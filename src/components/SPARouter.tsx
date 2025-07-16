@@ -16,7 +16,7 @@ function LoadingSpinner() {
 function NotFoundPage() {
     const { t } = useTranslation();
     const { navigate } = useSPARouter();
-    
+
     return (
         <div className="flex flex-1 flex-col items-center justify-center gap-4 p-4">
             <h1 className="text-4xl font-bold">404</h1>
@@ -35,13 +35,13 @@ function NotFoundPage() {
 export function SPARouter() {
     const { state } = useSPARouter();
     const route = findRouteByPath(state.currentPath);
-    
+
     if (!route) {
         return <NotFoundPage />;
     }
-    
+
     const Component = route.component;
-    
+
     return (
         <Suspense fallback={<LoadingSpinner />}>
             <Component />

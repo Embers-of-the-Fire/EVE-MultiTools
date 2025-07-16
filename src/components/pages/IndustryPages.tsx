@@ -2,16 +2,13 @@
 
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 export function IndustryManufacturingPage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">{t("nav.industry.manufacturing")}</h1>
-            </div>
-            
+        <PageLayout title={t("nav.industry.manufacturing")}>
             <div className="grid gap-4">
                 <Card>
                     <CardHeader>
@@ -22,19 +19,15 @@ export function IndustryManufacturingPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </PageLayout>
     );
 }
 
 export function IndustryMiningPage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">{t("nav.industry.mining")}</h1>
-            </div>
-            
+        <PageLayout title={t("nav.industry.mining")}>
             <div className="grid gap-4">
                 <Card>
                     <CardHeader>
@@ -45,19 +38,15 @@ export function IndustryMiningPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </PageLayout>
     );
 }
 
 export function IndustryResearchPage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">{t("nav.industry.research")}</h1>
-            </div>
-            
+        <PageLayout title={t("nav.industry.research")}>
             <div className="grid gap-4">
                 <Card>
                     <CardHeader>
@@ -68,6 +57,6 @@ export function IndustryResearchPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </PageLayout>
     );
 }

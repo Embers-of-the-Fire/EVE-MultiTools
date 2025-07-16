@@ -6,12 +6,13 @@ import { siteConfig } from "@/config/site";
 import { GithubIcon } from "@/components/icons";
 import { subtitle } from "@/components/primitives";
 import { useTranslation } from "react-i18next";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 export function HomePage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <PageContainer className="flex flex-1 flex-col gap-4 pt-0">
             <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
                 <div className="inline-block max-w-xxl text-center justify-center">
                     <span
@@ -41,11 +42,13 @@ export function HomePage() {
                     <Badge variant="outline" className="px-4 py-2">
                         <span>
                             {t("main.get_started_hint")}
-                            <code className="font-mono text-sm font-medium">components/pages/HomePage.tsx</code>
+                            <code className="font-mono text-sm font-medium">
+                                components/pages/HomePage.tsx
+                            </code>
                         </span>
                     </Badge>
                 </div>
             </section>
-        </div>
+        </PageContainer>
     );
 }

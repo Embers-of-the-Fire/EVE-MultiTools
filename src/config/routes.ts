@@ -3,22 +3,22 @@ import { HomePage } from "@/components/pages/HomePage";
 import { BundlePage } from "@/components/pages/BundlePage";
 import { DatabasePage } from "@/components/pages/DatabasePage";
 import { SettingsPage } from "@/components/pages/SettingsPage";
-import { 
-    MarketAnalysisPage, 
-    MarketOrdersPage, 
-    MarketHistoryPage, 
-    MarketCalculatorPage, 
-    MarketPredictorPage 
+import {
+    MarketAnalysisPage,
+    MarketCalculatorPage,
+    MarketHistoryPage,
+    MarketOrdersPage,
+    MarketPredictorPage,
 } from "@/components/pages/MarketPages";
-import { 
-    IndustryManufacturingPage, 
-    IndustryMiningPage, 
-    IndustryResearchPage 
+import {
+    IndustryManufacturingPage,
+    IndustryMiningPage,
+    IndustryResearchPage,
 } from "@/components/pages/IndustryPages";
-import { 
-    CharacterSkillsPage, 
-    CharacterAssetsPage, 
-    CharacterWalletPage 
+import {
+    CharacterAssetsPage,
+    CharacterSkillsPage,
+    CharacterWalletPage,
 } from "@/components/pages/CharacterPages";
 
 export const routes: AppRoute[] = [
@@ -150,14 +150,14 @@ export const routes: AppRoute[] = [
  */
 export function getFlatRoutes(): AppRoute[] {
     const flatRoutes: AppRoute[] = [];
-    
+
     function addRoute(route: AppRoute) {
         flatRoutes.push(route);
         if (route.children) {
             route.children.forEach(addRoute);
         }
     }
-    
+
     routes.forEach(addRoute);
     return flatRoutes;
 }
@@ -166,7 +166,7 @@ export function getFlatRoutes(): AppRoute[] {
  * 根据路径查找路由
  */
 export function findRouteByPath(path: string): AppRoute | undefined {
-    return getFlatRoutes().find(route => route.path === path);
+    return getFlatRoutes().find((route) => route.path === path);
 }
 
 /**
@@ -175,10 +175,10 @@ export function findRouteByPath(path: string): AppRoute | undefined {
 export function generateBreadcrumbs(path: string): { labelKey: string; path: string }[] {
     const breadcrumbs: { labelKey: string; path: string }[] = [];
     const pathSegments = path.split("/").filter(Boolean);
-    
+
     // 添加首页
     breadcrumbs.push({ labelKey: "nav.home", path: "/" });
-    
+
     // 根据路径段生成面包屑
     let currentPath = "";
     pathSegments.forEach((segment) => {
@@ -188,6 +188,6 @@ export function generateBreadcrumbs(path: string): { labelKey: string; path: str
             breadcrumbs.push({ labelKey: route.labelKey, path: currentPath });
         }
     });
-    
+
     return breadcrumbs;
 }

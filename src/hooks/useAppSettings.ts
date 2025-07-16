@@ -2,15 +2,8 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { useEffect } from "react";
 
 export function useAppSettings() {
-    const {
-        settings,
-        loading,
-        error,
-        setTheme,
-        setLanguage,
-        updateSettings,
-        resetToDefault,
-    } = useSettings();
+    const { settings, loading, error, setTheme, setLanguage, updateSettings, resetToDefault } =
+        useSettings();
 
     const isReady = !loading && !error && settings !== null;
 

@@ -42,7 +42,7 @@ const iconMap = {
 // 转换routes到sidebar格式
 const transformNavItems = (items: typeof routes) => {
     const { state } = useSPARouter();
-    
+
     return items.map((item) => ({
         title: item.labelKey,
         url: item.path,
@@ -106,7 +106,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const navMain = transformNavItems(routes);
-    
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>

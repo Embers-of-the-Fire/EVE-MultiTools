@@ -110,7 +110,9 @@ export function NavMain({ items }: { items: NavItemType[] }) {
                                                         <SidebarMenuSubButton asChild>
                                                             <button
                                                                 type="button"
-                                                                onClick={() => navigate(subItem.url)}
+                                                                onClick={() =>
+                                                                    navigate(subItem.url)
+                                                                }
                                                                 className="w-full text-left"
                                                             >
                                                                 <span>{t(subItem.title)}</span>

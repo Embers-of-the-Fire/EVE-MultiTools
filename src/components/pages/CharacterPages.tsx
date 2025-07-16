@@ -2,16 +2,13 @@
 
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 export function CharacterSkillsPage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">{t("nav.character.skills")}</h1>
-            </div>
-            
+        <PageLayout title={t("nav.character.skills")}>
             <div className="grid gap-4">
                 <Card>
                     <CardHeader>
@@ -22,19 +19,15 @@ export function CharacterSkillsPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </PageLayout>
     );
 }
 
 export function CharacterAssetsPage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">{t("nav.character.assets")}</h1>
-            </div>
-            
+        <PageLayout title={t("nav.character.assets")}>
             <div className="grid gap-4">
                 <Card>
                     <CardHeader>
@@ -45,19 +38,15 @@ export function CharacterAssetsPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </PageLayout>
     );
 }
 
 export function CharacterWalletPage() {
     const { t } = useTranslation();
-    
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">{t("nav.character.wallet")}</h1>
-            </div>
-            
+        <PageLayout title={t("nav.character.wallet")}>
             <div className="grid gap-4">
                 <Card>
                     <CardHeader>
@@ -68,6 +57,6 @@ export function CharacterWalletPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </PageLayout>
     );
 }

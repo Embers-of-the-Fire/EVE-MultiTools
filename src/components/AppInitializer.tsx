@@ -20,22 +20,28 @@ export function AppInitializer({ children }: InitializerProps) {
     const [syncCompleted, setSyncCompleted] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const { t } = useTranslation();
-    
+
     // 使用全局加载系统
     const { showLoading, hideLoading, updateProgress } = useGlobalLoading();
 
     // 稳定的加载方法
-    const startAppLoading = useCallback((message: string) => {
-        showLoading(APP_LOADING_ID, message);
-    }, [showLoading]);
+    const startAppLoading = useCallback(
+        (message: string) => {
+            showLoading(APP_LOADING_ID, message);
+        },
+        [showLoading]
+    );
 
     const stopAppLoading = useCallback(() => {
         hideLoading(APP_LOADING_ID);
     }, [hideLoading]);
 
-    const setAppProgress = useCallback((progress: number) => {
-        updateProgress(APP_LOADING_ID, progress);
-    }, [updateProgress]);
+    const setAppProgress = useCallback(
+        (progress: number) => {
+            updateProgress(APP_LOADING_ID, progress);
+        },
+        [updateProgress]
+    );
 
     // 确保只在客户端渲染时使用翻译
     useEffect(() => {
