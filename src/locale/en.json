@@ -1,0 +1,158 @@
+{
+    "main": {
+        "description": "A collection of multifunctional tools for EVE Online.",
+        "get_started_hint": "Get started by editing "
+    },
+    "common": {
+        "loading": "Loading...",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "save": "Save",
+        "close": "Close",
+        "more": "More",
+        "reload": "Reload",
+        "get_started": "Get Started",
+        "edit_page": "Edit Page",
+        "documentation": "Documentation",
+        "github": "GitHub",
+        "language": "Language",
+        "chinese": "中文",
+        "english": "English",
+        "log": "Log to Console",
+        "page_not_found": "Page not found",
+        "go_home": "Go Home"
+    },
+    "nav": {
+        "home": "Home",
+        "platform": "Platform",
+        "bookmarks": "Bookmarks",
+        "market": "Market",
+        "market.analysis": "Market Analysis",
+        "market.orders": "Market Orders",
+        "market.history": "Market History",
+        "market.tools": "Market Tools",
+        "market.tools.calculator": "Price Calculator",
+        "market.tools.predictor": "Price Predictor",
+        "industry": "Industry",
+        "industry.manufacturing": "Manufacturing",
+        "industry.mining": "Mining",
+        "industry.research": "Research",
+        "character": "Character",
+        "character.skills": "Skills",
+        "character.assets": "Assets",
+        "character.wallet": "Wallet",
+        "database": "Database",
+        "database.items": "Items",
+        "database.ships": "Ships",
+        "database.systems": "Systems",
+        "bundle": "Data Package",
+        "bundle.viewer": "Bundle Viewer",
+        "bundle.analyzer": "Bundle Analyzer",
+        "settings": "Settings"
+    },
+    "database": {
+        "title": "Database",
+        "description": "Access EVE Online database information"
+    },
+    "settings": {
+        "title": "Settings",
+        "description": "Application settings and preferences",
+        "theme": {
+            "label": "Theme",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System"
+        },
+        "language": {
+            "label": "Language",
+            "description": "Select the language for the application interface"
+        }
+    },
+    "bundle": {
+        "title": "Data Package Management",
+        "description": "Manage your EVE data packages, enable data for different servers",
+        "import": "Import Bundle",
+        "import_button": "Import Data Package File",
+        "importing": "Importing...",
+        "enable": "Enable",
+        "enabled": "Enabled",
+        "delete": "Delete",
+        "deleting": "Deleting...",
+        "no_data": "No data package data available, please import data package files first.",
+        "no_bundles": "No bundles found",
+        "server_id": "Server ID",
+        "created": "Created",
+        "game_version": "Game Version",
+        "game_build": "Game Build",
+        "delete_confirm_title": "Confirm Delete Data Package",
+        "delete_confirm_message": "Are you sure you want to delete data package \"{{name}}\"?",
+        "errors": {
+            "directoryexists": "Directory already exists",
+            "invalidfilename": "Invalid filename",
+            "ioerror": "File operation error",
+            "ziperror": "Archive error",
+            "registrationerror": "Registration error",
+            "unknown": "Unknown error"
+        }
+    },
+    "market": {
+        "analysis": {
+            "title": "Market Analysis",
+            "description": "Analyze market trends and data"
+        },
+        "orders": {
+            "title": "Market Orders",
+            "description": "View and manage market orders"
+        },
+        "history": {
+            "title": "Market History",
+            "description": "Browse historical market data"
+        },
+        "calculator": {
+            "title": "Price Calculator",
+            "description": "Calculate item prices and profits"
+        },
+        "predictor": {
+            "title": "Price Predictor",
+            "description": "Predict future price movements"
+        }
+    },
+    "industry": {
+        "manufacturing": {
+            "title": "Manufacturing",
+            "description": "Manage manufacturing operations"
+        },
+        "mining": {
+            "title": "Mining",
+            "description": "Track mining activities"
+        },
+        "research": {
+            "title": "Research",
+            "description": "Manage research and development"
+        }
+    },
+    "character": {
+        "skills": {
+            "title": "Character Skills",
+            "description": "View and plan character skills"
+        },
+        "assets": {
+            "title": "Character Assets",
+            "description": "Manage character assets"
+        },
+        "wallet": {
+            "title": "Character Wallet",
+            "description": "Track wallet transactions"
+        }
+    },
+    "error": {
+        "something_went_wrong": "Something went wrong!",
+        "try_again": "Try again",
+        "failed_to_load_settings": "Failed to load settings",
+        "failed_to_set_theme": "Failed to set theme",
+        "failed_to_set_language": "Failed to set language",
+        "failed_to_update_settings": "Failed to update settings",
+        "failed_to_reset_settings": "Failed to reset settings",
+        "use_settings_outside_provider": "useSettings must be used within a SettingsProvider"
+    }
+}

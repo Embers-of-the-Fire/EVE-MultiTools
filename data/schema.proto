@@ -1,0 +1,92 @@
+syntax = "proto2";
+
+package eve_multitools.data;
+
+// Type ID definition
+// This mirrors the structure of typeIDs.json in the FSD
+message TypeID {
+    required double base_price = 1;
+    required double capacity = 2;
+    optional int32 certificate_template = 3;
+    optional int32 description_id = 4;
+    repeated int32 designer_ids = 5;
+    optional int32 faction_id = 6;
+    optional int32 graphic_id = 7;
+    required int32 group_id = 8;
+    optional int32 icon_id = 9;
+    required bool is_dynamic_type = 10;
+    optional int32 isis_group_id = 11;
+    optional int32 market_group_id = 12;
+    optional int32 meta_level = 13;
+    required int32 portion_size = 14;
+    required bool published = 15;
+    optional int32 quote_author_id = 16;
+    optional int32 quote_id = 17;
+    optional int32 race_id = 18;
+    required double radius = 19;
+    optional int32 sound_id = 20;
+    optional int32 tech_level = 21;
+    required int32 type_id = 22;
+    required int32 type_name_id = 23;
+    optional int32 variation_parent_type_id = 24;
+    required double volume = 25;
+    optional int32 wreck_type_id = 26;
+}
+
+// Type dogma definition
+// This mirrors the structure of typeDogma.json in the FSD
+message TypeDogma {
+    // Dogma attribute definition
+    message DogmaAttribute {
+        required int32 attribute_id = 1;
+        required double value = 2;
+    }
+    
+    // Dogma effect definition
+    message DogmaEffect {
+        required int32 effect_id = 1;
+        required bool is_default = 2;
+    }
+    
+    repeated DogmaAttribute dogma_attributes = 1;
+    repeated DogmaEffect dogma_effects = 2;
+}
+
+// Type material definition
+// This mirrors the structure of typeMaterials.json in the FSD
+message TypeMaterial {
+    // Material definition
+    message Material {
+        required int32 material_type_id = 1;
+        required int32 quantity = 2;
+    }
+    
+    repeated Material materials = 1;
+}
+
+// Collection of all type IDs
+message TypeCollection {
+    message TypeEntry {
+        required int32 type_id = 1;
+        required TypeID type_data = 2;
+    }
+    repeated TypeEntry types = 1;
+}
+
+// Collection of all type dogma data
+message TypeDogmaCollection {
+    message TypeDogmaEntry {
+        required int32 type_id = 1;
+        required TypeDogma type_dogma = 2;
+    }
+    repeated TypeDogmaEntry type_dogmas = 1;
+}
+
+// Collection of all type material data
+message TypeMaterialCollection {
+    message TypeMaterialEntry {
+        required int32 type_id = 1;
+        required TypeMaterial type_material = 2;
+    }
+    repeated TypeMaterialEntry type_materials = 1;
+}

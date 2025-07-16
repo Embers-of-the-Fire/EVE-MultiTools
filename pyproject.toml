@@ -1,0 +1,13 @@
+[project]
+name = "eve-multitools"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.12.14",
+    "protobuf>=6.31.1",
+    "pydantic>=2.11.7",
+    "requests>=2.32.4",
+    "termcolor>=3.1.0",
+]
