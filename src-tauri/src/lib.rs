@@ -65,6 +65,9 @@ pub fn run() {
             data::image::graphic::get_graphic_path,
             data::image::icon::get_icon_path,
             data::localization::get_localization,
+            data::statics::types::get_type,
+            data::localization::search_type_by_name,
+            data::localization::search_type_by_description,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

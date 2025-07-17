@@ -26,6 +26,8 @@ if output_path.exists():
 with sqlite3.connect(output_path) as conn:
     cursor = conn.cursor()
     for table, sql in sqls.items():
+        if '_fts' in sql and 'fts5' not in sql:
+            continue
         print(f"Creating table {table} in mock database.")
         cursor.execute(sql)
     conn.commit()

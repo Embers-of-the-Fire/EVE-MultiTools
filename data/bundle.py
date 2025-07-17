@@ -525,6 +525,7 @@ with open(zh.file_path, "rb") as f:
 db = sqlite3.connect(BUNDLE_LOC_DB)
 try:
     cursor = db.cursor()
+
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS localization (
@@ -534,14 +535,31 @@ try:
         )
         """
     )
-    _success("Created localization table.")
+
+    cursor.execute(
+        """
+        CREATE VIRTUAL TABLE IF NOT EXISTS localization_fts USING fts5(
+            en, 
+            zh,
+            content='localization',
+            content_rowid='key'
+        )
+        """
+    )
+
     for key in en_data:
         cursor.execute(
             "INSERT OR REPLACE INTO localization (key, en, zh) VALUES (?, ?, ?)",
             (key, en_data[key][0], zh_data.get(key, [""])[0]),
         )
+
+    cursor.execute(
+        "INSERT INTO localization_fts(rowid, en, zh) SELECT key, en, zh FROM localization"
+    )
+
+    _success("Created localization table and FTS index.")
     db.commit()
-    _success("Inserted localization data into the database.")
+    db.close()
 except sqlite3.Error as e:
     _error(f"SQLite error: {e}")
 
@@ -675,6 +693,23 @@ class TypeID(BaseModel):
 types = fsd.get_fsd("types")
 type_collection = schema_pb2.TypeCollection()
 
+loc_db = sqlite3.connect(BUNDLE_LOC_DB)
+cursor = loc_db.cursor()
+# Create table for type localization
+
+cursor.execute(
+    """
+    CREATE TABLE IF NOT EXISTS loc_type (
+        type_id INTEGER NOT NULL UNIQUE PRIMARY KEY,
+        type_name_id INTEGER NOT NULL,
+        type_description_id INTEGER
+    )
+    """
+)
+
+cursor.execute("CREATE INDEX IF NOT EXISTS idx_type_name_id ON loc_type(type_name_id)")
+cursor.execute("CREATE INDEX IF NOT EXISTS idx_type_desc_id ON loc_type(type_description_id)")
+
 for type_id, type_def in types.items():
     try:
         validated = TypeID(**type_def)
@@ -685,6 +720,15 @@ for type_id, type_def in types.items():
     type_entry = type_collection.types.add()
     type_entry.type_id = int(type_id)
     type_entry.type_data.CopyFrom(pydantic_to_protobuf_type_id(validated, int(type_id)))
+
+    # Insert into lookup table
+    cursor.execute(
+        "INSERT OR REPLACE INTO loc_type (type_id, type_name_id, type_description_id) VALUES (?, ?, ?)",
+        (int(type_id), validated.typeNameID, validated.descriptionID),
+    )
+
+loc_db.commit()
+loc_db.close()
 
 BUNDLE_STATIC_TYPES = BUNDLE_STATIC / "types.pb"
 if BUNDLE_STATIC_TYPES.exists():

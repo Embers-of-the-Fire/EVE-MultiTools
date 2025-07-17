@@ -33,3 +33,4 @@ serde_with = { version = "3.14.0", features = ["chrono"] }
 uuid = { version = "1.0", features = ["v4"] }
 tokio = { version = "1.0", features = ["full"] }
 sqlx = { version = "0.8.6", features = ["runtime-tokio", "sqlite", "macros"] }
+nohash-hasher = "0.2.0"

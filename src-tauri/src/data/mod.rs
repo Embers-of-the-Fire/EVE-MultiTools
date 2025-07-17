@@ -7,3 +7,4 @@ pub mod proto {
 pub mod bundle;
 pub mod image;
 pub mod localization;
+pub mod statics;
