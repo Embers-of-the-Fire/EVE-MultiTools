@@ -60,7 +60,9 @@ pub fn run() {
             bundle::remove_bundle,
             bundle::get_bundles,
             bundle::get_enabled_bundle_id,
-            bundle::enable_bundle
+            bundle::enable_bundle,
+            data::image::graphic::get_graphic_path,
+            data::image::icon::get_icon_path,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

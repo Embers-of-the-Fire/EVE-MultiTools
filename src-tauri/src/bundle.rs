@@ -64,7 +64,7 @@ pub enum BundleImportEvent {
     },
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct BundleState {
     pub bundles: HashMap<String, BundleDescriptor>,
     pub activated_bundle: Option<crate::data::bundle::Bundle>,
@@ -287,7 +287,6 @@ pub struct BundleGameInfo {
 #[tauri::command]
 pub async fn import_bundle_file(
     bundle_path: String,
-    _bundle_state: tauri::State<'_, AppBundleState>,
     config_state: tauri::State<'_, crate::config::AppConfigState>,
     app: tauri::AppHandle,
     on_event: Channel<BundleImportEvent>,

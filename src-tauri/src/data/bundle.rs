@@ -1,14 +1,16 @@
-use serde::{Deserialize, Serialize};
+use crate::{bundle::BundleDescriptor, data::image::ImageService};
 
-use crate::bundle::BundleDescriptor;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct Bundle {
     pub descriptor: BundleDescriptor,
+    pub images: ImageService,
 }
 
 impl Bundle {
-    pub fn load(descriptor: BundleDescriptor) -> Self {
-        Bundle { descriptor }
+    pub fn load(descriptor: BundleDescriptor) -> anyhow::Result<Self> {
+        Ok(Bundle {
+            images: ImageService::init(&descriptor.root)?,
+            descriptor,
+        })
     }
 }

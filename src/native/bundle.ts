@@ -1,5 +1,4 @@
 import { tauriInvoke } from "./base";
-import { listen } from "@tauri-apps/api/event";
 import { Channel } from "@tauri-apps/api/core";
 
 /**
