@@ -1,5 +1,6 @@
 import { tauriInvoke } from "./base";
 import { listen } from "@tauri-apps/api/event";
+import { Channel } from "@tauri-apps/api/core";
 
 /**
  * Bundle metadata interface
@@ -60,52 +61,46 @@ export interface ImportResult {
 }
 
 /**
- * Import bundle file (legacy synchronous method)
+ * Bundle import event types
  */
-export async function importBundleFile(bundlePath: string): Promise<string> {
-    return await tauriInvoke<string>("import_bundle_file", { bundlePath });
-}
+export type BundleImportEvent =
+    | {
+          event: "progress";
+          data: {
+              stage: ImportStage;
+              current: number;
+              total: number;
+              message_key?: string;
+              message_params?: Record<string, unknown>;
+          };
+      }
+    | {
+          event: "result";
+          data: {
+              success: boolean;
+              bundle_name?: string;
+              error_type?: ImportErrorType;
+              error_params?: Record<string, unknown>;
+          };
+      };
 
 /**
- * Import bundle file asynchronously with progress tracking
+ * Import bundle file asynchronously with progress tracking using channels
  */
-export async function importBundleFileAsync(
+export async function importBundleFile(
     bundlePath: string,
-    onProgress?: (progress: ImportProgress) => void,
-    onResult?: (result: ImportResult) => void
-): Promise<string> {
-    const taskId = await tauriInvoke<string>("import_bundle_file_async", {
+    onEvent?: (event: BundleImportEvent) => void
+): Promise<void> {
+    const channel = new Channel<BundleImportEvent>();
+
+    if (onEvent) {
+        channel.onmessage = onEvent;
+    }
+
+    await tauriInvoke<void>("import_bundle_file", {
         bundlePath,
+        onEvent: channel,
     });
-
-    // 监听进度事件
-    if (onProgress) {
-        const progressUnlisten = await listen<ImportProgress>(
-            `bundle_import_progress_${taskId}`,
-            (event) => {
-                onProgress(event.payload);
-            }
-        );
-
-        // 监听结果事件来取消进度监听
-        const resultUnlisten = await listen<ImportResult>(`bundle_import_result_${taskId}`, () => {
-            progressUnlisten();
-            resultUnlisten();
-        });
-    }
-
-    // 监听结果事件
-    if (onResult) {
-        const resultUnlisten = await listen<ImportResult>(
-            `bundle_import_result_${taskId}`,
-            (event) => {
-                onResult(event.payload);
-                resultUnlisten();
-            }
-        );
-    }
-
-    return taskId;
 }
 
 /**
@@ -147,7 +142,6 @@ export async function enableBundle(serverId: string): Promise<void> {
 // Export convenient object-style interface
 export const bundleCommands = {
     importBundleFile,
-    importBundleFileAsync,
     getBundles,
     removeBundle,
     getEnabledBundleId,

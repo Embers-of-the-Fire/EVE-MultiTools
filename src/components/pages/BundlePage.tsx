@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import {
     bundleCommands,
     type BundleMetadata,
     type ImportProgress,
     type ImportResult,
+    type BundleImportEvent,
     ImportStage,
 } from "@/native";
 import { open } from "@tauri-apps/plugin-dialog";
@@ -23,17 +24,17 @@ import {
 } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { Loader2 } from "lucide-react";
+import { useBundle } from "@/contexts/BundleContext";
 
 export function BundlePage() {
     const { t, i18n } = useTranslation();
-    const [bundles, setBundles] = useState<BundleMetadata[]>([]);
-    const [loading, setLoading] = useState(false);
+    const { bundles, activeBundle, switchingToBundleId, isLoading, switchBundle } = useBundle();
+
     const [importProgress, setImportProgress] = useState<ImportProgress | null>(null);
     const [isImporting, setIsImporting] = useState(false);
     const [bundleToDelete, setBundleToDelete] = useState<BundleMetadata | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [enabledBundleId, setEnabledBundleId] = useState<string | null>(null);
-    const [enablingBundleId, setEnablingBundleId] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Helper function to get localized message from progress
@@ -53,34 +54,6 @@ export function BundlePage() {
         return t("bundle.errors.unknown");
     };
 
-    // Load bundles on component mount
-    const loadBundles = useCallback(async () => {
-        setLoading(true);
-        try {
-            const bundlesData = await bundleCommands.getBundles();
-            setBundles(bundlesData);
-        } catch (error) {
-            console.error("Failed to load bundles:", error);
-            toast.error(t("bundle.toast.load_failed"));
-        } finally {
-            setLoading(false);
-        }
-    }, [t]);
-
-    const loadEnabledBundleId = useCallback(async () => {
-        try {
-            const id = await bundleCommands.getEnabledBundleId();
-            setEnabledBundleId(id);
-        } catch (error) {
-            console.error("Failed to load enabled bundle ID:", error);
-        }
-    }, []);
-
-    useEffect(() => {
-        loadBundles();
-        loadEnabledBundleId();
-    }, [loadBundles, loadEnabledBundleId]);
-
     const handleImport = async () => {
         try {
             const result = await open({
@@ -91,38 +64,35 @@ export function BundlePage() {
                         extensions: ["bundle"],
                     },
                 ],
+                multiple: false,
             });
 
             if (result && !Array.isArray(result)) {
                 setIsImporting(true);
                 setImportProgress({ stage: ImportStage.Start, current: 0, total: 100 });
 
-                await bundleCommands.importBundleFileAsync(
-                    result,
-                    (progress) => {
-                        setImportProgress(progress);
-                    },
-                    (importResult) => {
+                await bundleCommands.importBundleFile(result, (event) => {
+                    if (event.event === "progress") {
+                        setImportProgress(event.data);
+                    } else if (event.event === "result") {
                         setIsImporting(false);
                         setImportProgress(null);
 
-                        if (importResult.success) {
+                        if (event.data.success) {
                             toast.success(t("bundle.toast.import_success"), {
                                 description: t("bundle.toast.import_success_message", {
-                                    name: importResult.bundle_name,
+                                    name: event.data.bundle_name,
                                 }),
                             });
-                            loadBundles();
-                            loadEnabledBundleId(); // 导入成功后立即更新启用的bundle状态
                         } else {
                             toast.error(t("bundle.toast.import_failed"), {
                                 description: t("bundle.toast.import_failed_message", {
-                                    error: getErrorMessage(importResult),
+                                    error: getErrorMessage(event.data),
                                 }),
                             });
                         }
                     }
-                );
+                });
             }
         } catch (error) {
             console.error("Import failed:", error);
@@ -132,14 +102,9 @@ export function BundlePage() {
         }
     };
 
-    const handleEnable = async (serverId: string) => {
-        setEnablingBundleId(serverId);
+    const handleEnable = async (bundle: BundleMetadata) => {
         try {
-            await bundleCommands.enableBundle(serverId);
-            setEnabledBundleId(serverId);
-            toast.success(t("bundle.toast.enable_success"), {
-                description: t("bundle.toast.enable_success_message"),
-            });
+            await switchBundle(bundle);
         } catch (error) {
             console.error("Enable failed:", error);
             toast.error(t("bundle.toast.enable_failed"), {
@@ -147,8 +112,6 @@ export function BundlePage() {
                     error: error instanceof Error ? error.message : String(error),
                 }),
             });
-        } finally {
-            setEnablingBundleId(null);
         }
     };
 
@@ -158,13 +121,6 @@ export function BundlePage() {
         setIsDeleting(true);
         try {
             await bundleCommands.removeBundle(bundleToDelete.serverID);
-            setBundles(bundles.filter((b) => b.serverID !== bundleToDelete.serverID));
-
-            // If this was the enabled bundle, clear the enabled state
-            if (enabledBundleId === bundleToDelete.serverID) {
-                setEnabledBundleId(null);
-            }
-
             toast.success(t("bundle.toast.delete_success"), {
                 description: t("bundle.toast.delete_success_message", {
                     name:
@@ -203,7 +159,14 @@ export function BundlePage() {
             description={t("bundle.description")}
             actions={
                 <Button onClick={handleImport} disabled={isImporting} className="min-w-[200px]">
-                    {isImporting ? t("bundle.importing") : t("bundle.import_button")}
+                    {isImporting ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            {t("bundle.importing")}
+                        </>
+                    ) : (
+                        t("bundle.import_button")
+                    )}
                 </Button>
             }
         >
@@ -227,9 +190,9 @@ export function BundlePage() {
 
             {/* Bundles List */}
             <div className="space-y-4">
-                {loading ? (
+                {isLoading ? (
                     <div className="flex items-center justify-center py-8">
-                        <div className="text-muted-foreground">{t("common.loading")}</div>
+                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                     </div>
                 ) : bundles.length === 0 ? (
                     <Card>
@@ -239,8 +202,8 @@ export function BundlePage() {
                     </Card>
                 ) : (
                     bundles.map((bundle) => {
-                        const isEnabled = enabledBundleId === bundle.serverID;
-                        const isEnabling = enablingBundleId === bundle.serverID;
+                        const isEnabled = activeBundle?.serverID === bundle.serverID;
+                        const isEnabling = switchingToBundleId === bundle.serverID;
                         const serverName =
                             bundle.serverName[i18n.language as keyof typeof bundle.serverName] ||
                             bundle.serverName.en;
@@ -252,7 +215,7 @@ export function BundlePage() {
                                         <div>
                                             <CardTitle className="flex items-center gap-2">
                                                 {serverName}
-                                                {isEnabled && (
+                                                {isEnabled && !isEnabling && (
                                                     <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
                                                         {t("bundle.enabled")}
                                                     </span>
@@ -267,18 +230,28 @@ export function BundlePage() {
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => handleEnable(bundle.serverID)}
-                                                    disabled={isEnabling}
+                                                    onClick={() => handleEnable(bundle)}
+                                                    disabled={
+                                                        isEnabling || switchingToBundleId !== null
+                                                    }
                                                 >
-                                                    {isEnabling
-                                                        ? t("common.loading")
-                                                        : t("bundle.enable")}
+                                                    {isEnabling ? (
+                                                        <>
+                                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                            {t("common.enabling")}
+                                                        </>
+                                                    ) : (
+                                                        t("bundle.enable")
+                                                    )}
                                                 </Button>
                                             )}
                                             <Button
                                                 variant="destructive"
                                                 size="sm"
                                                 onClick={() => openDeleteDialog(bundle)}
+                                                disabled={
+                                                    isEnabling || switchingToBundleId !== null
+                                                }
                                             >
                                                 {t("bundle.delete")}
                                             </Button>
@@ -292,7 +265,7 @@ export function BundlePage() {
                                                 {t("bundle.created")}:
                                             </span>
                                             <span className="ml-2 text-muted-foreground">
-                                                {bundle.created}
+                                                {new Date(bundle.created).toLocaleString()}
                                             </span>
                                         </div>
                                         <div>
@@ -325,16 +298,13 @@ export function BundlePage() {
                     <DialogHeader>
                         <DialogTitle>{t("bundle.delete_confirm_title")}</DialogTitle>
                         <DialogDescription>
-                            {bundleToDelete && (
-                                <>
-                                    {t("bundle.delete_confirm_message", {
-                                        name:
-                                            bundleToDelete.serverName[
-                                                i18n.language as keyof typeof bundleToDelete.serverName
-                                            ] || bundleToDelete.serverName.en,
-                                    })}
-                                </>
-                            )}
+                            {bundleToDelete &&
+                                t("bundle.delete_confirm_message", {
+                                    name:
+                                        bundleToDelete.serverName[
+                                            i18n.language as keyof typeof bundleToDelete.serverName
+                                        ] || bundleToDelete.serverName.en,
+                                })}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -342,7 +312,14 @@ export function BundlePage() {
                             {t("common.cancel")}
                         </Button>
                         <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-                            {isDeleting ? t("bundle.deleting") : t("bundle.delete")}
+                            {isDeleting ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    {t("bundle.deleting")}
+                                </>
+                            ) : (
+                                t("bundle.delete")
+                            )}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

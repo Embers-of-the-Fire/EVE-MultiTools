@@ -32,7 +32,18 @@
         "bundle.analyzer": "数据包分析器",
         "settings": "设置"
     },
-    "error": {
+    "locale": "zh",
+    "errors": {
+        "bundle_load_failed": "加载数据包失败",
+        "bundle_import_failed": "导入数据包失败",
+        "bundle_switch_failed": "切换数据包失败",
+        "bundle_remove_failed": "删除数据包失败",
+        "bundle_import_DirectoryExists": "目录已存在",
+        "bundle_import_InvalidFileName": "无效的文件名",
+        "bundle_import_IoError": "IO错误",
+        "bundle_import_ZipError": "ZIP文件错误",
+        "bundle_import_RegistrationError": "注册错误",
+        "bundle_import_unknown": "未知错误",
         "something_went_wrong": "出现了一些问题！",
         "try_again": "重试",
         "failed_to_load_settings": "加载设置失败",
@@ -77,6 +88,12 @@
         "game_build": "游戏构建",
         "delete_confirm_title": "确认删除数据包",
         "delete_confirm_message": "确定要删除数据包 \"{{name}}\" 吗？",
+        "no_active": "无活动数据包",
+        "please_import": "请导入数据包",
+        "available_bundles": "可用数据包",
+        "no_bundles": "没有可用的数据包",
+        "import": "导入数据包",
+        "version": "版本: {{version}}",
         "toast": {
             "import_success": "导入成功",
             "import_success_message": "数据包 \"{{name}}\" 导入成功！",
@@ -120,8 +137,11 @@
             "invalidfilename": "无效的文件名",
             "ioerror": "文件操作错误",
             "ziperror": "压缩包错误",
-            "registrationerror": "注册错误"
-        }
+            "registrationerror": "注册错误",
+            "unknown": "未知错误"
+        },
+        "please_select": "请选择数据包",
+        "no_bundles_available": "没有可用的数据包"
     },
     "workspace": {
         "teams": "团队",

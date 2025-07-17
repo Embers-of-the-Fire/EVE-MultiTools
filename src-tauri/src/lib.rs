@@ -57,7 +57,6 @@ pub fn run() {
             config::get_config_file_path,
             config::set_enabled_bundle_id,
             bundle::import_bundle_file,
-            bundle::import_bundle_file_async,
             bundle::remove_bundle,
             bundle::get_bundles,
             bundle::get_enabled_bundle_id,

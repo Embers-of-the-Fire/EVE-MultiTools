@@ -77,7 +77,7 @@ pub(crate) fn init(app: &mut App) -> anyhow::Result<()> {
     if let Some(enabled_bundle_id) = &config_state.global_settings.enabled_bundle_id {
         let bundle_state = app.state::<bundle::AppBundleState>();
         let mut bundle_state = bundle_state.lock().unwrap();
-        
+
         match bundle_state.activate_bundle(enabled_bundle_id) {
             Ok(_) => {
                 info!("Auto-activated bundle: {enabled_bundle_id}");

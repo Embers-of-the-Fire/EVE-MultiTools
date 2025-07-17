@@ -1,12 +1,16 @@
 use log::{error, info};
 use serde::{Deserialize, Serialize};
-use std::fs;
 use std::io::BufReader;
-use std::path::Path;
 use std::{collections::HashMap, path::PathBuf, sync::Mutex};
-use tauri::{Emitter, Manager};
+use tauri::{ipc::Channel, Emitter, Manager};
 use tokio::sync::mpsc;
 use zip::ZipArchive;
+
+#[derive(Clone, Serialize)]
+struct BundleChangeStartPayload {
+    #[serde(rename = "serverId")]
+    server_id: String,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ImportStage {
@@ -42,6 +46,24 @@ pub struct ImportResult {
     pub error_params: Option<serde_json::Value>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", tag = "event", content = "data")]
+pub enum BundleImportEvent {
+    Progress {
+        stage: ImportStage,
+        current: u64,
+        total: u64,
+        message_key: Option<String>,
+        message_params: Option<serde_json::Value>,
+    },
+    Result {
+        success: bool,
+        bundle_name: Option<String>,
+        error_type: Option<ImportErrorType>,
+        error_params: Option<serde_json::Value>,
+    },
+}
+
 #[derive(Debug, Clone)]
 pub struct BundleState {
     pub bundles: HashMap<String, BundleDescriptor>,
@@ -73,7 +95,7 @@ impl BundleState {
 
     pub fn activate_bundle(&mut self, server_id: &str) -> anyhow::Result<()> {
         if let Some(descriptor) = self.bundles.get(server_id) {
-            self.activated_bundle = Some(crate::data::bundle::Bundle::load(descriptor.clone()));
+            self.activated_bundle = Some(crate::data::bundle::Bundle::load(descriptor.clone())?);
             Ok(())
         } else {
             Err(anyhow::anyhow!(
@@ -83,49 +105,7 @@ impl BundleState {
         }
     }
 
-    pub fn import_bundle(&mut self, bundle_path: &Path, data_dir: &Path) -> anyhow::Result<String> {
-        let bundle_file_name = bundle_path
-            .file_stem()
-            .ok_or_else(|| anyhow::anyhow!("Invalid bundle file name"))?
-            .to_string_lossy()
-            .to_string();
-
-        let target_dir = data_dir.join("bundle").join(&bundle_file_name);
-
-        if target_dir.exists() {
-            return Err(anyhow::anyhow!(
-                "Bundle directory '{}' already exists",
-                bundle_file_name
-            ));
-        }
-
-        let file = fs::File::open(bundle_path)?;
-        let mut archive = ZipArchive::new(BufReader::new(file))?;
-
-        fs::create_dir_all(&target_dir)?;
-
-        for i in 0..archive.len() {
-            let mut file = archive.by_index(i)?;
-            let outpath = target_dir.join(file.name());
-
-            if file.is_dir() {
-                fs::create_dir_all(&outpath)?;
-            } else {
-                if let Some(parent) = outpath.parent() {
-                    fs::create_dir_all(parent)?;
-                }
-
-                let mut outfile = fs::File::create(&outpath)?;
-                std::io::copy(&mut file, &mut outfile)?;
-            }
-        }
-
-        self.add_bundle(target_dir)?;
-
-        Ok(bundle_file_name)
-    }
-
-    async fn import_bundle_blocking(
+    async fn import_bundle(
         bundle_path: PathBuf,
         data_dir: PathBuf,
         progress_sender: mpsc::UnboundedSender<ImportProgress>,
@@ -217,9 +197,9 @@ impl BundleState {
                     current: progress as u64,
                     total: 100,
                     message_key: Some("bundle.progress.extracting_file".to_string()),
-                    message_params: Some(serde_json::json!({ 
-                        "current": i + 1, 
-                        "total": total_files 
+                    message_params: Some(serde_json::json!({
+                        "current": i + 1,
+                        "total": total_files
                     })),
                 });
             }
@@ -305,12 +285,13 @@ pub struct BundleGameInfo {
 }
 
 #[tauri::command]
-pub async fn import_bundle_file_async(
+pub async fn import_bundle_file(
     bundle_path: String,
     _bundle_state: tauri::State<'_, AppBundleState>,
     config_state: tauri::State<'_, crate::config::AppConfigState>,
     app: tauri::AppHandle,
-) -> Result<String, String> {
+    on_event: Channel<BundleImportEvent>,
+) -> Result<(), String> {
     let bundle_path = PathBuf::from(bundle_path);
 
     let data_dir = {
@@ -327,31 +308,27 @@ pub async fn import_bundle_file_async(
 
     let (progress_sender, mut progress_receiver) = mpsc::unbounded_channel::<ImportProgress>();
 
-    let task_id = uuid::Uuid::new_v4().to_string();
-
-    let app_clone = app.clone();
-    let task_id_clone = task_id.clone();
+    // 启动进度转发任务
+    let on_event_clone = on_event.clone();
     tokio::spawn(async move {
         while let Some(progress) = progress_receiver.recv().await {
-            let _ = app_clone.emit(
-                &format!("bundle_import_progress_{task_id_clone}"),
-                &progress,
-            );
+            let _ = on_event_clone.send(BundleImportEvent::Progress {
+                stage: progress.stage,
+                current: progress.current,
+                total: progress.total,
+                message_key: progress.message_key,
+                message_params: progress.message_params,
+            });
         }
     });
 
-    let task_id_clone = task_id.clone();
+    // 启动导入任务
     let app_clone = app.clone();
     let data_dir_clone = data_dir.clone();
     tokio::spawn(async move {
         let bundle_state = app_clone.state::<AppBundleState>();
         let config_state = app_clone.state::<crate::config::AppConfigState>();
-        let result = match BundleState::import_bundle_blocking(
-            bundle_path,
-            data_dir,
-            progress_sender,
-        )
-        .await
+        let result = match BundleState::import_bundle(bundle_path, data_dir, progress_sender).await
         {
             Ok(bundle_name) => {
                 let target_dir = data_dir_clone.join("bundle").join(&bundle_name);
@@ -368,6 +345,11 @@ pub async fn import_bundle_file_async(
                                 error_params: Some(serde_json::json!({ "error": e.to_string() })),
                             }
                         } else {
+                            // Emit bundles-changed event
+                            if let Err(e) = app_clone.emit("bundles-changed", ()) {
+                                log::error!("Failed to emit bundles-changed event: {e:?}");
+                            }
+
                             // Check if this is the only bundle and auto-activate if so
                             let should_auto_activate =
                                 state.bundles.len() == 1 && state.activated_bundle.is_none();
@@ -419,71 +401,16 @@ pub async fn import_bundle_file_async(
             },
         };
 
-        let _ = app_clone.emit(&format!("bundle_import_result_{task_id_clone}"), &result);
+        // 发送结果事件
+        let _ = on_event.send(BundleImportEvent::Result {
+            success: result.success,
+            bundle_name: result.bundle_name,
+            error_type: result.error_type,
+            error_params: result.error_params,
+        });
     });
 
-    Ok(task_id)
-}
-
-#[tauri::command]
-pub fn import_bundle_file(
-    bundle_path: String,
-    bundle_state: tauri::State<AppBundleState>,
-    config_state: tauri::State<crate::config::AppConfigState>,
-) -> Result<String, String> {
-    let bundle_path = PathBuf::from(bundle_path);
-
-    // 获取数据目录
-    let data_dir = {
-        let config = config_state
-            .config
-            .lock()
-            .map_err(|e| format!("Failed to lock config state: {e}"))?;
-        config
-            .global_settings
-            .data_directory
-            .clone()
-            .ok_or_else(|| "Data directory not set".to_string())?
-    };
-
-    // 导入bundle
-    let mut bundle_state = bundle_state
-        .lock()
-        .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
-
-    let result = bundle_state
-        .import_bundle(&bundle_path, &data_dir)
-        .map_err(|e| format!("Failed to import bundle: {e}"))?;
-
-    // Check if this is the only bundle and auto-activate if so
-    let should_auto_activate =
-        bundle_state.bundles.len() == 1 && bundle_state.activated_bundle.is_none();
-
-    if should_auto_activate {
-        // Get the server ID of the newly imported bundle
-        if let Some((server_id, _)) = bundle_state.bundles.iter().next() {
-            let server_id = server_id.clone();
-
-            // Activate the bundle
-            if let Err(e) = bundle_state.activate_bundle(&server_id) {
-                error!("Failed to auto-activate bundle {server_id}: {e:?}");
-            } else {
-                info!("Auto-activated bundle: {server_id}");
-
-                // Save to config
-                let mut config = config_state
-                    .config
-                    .lock()
-                    .map_err(|e| format!("Failed to lock config state: {e}"))?;
-                config.global_settings.enabled_bundle_id = Some(server_id);
-                config
-                    .save_to_file()
-                    .map_err(|e| format!("Failed to save config: {e}"))?;
-            }
-        }
-    }
-
-    Ok(result)
+    Ok(())
 }
 
 #[tauri::command]
@@ -520,26 +447,46 @@ pub fn enable_bundle(
     server_id: String,
     bundle_state: tauri::State<AppBundleState>,
     config_state: tauri::State<crate::config::AppConfigState>,
+    app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
-    let mut bundle_state = bundle_state
-        .lock()
-        .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
+    // Emit start event
+    if let Err(e) = app_handle.emit(
+        "bundle-change-start",
+        &BundleChangeStartPayload {
+            server_id: server_id.clone(),
+        },
+    ) {
+        log::error!("Failed to emit bundle-change-start event: {e:?}");
+    }
 
-    bundle_state
-        .activate_bundle(&server_id)
-        .map_err(|e| format!("Failed to activate bundle: {e}"))?;
+    let result = (|| {
+        let mut bundle_state = bundle_state
+            .lock()
+            .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
 
-    // Save to config
-    let mut config = config_state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
-    config.global_settings.enabled_bundle_id = Some(server_id);
-    config
-        .save_to_file()
-        .map_err(|e| format!("Failed to save config: {e}"))?;
+        bundle_state
+            .activate_bundle(&server_id)
+            .map_err(|e| format!("Failed to activate bundle: {e}"))?;
 
-    Ok(())
+        // Save to config
+        let mut config = config_state
+            .config
+            .lock()
+            .map_err(|e| format!("Failed to lock config: {e}"))?;
+        config.global_settings.enabled_bundle_id = Some(server_id);
+        config
+            .save_to_file()
+            .map_err(|e| format!("Failed to save config: {e}"))?;
+
+        Ok(())
+    })();
+
+    // Emit finished event
+    if let Err(e) = app_handle.emit("bundle-change-finished", ()) {
+        log::error!("Failed to emit bundle-change-finished event: {e:?}");
+    }
+
+    result
 }
 
 #[tauri::command]
@@ -547,6 +494,7 @@ pub fn remove_bundle(
     server_id: String,
     bundle_state: tauri::State<AppBundleState>,
     config_state: tauri::State<crate::config::AppConfigState>,
+    app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
     let mut bundle_state = bundle_state
         .lock()
@@ -562,8 +510,9 @@ pub fn remove_bundle(
         .remove_bundle(&server_id)
         .map_err(|e| format!("Failed to remove bundle: {e}"))?;
 
-    // If the removed bundle was enabled, clear the config
+    // 如果删除的是已启用的数据包，清空启用状态
     if is_enabled {
+        bundle_state.activated_bundle = None;
         let mut config = config_state
             .config
             .lock()
@@ -572,6 +521,11 @@ pub fn remove_bundle(
         config
             .save_to_file()
             .map_err(|e| format!("Failed to save config: {e}"))?;
+    }
+
+    // Emit bundles-changed event
+    if let Err(e) = app_handle.emit("bundles-changed", ()) {
+        log::error!("Failed to emit bundles-changed event: {e:?}");
     }
 
     Ok(())

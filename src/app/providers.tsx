@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { I18nextProvider } from "react-i18next";
 import { Toaster } from "@/components/ui/sonner";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { BundleProvider } from "@/contexts/BundleContext";
 import { GlobalLoadingProvider, useGlobalLoading } from "@/contexts/GlobalLoadingContext";
 import { AppInitializer } from "@/components/AppInitializer";
 import { globalConfig } from "@/lib/global-config";
@@ -102,10 +103,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
             <GlobalLoadingProvider>
                 <GlobalConfigInitializer>
                     <SettingsProvider>
-                        <I18nInitializer>
-                            <AppInitializer>{children}</AppInitializer>
-                            <Toaster />
-                        </I18nInitializer>
+                        <BundleProvider>
+                            <I18nInitializer>
+                                <AppInitializer>{children}</AppInitializer>
+                                <Toaster />
+                            </I18nInitializer>
+                        </BundleProvider>
                     </SettingsProvider>
                 </GlobalConfigInitializer>
             </GlobalLoadingProvider>

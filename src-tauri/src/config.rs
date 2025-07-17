@@ -180,7 +180,10 @@ pub fn get_config_file_path(state: State<AppConfigState>) -> Result<String, Stri
 }
 
 #[tauri::command]
-pub fn set_enabled_bundle_id(state: State<AppConfigState>, bundle_id: Option<String>) -> Result<(), String> {
+pub fn set_enabled_bundle_id(
+    state: State<AppConfigState>,
+    bundle_id: Option<String>,
+) -> Result<(), String> {
     let mut config = state
         .config
         .lock()

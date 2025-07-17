@@ -17,5 +17,12 @@ export { configCommands } from "./config";
 export { bundleCommands } from "./bundle";
 
 // Type exports
-export type { BundleMetadata } from "./bundle";
+export type {
+    BundleMetadata,
+    ImportProgress,
+    ImportResult,
+    BundleImportEvent,
+    ImportErrorType,
+} from "./bundle";
+export { ImportStage } from "./bundle";
 export type { GlobalSettings, Language, Theme } from "@/types/config";
