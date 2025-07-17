@@ -25,13 +25,13 @@ impl GraphicService {
 }
 
 #[tauri::command]
-pub fn get_graphic_path(
+pub async fn get_graphic_path(
     bundle_state: tauri::State<'_, crate::bundle::AppBundleState>,
     graphic_id: u32,
 ) -> Result<PathBuf, String> {
     bundle_state
         .lock()
-        .map_err(|e| e.to_string())?
+        .await
         .activated_bundle
         .as_ref()
         .ok_or("No activated bundle found".to_string())

@@ -26,6 +26,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -36,7 +37,7 @@ next-env.d.ts
 
 # python
 /.venv
-/__pycache__/
+/**/__pycache__/
 
 # IDE
 /.vscode

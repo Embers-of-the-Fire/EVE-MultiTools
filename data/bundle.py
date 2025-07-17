@@ -529,8 +529,8 @@ try:
         """
         CREATE TABLE IF NOT EXISTS localization (
             key INTEGER UNIQUE PRIMARY KEY,
-            en TEXT,
-            zh TEXT
+            en TEXT NOT NULL,
+            zh TEXT NOT NULL
         )
         """
     )
@@ -759,8 +759,8 @@ try:
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS type_dogma (
-            type_id INTEGER UNIQUE PRIMARY KEY,
-            dogma_data BLOB
+            type_id INTEGER NOT NULL UNIQUE PRIMARY KEY,
+            dogma_data BLOB NOT NULL
         )
         """
     )
@@ -842,8 +842,8 @@ try:
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS type_materials (
-            type_id INTEGER UNIQUE PRIMARY KEY,
-            materials_data BLOB
+            type_id INTEGER NOT NULL UNIQUE PRIMARY KEY,
+            materials_data BLOB NOT NULL
         )
         """
     )

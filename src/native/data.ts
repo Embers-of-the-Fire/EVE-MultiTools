@@ -13,6 +13,30 @@ export const imageCommands = {
     getIconPath,
 } as const;
 
+export type LocString = {
+    en: string;
+    zh: string;
+};
+
+export async function getLocalization(key: number): Promise<LocString | null> {
+    return await tauriInvoke<LocString | null>("get_localization", { key });
+}
+
+export async function getLocalizationByLang(
+    key: number,
+    lang: "en" | "zh",
+): Promise<string | null> {
+    const loc = await getLocalization(key);
+    if (!loc) return null;
+    return lang === "en" ? loc.en : loc.zh;
+}
+
+export const localizationCommands = {
+    getLocalization,
+    getLocalizationByLang,
+} as const;
+
 export const dataCommands = {
     imageCommands,
+    localizationCommands,
 } as const;

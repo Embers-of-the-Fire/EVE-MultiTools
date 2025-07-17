@@ -1,9 +1,9 @@
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::io::BufReader;
-use std::{collections::HashMap, path::PathBuf, sync::Mutex};
+use std::{collections::HashMap, path::PathBuf};
 use tauri::{ipc::Channel, Emitter, Manager};
-use tokio::sync::mpsc;
+use tokio::sync::{mpsc, Mutex};
 use zip::ZipArchive;
 
 #[derive(Clone, Serialize)]
@@ -64,7 +64,6 @@ pub enum BundleImportEvent {
     },
 }
 
-#[derive(Debug)]
 pub struct BundleState {
     pub bundles: HashMap<String, BundleDescriptor>,
     pub activated_bundle: Option<crate::data::bundle::Bundle>,
@@ -93,9 +92,10 @@ impl BundleState {
         Ok(())
     }
 
-    pub fn activate_bundle(&mut self, server_id: &str) -> anyhow::Result<()> {
+    pub async fn activate_bundle(&mut self, server_id: &str) -> anyhow::Result<()> {
         if let Some(descriptor) = self.bundles.get(server_id) {
-            self.activated_bundle = Some(crate::data::bundle::Bundle::load(descriptor.clone())?);
+            self.activated_bundle =
+                Some(crate::data::bundle::Bundle::load(descriptor.clone()).await?);
             Ok(())
         } else {
             Err(anyhow::anyhow!(
@@ -327,78 +327,86 @@ pub async fn import_bundle_file(
     tokio::spawn(async move {
         let bundle_state = app_clone.state::<AppBundleState>();
         let config_state = app_clone.state::<crate::config::AppConfigState>();
-        let result = match BundleState::import_bundle(bundle_path, data_dir, progress_sender).await
-        {
+        let import_result =
+            BundleState::import_bundle(bundle_path, data_dir, progress_sender).await;
+
+        let result: ImportResult;
+
+        match import_result {
             Ok(bundle_name) => {
                 let target_dir = data_dir_clone.join("bundle").join(&bundle_name);
-                let mut state = bundle_state
-                    .lock()
-                    .map_err(|e| format!("Failed to lock state: {e}"));
-                match state {
-                    Ok(ref mut state) => {
-                        if let Err(e) = state.add_bundle(target_dir) {
-                            ImportResult {
-                                success: false,
-                                bundle_name: None,
-                                error_type: Some(ImportErrorType::RegistrationError),
-                                error_params: Some(serde_json::json!({ "error": e.to_string() })),
-                            }
-                        } else {
-                            // Emit bundles-changed event
-                            if let Err(e) = app_clone.emit("bundles-changed", ()) {
-                                log::error!("Failed to emit bundles-changed event: {e:?}");
-                            }
 
-                            // Check if this is the only bundle and auto-activate if so
-                            let should_auto_activate =
-                                state.bundles.len() == 1 && state.activated_bundle.is_none();
+                let mut state = bundle_state.lock().await;
 
-                            if should_auto_activate {
-                                // Get the server ID of the newly imported bundle
-                                if let Some((server_id, _)) = state.bundles.iter().next() {
-                                    let server_id = server_id.clone();
+                if let Err(e) = state.add_bundle(target_dir) {
+                    result = ImportResult {
+                        success: false,
+                        bundle_name: None,
+                        error_type: Some(ImportErrorType::RegistrationError),
+                        error_params: Some(serde_json::json!({ "error": e.to_string() })),
+                    };
+                } else {
+                    // Emit bundles-changed event
+                    if let Err(e) = app_clone.emit("bundles-changed", ()) {
+                        log::error!("Failed to emit bundles-changed event: {e:?}");
+                    }
 
-                                    // Activate the bundle
-                                    if let Err(e) = state.activate_bundle(&server_id) {
-                                        error!("Failed to auto-activate bundle {server_id}: {e:?}");
-                                    } else {
-                                        info!("Auto-activated bundle: {server_id}");
+                    // Check if this is the only bundle and auto-activate if so
+                    let should_auto_activate =
+                        state.bundles.len() == 1 && state.activated_bundle.is_none();
 
-                                        // Save to config
-                                        if let Ok(mut config) = config_state.config.lock() {
-                                            config.global_settings.enabled_bundle_id =
-                                                Some(server_id);
-                                            if let Err(e) = config.save_to_file() {
-                                                log::error!("Failed to save config after auto-activation: {e:?}");
-                                            }
-                                        }
+                    if should_auto_activate {
+                        // Get the server ID of the newly imported bundle
+                        let server_id_opt = {
+                            let state = bundle_state.lock().await;
+                            state
+                                .bundles
+                                .iter()
+                                .next()
+                                .map(|(server_id, _)| server_id.clone())
+                        };
+
+                        if let Some(server_id) = server_id_opt {
+                            let activate_result = {
+                                let mut state = bundle_state.lock().await;
+                                state.activate_bundle(&server_id).await
+                            };
+
+                            if let Err(e) = activate_result {
+                                error!("Failed to auto-activate bundle {server_id}: {e:?}");
+                            } else {
+                                info!("Auto-activated bundle: {server_id}");
+
+                                // Save to config
+                                if let Ok(mut config) = config_state.config.lock() {
+                                    config.global_settings.enabled_bundle_id = Some(server_id);
+                                    if let Err(e) = config.save_to_file() {
+                                        log::error!(
+                                            "Failed to save config after auto-activation: {e:?}"
+                                        );
                                     }
                                 }
                             }
-
-                            ImportResult {
-                                success: true,
-                                bundle_name: Some(bundle_name),
-                                error_type: None,
-                                error_params: None,
-                            }
                         }
                     }
-                    Err(e) => ImportResult {
-                        success: false,
-                        bundle_name: None,
-                        error_type: Some(ImportErrorType::IoError),
-                        error_params: Some(serde_json::json!({ "error": e })),
-                    },
+
+                    result = ImportResult {
+                        success: true,
+                        bundle_name: Some(bundle_name),
+                        error_type: None,
+                        error_params: None,
+                    };
                 }
             }
-            Err(e) => ImportResult {
-                success: false,
-                bundle_name: None,
-                error_type: Some(ImportErrorType::IoError),
-                error_params: Some(serde_json::json!({ "error": e.to_string() })),
-            },
-        };
+            Err(e) => {
+                result = ImportResult {
+                    success: false,
+                    bundle_name: None,
+                    error_type: Some(ImportErrorType::IoError),
+                    error_params: Some(serde_json::json!({ "error": e.to_string() })),
+                };
+            }
+        }
 
         // 发送结果事件
         let _ = on_event.send(BundleImportEvent::Result {
@@ -413,39 +421,10 @@ pub async fn import_bundle_file(
 }
 
 #[tauri::command]
-pub fn get_bundles(
-    bundle_state: tauri::State<AppBundleState>,
-) -> Result<Vec<BundleMetadata>, String> {
-    let bundle_state = bundle_state
-        .lock()
-        .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
-    let bundles: Vec<BundleMetadata> = bundle_state
-        .bundles
-        .values()
-        .map(|descriptor| descriptor.metadata.clone())
-        .collect();
-    Ok(bundles)
-}
-
-#[tauri::command]
-pub fn get_enabled_bundle_id(
-    bundle_state: tauri::State<AppBundleState>,
-) -> Result<Option<String>, String> {
-    let bundle_state = bundle_state
-        .lock()
-        .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
-
-    Ok(bundle_state
-        .activated_bundle
-        .as_ref()
-        .map(|bundle| bundle.descriptor.metadata.server_id.clone()))
-}
-
-#[tauri::command]
-pub fn enable_bundle(
+pub async fn enable_bundle(
     server_id: String,
-    bundle_state: tauri::State<AppBundleState>,
-    config_state: tauri::State<crate::config::AppConfigState>,
+    bundle_state: tauri::State<'_, AppBundleState>,
+    config_state: tauri::State<'_, crate::config::AppConfigState>,
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
     // Emit start event
@@ -458,13 +437,12 @@ pub fn enable_bundle(
         log::error!("Failed to emit bundle-change-start event: {e:?}");
     }
 
-    let result = (|| {
-        let mut bundle_state = bundle_state
-            .lock()
-            .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
+    let result = {
+        let mut bundle_state = bundle_state.lock().await;
 
         bundle_state
             .activate_bundle(&server_id)
+            .await
             .map_err(|e| format!("Failed to activate bundle: {e}"))?;
 
         // Save to config
@@ -478,7 +456,7 @@ pub fn enable_bundle(
             .map_err(|e| format!("Failed to save config: {e}"))?;
 
         Ok(())
-    })();
+    };
 
     // Emit finished event
     if let Err(e) = app_handle.emit("bundle-change-finished", ()) {
@@ -489,15 +467,38 @@ pub fn enable_bundle(
 }
 
 #[tauri::command]
-pub fn remove_bundle(
+pub async fn get_bundles(
+    bundle_state: tauri::State<'_, AppBundleState>,
+) -> Result<Vec<BundleMetadata>, String> {
+    let bundle_state = bundle_state.lock().await;
+    let bundles: Vec<BundleMetadata> = bundle_state
+        .bundles
+        .values()
+        .map(|descriptor| descriptor.metadata.clone())
+        .collect();
+    Ok(bundles)
+}
+
+#[tauri::command]
+pub async fn get_enabled_bundle_id(
+    bundle_state: tauri::State<'_, AppBundleState>,
+) -> Result<Option<String>, String> {
+    let bundle_state = bundle_state.lock().await;
+
+    Ok(bundle_state
+        .activated_bundle
+        .as_ref()
+        .map(|bundle| bundle.descriptor.metadata.server_id.clone()))
+}
+
+#[tauri::command]
+pub async fn remove_bundle(
     server_id: String,
-    bundle_state: tauri::State<AppBundleState>,
-    config_state: tauri::State<crate::config::AppConfigState>,
+    bundle_state: tauri::State<'_, AppBundleState>,
+    config_state: tauri::State<'_, crate::config::AppConfigState>,
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
-    let mut bundle_state = bundle_state
-        .lock()
-        .map_err(|e| format!("Failed to lock bundle state: {e}"))?;
+    let mut bundle_state = bundle_state.lock().await;
 
     // Check if we're removing the currently enabled bundle
     let is_enabled = bundle_state

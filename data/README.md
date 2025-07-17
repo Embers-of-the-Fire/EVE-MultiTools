@@ -127,3 +127,10 @@ To create the bundle, simply run:
 ```bash
 python3 bundle.py
 ```
+
+## Mock DB
+
+Our Rust backend uses SQLx to read databases,
+so we have to create a mock db to please its checker.
+
+Run `python data/mock.py` will generate the mock db.

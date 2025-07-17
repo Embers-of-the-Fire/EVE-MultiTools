@@ -4,6 +4,7 @@ mod bundle;
 mod config;
 mod data;
 mod init;
+mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -42,7 +43,7 @@ pub fn run() {
                         .build(),
                 )?;
             }
-            if let Err(e) = init::init(app) {
+            if let Err(e) = tauri::async_runtime::block_on(init::init(app)) {
                 error!("Failed to initialize application: {e:?}");
                 Err(e)?;
             }
@@ -63,6 +64,7 @@ pub fn run() {
             bundle::enable_bundle,
             data::image::graphic::get_graphic_path,
             data::image::icon::get_icon_path,
+            data::localization::get_localization,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
