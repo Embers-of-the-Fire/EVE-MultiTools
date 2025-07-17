@@ -45,6 +45,7 @@
         "database.items": "Items",
         "database.ships": "Ships",
         "database.systems": "Systems",
+        "explore": "Explore",
         "bundle": "Data Package",
         "bundle.viewer": "Bundle Viewer",
         "bundle.analyzer": "Bundle Analyzer",

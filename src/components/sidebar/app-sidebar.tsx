@@ -12,6 +12,7 @@ import {
     Home,
     Settings,
     Archive,
+    Compass,
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
@@ -37,6 +38,7 @@ const iconMap = {
     database: Database,
     archive: Archive,
     settings: Settings,
+    compass: Compass,
 };
 
 // 转换routes到sidebar格式

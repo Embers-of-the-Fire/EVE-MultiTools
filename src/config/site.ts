@@ -118,6 +118,11 @@ export const siteConfig: SiteConfig = {
             icon: "database",
         },
         {
+            labelKey: "nav.explore",
+            href: "/explore",
+            icon: "compass",
+        },
+        {
             labelKey: "nav.bundle",
             href: "/bundle",
             icon: "archive",

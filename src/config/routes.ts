@@ -20,6 +20,7 @@ import {
     CharacterSkillsPage,
     CharacterWalletPage,
 } from "@/components/pages/CharacterPages";
+import { ExplorePage } from "@/components/pages/ExplorePage";
 
 export const routes: AppRoute[] = [
     {
@@ -128,6 +129,13 @@ export const routes: AppRoute[] = [
         labelKey: "nav.database",
         component: DatabasePage,
         icon: "database",
+    },
+    {
+        key: "explore",
+        path: "/explore",
+        labelKey: "nav.explore",
+        component: ExplorePage,
+        icon: "compass",
     },
     {
         key: "bundle",
