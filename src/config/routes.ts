@@ -21,6 +21,9 @@ import {
     CharacterWalletPage,
 } from "@/components/pages/CharacterPages";
 import { ExplorePage } from "@/components/pages/ExplorePage";
+import { TypeExplorePage } from "@/components/pages/TypeExplorePage";
+import { LocalizationExplorePage } from "@/components/pages/LocalizationExplorePage";
+import { UniverseExplorePage } from "@/components/pages/UniverseExplorePage";
 
 export const routes: AppRoute[] = [
     {
@@ -136,22 +139,22 @@ export const routes: AppRoute[] = [
         icon: "compass",
         children: [
             {
-                key: "explore-overview",
-                path: "/explore/overview",
-                labelKey: "nav.explore.overview",
-                component: ExplorePage, // 可替换为具体页面
+                key: "explore-type",
+                path: "/explore/type",
+                labelKey: "nav.explore.type",
+                component: TypeExplorePage,
             },
             {
-                key: "explore-feature1",
-                path: "/explore/feature1",
-                labelKey: "nav.explore.feature1",
-                component: ExplorePage, // 占位符
+                key: "explore-localization",
+                path: "/explore/localization",
+                labelKey: "nav.explore.localization",
+                component: LocalizationExplorePage,
             },
             {
-                key: "explore-feature2",
-                path: "/explore/feature2",
-                labelKey: "nav.explore.feature2",
-                component: ExplorePage, // 占位符
+                key: "explore-universe",
+                path: "/explore/universe",
+                labelKey: "nav.explore.universe",
+                component: UniverseExplorePage,
             },
         ],
     },
