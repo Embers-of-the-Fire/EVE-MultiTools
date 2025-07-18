@@ -20,6 +20,7 @@ import { useSPARouter } from "@/contexts/SPARouterContext";
 type NavItemType = {
     title: string;
     url: string;
+    containsPage: boolean;
     icon?: LucideIcon;
     isActive?: boolean;
     items?: {
@@ -35,6 +36,7 @@ type NavItemType = {
 type FlattenedNavItem = {
     title: string;
     url: string;
+    containsPage: boolean;
     icon?: LucideIcon;
     isActive?: boolean;
     items?: {
@@ -87,7 +89,7 @@ export function NavMain({ items }: { items: NavItemType[] }) {
                         const hasChildren = item.items && item.items.length > 0;
 
                         if (hasChildren) {
-                            // 有子菜单的项目 - 使用折叠组件
+                            // 有子菜单的项目 - 使用折叠组件，点击主按钮时既跳转又展开
                             return (
                                 <Collapsible
                                     key={item.title}
@@ -97,7 +99,12 @@ export function NavMain({ items }: { items: NavItemType[] }) {
                                 >
                                     <SidebarMenuItem>
                                         <CollapsibleTrigger asChild>
-                                            <SidebarMenuButton tooltip={t(item.title)}>
+                                            <SidebarMenuButton
+                                                tooltip={t(item.title)}
+                                                onClick={() =>
+                                                    item.containsPage && navigate(item.url)
+                                                }
+                                            >
                                                 {item.icon && <item.icon />}
                                                 <span>{t(item.title)}</span>
                                                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -132,7 +139,7 @@ export function NavMain({ items }: { items: NavItemType[] }) {
                                     <SidebarMenuButton tooltip={t(item.title)} asChild>
                                         <button
                                             type="button"
-                                            onClick={() => navigate(item.url)}
+                                            onClick={() => item.containsPage && navigate(item.url)}
                                             className="w-full text-left"
                                         >
                                             {item.icon && <item.icon />}

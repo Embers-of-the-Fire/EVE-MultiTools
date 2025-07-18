@@ -5,7 +5,7 @@ export type AppRoute = {
     key: string;
     path: string;
     labelKey: string;
-    component: React.ComponentType;
+    component?: React.ComponentType;
     icon?: string;
     children?: AppRoute[];
     badge?: string;

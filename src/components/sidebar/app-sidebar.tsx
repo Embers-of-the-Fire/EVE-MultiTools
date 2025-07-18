@@ -48,6 +48,7 @@ const transformNavItems = (items: typeof routes) => {
     return items.map((item) => ({
         title: item.labelKey,
         url: item.path,
+        containsPage: !!item.component,
         icon: item.icon ? iconMap[item.icon as keyof typeof iconMap] : undefined,
         isActive: item.path === state.currentPath,
         items: item.children?.map((child) => ({

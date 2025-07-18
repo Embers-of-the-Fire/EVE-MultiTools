@@ -34,7 +34,6 @@ export const routes: AppRoute[] = [
         key: "market",
         path: "/market",
         labelKey: "nav.market",
-        component: MarketAnalysisPage,
         icon: "trending",
         children: [
             {
@@ -73,7 +72,6 @@ export const routes: AppRoute[] = [
         key: "industry",
         path: "/industry",
         labelKey: "nav.industry",
-        component: IndustryManufacturingPage,
         icon: "factory",
         children: [
             {
@@ -136,6 +134,26 @@ export const routes: AppRoute[] = [
         labelKey: "nav.explore",
         component: ExplorePage,
         icon: "compass",
+        children: [
+            {
+                key: "explore-overview",
+                path: "/explore/overview",
+                labelKey: "nav.explore.overview",
+                component: ExplorePage, // 可替换为具体页面
+            },
+            {
+                key: "explore-feature1",
+                path: "/explore/feature1",
+                labelKey: "nav.explore.feature1",
+                component: ExplorePage, // 占位符
+            },
+            {
+                key: "explore-feature2",
+                path: "/explore/feature2",
+                labelKey: "nav.explore.feature2",
+                component: ExplorePage, // 占位符
+            },
+        ],
     },
     {
         key: "bundle",

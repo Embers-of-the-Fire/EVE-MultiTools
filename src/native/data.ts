@@ -24,7 +24,7 @@ export async function getLocalization(key: number): Promise<LocString | null> {
 
 export async function getLocalizationByLang(
     key: number,
-    lang: "en" | "zh",
+    lang: "en" | "zh"
 ): Promise<string | null> {
     const loc = await getLocalization(key);
     if (!loc) return null;
@@ -72,7 +72,7 @@ export async function getType(typeId: number): Promise<Type | null> {
 export async function searchTypeByName(
     name: string,
     language: "en" | "zh",
-    limit: number = 20,
+    limit: number = 20
 ): Promise<number[]> {
     return await tauriInvoke<number[]>("search_type_by_name", {
         name,
@@ -84,7 +84,7 @@ export async function searchTypeByName(
 export async function searchTypeByDescription(
     desc: string,
     language: "en" | "zh",
-    limit: number = 20,
+    limit: number = 20
 ): Promise<number[]> {
     return await tauriInvoke<number[]>("search_type_by_description", {
         desc,
