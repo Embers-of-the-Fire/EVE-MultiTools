@@ -5,3 +5,7 @@
 /test
 
 eve-multitools-sqlite-mock.db
+
+/**/*.pyc
+
+/**/__pycache__
