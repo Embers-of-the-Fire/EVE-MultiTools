@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import TypeImage from "./TypeImage";
+import { getCategory, getGroup, getMetaGroup } from "@/native/data";
 import { getType, getLocalizationByLang } from "@/native/data";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { getGraphicUrl, getIconUrl } from "@/utils/image";
@@ -15,10 +16,13 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
     const [desc, setDesc] = useState<string>("");
     const [iconUrl, setIconUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [metaGroupIconUrl, setMetagroupIconUrl] = useState<string | null>(null);
+    const [categoryName, setCategoryName] = useState<string | null>(null);
 
     useEffect(() => {
         let mounted = true;
         setLoading(true);
+        setMetagroupIconUrl(null);
         getType(typeId).then(async (type) => {
             if (!type) {
                 if (mounted) setLoading(false);
@@ -35,11 +39,32 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                       ? getGraphicUrl(type.graphic_id)
                       : Promise.resolve(null),
             ]);
+            let categoryId: number | null = null;
+            const group = await getGroup(type.group_id);
+            if (group) {
+                categoryId = group.category_id;
+            }
+            let catName: string | null = null;
+            if (categoryId) {
+                const category = await getCategory(categoryId);
+                if (category) {
+                    catName = await getLocalizationByLang(category.category_name_id, language);
+                }
+            }
+            let mgIcon: string | null = null;
+            if (type.meta_group_id) {
+                const meta = await getMetaGroup(type.meta_group_id);
+                if (meta?.icon_id) {
+                    mgIcon = await getIconUrl(meta.icon_id);
+                }
+            }
             if (mounted) {
+                setLoading(false);
                 setName(nameText || "");
                 setDesc(descText || "");
                 setIconUrl(iconPath);
-                setLoading(false);
+                setMetagroupIconUrl(mgIcon);
+                setCategoryName(catName);
             }
         });
         return () => {
@@ -52,47 +77,24 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
             className={`flex items-center gap-3 p-3 rounded shadow bg-white dark:bg-black min-w-[220px] max-w-full ${className || ""}`}
         >
             {/* 图片 */}
-            <div className="w-16 h-16 flex-shrink-0 bg-transparent rounded flex items-center justify-center overflow-hidden">
-                {iconUrl && !loading ? (
-                    <Image
-                        src={iconUrl}
-                        alt={name}
-                        width={64}
-                        height={64}
-                        className="w-16 h-16 object-contain"
-                        onError={() => {
-                            setIconUrl(null);
-                        }}
-                    />
-                ) : (
-                    <svg
-                        width="64"
-                        height="64"
-                        viewBox="0 0 64 64"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-label="物品图片占位"
-                    >
-                        <title>物品图片占位</title>
-                        <rect width="64" height="64" rx="8" fill="#00000000" />
-                        <text x="50%" y="45%" textAnchor="middle" fontSize="14" fill="gray">
-                            <tspan x="50%" dy="0em">
-                                未知
-                            </tspan>
-                            <tspan x="50%" dy="1.2em">
-                                图像
-                            </tspan>
-                        </text>
-                    </svg>
-                )}
-            </div>
+            <TypeImage
+                iconUrl={iconUrl}
+                alt={name}
+                loading={loading}
+                onError={() => setIconUrl(null)}
+                metaGroupIconUrl={metaGroupIconUrl}
+            />
             <div className="flex flex-col flex-1 min-w-0">
                 <div className="font-semibold text-base truncate">
                     {loading ? "加载中..." : name}
                 </div>
                 <div className="text-sm text-gray-500 mt-1 line-clamp-2">{loading ? "" : desc}</div>
             </div>
-            <div className="flex-shrink-0 text-sm text-gray-500">ID {typeId}</div>
+            <div className="flex-shrink-0 text-sm text-gray-500">
+                ID {typeId}
+                <br />
+                Category {categoryName ? categoryName : "未知"}
+            </div>
         </div>
     );
 };

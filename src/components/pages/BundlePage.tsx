@@ -6,7 +6,6 @@ import {
     type BundleMetadata,
     type ImportProgress,
     type ImportResult,
-    type BundleImportEvent,
     ImportStage,
 } from "@/native";
 import { open } from "@tauri-apps/plugin-dialog";
@@ -29,7 +28,7 @@ import { useBundle } from "@/contexts/BundleContext";
 
 export function BundlePage() {
     const { t, i18n } = useTranslation();
-    const { bundles, activeBundle, switchingToBundleId, isLoading, switchBundle } = useBundle();
+    const { bundles, activeBundle, switchingToBundleId, failedBundleIds, isLoading, switchBundle } = useBundle();
 
     const [importProgress, setImportProgress] = useState<ImportProgress | null>(null);
     const [isImporting, setIsImporting] = useState(false);
@@ -204,6 +203,7 @@ export function BundlePage() {
                     bundles.map((bundle) => {
                         const isEnabled = activeBundle?.serverID === bundle.serverID;
                         const isEnabling = switchingToBundleId === bundle.serverID;
+                        const isFailed = failedBundleIds.has(bundle.serverID);
                         const serverName =
                             bundle.serverName[i18n.language as keyof typeof bundle.serverName] ||
                             bundle.serverName.en;
@@ -214,10 +214,17 @@ export function BundlePage() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <CardTitle className="flex items-center gap-2">
-                                                {serverName}
+                                                <span className={isFailed ? "text-red-600" : ""}>
+                                                    {serverName}
+                                                </span>
                                                 {isEnabled && !isEnabling && (
                                                     <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
                                                         {t("bundle.enabled")}
+                                                    </span>
+                                                )}
+                                                {isFailed && (
+                                                    <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                                                        {t("bundle.enable_failed")}
                                                     </span>
                                                 )}
                                             </CardTitle>

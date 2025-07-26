@@ -17,20 +17,21 @@ message TypeID {
     required bool is_dynamic_type = 10;
     optional int32 isis_group_id = 11;
     optional int32 market_group_id = 12;
-    optional int32 meta_level = 13;
-    required int32 portion_size = 14;
-    required bool published = 15;
-    optional int32 quote_author_id = 16;
-    optional int32 quote_id = 17;
-    optional int32 race_id = 18;
-    required double radius = 19;
-    optional int32 sound_id = 20;
-    optional int32 tech_level = 21;
-    required int32 type_id = 22;
-    required int32 type_name_id = 23;
-    optional int32 variation_parent_type_id = 24;
-    required double volume = 25;
-    optional int32 wreck_type_id = 26;
+    optional int32 meta_group_id = 13;
+    optional int32 meta_level = 14;
+    required int32 portion_size = 15;
+    required bool published = 16;
+    optional int32 quote_author_id = 17;
+    optional int32 quote_id = 18;
+    optional int32 race_id = 19;
+    required double radius = 20;
+    optional int32 sound_id = 21;
+    optional int32 tech_level = 22;
+    required int32 type_id = 23;
+    required int32 type_name_id = 24;
+    optional int32 variation_parent_type_id = 25;
+    required double volume = 26;
+    optional int32 wreck_type_id = 27;
 }
 
 // Type dogma definition
@@ -89,4 +90,58 @@ message TypeMaterialCollection {
         required TypeMaterial type_material = 2;
     }
     repeated TypeMaterialEntry type_materials = 1;
+}
+
+// Category definition
+message Category {
+    required int32 category_id = 1;
+    required int32 category_name_id = 2;
+    optional int32 icon_id = 3;
+    required bool published = 4;
+}
+
+// Collection of all categories
+message CategoryCollection {
+    message CategoryEntry {
+        required int32 category_id = 1;
+        required Category category_data = 2;
+    }
+    repeated CategoryEntry categories = 1;
+}
+
+// Group definition
+message Group {
+    required int32 group_id = 1;
+    required int32 group_name_id = 2;
+    optional int32 icon_id = 3;
+    required int32 category_id = 4;
+    required bool anchorable = 5;
+    required bool fittable_non_singleton = 6;
+    required bool anchored = 7;
+    required bool published = 8;
+    required bool use_base_price = 9;
+}
+
+// Collection of all groups
+message GroupCollection {
+    message GroupEntry {
+        required int32 group_id = 1;
+        required Group group_data = 2;
+    }
+    repeated GroupEntry groups = 1;
+}
+
+// MetaGroup definition
+message MetaGroup {
+    required int32 name_id = 1;
+    optional int32 icon_id = 2;
+}
+
+// Collection of all meta groups
+message MetaGroupCollection {
+    message MetaGroupEntry {
+        required int32 meta_group_id = 1;
+        required MetaGroup meta_group_data = 2;
+    }
+    repeated MetaGroupEntry meta_groups = 1;
 }

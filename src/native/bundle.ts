@@ -106,7 +106,6 @@ export async function importBundleFile(
  * Get all bundles list
  */
 export async function getBundles(): Promise<BundleMetadata[]> {
-    // biome-ignore lint/suspicious/noExplicitAny: Case convert.
     return (await tauriInvoke<any[]>("get_bundles")).map((val) => {
         return {
             serverID: val.server,

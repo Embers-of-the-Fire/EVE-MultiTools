@@ -10,6 +10,7 @@ interface BundleContextType {
     bundles: BundleMetadata[];
     activeBundle: BundleMetadata | null;
     switchingToBundleId: string | null;
+    failedBundleIds: Set<string>; // 新增：跟踪启用失败的bundle ID
     isLoading: boolean;
     error: string | null;
 
@@ -30,11 +31,18 @@ export function BundleProvider({ children }: BundleProviderProps) {
     const [bundles, setBundles] = useState<BundleMetadata[]>([]);
     const [activeBundle, setActiveBundle] = useState<BundleMetadata | null>(null);
     const [switchingToBundleId, setSwitchingToBundleId] = useState<string | null>(null);
+    const [failedBundleIds, setFailedBundleIds] = useState<Set<string>>(new Set()); // 新增：跟踪启用失败的bundle ID
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // 使用ref来存储事件监听器的清理函数
     const unlistenersRef = useRef<(() => void)[]>([]);
+    const switchingToBundleIdRef = useRef<string | null>(null);
+
+    // 同步 switchingToBundleId 到 ref
+    useEffect(() => {
+        switchingToBundleIdRef.current = switchingToBundleId;
+    }, [switchingToBundleId]);
 
     // 加载所有bundle和当前启用的bundle
     const loadBundles = useCallback(async (shouldAutoEnable = false) => {
@@ -78,10 +86,24 @@ export function BundleProvider({ children }: BundleProviderProps) {
             if (switchingToBundleId) return; // 防止重复点击
             try {
                 setError(null);
+                // 先移除失败状态（如果之前失败过）
+                setFailedBundleIds(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(bundle.serverID);
+                    return newSet;
+                });
                 await bundleCommands.enableBundle(bundle.serverID);
             } catch (err) {
                 console.error("Failed to initiate bundle switch:", err);
                 setError("Failed to switch bundle");
+                // 标记为失败
+                setFailedBundleIds(prev => {
+                    const newSet = new Set(prev);
+                    newSet.add(bundle.serverID);
+                    return newSet;
+                });
+                // 确保切换状态清除
+                setSwitchingToBundleId(null);
             }
         },
         [switchingToBundleId]
@@ -111,7 +133,16 @@ export function BundleProvider({ children }: BundleProviderProps) {
 
                 // Bundle切换完成事件
                 const bundleChangeFinishedUnlisten = await listen("bundle-change-finished", () => {
+                    const currentSwitchingId = switchingToBundleIdRef.current;
                     setSwitchingToBundleId(null);
+                    // 成功切换时，移除失败状态
+                    if (currentSwitchingId) {
+                        setFailedBundleIds(prev => {
+                            const newSet = new Set(prev);
+                            newSet.delete(currentSwitchingId);
+                            return newSet;
+                        });
+                    }
                     loadBundles(false); // 切换完成后加载，不自动启用
                 });
                 unlistenersRef.current.push(bundleChangeFinishedUnlisten);
@@ -138,6 +169,7 @@ export function BundleProvider({ children }: BundleProviderProps) {
         bundles,
         activeBundle,
         switchingToBundleId,
+        failedBundleIds,
         isLoading,
         error,
         loadBundles,

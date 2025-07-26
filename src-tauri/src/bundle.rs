@@ -398,22 +398,33 @@ pub async fn enable_bundle(
     let result = {
         let mut bundle_state = bundle_state.lock().await;
 
-        bundle_state
-            .activate_bundle(&server_id)
-            .await
-            .map_err(|e| format!("Failed to activate bundle: {e}"))?;
-
-        // Save to config
-        let mut config = config_state
-            .config
-            .lock()
-            .map_err(|e| format!("Failed to lock config: {e}"))?;
-        config.global_settings.enabled_bundle_id = Some(server_id);
-        config
-            .save_to_file()
-            .map_err(|e| format!("Failed to save config: {e}"))?;
-
-        Ok(())
+        match bundle_state.activate_bundle(&server_id).await {
+            Ok(_) => {
+                // Save to config only on successful activation
+                let mut config = config_state
+                    .config
+                    .lock()
+                    .map_err(|e| format!("Failed to lock config: {e}"))?;
+                config.global_settings.enabled_bundle_id = Some(server_id);
+                config
+                    .save_to_file()
+                    .map_err(|e| format!("Failed to save config: {e}"))?;
+                Ok(())
+            }
+            Err(e) => {
+                // Clear any enabled bundle state on failure
+                bundle_state.activated_bundle = None;
+                let mut config = config_state
+                    .config
+                    .lock()
+                    .map_err(|e| format!("Failed to lock config: {e}"))?;
+                config.global_settings.enabled_bundle_id = None;
+                config
+                    .save_to_file()
+                    .map_err(|e| format!("Failed to save config: {e}"))?;
+                Err(format!("Failed to activate bundle: {e}"))
+            }
+        }
     };
 
     // Emit finished event

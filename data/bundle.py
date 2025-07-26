@@ -622,6 +622,8 @@ def pydantic_to_protobuf_type_id(pydantic_obj: "TypeID", type_id: int) -> schema
         pb_obj.isis_group_id = pydantic_obj.isisGroupID
     if pydantic_obj.marketGroupID is not None:
         pb_obj.market_group_id = pydantic_obj.marketGroupID
+    if pydantic_obj.metaGroupID is not None:
+        pb_obj.meta_group_id = pydantic_obj.metaGroupID
     if pydantic_obj.metaLevel is not None:
         pb_obj.meta_level = pydantic_obj.metaLevel
     if pydantic_obj.quoteAuthorID is not None:
@@ -659,6 +661,7 @@ class TypeID(BaseModel):
     isDynamicType: BoolInt = Field(default=False)
     isisGroupID: int | None = Field(default=None)
     marketGroupID: int | None = Field(default=None)
+    metaGroupID: int | None = Field(default=None)
     metaLevel: int | None = Field(default=None)
     portionSize: int
     published: BoolInt
@@ -923,6 +926,153 @@ except sqlite3.Error as e:
     _error(f"SQLite error while processing type materials: {e}")
 finally:
     materials_db.close()
+
+##### 3.4.1.4 Collect categories
+# Category definitions are stored in `fsd/categories.json`.
+# This part of data is used when displaying images and is short enough to be stored in memory.
+
+
+class Category(BaseModel):
+    """Category definition.
+
+    This mirrors the structure of categories.json in the FSD."""
+
+    categoryID: int
+    categoryNameID: int
+    iconID: int | None = Field(default=None)
+    published: BoolInt = Field(default=False)
+
+
+# Protobuf转换函数
+def pydantic_to_protobuf_category(pydantic_obj: "Category") -> schema_pb2.Category:
+    pb_obj = schema_pb2.Category()
+    pb_obj.category_id = pydantic_obj.categoryID
+    pb_obj.category_name_id = pydantic_obj.categoryNameID
+    pb_obj.published = pydantic_obj.published
+    if pydantic_obj.iconID is not None:
+        pb_obj.icon_id = pydantic_obj.iconID
+    return pb_obj
+
+
+# 收集和序列化category数据
+categories = fsd.get_fsd("categories")
+category_collection = schema_pb2.CategoryCollection()
+for category_id, category_def in categories.items():
+    try:
+        validated = Category(**category_def)
+    except ValidationError:
+        _error(f"Failed to validate category info for category {category_id}")
+        continue
+    category_entry = category_collection.categories.add()
+    category_entry.category_id = int(category_id)
+    category_entry.category_data.CopyFrom(pydantic_to_protobuf_category(validated))
+
+BUNDLE_STATIC_CATEGORIES = BUNDLE_STATIC / "categories.pb"
+if BUNDLE_STATIC_CATEGORIES.exists():
+    _warning(
+        f"Categories protobuf file '{BUNDLE_STATIC_CATEGORIES}' already exists. It will be overwritten."
+    )
+    BUNDLE_STATIC_CATEGORIES.unlink()
+with open(BUNDLE_STATIC_CATEGORIES, "wb+") as f:
+    f.write(category_collection.SerializeToString())
+_success("Processed categories information.")
+
+##### 3.4.1.5 Collect groups
+# Group definitions are stored in `fsd/groups.json`.
+# This part of data is short enough to be stored in memory.
+
+
+class Group(BaseModel):
+    """Group definition.
+
+    This mirrors the structure of groups.json in the FSD."""
+
+    anchorable: BoolInt = Field(default=False)
+    fittableNonSingleton: BoolInt = Field(default=False)
+    iconID: int | None = None
+    groupNameID: int
+    groupID: int
+    anchored: BoolInt = Field(default=False)
+    published: BoolInt = Field(default=False)
+    useBasePrice: BoolInt = Field(default=False)
+    categoryID: int
+
+
+def pydantic_to_protobuf_group(pydantic_obj: "Group") -> schema_pb2.Group:
+    pb_obj = schema_pb2.Group()
+    pb_obj.group_id = pydantic_obj.groupID
+    pb_obj.group_name_id = pydantic_obj.groupNameID
+    if pydantic_obj.iconID is not None:
+        pb_obj.icon_id = pydantic_obj.iconID
+    pb_obj.category_id = pydantic_obj.categoryID
+    pb_obj.anchorable = pydantic_obj.anchorable
+    pb_obj.fittable_non_singleton = pydantic_obj.fittableNonSingleton
+    pb_obj.anchored = pydantic_obj.anchored
+    pb_obj.published = pydantic_obj.published
+    pb_obj.use_base_price = pydantic_obj.useBasePrice
+    return pb_obj
+
+
+groups = fsd.get_fsd("groups")
+group_collection = schema_pb2.GroupCollection()
+for group_id, group_def in groups.items():
+    try:
+        validated = Group(**group_def)
+    except ValidationError:
+        _error(f"Failed to validate group info for group {group_id}")
+        continue
+    group_entry = group_collection.groups.add()
+    group_entry.group_id = int(group_id)
+    group_entry.group_data.CopyFrom(pydantic_to_protobuf_group(validated))
+
+BUNDLE_STATIC_GROUPS = BUNDLE_STATIC / "groups.pb"
+if BUNDLE_STATIC_GROUPS.exists():
+    _warning(
+        f"Groups protobuf file '{BUNDLE_STATIC_GROUPS}' already exists. It will be overwritten."
+    )
+    BUNDLE_STATIC_GROUPS.unlink()
+with open(BUNDLE_STATIC_GROUPS, "wb+") as f:
+    f.write(group_collection.SerializeToString())
+_success("Processed groups information.")
+
+##### 3.4.1.6 Collect meta groups
+# Meta group definitions are stored in `fsd/metagroups.json`.
+# This part of data is short enough to be stored in memory.
+
+
+class MetaGroup(BaseModel):
+    nameID: int
+    iconID: int | None = Field(default=None)
+
+
+def pydantic_to_protobuf_meta_group(pydantic_obj: "MetaGroup") -> schema_pb2.MetaGroup:
+    pb_obj = schema_pb2.MetaGroup()
+    pb_obj.name_id = pydantic_obj.nameID
+    if pydantic_obj.iconID is not None:
+        pb_obj.icon_id = pydantic_obj.iconID
+    return pb_obj
+
+
+meta_groups = fsd.get_fsd("metagroups")
+meta_group_collection = schema_pb2.MetaGroupCollection()
+for meta_group_id, meta_group_def in meta_groups.items():
+    try:
+        validated = MetaGroup(**meta_group_def)
+    except ValidationError:
+        _error(f"Failed to validate meta group info for meta group {meta_group_id}")
+        continue
+    meta_group_entry = meta_group_collection.meta_groups.add()
+    meta_group_entry.meta_group_id = int(meta_group_id)
+    meta_group_entry.meta_group_data.CopyFrom(pydantic_to_protobuf_meta_group(validated))
+BUNDLE_STATIC_META_GROUPS = BUNDLE_STATIC / "meta_groups.pb"
+if BUNDLE_STATIC_META_GROUPS.exists():
+    _warning(
+        f"Meta groups protobuf file '{BUNDLE_STATIC_META_GROUPS}' already exists. It will be overwritten."
+    )
+    BUNDLE_STATIC_META_GROUPS.unlink()
+with open(BUNDLE_STATIC_META_GROUPS, "wb+") as f:
+    f.write(meta_group_collection.SerializeToString())
+_success("Processed meta groups information.")
 
 ## 4. Package the bundle
 cprint("Packaging bundle...", "green", attrs=["bold"])

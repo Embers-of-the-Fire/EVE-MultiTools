@@ -68,7 +68,6 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                         <SidebarMenuButton
                             tooltip={t(item.title)}
                             onClick={() => {
-                                console.log(0);
                                 setOpen(true);
                                 if (item.containsPage) {
                                     navigate(item.url);
@@ -114,7 +113,16 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
     } else {
         return (
             <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={t(item.title)} asChild>
+                <SidebarMenuButton
+                    tooltip={t(item.title)}
+                    onClick={() => {
+                        setOpen(true);
+                        if (item.containsPage) {
+                            navigate(item.url);
+                        }
+                    }}
+                    asChild
+                >
                     <button type="button" className="w-full text-left">
                         {item.icon && <item.icon />}
                         <span>{t(item.title)}</span>

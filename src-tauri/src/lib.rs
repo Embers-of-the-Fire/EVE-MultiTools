@@ -66,6 +66,9 @@ pub fn run() {
             data::image::icon::get_icon_path,
             data::localization::get_localization,
             data::statics::types::get_type,
+            data::statics::categories::get_category,
+            data::statics::groups::get_group,
+            data::statics::meta_groups::get_meta_group,
             data::localization::search_type_by_name,
             data::localization::search_type_by_description,
         ])

@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x64\x61ta/schema.proto\x12\x13\x65ve_multitools.data\"\xad\x04\n\x06TypeID\x12\x12\n\nbase_price\x18\x01 \x02(\x01\x12\x10\n\x08\x63\x61pacity\x18\x02 \x02(\x01\x12\x1c\n\x14\x63\x65rtificate_template\x18\x03 \x01(\x05\x12\x16\n\x0e\x64\x65scription_id\x18\x04 \x01(\x05\x12\x14\n\x0c\x64\x65signer_ids\x18\x05 \x03(\x05\x12\x12\n\nfaction_id\x18\x06 \x01(\x05\x12\x12\n\ngraphic_id\x18\x07 \x01(\x05\x12\x10\n\x08group_id\x18\x08 \x02(\x05\x12\x0f\n\x07icon_id\x18\t \x01(\x05\x12\x17\n\x0fis_dynamic_type\x18\n \x02(\x08\x12\x15\n\risis_group_id\x18\x0b \x01(\x05\x12\x17\n\x0fmarket_group_id\x18\x0c \x01(\x05\x12\x12\n\nmeta_level\x18\r \x01(\x05\x12\x14\n\x0cportion_size\x18\x0e \x02(\x05\x12\x11\n\tpublished\x18\x0f \x02(\x08\x12\x17\n\x0fquote_author_id\x18\x10 \x01(\x05\x12\x10\n\x08quote_id\x18\x11 \x01(\x05\x12\x0f\n\x07race_id\x18\x12 \x01(\x05\x12\x0e\n\x06radius\x18\x13 \x02(\x01\x12\x10\n\x08sound_id\x18\x14 \x01(\x05\x12\x12\n\ntech_level\x18\x15 \x01(\x05\x12\x0f\n\x07type_id\x18\x16 \x02(\x05\x12\x14\n\x0ctype_name_id\x18\x17 \x02(\x05\x12 \n\x18variation_parent_type_id\x18\x18 \x01(\x05\x12\x0e\n\x06volume\x18\x19 \x02(\x01\x12\x15\n\rwreck_type_id\x18\x1a \x01(\x05\"\x84\x02\n\tTypeDogma\x12G\n\x10\x64ogma_attributes\x18\x01 \x03(\x0b\x32-.eve_multitools.data.TypeDogma.DogmaAttribute\x12\x41\n\rdogma_effects\x18\x02 \x03(\x0b\x32*.eve_multitools.data.TypeDogma.DogmaEffect\x1a\x35\n\x0e\x44ogmaAttribute\x12\x14\n\x0c\x61ttribute_id\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x1a\x34\n\x0b\x44ogmaEffect\x12\x11\n\teffect_id\x18\x01 \x02(\x05\x12\x12\n\nis_default\x18\x02 \x02(\x08\"\x85\x01\n\x0cTypeMaterial\x12=\n\tmaterials\x18\x01 \x03(\x0b\x32*.eve_multitools.data.TypeMaterial.Material\x1a\x36\n\x08Material\x12\x18\n\x10material_type_id\x18\x01 \x02(\x05\x12\x10\n\x08quantity\x18\x02 \x02(\x05\"\x9c\x01\n\x0eTypeCollection\x12<\n\x05types\x18\x01 \x03(\x0b\x32-.eve_multitools.data.TypeCollection.TypeEntry\x1aL\n\tTypeEntry\x12\x0f\n\x07type_id\x18\x01 \x02(\x05\x12.\n\ttype_data\x18\x02 \x02(\x0b\x32\x1b.eve_multitools.data.TypeID\"\xba\x01\n\x13TypeDogmaCollection\x12L\n\x0btype_dogmas\x18\x01 \x03(\x0b\x32\x37.eve_multitools.data.TypeDogmaCollection.TypeDogmaEntry\x1aU\n\x0eTypeDogmaEntry\x12\x0f\n\x07type_id\x18\x01 \x02(\x05\x12\x32\n\ntype_dogma\x18\x02 \x02(\x0b\x32\x1e.eve_multitools.data.TypeDogma\"\xcf\x01\n\x16TypeMaterialCollection\x12U\n\x0etype_materials\x18\x01 \x03(\x0b\x32=.eve_multitools.data.TypeMaterialCollection.TypeMaterialEntry\x1a^\n\x11TypeMaterialEntry\x12\x0f\n\x07type_id\x18\x01 \x02(\x05\x12\x38\n\rtype_material\x18\x02 \x02(\x0b\x32!.eve_multitools.data.TypeMaterial')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x64\x61ta/schema.proto\x12\x13\x65ve_multitools.data\"\xc4\x04\n\x06TypeID\x12\x12\n\nbase_price\x18\x01 \x02(\x01\x12\x10\n\x08\x63\x61pacity\x18\x02 \x02(\x01\x12\x1c\n\x14\x63\x65rtificate_template\x18\x03 \x01(\x05\x12\x16\n\x0e\x64\x65scription_id\x18\x04 \x01(\x05\x12\x14\n\x0c\x64\x65signer_ids\x18\x05 \x03(\x05\x12\x12\n\nfaction_id\x18\x06 \x01(\x05\x12\x12\n\ngraphic_id\x18\x07 \x01(\x05\x12\x10\n\x08group_id\x18\x08 \x02(\x05\x12\x0f\n\x07icon_id\x18\t \x01(\x05\x12\x17\n\x0fis_dynamic_type\x18\n \x02(\x08\x12\x15\n\risis_group_id\x18\x0b \x01(\x05\x12\x17\n\x0fmarket_group_id\x18\x0c \x01(\x05\x12\x15\n\rmeta_group_id\x18\r \x01(\x05\x12\x12\n\nmeta_level\x18\x0e \x01(\x05\x12\x14\n\x0cportion_size\x18\x0f \x02(\x05\x12\x11\n\tpublished\x18\x10 \x02(\x08\x12\x17\n\x0fquote_author_id\x18\x11 \x01(\x05\x12\x10\n\x08quote_id\x18\x12 \x01(\x05\x12\x0f\n\x07race_id\x18\x13 \x01(\x05\x12\x0e\n\x06radius\x18\x14 \x02(\x01\x12\x10\n\x08sound_id\x18\x15 \x01(\x05\x12\x12\n\ntech_level\x18\x16 \x01(\x05\x12\x0f\n\x07type_id\x18\x17 \x02(\x05\x12\x14\n\x0ctype_name_id\x18\x18 \x02(\x05\x12 \n\x18variation_parent_type_id\x18\x19 \x01(\x05\x12\x0e\n\x06volume\x18\x1a \x02(\x01\x12\x15\n\rwreck_type_id\x18\x1b \x01(\x05\"\x84\x02\n\tTypeDogma\x12G\n\x10\x64ogma_attributes\x18\x01 \x03(\x0b\x32-.eve_multitools.data.TypeDogma.DogmaAttribute\x12\x41\n\rdogma_effects\x18\x02 \x03(\x0b\x32*.eve_multitools.data.TypeDogma.DogmaEffect\x1a\x35\n\x0e\x44ogmaAttribute\x12\x14\n\x0c\x61ttribute_id\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x1a\x34\n\x0b\x44ogmaEffect\x12\x11\n\teffect_id\x18\x01 \x02(\x05\x12\x12\n\nis_default\x18\x02 \x02(\x08\"\x85\x01\n\x0cTypeMaterial\x12=\n\tmaterials\x18\x01 \x03(\x0b\x32*.eve_multitools.data.TypeMaterial.Material\x1a\x36\n\x08Material\x12\x18\n\x10material_type_id\x18\x01 \x02(\x05\x12\x10\n\x08quantity\x18\x02 \x02(\x05\"\x9c\x01\n\x0eTypeCollection\x12<\n\x05types\x18\x01 \x03(\x0b\x32-.eve_multitools.data.TypeCollection.TypeEntry\x1aL\n\tTypeEntry\x12\x0f\n\x07type_id\x18\x01 \x02(\x05\x12.\n\ttype_data\x18\x02 \x02(\x0b\x32\x1b.eve_multitools.data.TypeID\"\xba\x01\n\x13TypeDogmaCollection\x12L\n\x0btype_dogmas\x18\x01 \x03(\x0b\x32\x37.eve_multitools.data.TypeDogmaCollection.TypeDogmaEntry\x1aU\n\x0eTypeDogmaEntry\x12\x0f\n\x07type_id\x18\x01 \x02(\x05\x12\x32\n\ntype_dogma\x18\x02 \x02(\x0b\x32\x1e.eve_multitools.data.TypeDogma\"\xcf\x01\n\x16TypeMaterialCollection\x12U\n\x0etype_materials\x18\x01 \x03(\x0b\x32=.eve_multitools.data.TypeMaterialCollection.TypeMaterialEntry\x1a^\n\x11TypeMaterialEntry\x12\x0f\n\x07type_id\x18\x01 \x02(\x05\x12\x38\n\rtype_material\x18\x02 \x02(\x0b\x32!.eve_multitools.data.TypeMaterial\"]\n\x08\x43\x61tegory\x12\x13\n\x0b\x63\x61tegory_id\x18\x01 \x02(\x05\x12\x18\n\x10\x63\x61tegory_name_id\x18\x02 \x02(\x05\x12\x0f\n\x07icon_id\x18\x03 \x01(\x05\x12\x11\n\tpublished\x18\x04 \x02(\x08\"\xbb\x01\n\x12\x43\x61tegoryCollection\x12I\n\ncategories\x18\x01 \x03(\x0b\x32\x35.eve_multitools.data.CategoryCollection.CategoryEntry\x1aZ\n\rCategoryEntry\x12\x13\n\x0b\x63\x61tegory_id\x18\x01 \x02(\x05\x12\x34\n\rcategory_data\x18\x02 \x02(\x0b\x32\x1d.eve_multitools.data.Category\"\xc7\x01\n\x05Group\x12\x10\n\x08group_id\x18\x01 \x02(\x05\x12\x15\n\rgroup_name_id\x18\x02 \x02(\x05\x12\x0f\n\x07icon_id\x18\x03 \x01(\x05\x12\x13\n\x0b\x63\x61tegory_id\x18\x04 \x02(\x05\x12\x12\n\nanchorable\x18\x05 \x02(\x08\x12\x1e\n\x16\x66ittable_non_singleton\x18\x06 \x02(\x08\x12\x10\n\x08\x61nchored\x18\x07 \x02(\x08\x12\x11\n\tpublished\x18\x08 \x02(\x08\x12\x16\n\x0euse_base_price\x18\t \x02(\x08\"\xa2\x01\n\x0fGroupCollection\x12?\n\x06groups\x18\x01 \x03(\x0b\x32/.eve_multitools.data.GroupCollection.GroupEntry\x1aN\n\nGroupEntry\x12\x10\n\x08group_id\x18\x01 \x02(\x05\x12.\n\ngroup_data\x18\x02 \x02(\x0b\x32\x1a.eve_multitools.data.Group\"-\n\tMetaGroup\x12\x0f\n\x07name_id\x18\x01 \x02(\x05\x12\x0f\n\x07icon_id\x18\x02 \x01(\x05\"\xc5\x01\n\x13MetaGroupCollection\x12L\n\x0bmeta_groups\x18\x01 \x03(\x0b\x32\x37.eve_multitools.data.MetaGroupCollection.MetaGroupEntry\x1a`\n\x0eMetaGroupEntry\x12\x15\n\rmeta_group_id\x18\x01 \x02(\x05\x12\x37\n\x0fmeta_group_data\x18\x02 \x02(\x0b\x32\x1e.eve_multitools.data.MetaGroup')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'data.schema_pb2', globals())
@@ -21,27 +21,45 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _TYPEID._serialized_start=43
-  _TYPEID._serialized_end=600
-  _TYPEDOGMA._serialized_start=603
-  _TYPEDOGMA._serialized_end=863
-  _TYPEDOGMA_DOGMAATTRIBUTE._serialized_start=756
-  _TYPEDOGMA_DOGMAATTRIBUTE._serialized_end=809
-  _TYPEDOGMA_DOGMAEFFECT._serialized_start=811
-  _TYPEDOGMA_DOGMAEFFECT._serialized_end=863
-  _TYPEMATERIAL._serialized_start=866
-  _TYPEMATERIAL._serialized_end=999
-  _TYPEMATERIAL_MATERIAL._serialized_start=945
-  _TYPEMATERIAL_MATERIAL._serialized_end=999
-  _TYPECOLLECTION._serialized_start=1002
-  _TYPECOLLECTION._serialized_end=1158
-  _TYPECOLLECTION_TYPEENTRY._serialized_start=1082
-  _TYPECOLLECTION_TYPEENTRY._serialized_end=1158
-  _TYPEDOGMACOLLECTION._serialized_start=1161
-  _TYPEDOGMACOLLECTION._serialized_end=1347
-  _TYPEDOGMACOLLECTION_TYPEDOGMAENTRY._serialized_start=1262
-  _TYPEDOGMACOLLECTION_TYPEDOGMAENTRY._serialized_end=1347
-  _TYPEMATERIALCOLLECTION._serialized_start=1350
-  _TYPEMATERIALCOLLECTION._serialized_end=1557
-  _TYPEMATERIALCOLLECTION_TYPEMATERIALENTRY._serialized_start=1463
-  _TYPEMATERIALCOLLECTION_TYPEMATERIALENTRY._serialized_end=1557
+  _TYPEID._serialized_end=623
+  _TYPEDOGMA._serialized_start=626
+  _TYPEDOGMA._serialized_end=886
+  _TYPEDOGMA_DOGMAATTRIBUTE._serialized_start=779
+  _TYPEDOGMA_DOGMAATTRIBUTE._serialized_end=832
+  _TYPEDOGMA_DOGMAEFFECT._serialized_start=834
+  _TYPEDOGMA_DOGMAEFFECT._serialized_end=886
+  _TYPEMATERIAL._serialized_start=889
+  _TYPEMATERIAL._serialized_end=1022
+  _TYPEMATERIAL_MATERIAL._serialized_start=968
+  _TYPEMATERIAL_MATERIAL._serialized_end=1022
+  _TYPECOLLECTION._serialized_start=1025
+  _TYPECOLLECTION._serialized_end=1181
+  _TYPECOLLECTION_TYPEENTRY._serialized_start=1105
+  _TYPECOLLECTION_TYPEENTRY._serialized_end=1181
+  _TYPEDOGMACOLLECTION._serialized_start=1184
+  _TYPEDOGMACOLLECTION._serialized_end=1370
+  _TYPEDOGMACOLLECTION_TYPEDOGMAENTRY._serialized_start=1285
+  _TYPEDOGMACOLLECTION_TYPEDOGMAENTRY._serialized_end=1370
+  _TYPEMATERIALCOLLECTION._serialized_start=1373
+  _TYPEMATERIALCOLLECTION._serialized_end=1580
+  _TYPEMATERIALCOLLECTION_TYPEMATERIALENTRY._serialized_start=1486
+  _TYPEMATERIALCOLLECTION_TYPEMATERIALENTRY._serialized_end=1580
+  _CATEGORY._serialized_start=1582
+  _CATEGORY._serialized_end=1675
+  _CATEGORYCOLLECTION._serialized_start=1678
+  _CATEGORYCOLLECTION._serialized_end=1865
+  _CATEGORYCOLLECTION_CATEGORYENTRY._serialized_start=1775
+  _CATEGORYCOLLECTION_CATEGORYENTRY._serialized_end=1865
+  _GROUP._serialized_start=1868
+  _GROUP._serialized_end=2067
+  _GROUPCOLLECTION._serialized_start=2070
+  _GROUPCOLLECTION._serialized_end=2232
+  _GROUPCOLLECTION_GROUPENTRY._serialized_start=2154
+  _GROUPCOLLECTION_GROUPENTRY._serialized_end=2232
+  _METAGROUP._serialized_start=2234
+  _METAGROUP._serialized_end=2279
+  _METAGROUPCOLLECTION._serialized_start=2282
+  _METAGROUPCOLLECTION._serialized_end=2479
+  _METAGROUPCOLLECTION_METAGROUPENTRY._serialized_start=2383
+  _METAGROUPCOLLECTION_METAGROUPENTRY._serialized_end=2479
 # @@protoc_insertion_point(module_scope)

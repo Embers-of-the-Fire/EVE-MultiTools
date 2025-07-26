@@ -1,4 +1,5 @@
 fn main() {
+    println!("cargo:rerun-if-changed=../data/schema.proto");
     // Compile the protobuf files
     prost_build::compile_protos(&["../data/schema.proto"], &["../data"])
         .expect("Failed to compile protobuf files");
