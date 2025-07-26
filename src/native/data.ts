@@ -66,8 +66,7 @@ export async function getCategory(
 }
 
 export interface MetaGroup {
-    meta_group_id: number;
-    meta_group_name_id: number;
+    name_id: number;
     icon_id?: number;
 }
 export async function getMetaGroup(

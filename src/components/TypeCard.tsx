@@ -18,6 +18,7 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
     const [loading, setLoading] = useState(true);
     const [metaGroupIconUrl, setMetagroupIconUrl] = useState<string | null>(null);
     const [categoryName, setCategoryName] = useState<string | null>(null);
+    const [metaGroupName, setMetaGroupName] = useState<string | null>(null);
 
     useEffect(() => {
         let mounted = true;
@@ -52,19 +53,24 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                 }
             }
             let mgIcon: string | null = null;
+            let mgName: string | null = null;
             if (type.meta_group_id) {
                 const meta = await getMetaGroup(type.meta_group_id);
                 if (meta?.icon_id) {
                     mgIcon = await getIconUrl(meta.icon_id);
                 }
+                if (meta?.name_id) {
+                    mgName = await getLocalizationByLang(meta.name_id, language);
+                }
             }
             if (mounted) {
-                setLoading(false);
                 setName(nameText || "");
                 setDesc(descText || "");
                 setIconUrl(iconPath);
                 setMetagroupIconUrl(mgIcon);
                 setCategoryName(catName);
+                setMetaGroupName(mgName || null);
+                setLoading(false);
             }
         });
         return () => {
@@ -83,6 +89,7 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                 loading={loading}
                 onError={() => setIconUrl(null)}
                 metaGroupIconUrl={metaGroupIconUrl}
+                metaGroupName={metaGroupName ?? undefined}
             />
             <div className="flex flex-col flex-1 min-w-0">
                 <div className="font-semibold text-base truncate">
