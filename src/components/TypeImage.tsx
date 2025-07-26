@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import type React from "react";
 
@@ -13,9 +12,16 @@ interface TypeImageProps {
     metaGroupName?: string;
 }
 
-const TypeImage: React.FC<TypeImageProps> = ({ iconUrl, alt, loading, onError, metaGroupIconUrl, metaGroupName }) => {
+const TypeImage: React.FC<TypeImageProps> = ({
+    iconUrl,
+    alt,
+    loading,
+    onError,
+    metaGroupIconUrl,
+    metaGroupName,
+}) => {
     return (
-        <div className="w-16 h-16 flex-shrink-0 bg-transparent rounded flex items-center justify-center overflow-hidden relative">
+        <div className="w-16 h-16 shrink-0 bg-transparent rounded flex items-center justify-center overflow-hidden relative">
             {iconUrl && !loading ? (
                 <Image
                     src={iconUrl}
@@ -37,8 +43,12 @@ const TypeImage: React.FC<TypeImageProps> = ({ iconUrl, alt, loading, onError, m
                     <title>物品图片占位</title>
                     <rect width="64" height="64" rx="8" fill="#00000000" />
                     <text x="50%" y="45%" textAnchor="middle" fontSize="14" fill="gray">
-                        <tspan x="50%" dy="0em">未知</tspan>
-                        <tspan x="50%" dy="1.2em">图像</tspan>
+                        <tspan x="50%" dy="0em">
+                            未知
+                        </tspan>
+                        <tspan x="50%" dy="1.2em">
+                            图像
+                        </tspan>
                     </text>
                 </svg>
             )}

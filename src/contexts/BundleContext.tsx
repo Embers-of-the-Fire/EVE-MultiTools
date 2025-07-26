@@ -87,7 +87,7 @@ export function BundleProvider({ children }: BundleProviderProps) {
             try {
                 setError(null);
                 // 先移除失败状态（如果之前失败过）
-                setFailedBundleIds(prev => {
+                setFailedBundleIds((prev) => {
                     const newSet = new Set(prev);
                     newSet.delete(bundle.serverID);
                     return newSet;
@@ -97,7 +97,7 @@ export function BundleProvider({ children }: BundleProviderProps) {
                 console.error("Failed to initiate bundle switch:", err);
                 setError("Failed to switch bundle");
                 // 标记为失败
-                setFailedBundleIds(prev => {
+                setFailedBundleIds((prev) => {
                     const newSet = new Set(prev);
                     newSet.add(bundle.serverID);
                     return newSet;
@@ -137,7 +137,7 @@ export function BundleProvider({ children }: BundleProviderProps) {
                     setSwitchingToBundleId(null);
                     // 成功切换时，移除失败状态
                     if (currentSwitchingId) {
-                        setFailedBundleIds(prev => {
+                        setFailedBundleIds((prev) => {
                             const newSet = new Set(prev);
                             newSet.delete(currentSwitchingId);
                             return newSet;

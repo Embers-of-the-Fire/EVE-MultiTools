@@ -113,7 +113,7 @@ function GlobalLoadingUI({ message, progress }: { message: string; progress?: nu
     const displayMessage = isMounted ? message : "Loading...";
 
     return (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-xs z-50 flex items-center justify-center">
             <div className="bg-background border border-border rounded-lg shadow-lg p-6 max-w-sm w-full mx-4">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4 mx-auto"></div>

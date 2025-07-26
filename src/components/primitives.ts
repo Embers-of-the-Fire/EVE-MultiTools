@@ -27,7 +27,7 @@ export const title = tv({
     compoundVariants: [
         {
             color: ["violet", "yellow", "blue", "cyan", "green", "pink", "foreground"],
-            class: "bg-clip-text text-transparent bg-gradient-to-b",
+            class: "bg-clip-text text-transparent bg-linear-to-b",
         },
     ],
 });
@@ -36,7 +36,7 @@ export const subtitle = tv({
     base: "w-full md:w-1/2 my-2 text-lg lg:text-xl text-default-600 block max-w-full",
     variants: {
         fullWidth: {
-            true: "!w-full",
+            true: "w-full!",
         },
     },
     defaultVariants: {

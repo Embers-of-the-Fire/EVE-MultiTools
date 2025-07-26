@@ -16,7 +16,7 @@ export function HomePage() {
             <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
                 <div className="inline-block max-w-xxl text-center justify-center">
                     <span
-                        className="tracking-tight inline font-semibold bg-gradient-to-b from-[#FF1CF7] to-[#b249f8]
+                        className="tracking-tight inline font-semibold bg-linear-to-b from-[#FF1CF7] to-[#b249f8]
                         text-[2.3rem] lg:text-5xl leading-9 bg-clip-text text-transparent"
                     >
                         EVE MultiTools&nbsp;

@@ -23,7 +23,7 @@ export function ShortcutCard({ title, description, icon, onClick }: ShortcutCard
             <CardHeader className="flex flex-row items-center gap-4 p-6 pb-2">
                 <span className="h-12 w-12 flex items-center justify-center text-2xl">{icon}</span>
                 <div>
-                    <CardTitle className="text-lg font-bold tracking-wider drop-shadow">
+                    <CardTitle className="text-lg font-bold tracking-wider drop-shadow-sm">
                         {title}
                     </CardTitle>
                 </div>

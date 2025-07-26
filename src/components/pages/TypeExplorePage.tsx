@@ -61,7 +61,7 @@ function TypeHistoryButton() {
                                     <Fragment key={id}>
                                         <Button
                                             variant="ghost"
-                                            className={`w-full text-left px-4 py-2 cursor-pointer transition-colors focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-800`}
+                                            className={`w-full text-left px-4 py-2 cursor-pointer transition-colors focus:outline-hidden hover:bg-gray-100 dark:hover:bg-gray-800`}
                                             onClick={() => {
                                                 setCurrentTypeID(id);
                                                 setOpen(false);
@@ -140,7 +140,7 @@ export function TypeExplorePage() {
                 <Input
                     ref={inputRef}
                     className={cn(
-                        "px-2 h-14 w-full font-sans text-lg outline-none rounded-none",
+                        "px-2 h-14 w-full font-sans text-lg outline-hidden rounded-none",
                         "bg-transparent text-default-700 placeholder-default-500",
                         "dark:text-default-500 dark:placeholder:text-default-300",
                         "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -171,7 +171,7 @@ export function TypeExplorePage() {
             <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
                 {loading && <div>加载中...</div>}
                 {!loading && results.length > 0 && (
-                    <ScrollArea className="border rounded bg-white dark:bg-black/30 shadow p-4 my-2 flex flex-col min-h-0 flex-1 w-full max-w-none">
+                    <ScrollArea className="border rounded bg-white dark:bg-black/30 shadow-sm p-4 my-2 flex flex-col min-h-0 flex-1 w-full max-w-none">
                         <div className="font-bold mb-2">搜索结果</div>
                         <div className="flex flex-col gap-2 flex-1 min-h-0 w-full max-w-none">
                             {results.map((item) => (

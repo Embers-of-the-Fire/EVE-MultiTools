@@ -80,8 +80,8 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                                 className={cn(
                                     "ml-auto transition-transform duration-200",
                                     "group-data-[state=open]/collapsible:rotate-90",
-                                    "group-data-[state=open]/collapsible:hover:rotate-0",
-                                    "group-data-[state=closed]/collapsible:hover:rotate-90"
+                                    "hover:group-data-[state=open]/collapsible:rotate-0",
+                                    "hover:group-data-[state=closed]/collapsible:rotate-90"
                                 )}
                                 onClick={(e) => {
                                     e.stopPropagation();

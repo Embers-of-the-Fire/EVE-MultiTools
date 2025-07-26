@@ -28,7 +28,8 @@ import { useBundle } from "@/contexts/BundleContext";
 
 export function BundlePage() {
     const { t, i18n } = useTranslation();
-    const { bundles, activeBundle, switchingToBundleId, failedBundleIds, isLoading, switchBundle } = useBundle();
+    const { bundles, activeBundle, switchingToBundleId, failedBundleIds, isLoading, switchBundle } =
+        useBundle();
 
     const [importProgress, setImportProgress] = useState<ImportProgress | null>(null);
     const [isImporting, setIsImporting] = useState(false);

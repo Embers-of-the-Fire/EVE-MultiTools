@@ -430,21 +430,45 @@ class TypeID$Type extends MessageType<TypeID> {
         super("eve_multitools.data.TypeID", [
             { no: 1, name: "base_price", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 2, name: "capacity", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
-            { no: 3, name: "certificate_template", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 3,
+                name: "certificate_template",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
             { no: 4, name: "description_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
-            { no: 5, name: "designer_ids", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 5,
+                name: "designer_ids",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
             { no: 6, name: "faction_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "graphic_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 8, name: "group_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "icon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "is_dynamic_type", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 11, name: "isis_group_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
-            { no: 12, name: "market_group_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 12,
+                name: "market_group_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
             { no: 13, name: "meta_group_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 14, name: "meta_level", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 15, name: "portion_size", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 16, name: "published", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 17, name: "quote_author_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 17,
+                name: "quote_author_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
             { no: 18, name: "quote_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 19, name: "race_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 20, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
@@ -452,13 +476,19 @@ class TypeID$Type extends MessageType<TypeID> {
             { no: 22, name: "tech_level", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
             { no: 23, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 24, name: "type_name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 25, name: "variation_parent_type_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 25,
+                name: "variation_parent_type_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
             { no: 26, name: "volume", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
-            { no: 27, name: "wreck_type_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ }
+            { no: 27, name: "wreck_type_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<TypeID>): TypeID {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.basePrice = 0;
         message.capacity = 0;
         message.designerIds = [];
@@ -470,12 +500,17 @@ class TypeID$Type extends MessageType<TypeID> {
         message.typeId = 0;
         message.typeNameId = 0;
         message.volume = 0;
-        if (value !== undefined)
-            reflectionMergePartial<TypeID>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<TypeID>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeID): TypeID {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeID
+    ): TypeID {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -493,10 +528,9 @@ class TypeID$Type extends MessageType<TypeID> {
                     break;
                 case /* repeated int32 designer_ids */ 5:
                     if (wireType === WireType.LengthDelimited)
-                        for (let e = reader.int32() + reader.pos; reader.pos < e;)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
                             message.designerIds.push(reader.int32());
-                    else
-                        message.designerIds.push(reader.int32());
+                    else message.designerIds.push(reader.int32());
                     break;
                 case /* optional int32 faction_id */ 6:
                     message.factionId = reader.int32();
@@ -567,21 +601,31 @@ class TypeID$Type extends MessageType<TypeID> {
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeID, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeID,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required double base_price = 1; */
-        if (message.basePrice !== 0)
-            writer.tag(1, WireType.Bit64).double(message.basePrice);
+        if (message.basePrice !== 0) writer.tag(1, WireType.Bit64).double(message.basePrice);
         /* required double capacity = 2; */
-        if (message.capacity !== 0)
-            writer.tag(2, WireType.Bit64).double(message.capacity);
+        if (message.capacity !== 0) writer.tag(2, WireType.Bit64).double(message.capacity);
         /* optional int32 certificate_template = 3; */
         if (message.certificateTemplate !== undefined)
             writer.tag(3, WireType.Varint).int32(message.certificateTemplate);
@@ -598,11 +642,9 @@ class TypeID$Type extends MessageType<TypeID> {
         if (message.graphicId !== undefined)
             writer.tag(7, WireType.Varint).int32(message.graphicId);
         /* required int32 group_id = 8; */
-        if (message.groupId !== 0)
-            writer.tag(8, WireType.Varint).int32(message.groupId);
+        if (message.groupId !== 0) writer.tag(8, WireType.Varint).int32(message.groupId);
         /* optional int32 icon_id = 9; */
-        if (message.iconId !== undefined)
-            writer.tag(9, WireType.Varint).int32(message.iconId);
+        if (message.iconId !== undefined) writer.tag(9, WireType.Varint).int32(message.iconId);
         /* required bool is_dynamic_type = 10; */
         if (message.isDynamicType !== false)
             writer.tag(10, WireType.Varint).bool(message.isDynamicType);
@@ -619,41 +661,32 @@ class TypeID$Type extends MessageType<TypeID> {
         if (message.metaLevel !== undefined)
             writer.tag(14, WireType.Varint).int32(message.metaLevel);
         /* required int32 portion_size = 15; */
-        if (message.portionSize !== 0)
-            writer.tag(15, WireType.Varint).int32(message.portionSize);
+        if (message.portionSize !== 0) writer.tag(15, WireType.Varint).int32(message.portionSize);
         /* required bool published = 16; */
-        if (message.published !== false)
-            writer.tag(16, WireType.Varint).bool(message.published);
+        if (message.published !== false) writer.tag(16, WireType.Varint).bool(message.published);
         /* optional int32 quote_author_id = 17; */
         if (message.quoteAuthorId !== undefined)
             writer.tag(17, WireType.Varint).int32(message.quoteAuthorId);
         /* optional int32 quote_id = 18; */
-        if (message.quoteId !== undefined)
-            writer.tag(18, WireType.Varint).int32(message.quoteId);
+        if (message.quoteId !== undefined) writer.tag(18, WireType.Varint).int32(message.quoteId);
         /* optional int32 race_id = 19; */
-        if (message.raceId !== undefined)
-            writer.tag(19, WireType.Varint).int32(message.raceId);
+        if (message.raceId !== undefined) writer.tag(19, WireType.Varint).int32(message.raceId);
         /* required double radius = 20; */
-        if (message.radius !== 0)
-            writer.tag(20, WireType.Bit64).double(message.radius);
+        if (message.radius !== 0) writer.tag(20, WireType.Bit64).double(message.radius);
         /* optional int32 sound_id = 21; */
-        if (message.soundId !== undefined)
-            writer.tag(21, WireType.Varint).int32(message.soundId);
+        if (message.soundId !== undefined) writer.tag(21, WireType.Varint).int32(message.soundId);
         /* optional int32 tech_level = 22; */
         if (message.techLevel !== undefined)
             writer.tag(22, WireType.Varint).int32(message.techLevel);
         /* required int32 type_id = 23; */
-        if (message.typeId !== 0)
-            writer.tag(23, WireType.Varint).int32(message.typeId);
+        if (message.typeId !== 0) writer.tag(23, WireType.Varint).int32(message.typeId);
         /* required int32 type_name_id = 24; */
-        if (message.typeNameId !== 0)
-            writer.tag(24, WireType.Varint).int32(message.typeNameId);
+        if (message.typeNameId !== 0) writer.tag(24, WireType.Varint).int32(message.typeNameId);
         /* optional int32 variation_parent_type_id = 25; */
         if (message.variationParentTypeId !== undefined)
             writer.tag(25, WireType.Varint).int32(message.variationParentTypeId);
         /* required double volume = 26; */
-        if (message.volume !== 0)
-            writer.tag(26, WireType.Bit64).double(message.volume);
+        if (message.volume !== 0) writer.tag(26, WireType.Bit64).double(message.volume);
         /* optional int32 wreck_type_id = 27; */
         if (message.wreckTypeId !== undefined)
             writer.tag(27, WireType.Varint).int32(message.wreckTypeId);
@@ -671,47 +704,92 @@ export const TypeID = new TypeID$Type();
 class TypeDogma$Type extends MessageType<TypeDogma> {
     constructor() {
         super("eve_multitools.data.TypeDogma", [
-            { no: 1, name: "dogma_attributes", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TypeDogma_DogmaAttribute },
-            { no: 2, name: "dogma_effects", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TypeDogma_DogmaEffect }
+            {
+                no: 1,
+                name: "dogma_attributes",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => TypeDogma_DogmaAttribute,
+            },
+            {
+                no: 2,
+                name: "dogma_effects",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => TypeDogma_DogmaEffect,
+            },
         ]);
     }
     create(value?: PartialMessage<TypeDogma>): TypeDogma {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.dogmaAttributes = [];
         message.dogmaEffects = [];
-        if (value !== undefined)
-            reflectionMergePartial<TypeDogma>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<TypeDogma>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeDogma): TypeDogma {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeDogma
+    ): TypeDogma {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.TypeDogma.DogmaAttribute dogma_attributes */ 1:
-                    message.dogmaAttributes.push(TypeDogma_DogmaAttribute.internalBinaryRead(reader, reader.uint32(), options));
+                    message.dogmaAttributes.push(
+                        TypeDogma_DogmaAttribute.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 case /* repeated eve_multitools.data.TypeDogma.DogmaEffect dogma_effects */ 2:
-                    message.dogmaEffects.push(TypeDogma_DogmaEffect.internalBinaryRead(reader, reader.uint32(), options));
+                    message.dogmaEffects.push(
+                        TypeDogma_DogmaEffect.internalBinaryRead(reader, reader.uint32(), options)
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeDogma, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeDogma,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.TypeDogma.DogmaAttribute dogma_attributes = 1; */
         for (let i = 0; i < message.dogmaAttributes.length; i++)
-            TypeDogma_DogmaAttribute.internalBinaryWrite(message.dogmaAttributes[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            TypeDogma_DogmaAttribute.internalBinaryWrite(
+                message.dogmaAttributes[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         /* repeated eve_multitools.data.TypeDogma.DogmaEffect dogma_effects = 2; */
         for (let i = 0; i < message.dogmaEffects.length; i++)
-            TypeDogma_DogmaEffect.internalBinaryWrite(message.dogmaEffects[i], writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            TypeDogma_DogmaEffect.internalBinaryWrite(
+                message.dogmaEffects[i],
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -727,19 +805,25 @@ class TypeDogma_DogmaAttribute$Type extends MessageType<TypeDogma_DogmaAttribute
     constructor() {
         super("eve_multitools.data.TypeDogma.DogmaAttribute", [
             { no: 1, name: "attribute_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "value", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
+            { no: 2, name: "value", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
         ]);
     }
     create(value?: PartialMessage<TypeDogma_DogmaAttribute>): TypeDogma_DogmaAttribute {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.attributeId = 0;
         message.value = 0;
         if (value !== undefined)
             reflectionMergePartial<TypeDogma_DogmaAttribute>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeDogma_DogmaAttribute): TypeDogma_DogmaAttribute {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeDogma_DogmaAttribute
+    ): TypeDogma_DogmaAttribute {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -752,21 +836,31 @@ class TypeDogma_DogmaAttribute$Type extends MessageType<TypeDogma_DogmaAttribute
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeDogma_DogmaAttribute, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeDogma_DogmaAttribute,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 attribute_id = 1; */
-        if (message.attributeId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.attributeId);
+        if (message.attributeId !== 0) writer.tag(1, WireType.Varint).int32(message.attributeId);
         /* required double value = 2; */
-        if (message.value !== 0)
-            writer.tag(2, WireType.Bit64).double(message.value);
+        if (message.value !== 0) writer.tag(2, WireType.Bit64).double(message.value);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -782,19 +876,25 @@ class TypeDogma_DogmaEffect$Type extends MessageType<TypeDogma_DogmaEffect> {
     constructor() {
         super("eve_multitools.data.TypeDogma.DogmaEffect", [
             { no: 1, name: "effect_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "is_default", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 2, name: "is_default", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
         ]);
     }
     create(value?: PartialMessage<TypeDogma_DogmaEffect>): TypeDogma_DogmaEffect {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.effectId = 0;
         message.isDefault = false;
         if (value !== undefined)
             reflectionMergePartial<TypeDogma_DogmaEffect>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeDogma_DogmaEffect): TypeDogma_DogmaEffect {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeDogma_DogmaEffect
+    ): TypeDogma_DogmaEffect {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -807,21 +907,31 @@ class TypeDogma_DogmaEffect$Type extends MessageType<TypeDogma_DogmaEffect> {
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeDogma_DogmaEffect, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeDogma_DogmaEffect,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 effect_id = 1; */
-        if (message.effectId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.effectId);
+        if (message.effectId !== 0) writer.tag(1, WireType.Varint).int32(message.effectId);
         /* required bool is_default = 2; */
-        if (message.isDefault !== false)
-            writer.tag(2, WireType.Varint).bool(message.isDefault);
+        if (message.isDefault !== false) writer.tag(2, WireType.Varint).bool(message.isDefault);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -836,39 +946,68 @@ export const TypeDogma_DogmaEffect = new TypeDogma_DogmaEffect$Type();
 class TypeMaterial$Type extends MessageType<TypeMaterial> {
     constructor() {
         super("eve_multitools.data.TypeMaterial", [
-            { no: 1, name: "materials", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TypeMaterial_Material }
+            {
+                no: 1,
+                name: "materials",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => TypeMaterial_Material,
+            },
         ]);
     }
     create(value?: PartialMessage<TypeMaterial>): TypeMaterial {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.materials = [];
-        if (value !== undefined)
-            reflectionMergePartial<TypeMaterial>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<TypeMaterial>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeMaterial): TypeMaterial {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeMaterial
+    ): TypeMaterial {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.TypeMaterial.Material materials */ 1:
-                    message.materials.push(TypeMaterial_Material.internalBinaryRead(reader, reader.uint32(), options));
+                    message.materials.push(
+                        TypeMaterial_Material.internalBinaryRead(reader, reader.uint32(), options)
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeMaterial, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeMaterial,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.TypeMaterial.Material materials = 1; */
         for (let i = 0; i < message.materials.length; i++)
-            TypeMaterial_Material.internalBinaryWrite(message.materials[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            TypeMaterial_Material.internalBinaryWrite(
+                message.materials[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -884,19 +1023,25 @@ class TypeMaterial_Material$Type extends MessageType<TypeMaterial_Material> {
     constructor() {
         super("eve_multitools.data.TypeMaterial.Material", [
             { no: 1, name: "material_type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "quantity", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 2, name: "quantity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<TypeMaterial_Material>): TypeMaterial_Material {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.materialTypeId = 0;
         message.quantity = 0;
         if (value !== undefined)
             reflectionMergePartial<TypeMaterial_Material>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeMaterial_Material): TypeMaterial_Material {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeMaterial_Material
+    ): TypeMaterial_Material {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -909,21 +1054,32 @@ class TypeMaterial_Material$Type extends MessageType<TypeMaterial_Material> {
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeMaterial_Material, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeMaterial_Material,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 material_type_id = 1; */
         if (message.materialTypeId !== 0)
             writer.tag(1, WireType.Varint).int32(message.materialTypeId);
         /* required int32 quantity = 2; */
-        if (message.quantity !== 0)
-            writer.tag(2, WireType.Varint).int32(message.quantity);
+        if (message.quantity !== 0) writer.tag(2, WireType.Varint).int32(message.quantity);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -938,39 +1094,72 @@ export const TypeMaterial_Material = new TypeMaterial_Material$Type();
 class TypeCollection$Type extends MessageType<TypeCollection> {
     constructor() {
         super("eve_multitools.data.TypeCollection", [
-            { no: 1, name: "types", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TypeCollection_TypeEntry }
+            {
+                no: 1,
+                name: "types",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => TypeCollection_TypeEntry,
+            },
         ]);
     }
     create(value?: PartialMessage<TypeCollection>): TypeCollection {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.types = [];
-        if (value !== undefined)
-            reflectionMergePartial<TypeCollection>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<TypeCollection>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeCollection): TypeCollection {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeCollection
+    ): TypeCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.TypeCollection.TypeEntry types */ 1:
-                    message.types.push(TypeCollection_TypeEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    message.types.push(
+                        TypeCollection_TypeEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeCollection, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.TypeCollection.TypeEntry types = 1; */
         for (let i = 0; i < message.types.length; i++)
-            TypeCollection_TypeEntry.internalBinaryWrite(message.types[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            TypeCollection_TypeEntry.internalBinaryWrite(
+                message.types[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -986,18 +1175,24 @@ class TypeCollection_TypeEntry$Type extends MessageType<TypeCollection_TypeEntry
     constructor() {
         super("eve_multitools.data.TypeCollection.TypeEntry", [
             { no: 1, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "type_data", kind: "message", T: () => TypeID }
+            { no: 2, name: "type_data", kind: "message", T: () => TypeID },
         ]);
     }
     create(value?: PartialMessage<TypeCollection_TypeEntry>): TypeCollection_TypeEntry {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.typeId = 0;
         if (value !== undefined)
             reflectionMergePartial<TypeCollection_TypeEntry>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeCollection_TypeEntry): TypeCollection_TypeEntry {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeCollection_TypeEntry
+    ): TypeCollection_TypeEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1005,26 +1200,46 @@ class TypeCollection_TypeEntry$Type extends MessageType<TypeCollection_TypeEntry
                     message.typeId = reader.int32();
                     break;
                 case /* required eve_multitools.data.TypeID type_data */ 2:
-                    message.typeData = TypeID.internalBinaryRead(reader, reader.uint32(), options, message.typeData);
+                    message.typeData = TypeID.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.typeData
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeCollection_TypeEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeCollection_TypeEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 type_id = 1; */
-        if (message.typeId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.typeId);
+        if (message.typeId !== 0) writer.tag(1, WireType.Varint).int32(message.typeId);
         /* required eve_multitools.data.TypeID type_data = 2; */
         if (message.typeData)
-            TypeID.internalBinaryWrite(message.typeData, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            TypeID.internalBinaryWrite(
+                message.typeData,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1039,39 +1254,72 @@ export const TypeCollection_TypeEntry = new TypeCollection_TypeEntry$Type();
 class TypeDogmaCollection$Type extends MessageType<TypeDogmaCollection> {
     constructor() {
         super("eve_multitools.data.TypeDogmaCollection", [
-            { no: 1, name: "type_dogmas", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TypeDogmaCollection_TypeDogmaEntry }
+            {
+                no: 1,
+                name: "type_dogmas",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => TypeDogmaCollection_TypeDogmaEntry,
+            },
         ]);
     }
     create(value?: PartialMessage<TypeDogmaCollection>): TypeDogmaCollection {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.typeDogmas = [];
-        if (value !== undefined)
-            reflectionMergePartial<TypeDogmaCollection>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<TypeDogmaCollection>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeDogmaCollection): TypeDogmaCollection {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeDogmaCollection
+    ): TypeDogmaCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.TypeDogmaCollection.TypeDogmaEntry type_dogmas */ 1:
-                    message.typeDogmas.push(TypeDogmaCollection_TypeDogmaEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    message.typeDogmas.push(
+                        TypeDogmaCollection_TypeDogmaEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeDogmaCollection, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeDogmaCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.TypeDogmaCollection.TypeDogmaEntry type_dogmas = 1; */
         for (let i = 0; i < message.typeDogmas.length; i++)
-            TypeDogmaCollection_TypeDogmaEntry.internalBinaryWrite(message.typeDogmas[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            TypeDogmaCollection_TypeDogmaEntry.internalBinaryWrite(
+                message.typeDogmas[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1087,18 +1335,26 @@ class TypeDogmaCollection_TypeDogmaEntry$Type extends MessageType<TypeDogmaColle
     constructor() {
         super("eve_multitools.data.TypeDogmaCollection.TypeDogmaEntry", [
             { no: 1, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "type_dogma", kind: "message", T: () => TypeDogma }
+            { no: 2, name: "type_dogma", kind: "message", T: () => TypeDogma },
         ]);
     }
-    create(value?: PartialMessage<TypeDogmaCollection_TypeDogmaEntry>): TypeDogmaCollection_TypeDogmaEntry {
-        const message = globalThis.Object.create((this.messagePrototype!));
+    create(
+        value?: PartialMessage<TypeDogmaCollection_TypeDogmaEntry>
+    ): TypeDogmaCollection_TypeDogmaEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.typeId = 0;
         if (value !== undefined)
             reflectionMergePartial<TypeDogmaCollection_TypeDogmaEntry>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeDogmaCollection_TypeDogmaEntry): TypeDogmaCollection_TypeDogmaEntry {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeDogmaCollection_TypeDogmaEntry
+    ): TypeDogmaCollection_TypeDogmaEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1106,26 +1362,46 @@ class TypeDogmaCollection_TypeDogmaEntry$Type extends MessageType<TypeDogmaColle
                     message.typeId = reader.int32();
                     break;
                 case /* required eve_multitools.data.TypeDogma type_dogma */ 2:
-                    message.typeDogma = TypeDogma.internalBinaryRead(reader, reader.uint32(), options, message.typeDogma);
+                    message.typeDogma = TypeDogma.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.typeDogma
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeDogmaCollection_TypeDogmaEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeDogmaCollection_TypeDogmaEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 type_id = 1; */
-        if (message.typeId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.typeId);
+        if (message.typeId !== 0) writer.tag(1, WireType.Varint).int32(message.typeId);
         /* required eve_multitools.data.TypeDogma type_dogma = 2; */
         if (message.typeDogma)
-            TypeDogma.internalBinaryWrite(message.typeDogma, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            TypeDogma.internalBinaryWrite(
+                message.typeDogma,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1140,39 +1416,73 @@ export const TypeDogmaCollection_TypeDogmaEntry = new TypeDogmaCollection_TypeDo
 class TypeMaterialCollection$Type extends MessageType<TypeMaterialCollection> {
     constructor() {
         super("eve_multitools.data.TypeMaterialCollection", [
-            { no: 1, name: "type_materials", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TypeMaterialCollection_TypeMaterialEntry }
+            {
+                no: 1,
+                name: "type_materials",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => TypeMaterialCollection_TypeMaterialEntry,
+            },
         ]);
     }
     create(value?: PartialMessage<TypeMaterialCollection>): TypeMaterialCollection {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.typeMaterials = [];
         if (value !== undefined)
             reflectionMergePartial<TypeMaterialCollection>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeMaterialCollection): TypeMaterialCollection {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeMaterialCollection
+    ): TypeMaterialCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.TypeMaterialCollection.TypeMaterialEntry type_materials */ 1:
-                    message.typeMaterials.push(TypeMaterialCollection_TypeMaterialEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    message.typeMaterials.push(
+                        TypeMaterialCollection_TypeMaterialEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeMaterialCollection, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeMaterialCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.TypeMaterialCollection.TypeMaterialEntry type_materials = 1; */
         for (let i = 0; i < message.typeMaterials.length; i++)
-            TypeMaterialCollection_TypeMaterialEntry.internalBinaryWrite(message.typeMaterials[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            TypeMaterialCollection_TypeMaterialEntry.internalBinaryWrite(
+                message.typeMaterials[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1188,18 +1498,26 @@ class TypeMaterialCollection_TypeMaterialEntry$Type extends MessageType<TypeMate
     constructor() {
         super("eve_multitools.data.TypeMaterialCollection.TypeMaterialEntry", [
             { no: 1, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "type_material", kind: "message", T: () => TypeMaterial }
+            { no: 2, name: "type_material", kind: "message", T: () => TypeMaterial },
         ]);
     }
-    create(value?: PartialMessage<TypeMaterialCollection_TypeMaterialEntry>): TypeMaterialCollection_TypeMaterialEntry {
-        const message = globalThis.Object.create((this.messagePrototype!));
+    create(
+        value?: PartialMessage<TypeMaterialCollection_TypeMaterialEntry>
+    ): TypeMaterialCollection_TypeMaterialEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.typeId = 0;
         if (value !== undefined)
             reflectionMergePartial<TypeMaterialCollection_TypeMaterialEntry>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TypeMaterialCollection_TypeMaterialEntry): TypeMaterialCollection_TypeMaterialEntry {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: TypeMaterialCollection_TypeMaterialEntry
+    ): TypeMaterialCollection_TypeMaterialEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1207,26 +1525,46 @@ class TypeMaterialCollection_TypeMaterialEntry$Type extends MessageType<TypeMate
                     message.typeId = reader.int32();
                     break;
                 case /* required eve_multitools.data.TypeMaterial type_material */ 2:
-                    message.typeMaterial = TypeMaterial.internalBinaryRead(reader, reader.uint32(), options, message.typeMaterial);
+                    message.typeMaterial = TypeMaterial.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.typeMaterial
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: TypeMaterialCollection_TypeMaterialEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: TypeMaterialCollection_TypeMaterialEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 type_id = 1; */
-        if (message.typeId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.typeId);
+        if (message.typeId !== 0) writer.tag(1, WireType.Varint).int32(message.typeId);
         /* required eve_multitools.data.TypeMaterial type_material = 2; */
         if (message.typeMaterial)
-            TypeMaterial.internalBinaryWrite(message.typeMaterial, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            TypeMaterial.internalBinaryWrite(
+                message.typeMaterial,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1236,7 +1574,8 @@ class TypeMaterialCollection_TypeMaterialEntry$Type extends MessageType<TypeMate
 /**
  * @generated MessageType for protobuf message eve_multitools.data.TypeMaterialCollection.TypeMaterialEntry
  */
-export const TypeMaterialCollection_TypeMaterialEntry = new TypeMaterialCollection_TypeMaterialEntry$Type();
+export const TypeMaterialCollection_TypeMaterialEntry =
+    new TypeMaterialCollection_TypeMaterialEntry$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Category$Type extends MessageType<Category> {
     constructor() {
@@ -1244,20 +1583,25 @@ class Category$Type extends MessageType<Category> {
             { no: 1, name: "category_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 2, name: "category_name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "icon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
-            { no: 4, name: "published", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 4, name: "published", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
         ]);
     }
     create(value?: PartialMessage<Category>): Category {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.categoryId = 0;
         message.categoryNameId = 0;
         message.published = false;
-        if (value !== undefined)
-            reflectionMergePartial<Category>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<Category>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: Category): Category {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Category
+    ): Category {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1276,27 +1620,36 @@ class Category$Type extends MessageType<Category> {
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: Category, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: Category,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 category_id = 1; */
-        if (message.categoryId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.categoryId);
+        if (message.categoryId !== 0) writer.tag(1, WireType.Varint).int32(message.categoryId);
         /* required int32 category_name_id = 2; */
         if (message.categoryNameId !== 0)
             writer.tag(2, WireType.Varint).int32(message.categoryNameId);
         /* optional int32 icon_id = 3; */
-        if (message.iconId !== undefined)
-            writer.tag(3, WireType.Varint).int32(message.iconId);
+        if (message.iconId !== undefined) writer.tag(3, WireType.Varint).int32(message.iconId);
         /* required bool published = 4; */
-        if (message.published !== false)
-            writer.tag(4, WireType.Varint).bool(message.published);
+        if (message.published !== false) writer.tag(4, WireType.Varint).bool(message.published);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1311,39 +1664,72 @@ export const Category = new Category$Type();
 class CategoryCollection$Type extends MessageType<CategoryCollection> {
     constructor() {
         super("eve_multitools.data.CategoryCollection", [
-            { no: 1, name: "categories", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => CategoryCollection_CategoryEntry }
+            {
+                no: 1,
+                name: "categories",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => CategoryCollection_CategoryEntry,
+            },
         ]);
     }
     create(value?: PartialMessage<CategoryCollection>): CategoryCollection {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.categories = [];
-        if (value !== undefined)
-            reflectionMergePartial<CategoryCollection>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<CategoryCollection>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CategoryCollection): CategoryCollection {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: CategoryCollection
+    ): CategoryCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.CategoryCollection.CategoryEntry categories */ 1:
-                    message.categories.push(CategoryCollection_CategoryEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    message.categories.push(
+                        CategoryCollection_CategoryEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: CategoryCollection, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: CategoryCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.CategoryCollection.CategoryEntry categories = 1; */
         for (let i = 0; i < message.categories.length; i++)
-            CategoryCollection_CategoryEntry.internalBinaryWrite(message.categories[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            CategoryCollection_CategoryEntry.internalBinaryWrite(
+                message.categories[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1359,18 +1745,26 @@ class CategoryCollection_CategoryEntry$Type extends MessageType<CategoryCollecti
     constructor() {
         super("eve_multitools.data.CategoryCollection.CategoryEntry", [
             { no: 1, name: "category_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "category_data", kind: "message", T: () => Category }
+            { no: 2, name: "category_data", kind: "message", T: () => Category },
         ]);
     }
-    create(value?: PartialMessage<CategoryCollection_CategoryEntry>): CategoryCollection_CategoryEntry {
-        const message = globalThis.Object.create((this.messagePrototype!));
+    create(
+        value?: PartialMessage<CategoryCollection_CategoryEntry>
+    ): CategoryCollection_CategoryEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.categoryId = 0;
         if (value !== undefined)
             reflectionMergePartial<CategoryCollection_CategoryEntry>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CategoryCollection_CategoryEntry): CategoryCollection_CategoryEntry {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: CategoryCollection_CategoryEntry
+    ): CategoryCollection_CategoryEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1378,26 +1772,46 @@ class CategoryCollection_CategoryEntry$Type extends MessageType<CategoryCollecti
                     message.categoryId = reader.int32();
                     break;
                 case /* required eve_multitools.data.Category category_data */ 2:
-                    message.categoryData = Category.internalBinaryRead(reader, reader.uint32(), options, message.categoryData);
+                    message.categoryData = Category.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.categoryData
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: CategoryCollection_CategoryEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: CategoryCollection_CategoryEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 category_id = 1; */
-        if (message.categoryId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.categoryId);
+        if (message.categoryId !== 0) writer.tag(1, WireType.Varint).int32(message.categoryId);
         /* required eve_multitools.data.Category category_data = 2; */
         if (message.categoryData)
-            Category.internalBinaryWrite(message.categoryData, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            Category.internalBinaryWrite(
+                message.categoryData,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1420,11 +1834,11 @@ class Group$Type extends MessageType<Group> {
             { no: 6, name: "fittable_non_singleton", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 7, name: "anchored", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 8, name: "published", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 9, name: "use_base_price", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 9, name: "use_base_price", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
         ]);
     }
     create(value?: PartialMessage<Group>): Group {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.groupId = 0;
         message.groupNameId = 0;
         message.categoryId = 0;
@@ -1433,12 +1847,17 @@ class Group$Type extends MessageType<Group> {
         message.anchored = false;
         message.published = false;
         message.useBasePrice = false;
-        if (value !== undefined)
-            reflectionMergePartial<Group>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<Group>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: Group): Group {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Group
+    ): Group {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1472,39 +1891,44 @@ class Group$Type extends MessageType<Group> {
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: Group, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: Group,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 group_id = 1; */
-        if (message.groupId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.groupId);
+        if (message.groupId !== 0) writer.tag(1, WireType.Varint).int32(message.groupId);
         /* required int32 group_name_id = 2; */
-        if (message.groupNameId !== 0)
-            writer.tag(2, WireType.Varint).int32(message.groupNameId);
+        if (message.groupNameId !== 0) writer.tag(2, WireType.Varint).int32(message.groupNameId);
         /* optional int32 icon_id = 3; */
-        if (message.iconId !== undefined)
-            writer.tag(3, WireType.Varint).int32(message.iconId);
+        if (message.iconId !== undefined) writer.tag(3, WireType.Varint).int32(message.iconId);
         /* required int32 category_id = 4; */
-        if (message.categoryId !== 0)
-            writer.tag(4, WireType.Varint).int32(message.categoryId);
+        if (message.categoryId !== 0) writer.tag(4, WireType.Varint).int32(message.categoryId);
         /* required bool anchorable = 5; */
-        if (message.anchorable !== false)
-            writer.tag(5, WireType.Varint).bool(message.anchorable);
+        if (message.anchorable !== false) writer.tag(5, WireType.Varint).bool(message.anchorable);
         /* required bool fittable_non_singleton = 6; */
         if (message.fittableNonSingleton !== false)
             writer.tag(6, WireType.Varint).bool(message.fittableNonSingleton);
         /* required bool anchored = 7; */
-        if (message.anchored !== false)
-            writer.tag(7, WireType.Varint).bool(message.anchored);
+        if (message.anchored !== false) writer.tag(7, WireType.Varint).bool(message.anchored);
         /* required bool published = 8; */
-        if (message.published !== false)
-            writer.tag(8, WireType.Varint).bool(message.published);
+        if (message.published !== false) writer.tag(8, WireType.Varint).bool(message.published);
         /* required bool use_base_price = 9; */
         if (message.useBasePrice !== false)
             writer.tag(9, WireType.Varint).bool(message.useBasePrice);
@@ -1522,39 +1946,72 @@ export const Group = new Group$Type();
 class GroupCollection$Type extends MessageType<GroupCollection> {
     constructor() {
         super("eve_multitools.data.GroupCollection", [
-            { no: 1, name: "groups", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => GroupCollection_GroupEntry }
+            {
+                no: 1,
+                name: "groups",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => GroupCollection_GroupEntry,
+            },
         ]);
     }
     create(value?: PartialMessage<GroupCollection>): GroupCollection {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.groups = [];
-        if (value !== undefined)
-            reflectionMergePartial<GroupCollection>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<GroupCollection>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GroupCollection): GroupCollection {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: GroupCollection
+    ): GroupCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.GroupCollection.GroupEntry groups */ 1:
-                    message.groups.push(GroupCollection_GroupEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    message.groups.push(
+                        GroupCollection_GroupEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: GroupCollection, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: GroupCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.GroupCollection.GroupEntry groups = 1; */
         for (let i = 0; i < message.groups.length; i++)
-            GroupCollection_GroupEntry.internalBinaryWrite(message.groups[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            GroupCollection_GroupEntry.internalBinaryWrite(
+                message.groups[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1570,18 +2027,24 @@ class GroupCollection_GroupEntry$Type extends MessageType<GroupCollection_GroupE
     constructor() {
         super("eve_multitools.data.GroupCollection.GroupEntry", [
             { no: 1, name: "group_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "group_data", kind: "message", T: () => Group }
+            { no: 2, name: "group_data", kind: "message", T: () => Group },
         ]);
     }
     create(value?: PartialMessage<GroupCollection_GroupEntry>): GroupCollection_GroupEntry {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.groupId = 0;
         if (value !== undefined)
             reflectionMergePartial<GroupCollection_GroupEntry>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GroupCollection_GroupEntry): GroupCollection_GroupEntry {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: GroupCollection_GroupEntry
+    ): GroupCollection_GroupEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1589,26 +2052,46 @@ class GroupCollection_GroupEntry$Type extends MessageType<GroupCollection_GroupE
                     message.groupId = reader.int32();
                     break;
                 case /* required eve_multitools.data.Group group_data */ 2:
-                    message.groupData = Group.internalBinaryRead(reader, reader.uint32(), options, message.groupData);
+                    message.groupData = Group.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.groupData
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: GroupCollection_GroupEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: GroupCollection_GroupEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 group_id = 1; */
-        if (message.groupId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.groupId);
+        if (message.groupId !== 0) writer.tag(1, WireType.Varint).int32(message.groupId);
         /* required eve_multitools.data.Group group_data = 2; */
         if (message.groupData)
-            Group.internalBinaryWrite(message.groupData, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            Group.internalBinaryWrite(
+                message.groupData,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1624,18 +2107,23 @@ class MetaGroup$Type extends MessageType<MetaGroup> {
     constructor() {
         super("eve_multitools.data.MetaGroup", [
             { no: 1, name: "name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "icon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ }
+            { no: 2, name: "icon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<MetaGroup>): MetaGroup {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.nameId = 0;
-        if (value !== undefined)
-            reflectionMergePartial<MetaGroup>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<MetaGroup>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MetaGroup): MetaGroup {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MetaGroup
+    ): MetaGroup {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1648,21 +2136,31 @@ class MetaGroup$Type extends MessageType<MetaGroup> {
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: MetaGroup, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: MetaGroup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 name_id = 1; */
-        if (message.nameId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.nameId);
+        if (message.nameId !== 0) writer.tag(1, WireType.Varint).int32(message.nameId);
         /* optional int32 icon_id = 2; */
-        if (message.iconId !== undefined)
-            writer.tag(2, WireType.Varint).int32(message.iconId);
+        if (message.iconId !== undefined) writer.tag(2, WireType.Varint).int32(message.iconId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1677,39 +2175,72 @@ export const MetaGroup = new MetaGroup$Type();
 class MetaGroupCollection$Type extends MessageType<MetaGroupCollection> {
     constructor() {
         super("eve_multitools.data.MetaGroupCollection", [
-            { no: 1, name: "meta_groups", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => MetaGroupCollection_MetaGroupEntry }
+            {
+                no: 1,
+                name: "meta_groups",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => MetaGroupCollection_MetaGroupEntry,
+            },
         ]);
     }
     create(value?: PartialMessage<MetaGroupCollection>): MetaGroupCollection {
-        const message = globalThis.Object.create((this.messagePrototype!));
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.metaGroups = [];
-        if (value !== undefined)
-            reflectionMergePartial<MetaGroupCollection>(this, message, value);
+        if (value !== undefined) reflectionMergePartial<MetaGroupCollection>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MetaGroupCollection): MetaGroupCollection {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MetaGroupCollection
+    ): MetaGroupCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
                 case /* repeated eve_multitools.data.MetaGroupCollection.MetaGroupEntry meta_groups */ 1:
-                    message.metaGroups.push(MetaGroupCollection_MetaGroupEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    message.metaGroups.push(
+                        MetaGroupCollection_MetaGroupEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: MetaGroupCollection, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: MetaGroupCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* repeated eve_multitools.data.MetaGroupCollection.MetaGroupEntry meta_groups = 1; */
         for (let i = 0; i < message.metaGroups.length; i++)
-            MetaGroupCollection_MetaGroupEntry.internalBinaryWrite(message.metaGroups[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            MetaGroupCollection_MetaGroupEntry.internalBinaryWrite(
+                message.metaGroups[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1725,18 +2256,26 @@ class MetaGroupCollection_MetaGroupEntry$Type extends MessageType<MetaGroupColle
     constructor() {
         super("eve_multitools.data.MetaGroupCollection.MetaGroupEntry", [
             { no: 1, name: "meta_group_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "meta_group_data", kind: "message", T: () => MetaGroup }
+            { no: 2, name: "meta_group_data", kind: "message", T: () => MetaGroup },
         ]);
     }
-    create(value?: PartialMessage<MetaGroupCollection_MetaGroupEntry>): MetaGroupCollection_MetaGroupEntry {
-        const message = globalThis.Object.create((this.messagePrototype!));
+    create(
+        value?: PartialMessage<MetaGroupCollection_MetaGroupEntry>
+    ): MetaGroupCollection_MetaGroupEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
         message.metaGroupId = 0;
         if (value !== undefined)
             reflectionMergePartial<MetaGroupCollection_MetaGroupEntry>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MetaGroupCollection_MetaGroupEntry): MetaGroupCollection_MetaGroupEntry {
-        let message = target ?? this.create(), end = reader.pos + length;
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MetaGroupCollection_MetaGroupEntry
+    ): MetaGroupCollection_MetaGroupEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
@@ -1744,26 +2283,46 @@ class MetaGroupCollection_MetaGroupEntry$Type extends MessageType<MetaGroupColle
                     message.metaGroupId = reader.int32();
                     break;
                 case /* required eve_multitools.data.MetaGroup meta_group_data */ 2:
-                    message.metaGroupData = MetaGroup.internalBinaryRead(reader, reader.uint32(), options, message.metaGroupData);
+                    message.metaGroupData = MetaGroup.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.metaGroupData
+                    );
                     break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
                     let d = reader.skip(wireType);
                     if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
             }
         }
         return message;
     }
-    internalBinaryWrite(message: MetaGroupCollection_MetaGroupEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(
+        message: MetaGroupCollection_MetaGroupEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
         /* required int32 meta_group_id = 1; */
-        if (message.metaGroupId !== 0)
-            writer.tag(1, WireType.Varint).int32(message.metaGroupId);
+        if (message.metaGroupId !== 0) writer.tag(1, WireType.Varint).int32(message.metaGroupId);
         /* required eve_multitools.data.MetaGroup meta_group_data = 2; */
         if (message.metaGroupData)
-            MetaGroup.internalBinaryWrite(message.metaGroupData, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+            MetaGroup.internalBinaryWrite(
+                message.metaGroupData,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

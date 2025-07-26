@@ -80,7 +80,7 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
 
     return (
         <div
-            className={`flex items-center gap-3 p-3 rounded shadow bg-white dark:bg-black min-w-[220px] max-w-full ${className || ""}`}
+            className={`flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full ${className || ""}`}
         >
             {/* 图片 */}
             <TypeImage
@@ -97,7 +97,7 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                 </div>
                 <div className="text-sm text-gray-500 mt-1 line-clamp-2">{loading ? "" : desc}</div>
             </div>
-            <div className="flex-shrink-0 text-sm text-gray-500">
+            <div className="shrink-0 text-sm text-gray-500">
                 ID {typeId}
                 <br />
                 Category {categoryName ? categoryName : "未知"}
