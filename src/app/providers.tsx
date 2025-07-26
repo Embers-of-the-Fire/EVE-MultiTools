@@ -12,6 +12,7 @@ import { GlobalLoadingProvider, useGlobalLoading } from "@/contexts/GlobalLoadin
 import { AppInitializer } from "@/components/AppInitializer";
 import { globalConfig } from "@/lib/global-config";
 import { i18n } from "@/locale/i18n";
+import { TypeExploreProvider } from "@/contexts/TypeExploreContext";
 
 export interface ProvidersProps {
     children: React.ReactNode;
@@ -104,10 +105,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
                 <GlobalConfigInitializer>
                     <SettingsProvider>
                         <BundleProvider>
-                            <I18nInitializer>
-                                <AppInitializer>{children}</AppInitializer>
-                                <Toaster />
-                            </I18nInitializer>
+                            <TypeExploreProvider>
+                                <I18nInitializer>
+                                    <AppInitializer>{children}</AppInitializer>
+                                    <Toaster />
+                                </I18nInitializer>
+                            </TypeExploreProvider>
                         </BundleProvider>
                     </SettingsProvider>
                 </GlobalConfigInitializer>

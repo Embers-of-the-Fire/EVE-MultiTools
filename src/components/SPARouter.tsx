@@ -42,9 +42,5 @@ export function SPARouter() {
 
     const Component = route.component;
 
-    return (
-        <Suspense fallback={<LoadingSpinner />}>
-            <Component />
-        </Suspense>
-    );
+    return <Suspense fallback={<LoadingSpinner />}>{Component && <Component />}</Suspense>;
 }

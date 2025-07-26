@@ -10,7 +10,7 @@ export function SPALayout() {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <SidebarInset>
+            <SidebarInset className="h-[100vh]">
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4 flex-1">
                         <SidebarTrigger className="-ml-1" />
@@ -25,7 +25,7 @@ export function SPALayout() {
                         <LangSwitch />
                     </div>
                 </header>
-                <main className="flex-1">
+                <main className="flex-1 h-full overflow-hidden flex flex-col">
                     <SPARouter />
                 </main>
                 <footer className="w-full flex items-center justify-center py-3 border-t border-divider">

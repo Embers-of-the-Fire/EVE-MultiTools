@@ -536,28 +536,13 @@ try:
         """
     )
 
-    cursor.execute(
-        """
-        CREATE VIRTUAL TABLE IF NOT EXISTS localization_fts USING fts5(
-            en, 
-            zh,
-            content='localization',
-            content_rowid='key'
-        )
-        """
-    )
-
     for key in en_data:
         cursor.execute(
             "INSERT OR REPLACE INTO localization (key, en, zh) VALUES (?, ?, ?)",
             (key, en_data[key][0], zh_data.get(key, [""])[0]),
         )
 
-    cursor.execute(
-        "INSERT INTO localization_fts(rowid, en, zh) SELECT key, en, zh FROM localization"
-    )
-
-    _success("Created localization table and FTS index.")
+    _success("Created localization table.")
     db.commit()
     db.close()
 except sqlite3.Error as e:

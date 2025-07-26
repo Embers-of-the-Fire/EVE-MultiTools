@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::{
     bundle::BundleDescriptor,
     data::{image::ImageService, localization::LocalizationService, statics::StaticsService},
@@ -12,6 +14,7 @@ pub struct Bundle {
 
 impl Bundle {
     pub async fn load(descriptor: BundleDescriptor) -> anyhow::Result<Self> {
+        info!("Loading bundle: {}", descriptor.metadata.server_id);
         Ok(Bundle {
             images: ImageService::init(&descriptor.root)?,
             localization: LocalizationService::init(&descriptor.root).await?,

@@ -16,6 +16,8 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useSPARouter } from "@/contexts/SPARouterContext";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 type NavItemType = {
     title: string;
@@ -45,9 +47,86 @@ type FlattenedNavItem = {
     }[];
 };
 
-export function NavMain({ items }: { items: NavItemType[] }) {
+function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
+    const [open, setOpen] = useState<boolean>(item.isActive ?? false);
     const { t } = useTranslation();
     const { navigate } = useSPARouter();
+
+    const hasChildren = item.items && item.items.length > 0;
+
+    if (hasChildren) {
+        return (
+            <Collapsible
+                key={item.title}
+                asChild
+                open={open}
+                defaultOpen={item.isActive}
+                className="group/collapsible"
+            >
+                <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                            tooltip={t(item.title)}
+                            onClick={() => {
+                                console.log(0);
+                                setOpen(true);
+                                if (item.containsPage) {
+                                    navigate(item.url);
+                                }
+                            }}
+                        >
+                            {item.icon && <item.icon />}
+                            <span>{t(item.title)}</span>
+                            <ChevronRight
+                                className={cn(
+                                    "ml-auto transition-transform duration-200",
+                                    "group-data-[state=open]/collapsible:rotate-90",
+                                    "group-data-[state=open]/collapsible:hover:rotate-0",
+                                    "group-data-[state=closed]/collapsible:hover:rotate-90"
+                                )}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setOpen(!open);
+                                }}
+                            />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <SidebarMenuSub>
+                            {item.items?.map((subItem) => (
+                                <SidebarMenuSubItem key={subItem.title}>
+                                    <SidebarMenuSubButton asChild>
+                                        <button
+                                            type="button"
+                                            onClick={() => navigate(subItem.url)}
+                                            className="w-full text-left"
+                                        >
+                                            <span>{t(subItem.title)}</span>
+                                        </button>
+                                    </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            ))}
+                        </SidebarMenuSub>
+                    </CollapsibleContent>
+                </SidebarMenuItem>
+            </Collapsible>
+        );
+    } else {
+        return (
+            <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton tooltip={t(item.title)} asChild>
+                    <button type="button" className="w-full text-left">
+                        {item.icon && <item.icon />}
+                        <span>{t(item.title)}</span>
+                    </button>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        );
+    }
+}
+
+export function NavMain({ items }: { items: NavItemType[] }) {
+    const { t } = useTranslation();
 
     // 扁平化处理，将嵌套的子项展开
     const flattenItems = (items: NavItemType[]): FlattenedNavItem[] => {
@@ -85,71 +164,9 @@ export function NavMain({ items }: { items: NavItemType[] }) {
             <SidebarGroupLabel>{t("nav.platform")}</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {processedItems.map((item) => {
-                        const hasChildren = item.items && item.items.length > 0;
-
-                        if (hasChildren) {
-                            // 有子菜单的项目 - 使用折叠组件，点击主按钮时既跳转又展开
-                            return (
-                                <Collapsible
-                                    key={item.title}
-                                    asChild
-                                    defaultOpen={item.isActive}
-                                    className="group/collapsible"
-                                >
-                                    <SidebarMenuItem>
-                                        <CollapsibleTrigger asChild>
-                                            <SidebarMenuButton
-                                                tooltip={t(item.title)}
-                                                onClick={() =>
-                                                    item.containsPage && navigate(item.url)
-                                                }
-                                            >
-                                                {item.icon && <item.icon />}
-                                                <span>{t(item.title)}</span>
-                                                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                            </SidebarMenuButton>
-                                        </CollapsibleTrigger>
-                                        <CollapsibleContent>
-                                            <SidebarMenuSub>
-                                                {item.items?.map((subItem) => (
-                                                    <SidebarMenuSubItem key={subItem.title}>
-                                                        <SidebarMenuSubButton asChild>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    navigate(subItem.url)
-                                                                }
-                                                                className="w-full text-left"
-                                                            >
-                                                                <span>{t(subItem.title)}</span>
-                                                            </button>
-                                                        </SidebarMenuSubButton>
-                                                    </SidebarMenuSubItem>
-                                                ))}
-                                            </SidebarMenuSub>
-                                        </CollapsibleContent>
-                                    </SidebarMenuItem>
-                                </Collapsible>
-                            );
-                        } else {
-                            // 没有子菜单的项目 - 使用普通按钮
-                            return (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton tooltip={t(item.title)} asChild>
-                                        <button
-                                            type="button"
-                                            onClick={() => item.containsPage && navigate(item.url)}
-                                            className="w-full text-left"
-                                        >
-                                            {item.icon && <item.icon />}
-                                            <span>{t(item.title)}</span>
-                                        </button>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            );
-                        }
-                    })}
+                    {processedItems.map((item) => (
+                        <CollapsibleMenu key={item.url} item={item} />
+                    ))}
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>

@@ -1,4 +1,3 @@
-use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::io::BufReader;
 use std::{collections::HashMap, path::PathBuf};
@@ -221,17 +220,16 @@ impl BundleState {
 
     pub fn remove_bundle(&mut self, server_id: &str) -> anyhow::Result<()> {
         if let Some(descriptor) = self.bundles.remove(server_id) {
-            // 删除bundle目录
-            if descriptor.root.exists() {
-                std::fs::remove_dir_all(&descriptor.root)?;
-            }
-
             if self
                 .activated_bundle
                 .as_ref()
                 .is_some_and(|b| b.descriptor.metadata.server_id == descriptor.metadata.server_id)
             {
                 self.activated_bundle = None;
+            }
+
+            if descriptor.root.exists() {
+                std::fs::remove_dir_all(&descriptor.root)?;
             }
 
             Ok(())
@@ -326,7 +324,6 @@ pub async fn import_bundle_file(
     let data_dir_clone = data_dir.clone();
     tokio::spawn(async move {
         let bundle_state = app_clone.state::<AppBundleState>();
-        let config_state = app_clone.state::<crate::config::AppConfigState>();
         let import_result =
             BundleState::import_bundle(bundle_path, data_dir, progress_sender).await;
 
@@ -349,45 +346,6 @@ pub async fn import_bundle_file(
                     // Emit bundles-changed event
                     if let Err(e) = app_clone.emit("bundles-changed", ()) {
                         log::error!("Failed to emit bundles-changed event: {e:?}");
-                    }
-
-                    // Check if this is the only bundle and auto-activate if so
-                    let should_auto_activate =
-                        state.bundles.len() == 1 && state.activated_bundle.is_none();
-
-                    if should_auto_activate {
-                        // Get the server ID of the newly imported bundle
-                        let server_id_opt = {
-                            let state = bundle_state.lock().await;
-                            state
-                                .bundles
-                                .iter()
-                                .next()
-                                .map(|(server_id, _)| server_id.clone())
-                        };
-
-                        if let Some(server_id) = server_id_opt {
-                            let activate_result = {
-                                let mut state = bundle_state.lock().await;
-                                state.activate_bundle(&server_id).await
-                            };
-
-                            if let Err(e) = activate_result {
-                                error!("Failed to auto-activate bundle {server_id}: {e:?}");
-                            } else {
-                                info!("Auto-activated bundle: {server_id}");
-
-                                // Save to config
-                                if let Ok(mut config) = config_state.config.lock() {
-                                    config.global_settings.enabled_bundle_id = Some(server_id);
-                                    if let Err(e) = config.save_to_file() {
-                                        log::error!(
-                                            "Failed to save config after auto-activation: {e:?}"
-                                        );
-                                    }
-                                }
-                            }
-                        }
                     }
 
                     result = ImportResult {

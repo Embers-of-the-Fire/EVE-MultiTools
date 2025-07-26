@@ -47,38 +47,40 @@ impl LocalizationService {
         language: LocLanguage,
         limit: u32,
     ) -> anyhow::Result<Vec<i32>> {
-        match language {
+        let name = format!("%{name}%");
+        let mut filtered: Vec<_> = match language {
             LocLanguage::English => {
                 let rows = sqlx::query!(
-                    "SELECT lt.type_id \
+                    "SELECT loc.en, lt.type_id \
                      FROM loc_type lt \
-                     JOIN localization_fts fts ON lt.type_name_id = fts.rowid \
-                     WHERE fts.en MATCH ? \
-                     ORDER BY bm25(localization_fts) ASC \
-                     LIMIT ?",
-                    name,
-                    limit
+                     JOIN localization loc ON lt.type_name_id = loc.key \
+                     WHERE loc.en LIKE ?",
+                    name
                 )
                 .fetch_all(self.db.pool())
                 .await?;
-                Ok(rows.into_iter().map(|x| x.type_id as i32).collect())
+                rows.into_iter()
+                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.en, &name)))
+                    .collect()
             }
             LocLanguage::Chinese => {
                 let rows = sqlx::query!(
-                    "SELECT lt.type_id \
+                    "SELECT loc.zh, lt.type_id \
                      FROM loc_type lt \
-                     JOIN localization_fts fts ON lt.type_name_id = fts.rowid \
-                     WHERE fts.zh MATCH ? \
-                     ORDER BY bm25(localization_fts) ASC \
-                     LIMIT ?",
-                    name,
-                    limit
+                     JOIN localization loc ON lt.type_name_id = loc.key \
+                     WHERE loc.zh LIKE ?",
+                    name
                 )
                 .fetch_all(self.db.pool())
                 .await?;
-                Ok(rows.into_iter().map(|x| x.type_id as i32).collect())
+                rows.into_iter()
+                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.zh, &name)))
+                    .collect()
             }
-        }
+        };
+        filtered.sort_by_key(|(_, score)| *score);
+        filtered.truncate(limit as usize);
+        Ok(filtered.into_iter().map(|(id, _)| id as i32).collect())
     }
 
     pub async fn search_type_by_description(
@@ -87,38 +89,40 @@ impl LocalizationService {
         language: LocLanguage,
         limit: u32,
     ) -> anyhow::Result<Vec<i32>> {
-        match language {
+        let desc = format!("%{desc}%");
+        let mut filtered: Vec<_> = match language {
             LocLanguage::English => {
                 let rows = sqlx::query!(
-                    "SELECT lt.type_id \
+                    "SELECT loc.en, lt.type_id \
                      FROM loc_type lt \
-                     JOIN localization_fts fts ON lt.type_description_id = fts.rowid \
-                     WHERE fts.en MATCH ? \
-                     ORDER BY bm25(localization_fts) ASC \
-                     LIMIT ?",
-                    desc,
-                    limit
+                     JOIN localization loc ON lt.type_description_id = loc.key \
+                     WHERE loc.en LIKE ?",
+                    desc
                 )
                 .fetch_all(self.db.pool())
                 .await?;
-                Ok(rows.into_iter().map(|x| x.type_id as i32).collect())
+                rows.into_iter()
+                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.en, &desc)))
+                    .collect()
             }
             LocLanguage::Chinese => {
                 let rows = sqlx::query!(
-                    "SELECT lt.type_id \
+                    "SELECT loc.zh, lt.type_id \
                      FROM loc_type lt \
-                     JOIN localization_fts fts ON lt.type_description_id = fts.rowid \
-                     WHERE fts.zh MATCH ? \
-                     ORDER BY bm25(localization_fts) ASC \
-                     LIMIT ?",
+                     JOIN localization loc ON lt.type_description_id = loc.key \
+                     WHERE loc.zh LIKE ?",
                     desc,
-                    limit
                 )
                 .fetch_all(self.db.pool())
                 .await?;
-                Ok(rows.into_iter().map(|x| x.type_id as i32).collect())
+                rows.into_iter()
+                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.zh, &desc)))
+                    .collect()
             }
-        }
+        };
+        filtered.sort_by_key(|(_, score)|*score);
+        filtered.truncate(limit as usize);
+        Ok(filtered.into_iter().map(|(id, _)| id as i32).collect())
     }
 }
 

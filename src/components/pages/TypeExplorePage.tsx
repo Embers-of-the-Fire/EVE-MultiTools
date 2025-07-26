@@ -1,14 +1,191 @@
 import { useTranslation } from "react-i18next";
 import { PageLayout } from "../layout";
+import { useTypeExplore } from "@/contexts/TypeExploreContext";
+import { Fragment, useState, useRef, useEffect } from "react";
+import { searchTypeByName, getType, getLocalizationByLang } from "@/native/data";
+import { useTranslation as useTranslationI18n } from "react-i18next";
+type SearchResult = { id: number; name: string };
+import { Input } from "../ui/input";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { History, Search, X } from "lucide-react";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Separator } from "../ui/separator";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+import TypeCard from "../TypeCard";
+
+function TypeHistoryButton() {
+    const { history, setCurrentTypeID } = useTypeExplore();
+    const [open, setOpen] = useState(false);
+    const { t } = useTranslation();
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!open) return;
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
+
+    return (
+        <div className="relative inline-block mr-6" ref={dropdownRef}>
+            <Button
+                variant="default"
+                size="icon"
+                className="size-12 [&_svg]:size-5"
+                onClick={() => setOpen(!open)}
+            >
+                <History size="64" />
+            </Button>
+            <div
+                className={`absolute right-0 mt-2 rounded-md max-h-72 min-w-[180px] z-50 bg-white dark:bg-black shadow-lg
+                    transition-all duration-200 ease-in-out
+                    ${open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
+                style={{
+                    transitionProperty: "opacity, transform",
+                }}
+            >
+                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 border-2">
+                    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] max-h-72">
+                        <div className="my-1">
+                            {history.length === 0 ? (
+                                <div className="p-3">暂无历史</div>
+                            ) : (
+                                history.map((id) => (
+                                    <Fragment key={id}>
+                                        <Button
+                                            variant="ghost"
+                                            className={`w-full text-left px-4 py-2 cursor-pointer transition-colors focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-800`}
+                                            onClick={() => {
+                                                setCurrentTypeID(id);
+                                                setOpen(false);
+                                            }}
+                                        >
+                                            TypeID: {id}
+                                        </Button>
+                                        <Separator className="last:hidden" />
+                                    </Fragment>
+                                ))
+                            )}
+                        </div>
+                    </ScrollAreaPrimitive.Viewport>
+                    <ScrollBar />
+                    <ScrollAreaPrimitive.Corner />
+                </ScrollAreaPrimitive.Root>
+            </div>
+        </div>
+    );
+}
 
 export function TypeExplorePage() {
     const { t } = useTranslation();
+    const [search, setSearch] = useState("");
+    const [focused, setFocused] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const [results, setResults] = useState<SearchResult[]>([]);
+    const [loading, setLoading] = useState(false);
+    const { i18n } = useTranslationI18n();
+
+    useEffect(() => {
+        let ignore = false;
+        if (!search.trim()) {
+            setResults([]);
+            return;
+        }
+        setLoading(true);
+        (async () => {
+            try {
+                const ids = await searchTypeByName(search, i18n.language === "zh" ? "zh" : "en");
+                const items: SearchResult[] = [];
+                for (const id of ids) {
+                    const type = await getType(id);
+                    if (!type) continue;
+                    const name = await getLocalizationByLang(
+                        type.type_name_id,
+                        i18n.language === "zh" ? "zh" : "en"
+                    );
+                    items.push({ id, name: name || String(id) });
+                }
+                if (!ignore) setResults(items);
+            } finally {
+                if (!ignore) setLoading(false);
+            }
+        })();
+        return () => {
+            ignore = true;
+        };
+    }, [search, i18n.language]);
+
     return (
-        <PageLayout title={t("explore.type.title", "物品/Type")}
-                    description={t("explore.type.desc", "探索所有物品类型")}
+        <PageLayout
+            title={t("explore.type.title")}
+            description={t("explore.type.desc")}
+            actions={<TypeHistoryButton />}
         >
-            
-            <div>{t("explore.type.content", "这里是物品/Type子页面")}</div>
+            <div
+                className={cn(
+                    "flex items-center w-full px-4 border-b-2 mb-4",
+                    "transition-all duration-300",
+                    focused ? "w-full border-black dark:border-white" : "w-48 md:w-64"
+                )}
+            >
+                <Search />
+                <Input
+                    ref={inputRef}
+                    className={cn(
+                        "px-2 h-14 w-full font-sans text-lg outline-none rounded-none",
+                        "bg-transparent text-default-700 placeholder-default-500",
+                        "dark:text-default-500 dark:placeholder:text-default-300",
+                        "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    )}
+                    placeholder={t("explore.type.search.placeholder")}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    autoComplete="off"
+                    spellCheck={false}
+                    style={{ minWidth: 0 }}
+                />
+                <Button
+                    variant="ghost"
+                    className="size-10"
+                    size="icon"
+                    onClick={() => {
+                        setSearch("");
+                        inputRef.current?.blur();
+                    }}
+                    tabIndex={-1}
+                >
+                    <X />
+                </Button>
+            </div>
+            {/* 搜索结果整体列表卡片展示 */}
+            <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
+                {loading && <div>加载中...</div>}
+                {!loading && results.length > 0 && (
+                    <ScrollArea className="border rounded bg-white dark:bg-black/30 shadow p-4 my-2 flex flex-col min-h-0 flex-1 w-full max-w-none">
+                        <div className="font-bold mb-2">搜索结果</div>
+                        <div className="flex flex-col gap-2 flex-1 min-h-0 w-full max-w-none">
+                            {results.map((item) => (
+                                <TypeCard
+                                    key={item.id}
+                                    typeId={item.id}
+                                    className="border-b last:border-b-0 py-1 w-full max-w-none"
+                                />
+                            ))}
+                        </div>
+                    </ScrollArea>
+                )}
+                {!loading && search && results.length === 0 && <div>无结果</div>}
+            </div>
         </PageLayout>
     );
 }

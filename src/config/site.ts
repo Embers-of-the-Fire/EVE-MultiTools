@@ -21,32 +21,6 @@ export type SiteConfig = {
 export const siteConfig: SiteConfig = {
     name: "EVE MultiTools",
     description: "EVE MultiTools",
-    workspaces: [
-        {
-            key: "eve-corp",
-            label: "EVE Corp",
-            description: "Main corporate workspace",
-            icon: "solar:users-group-two-rounded-outline",
-        },
-        {
-            key: "personal",
-            label: "Personal",
-            description: "Personal workspace",
-            icon: "solar:user-bold",
-        },
-        {
-            key: "alliance",
-            label: "Alliance",
-            description: "Alliance workspace",
-            icon: "solar:users-group-two-rounded-outline",
-        },
-        {
-            key: "trading",
-            label: "Trading Hub",
-            description: "Trading operations",
-            icon: "solar:chart-square-linear",
-        },
-    ],
     layout: {
         showSidebar: true,
         showBreadcrumb: true,
