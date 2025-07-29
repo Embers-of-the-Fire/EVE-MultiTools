@@ -487,21 +487,51 @@ async def collect_icons_async():
 asyncio.run(collect_icons_async())
 
 
+#### 3.2.3 Collect skin material icons
+# The icons is stored in the resource `res:/ui/texture/classes/skins/icons/<id>.png`.
+# We will collect all skin material icons and store them in `images/skins/materials`.
+# Since collecting skin material list requires a sqlite fetch,
+# we choose to simply collect all resources stored there.
+
+
+async def collect_skin_material_icons_async():
+    cprint("Collecting skin material icons...", "green", attrs=["bold"])
+    BUNDLE_SKIN_MATERIALS = BUNDLE_IMAGES / "skins" / "materials"
+    BUNDLE_SKIN_MATERIALS.mkdir(parents=True, exist_ok=True)
+    skin_materials = await res_file_index.get_resources_async(
+        "res:/ui/texture/classes/skins/icons", download=False
+    )
+    if not skin_materials:
+        _error("No skin material icons found in resource index.")
+    download_tasks = []
+    for skin_material in skin_materials:
+        if not skin_material.file_name.endswith(".png"):
+            continue
+        target_path = BUNDLE_SKIN_MATERIALS / skin_material.file_name
+        task = download_and_copy_icon(
+            skin_material.res_id,
+            target_path,
+            f"skin material icon {skin_material.file_name}",
+        )
+        download_tasks.append(task)
+
+    if download_tasks:
+        await asyncio.gather(*download_tasks)
+
+
+asyncio.run(collect_skin_material_icons_async())
+
+
 ### 3.3 Collect localizations
 # The localization files is stored in resource
 # `res:/localizationfsd/localization_fsd_<lang code>.pickle`.
 # Currently we only support English and Chinese.
 # The localization files are Python3-compatible pickle files.
-# However, we cannot use them directly as we dont have python
-# in the release bundle.
-# So we will convert them to a SQLite database file.
+# We will now store them as protobuf files for faster loading.
 cprint("Collecting localizations...", "green", attrs=["bold"])
 BUNDLE_LOCALIZATIONS = BUNDLE_ROOT / "localizations"
 BUNDLE_LOCALIZATIONS.mkdir(parents=True, exist_ok=True)
-BUNDLE_LOC_DB = BUNDLE_LOCALIZATIONS / "localizations.db"
-if BUNDLE_LOC_DB.exists():
-    _warning(f"Localization database '{BUNDLE_LOC_DB}' already exists. It will be overwritten.")
-    BUNDLE_LOC_DB.unlink()
+
 en = res_file_index.get_resource("res:/localizationfsd/localization_fsd_en-us.pickle")
 if not en:
     _error("English localization file not found in resource index.")
@@ -522,31 +552,26 @@ with open(zh.file_path, "rb") as f:
     except Exception as e:
         _error(f"Unable to load Chinese localization data: {e}")
 
-db = sqlite3.connect(BUNDLE_LOC_DB)
-try:
-    cursor = db.cursor()
+# Create protobuf localization collection
+localization_collection = schema_pb2.LocalizationCollection()
+for key in en_data:
+    en_text = en_data[key][0] if key in en_data else ""
+    zh_text = zh_data.get(key, [""])[0]
+    
+    loc_entry = localization_collection.localizations.add()
+    loc_entry.key = key
+    loc_entry.localization_data.en = en_text
+    loc_entry.localization_data.zh = zh_text
 
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS localization (
-            key INTEGER UNIQUE PRIMARY KEY,
-            en TEXT NOT NULL,
-            zh TEXT NOT NULL
-        )
-        """
-    )
+# Save localization protobuf
+BUNDLE_LOC_PB = BUNDLE_LOCALIZATIONS / "localizations.pb"
+if BUNDLE_LOC_PB.exists():
+    _warning(f"Localization protobuf file '{BUNDLE_LOC_PB}' already exists. It will be overwritten.")
+    BUNDLE_LOC_PB.unlink()
 
-    for key in en_data:
-        cursor.execute(
-            "INSERT OR REPLACE INTO localization (key, en, zh) VALUES (?, ?, ?)",
-            (key, en_data[key][0], zh_data.get(key, [""])[0]),
-        )
-
-    _success("Created localization table.")
-    db.commit()
-    db.close()
-except sqlite3.Error as e:
-    _error(f"SQLite error: {e}")
+with open(BUNDLE_LOC_PB, "wb+") as f:
+    f.write(localization_collection.SerializeToString())
+_success("Created localization protobuf file.")
 
 ### 3.4 Collect static data
 # This section is for collecting static data.
@@ -681,22 +706,8 @@ class TypeID(BaseModel):
 types = fsd.get_fsd("types")
 type_collection = schema_pb2.TypeCollection()
 
-loc_db = sqlite3.connect(BUNDLE_LOC_DB)
-cursor = loc_db.cursor()
-# Create table for type localization
-
-cursor.execute(
-    """
-    CREATE TABLE IF NOT EXISTS loc_type (
-        type_id INTEGER NOT NULL UNIQUE PRIMARY KEY,
-        type_name_id INTEGER NOT NULL,
-        type_description_id INTEGER
-    )
-    """
-)
-
-cursor.execute("CREATE INDEX IF NOT EXISTS idx_type_name_id ON loc_type(type_name_id)")
-cursor.execute("CREATE INDEX IF NOT EXISTS idx_type_desc_id ON loc_type(type_description_id)")
+# Create type localization lookup
+type_loc_lookup = schema_pb2.TypeLocalizationLookup()
 
 for type_id, type_def in types.items():
     try:
@@ -709,14 +720,12 @@ for type_id, type_def in types.items():
     type_entry.type_id = int(type_id)
     type_entry.type_data.CopyFrom(pydantic_to_protobuf_type_id(validated, int(type_id)))
 
-    # Insert into lookup table
-    cursor.execute(
-        "INSERT OR REPLACE INTO loc_type (type_id, type_name_id, type_description_id) VALUES (?, ?, ?)",
-        (int(type_id), validated.typeNameID, validated.descriptionID),
-    )
-
-loc_db.commit()
-loc_db.close()
+    # Add to type localization lookup
+    loc_entry = type_loc_lookup.type_entries.add()
+    loc_entry.type_id = int(type_id)
+    loc_entry.type_name_id = validated.typeNameID
+    if validated.descriptionID is not None:
+        loc_entry.type_description_id = validated.descriptionID
 
 BUNDLE_STATIC_TYPES = BUNDLE_STATIC / "types.pb"
 if BUNDLE_STATIC_TYPES.exists():
@@ -726,6 +735,25 @@ if BUNDLE_STATIC_TYPES.exists():
 with open(BUNDLE_STATIC_TYPES, "wb+") as f:
     f.write(type_collection.SerializeToString())
 _success("Processed types information.")
+
+# Save type localization lookup
+BUNDLE_STATIC_TYPES = BUNDLE_STATIC / "types.pb"
+if BUNDLE_STATIC_TYPES.exists():
+    _warning(f"Types protobuf file '{BUNDLE_STATIC_TYPES}' already exists. It will be overwritten.")
+    BUNDLE_STATIC_TYPES.unlink()
+# Save as protobuf binary
+with open(BUNDLE_STATIC_TYPES, "wb+") as f:
+    f.write(type_collection.SerializeToString())
+_success("Processed types information.")
+
+# Save type localization lookup
+BUNDLE_TYPE_LOC_LOOKUP = BUNDLE_LOCALIZATIONS / "type_localization_lookup.pb"
+if BUNDLE_TYPE_LOC_LOOKUP.exists():
+    _warning(f"Type localization lookup file '{BUNDLE_TYPE_LOC_LOOKUP}' already exists. It will be overwritten.")
+    BUNDLE_TYPE_LOC_LOOKUP.unlink()
+with open(BUNDLE_TYPE_LOC_LOOKUP, "wb+") as f:
+    f.write(type_loc_lookup.SerializeToString())
+_success("Processed type localization lookup information.")
 
 ##### 3.4.1.2 Collect type dogma
 # Type dogma definitions are stored in `fsd/typedogma.json`.
@@ -1073,6 +1101,151 @@ if BUNDLE_STATIC_META_GROUPS.exists():
 with open(BUNDLE_STATIC_META_GROUPS, "wb+") as f:
     f.write(meta_group_collection.SerializeToString())
 _success("Processed meta groups information.")
+
+##### 3.4.1.7 Collect skin infos
+# Skin definitions are stored in `res:/staticdata/skins.static`, `res:/staticdata/skinmaterials.static`,
+# and `res:/staticdata/skinlicenses.static`.
+# The three static files are sqlite3 databases.
+# We'll re-format them into a single SQLite database file.
+
+BUNDLE_SKINS_DB = BUNDLE_STATIC / "skins.db"
+if BUNDLE_SKINS_DB.exists():
+    _warning(f"Skins database '{BUNDLE_SKINS_DB}' already exists. It will be overwritten.")
+    BUNDLE_SKINS_DB.unlink()
+# 初始化 skins.db 的表结构
+skins_db = sqlite3.connect(BUNDLE_SKINS_DB)
+try:
+    cursor = skins_db.cursor()
+    # skins 表
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS skins (
+            skin_id INTEGER PRIMARY KEY,
+            internal_name TEXT NOT NULL,
+            allow_ccp_devs BOOLEAN NOT NULL,
+            skin_material_id INTEGER NOT NULL,
+            visible_serenity BOOLEAN NOT NULL,
+            visible_tranquility BOOLEAN NOT NULL
+        )
+        """
+    )
+    # skin_materials 表
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS skin_materials (
+            skin_material_id INTEGER PRIMARY KEY,
+            display_name_id INTEGER NOT NULL,
+            material_set_id INTEGER NOT NULL
+        )
+        """
+    )
+    # skin_licenses 表
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS skin_licenses (
+            license_id INTEGER PRIMARY KEY,
+            skin_id INTEGER NOT NULL,
+            duration INTEGER NOT NULL,
+            FOREIGN KEY (skin_id) REFERENCES skins(skin_id)
+        )
+        """
+    )
+    # skin_types 表
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS skin_types (
+            skin_id INTEGER NOT NULL,
+            type_id INTEGER NOT NULL,
+            PRIMARY KEY (skin_id, type_id),
+            FOREIGN KEY (skin_id) REFERENCES skins(skin_id)
+        )
+        """
+    )
+    # 常用索引
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_skin_licenses_skin_id ON skin_licenses(skin_id)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_skin_types_type_id ON skin_types(type_id)")
+    skins_db.commit()
+
+    with (
+        sqlite3.connect(
+            res_file_index.get_resource("res:/staticdata/skins.static").file_path
+        ) as skins_static_db,
+        sqlite3.connect(
+            res_file_index.get_resource("res:/staticdata/skinmaterials.static").file_path
+        ) as skin_materials_static_db,
+        sqlite3.connect(
+            res_file_index.get_resource("res:/staticdata/skinlicenses.static").file_path
+        ) as skin_licenses_static_db,
+    ):
+        skins_static_cur = skins_static_db.cursor()
+        skin_materials_static_cur = skin_materials_static_db.cursor()
+        skin_licenses_static_cur = skin_licenses_static_db.cursor()
+
+        cursor.executemany(
+            "INSERT INTO skins VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                (
+                    key,
+                    value["internalName"],
+                    value["allowCCPDevs"],
+                    value["skinMaterialID"],
+                    value["visibleSerenity"],
+                    value["visibleTranquility"],
+                )
+                for key, value in map(
+                    lambda t: (t[0], json.loads(t[1])),
+                    skins_static_cur.execute("SELECT key, value FROM cache").fetchall(),
+                )
+            ),
+        )
+        # 插入 skin_materials
+        cursor.executemany(
+            "INSERT INTO skin_materials VALUES (?, ?, ?)",
+            (
+                (
+                    key,
+                    value["displayNameID"],
+                    value["materialSetID"],
+                )
+                for key, value in map(
+                    lambda t: (t[0], json.loads(t[1])),
+                    skin_materials_static_cur.execute("SELECT key, value FROM cache").fetchall(),
+                )
+            ),
+        )
+        # 插入 skin_licenses
+        cursor.executemany(
+            "INSERT INTO skin_licenses (license_id, skin_id, duration) VALUES (?, ?, ?)",
+            (
+                (
+                    value["licenseTypeID"],
+                    value["skinID"],
+                    value["duration"],
+                )
+                for _, value in map(
+                    lambda t: (t[0], json.loads(t[1])),
+                    skin_licenses_static_cur.execute("SELECT key, value FROM cache").fetchall(),
+                )
+            ),
+        )
+        # 插入 skin_types（皮肤与类型的多对多关系）
+        for key, value in map(
+            lambda t: (t[0], json.loads(t[1])),
+            skins_static_cur.execute("SELECT key, value FROM cache").fetchall(),
+        ):
+            if "types" in value and value["types"]:
+                cursor.executemany(
+                    "INSERT INTO skin_types (skin_id, type_id) VALUES (?, ?)",
+                    ((key, type_id) for type_id in value["types"]),
+                )
+
+    skins_db.commit()
+    _success("Initialized skins.db with skins, skin materials, and skin licenses.")
+    _success("Populated skins, skin materials, and skin licenses tables.")
+except sqlite3.Error as e:
+    _error(f"SQLite error while initializing skins.db: {e}")
+finally:
+    skins_db.close()
 
 ## 4. Package the bundle
 cprint("Packaging bundle...", "green", attrs=["bold"])

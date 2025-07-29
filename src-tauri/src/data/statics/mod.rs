@@ -3,6 +3,7 @@ use std::path::Path;
 pub mod categories;
 pub mod groups;
 pub mod meta_groups;
+pub mod skins;
 pub mod types;
 
 pub struct StaticsService {
@@ -10,6 +11,7 @@ pub struct StaticsService {
     pub categories: categories::CategoriesService,
     pub groups: groups::GroupsService,
     pub meta_groups: meta_groups::MetaGroupsService,
+    pub skins: skins::SkinService,
 }
 
 impl StaticsService {
@@ -19,12 +21,14 @@ impl StaticsService {
         let categories = categories::CategoriesService::init(&static_path).await?;
         let groups = groups::GroupsService::init(&static_path).await?;
         let meta_groups = meta_groups::MetaGroupsService::init(&static_path).await?;
+        let skins = skins::SkinService::init(&static_path).await?;
 
         Ok(Self {
             types,
             categories,
             groups,
             meta_groups,
+            skins,
         })
     }
 }

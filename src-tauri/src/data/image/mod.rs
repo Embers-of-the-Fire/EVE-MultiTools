@@ -1,14 +1,16 @@
 use std::path::Path;
 
-use crate::data::image::{graphic::GraphicService, icon::IconService};
+use crate::data::image::{graphic::GraphicService, icon::IconService, skin::SkinService};
 
 pub mod graphic;
 pub mod icon;
+pub mod skin;
 
 #[derive(Debug)]
 pub struct ImageService {
     pub graphic: GraphicService,
     pub icon: IconService,
+    pub skin: SkinService,
 }
 
 impl ImageService {
@@ -17,6 +19,7 @@ impl ImageService {
         Ok(Self {
             graphic: GraphicService::init(&image_path)?,
             icon: IconService::init(&image_path)?,
+            skin: SkinService::init(&image_path)?,
         })
     }
 }

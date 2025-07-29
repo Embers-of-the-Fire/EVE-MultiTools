@@ -1,6 +1,16 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::anyhow;
+use serde_repr::{Serialize_repr, Deserialize_repr};
+
+#[repr(u8)]
+#[derive(Debug, Clone, Copy, Serialize_repr, Deserialize_repr)]
+#[serde(untagged)]
+pub enum GraphicType {
+    Icon = 0,
+    Blueprint = 1,
+    BlueprintCopy = 2,
+}
 
 #[derive(Debug)]
 pub struct GraphicService {
@@ -19,8 +29,12 @@ impl GraphicService {
         Ok(Self { graphic_path: path })
     }
 
-    pub fn get_path(&self, graphic_id: u32) -> PathBuf {
-        self.graphic_path.join(format!("{graphic_id}.png"))
+    pub fn get_path(&self, graphic_id: u32, graphic_type: GraphicType) -> PathBuf {
+        self.graphic_path.join(format!("{graphic_id}{}.png", match graphic_type {
+            GraphicType::Icon => "",
+            GraphicType::Blueprint => "_bp",
+            GraphicType::BlueprintCopy => "_bpc",
+        }))
     }
 }
 
@@ -28,6 +42,7 @@ impl GraphicService {
 pub async fn get_graphic_path(
     bundle_state: tauri::State<'_, crate::bundle::AppBundleState>,
     graphic_id: u32,
+    graphic_type: GraphicType,
 ) -> Result<PathBuf, String> {
     bundle_state
         .lock()
@@ -35,5 +50,5 @@ pub async fn get_graphic_path(
         .activated_bundle
         .as_ref()
         .ok_or("No activated bundle found".to_string())
-        .map(|bundle| bundle.images.graphic.get_path(graphic_id))
+        .map(|bundle| bundle.images.graphic.get_path(graphic_id, dbg!(graphic_type)))
 }

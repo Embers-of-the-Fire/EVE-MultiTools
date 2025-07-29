@@ -145,3 +145,28 @@ message MetaGroupCollection {
     }
     repeated MetaGroupEntry meta_groups = 1;
 }
+
+// Localization string definition
+message LocalizationString {
+    required string en = 1;
+    required string zh = 2;
+}
+
+// Collection of all localization strings
+message LocalizationCollection {
+    message LocalizationEntry {
+        required uint32 key = 1;
+        required LocalizationString localization_data = 2;
+    }
+    repeated LocalizationEntry localizations = 1;
+}
+
+// Type localization lookup data
+message TypeLocalizationLookup {
+    message TypeLocEntry {
+        required int32 type_id = 1;
+        required uint32 type_name_id = 2;
+        optional uint32 type_description_id = 3;
+    }
+    repeated TypeLocEntry type_entries = 1;
+}

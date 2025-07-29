@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import TypeImage from "./TypeImage";
-import { getCategory, getGroup, getMetaGroup } from "@/native/data";
+import { getCategory, getGroup, getMetaGroup, getSkinMaterialIdByLicense } from "@/native/data";
 import { getType, getLocalizationByLang } from "@/native/data";
 import { useLanguage } from "@/hooks/useAppSettings";
-import { getGraphicUrl, getIconUrl } from "@/utils/image";
+import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
+import { GraphicType } from "@/types/data";
 
 interface TypeCardProps {
     typeId: number;
@@ -29,6 +31,13 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                 if (mounted) setLoading(false);
                 return;
             }
+
+            let categoryId: number | null = null;
+            const group = await getGroup(type.group_id);
+            if (group) {
+                categoryId = group.category_id;
+            }
+
             const [nameText, descText, iconPath] = await Promise.all([
                 getLocalizationByLang(type.type_name_id, language),
                 type.description_id
@@ -37,21 +46,27 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                 type.icon_id
                     ? getIconUrl(type.icon_id)
                     : type.graphic_id
-                      ? getGraphicUrl(type.graphic_id)
-                      : Promise.resolve(null),
+                      ? getGraphicUrl(
+                            type.graphic_id,
+                            categoryId === CATEGORY_ID_BLUEPRINT
+                                ? GraphicType.Blueprint
+                                : GraphicType.Icon
+                        )
+                      : (async () => {
+                            const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
+                            if (skinMatId === null) return null;
+                            return getSkinMaterialUrl(skinMatId);
+                        })(),
             ]);
-            let categoryId: number | null = null;
-            const group = await getGroup(type.group_id);
-            if (group) {
-                categoryId = group.category_id;
-            }
+
             let catName: string | null = null;
             if (categoryId) {
                 const category = await getCategory(categoryId);
                 if (category) {
-                    catName = await getLocalizationByLang(category.category_name_id, language);
+                    catName = `${categoryId}|${await getLocalizationByLang(category.category_name_id, language)}`;
                 }
             }
+
             let mgIcon: string | null = null;
             let mgName: string | null = null;
             if (type.meta_group_id) {
@@ -63,6 +78,7 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
                     mgName = await getLocalizationByLang(meta.name_id, language);
                 }
             }
+
             if (mounted) {
                 setName(nameText || "");
                 setDesc(descText || "");

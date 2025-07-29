@@ -36,3 +36,4 @@ sqlx = { version = "0.8.6", features = ["runtime-tokio", "sqlite", "macros"] }
 nohash-hasher = "0.2.0"
 ordered-float = "5.0.0"
 levenshtein = "1.0.5"
+serde_repr = "0.1.20"

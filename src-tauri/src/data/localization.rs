@@ -1,14 +1,15 @@
-use std::path::Path;
+use std::{collections::HashMap, path::Path, sync::Arc};
 
 use serde::{Deserialize, Serialize};
-
-use crate::utils::database::SqliteConnection;
+use tokio::{fs::File, io::AsyncReadExt};
+use prost::Message;
 
 pub struct LocalizationService {
-    db: SqliteConnection,
+    localizations: Arc<HashMap<u32, LocString>>,
+    type_lookup: Arc<HashMap<i32, TypeLocEntry>>,
 }
 
-#[derive(Debug, Clone, sqlx::FromRow, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LocString {
     pub en: String,
     pub zh: String,
@@ -22,22 +23,66 @@ pub enum LocLanguage {
     Chinese,
 }
 
+#[derive(Debug, Clone)]
+struct TypeLocEntry {
+    pub type_name_id: u32,
+    pub type_description_id: Option<u32>,
+}
+
 impl LocalizationService {
     pub async fn init(root_path: &Path) -> anyhow::Result<Self> {
-        let localization_path = root_path.join("localizations/localizations.db");
-        let db = SqliteConnection::connect(localization_path).await?;
-        Ok(Self { db })
+        // Load localization protobuf
+        let localization_path = root_path.join("localizations/localizations.pb");
+        let mut file = File::open(&localization_path).await?;
+        let mut buf = Vec::new();
+        file.read_to_end(&mut buf).await?;
+        let proto = crate::data::proto::schema::LocalizationCollection::decode(&buf[..])?;
+
+        // Convert to HashMap for fast lookup
+        let localizations: HashMap<u32, LocString> = proto
+            .localizations
+            .into_iter()
+            .map(|entry| {
+                (
+                    entry.key,
+                    LocString {
+                        en: entry.localization_data.en,
+                        zh: entry.localization_data.zh,
+                    },
+                )
+            })
+            .collect();
+
+        // Load type localization lookup protobuf
+        let type_lookup_path = root_path.join("localizations/type_localization_lookup.pb");
+        let mut lookup_file = File::open(&type_lookup_path).await?;
+        let mut lookup_buf = Vec::new();
+        lookup_file.read_to_end(&mut lookup_buf).await?;
+        let lookup_proto = crate::data::proto::schema::TypeLocalizationLookup::decode(&lookup_buf[..])?;
+
+        // Convert to HashMap for fast lookup
+        let type_lookup: HashMap<i32, TypeLocEntry> = lookup_proto
+            .type_entries
+            .into_iter()
+            .map(|entry| {
+                (
+                    entry.type_id,
+                    TypeLocEntry {
+                        type_name_id: entry.type_name_id,
+                        type_description_id: entry.type_description_id,
+                    },
+                )
+            })
+            .collect();
+
+        Ok(Self {
+            localizations: Arc::new(localizations),
+            type_lookup: Arc::new(type_lookup),
+        })
     }
 
     pub async fn get_localization(&self, key: u32) -> anyhow::Result<Option<LocString>> {
-        let out: Option<LocString> = sqlx::query_as!(
-            LocString,
-            "SELECT en, zh FROM localization WHERE key = ?",
-            key
-        )
-        .fetch_optional(self.db.pool())
-        .await?;
-        Ok(out)
+        Ok(self.localizations.get(&key).cloned())
     }
 
     /* Reversed Search */
@@ -51,40 +96,31 @@ impl LocalizationService {
         if name.is_empty() {
             return Ok(vec![]);
         }
-        let name = format!("%{name}%");
-        let mut filtered: Vec<_> = match language {
-            LocLanguage::English => {
-                let rows = sqlx::query!(
-                    "SELECT loc.en, lt.type_id \
-                     FROM loc_type lt \
-                     JOIN localization loc ON lt.type_name_id = loc.key \
-                     WHERE loc.en LIKE ?",
-                    name
-                )
-                .fetch_all(self.db.pool())
-                .await?;
-                rows.into_iter()
-                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.en, &name)))
-                    .collect()
+        let name_lower = name.to_lowercase();
+        
+        let mut filtered: Vec<(i32, usize)> = Vec::new();
+        
+        // Search through all type entries
+        for (type_id, type_entry) in self.type_lookup.iter() {
+            if let Some(loc_string) = self.localizations.get(&type_entry.type_name_id) {
+                let text = match language {
+                    LocLanguage::English => &loc_string.en,
+                    LocLanguage::Chinese => &loc_string.zh,
+                };
+                
+                let text_lower = text.to_lowercase();
+                if text_lower.contains(&name_lower) {
+                    let score = levenshtein::levenshtein(&text_lower, &name_lower);
+                    filtered.push((*type_id, score));
+                }
             }
-            LocLanguage::Chinese => {
-                let rows = sqlx::query!(
-                    "SELECT loc.zh, lt.type_id \
-                     FROM loc_type lt \
-                     JOIN localization loc ON lt.type_name_id = loc.key \
-                     WHERE loc.zh LIKE ?",
-                    name
-                )
-                .fetch_all(self.db.pool())
-                .await?;
-                rows.into_iter()
-                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.zh, &name)))
-                    .collect()
-            }
-        };
+        }
+        
+        // Sort by relevance (lower score = better match)
         filtered.sort_by_key(|(_, score)| *score);
         filtered.truncate(limit as usize);
-        Ok(filtered.into_iter().map(|(id, _)| id as i32).collect())
+        
+        Ok(filtered.into_iter().map(|(id, _)| id).collect())
     }
 
     pub async fn search_type_by_description(
@@ -97,40 +133,33 @@ impl LocalizationService {
         if desc.is_empty() {
             return Ok(vec![]);
         }
-        let desc = format!("%{desc}%");
-        let mut filtered: Vec<_> = match language {
-            LocLanguage::English => {
-                let rows = sqlx::query!(
-                    "SELECT loc.en, lt.type_id \
-                     FROM loc_type lt \
-                     JOIN localization loc ON lt.type_description_id = loc.key \
-                     WHERE loc.en LIKE ?",
-                    desc
-                )
-                .fetch_all(self.db.pool())
-                .await?;
-                rows.into_iter()
-                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.en, &desc)))
-                    .collect()
+        let desc_lower = desc.to_lowercase();
+        
+        let mut filtered: Vec<(i32, usize)> = Vec::new();
+        
+        // Search through all type entries that have description
+        for (type_id, type_entry) in self.type_lookup.iter() {
+            if let Some(desc_id) = type_entry.type_description_id {
+                if let Some(loc_string) = self.localizations.get(&desc_id) {
+                    let text = match language {
+                        LocLanguage::English => &loc_string.en,
+                        LocLanguage::Chinese => &loc_string.zh,
+                    };
+                    
+                    let text_lower = text.to_lowercase();
+                    if text_lower.contains(&desc_lower) {
+                        let score = levenshtein::levenshtein(&text_lower, &desc_lower);
+                        filtered.push((*type_id, score));
+                    }
+                }
             }
-            LocLanguage::Chinese => {
-                let rows = sqlx::query!(
-                    "SELECT loc.zh, lt.type_id \
-                     FROM loc_type lt \
-                     JOIN localization loc ON lt.type_description_id = loc.key \
-                     WHERE loc.zh LIKE ?",
-                    desc,
-                )
-                .fetch_all(self.db.pool())
-                .await?;
-                rows.into_iter()
-                    .map(|t| (t.type_id, levenshtein::levenshtein(&t.zh, &desc)))
-                    .collect()
-            }
-        };
+        }
+        
+        // Sort by relevance (lower score = better match)
         filtered.sort_by_key(|(_, score)| *score);
         filtered.truncate(limit as usize);
-        Ok(filtered.into_iter().map(|(id, _)| id as i32).collect())
+        
+        Ok(filtered.into_iter().map(|(id, _)| id).collect())
     }
 }
 
