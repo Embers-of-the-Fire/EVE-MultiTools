@@ -47,6 +47,10 @@ impl LocalizationService {
         language: LocLanguage,
         limit: u32,
     ) -> anyhow::Result<Vec<i32>> {
+        let name = name.trim();
+        if name.is_empty() {
+            return Ok(vec![]);
+        }
         let name = format!("%{name}%");
         let mut filtered: Vec<_> = match language {
             LocLanguage::English => {
@@ -89,6 +93,10 @@ impl LocalizationService {
         language: LocLanguage,
         limit: u32,
     ) -> anyhow::Result<Vec<i32>> {
+        let desc = desc.trim();
+        if desc.is_empty() {
+            return Ok(vec![]);
+        }
         let desc = format!("%{desc}%");
         let mut filtered: Vec<_> = match language {
             LocLanguage::English => {
@@ -120,7 +128,7 @@ impl LocalizationService {
                     .collect()
             }
         };
-        filtered.sort_by_key(|(_, score)|*score);
+        filtered.sort_by_key(|(_, score)| *score);
         filtered.truncate(limit as usize);
         Ok(filtered.into_iter().map(|(id, _)| id as i32).collect())
     }
