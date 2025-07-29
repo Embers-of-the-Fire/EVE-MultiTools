@@ -28,18 +28,6 @@ export function SPALayout() {
                 <main className="flex-1 h-full overflow-hidden flex flex-col">
                     <SPARouter />
                 </main>
-                <footer className="w-full flex items-center justify-center py-3 border-t border-divider">
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-current"
-                        href="https://ui.shadcn.com?utm_source=next-app-template"
-                        title="shadcn/ui homepage"
-                    >
-                        <span className="text-muted-foreground">Powered by</span>
-                        <p className="text-primary">shadcn/ui</p>
-                    </a>
-                </footer>
             </SidebarInset>
         </SidebarProvider>
     );

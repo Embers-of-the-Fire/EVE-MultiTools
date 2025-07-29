@@ -120,6 +120,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavBookmarks bookmarks={data.bookmarks} />
             </SidebarContent>
             <SidebarFooter>
+                <div className="w-full flex items-center justify-center">
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-current"
+                        href="https://ui.shadcn.com?utm_source=next-app-template"
+                        title="shadcn/ui homepage"
+                    >
+                        <span className="text-muted-foreground text-xs">Powered by</span>
+                        <span className="text-primary text-xs">shadcn/ui</span>
+                    </a>
+                </div>
                 <NavUser user={data.user} />
             </SidebarFooter>
             <SidebarRail />
