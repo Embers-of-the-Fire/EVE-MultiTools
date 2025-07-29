@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { PageLayout } from "../layout";
-import { useSPARouter } from "@/contexts/SPARouterContext";
+import { useSPARouter } from "@/hooks/useSPARouter";
 import { ShortcutCard } from "../ShortcutCard";
 import { Box, Earth, Languages } from "lucide-react";
 
@@ -15,19 +15,19 @@ export function ExplorePage() {
                     title={t("explore.type.title")}
                     description={t("explore.type.desc", "探索所有物品类型")}
                     icon={<Box />}
-                    onClick={() => navigate("/explore/type")}
+                    onClick={() => navigate("/explore/type", "Type Explorer")}
                 />
                 <ShortcutCard
                     title={t("explore.localization.title")}
                     description={t("explore.localization.desc", "探索本地化内容")}
                     icon={<Languages />}
-                    onClick={() => navigate("/explore/localization")}
+                    onClick={() => navigate("/explore/localization", "Localization Explorer")}
                 />
                 <ShortcutCard
                     title={t("explore.universe.title")}
                     description={t("explore.universe.desc", "探索宇宙相关内容")}
                     icon={<Earth />}
-                    onClick={() => navigate("/explore/universe")}
+                    onClick={() => navigate("/explore/universe", "Universe Explorer")}
                 />
             </div>
         </PageLayout>

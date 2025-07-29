@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSPARouter } from "@/contexts/SPARouterContext";
+import { useSPARouter } from "@/hooks/useSPARouter";
 import { findRouteByPath } from "@/config/routes";
 import { useTranslation } from "react-i18next";
 
@@ -23,7 +23,7 @@ function NotFoundPage() {
             <p className="text-muted-foreground">{t("common.page_not_found")}</p>
             <button
                 type="button"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/", "Home")}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
             >
                 {t("common.go_home")}
@@ -33,8 +33,8 @@ function NotFoundPage() {
 }
 
 export function SPARouter() {
-    const { state } = useSPARouter();
-    const route = findRouteByPath(state.currentPath);
+    const { currentPath } = useSPARouter();
+    const route = findRouteByPath(currentPath);
 
     if (!route) {
         return <NotFoundPage />;

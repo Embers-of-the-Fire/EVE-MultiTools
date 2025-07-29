@@ -15,7 +15,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useSPARouter } from "@/contexts/SPARouterContext";
+import { useSPARouter } from "@/hooks/useSPARouter";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +70,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                             onClick={() => {
                                 setOpen(true);
                                 if (item.containsPage) {
-                                    navigate(item.url);
+                                    navigate(item.url, t(item.title));
                                 }
                             }}
                         >
@@ -97,7 +97,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                                     <SidebarMenuSubButton asChild>
                                         <button
                                             type="button"
-                                            onClick={() => navigate(subItem.url)}
+                                            onClick={() => navigate(subItem.url, t(subItem.title))}
                                             className="w-full text-left"
                                         >
                                             <span>{t(subItem.title)}</span>
@@ -118,7 +118,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                     onClick={() => {
                         setOpen(true);
                         if (item.containsPage) {
-                            navigate(item.url);
+                            navigate(item.url, t(item.title));
                         }
                     }}
                     asChild

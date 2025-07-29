@@ -11,7 +11,7 @@ import { Languages } from "lucide-react";
 import clsx from "clsx";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useSettings } from "@/contexts/SettingsContext";
+import { useSettings } from "@/hooks/useSettings";
 import type { Language } from "@/types";
 
 export interface LangSwitchProps {

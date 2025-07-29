@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useTheme } from "next-themes";
-import { useSettings } from "@/contexts/SettingsContext";
+import { useSettings } from "@/hooks/useSettings";
 import { useGlobalConfig } from "@/hooks/useGlobalConfig";
 import { useTranslation } from "react-i18next";
-import { useGlobalLoading } from "@/contexts/GlobalLoadingContext";
+import { useGlobalLoading } from "@/hooks/useGlobalLoading";
 
 interface InitializerProps {
     children: React.ReactNode;

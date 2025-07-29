@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { useGlobalLoading } from "@/contexts/GlobalLoadingContext";
+import { useGlobalLoadingStore } from "@/stores/globalLoadingStore";
 
 export interface UseLoadingOptions {
     id: string;
@@ -11,7 +11,7 @@ export interface UseLoadingOptions {
 }
 
 export function useLoading(options: UseLoadingOptions) {
-    const { showLoading, hideLoading, updateProgress } = useGlobalLoading();
+    const { showLoading, hideLoading, updateProgress } = useGlobalLoadingStore();
     const { id, message, autoHide = true, delay = 0 } = options;
     const isLoadingRef = useRef(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);

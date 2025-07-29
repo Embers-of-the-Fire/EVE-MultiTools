@@ -1,6 +1,6 @@
 "use client";
 
-import { useSettings } from "@/contexts/SettingsContext";
+import { useSettings } from "@/hooks/useSettings";
 import type { Theme, Language } from "@/types/config";
 import { useTranslation } from "react-i18next";
 

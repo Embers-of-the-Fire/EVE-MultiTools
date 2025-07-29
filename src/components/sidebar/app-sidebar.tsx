@@ -27,7 +27,7 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
-import { useSPARouter } from "@/contexts/SPARouterContext";
+import { useSPARouter } from "@/hooks/useSPARouter";
 
 // 图标映射
 const iconMap = {
@@ -43,22 +43,22 @@ const iconMap = {
 
 // 转换routes到sidebar格式
 const transformNavItems = (items: typeof routes) => {
-    const { state } = useSPARouter();
+    const { currentPath } = useSPARouter();
 
     return items.map((item) => ({
         title: item.labelKey,
         url: item.path,
         containsPage: !!item.component,
         icon: item.icon ? iconMap[item.icon as keyof typeof iconMap] : undefined,
-        isActive: item.path === state.currentPath,
+        isActive: item.path === currentPath,
         items: item.children?.map((child) => ({
             title: child.labelKey,
             url: child.path,
-            isActive: child.path === state.currentPath,
+            isActive: child.path === currentPath,
             items: child.children?.map((grandChild) => ({
                 title: grandChild.labelKey,
                 url: grandChild.path,
-                isActive: grandChild.path === state.currentPath,
+                isActive: grandChild.path === currentPath,
             })),
         })),
     }));

@@ -13,7 +13,7 @@ import { useIsSSR } from "@react-aria/ssr";
 import { Moon, Sun, Monitor } from "lucide-react";
 import clsx from "clsx";
 
-import { useSettings } from "@/contexts/SettingsContext";
+import { useSettings } from "@/hooks/useSettings";
 import { useTranslation } from "react-i18next";
 
 export interface ThemeSwitchProps {

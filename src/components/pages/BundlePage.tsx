@@ -24,7 +24,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Loader2 } from "lucide-react";
-import { useBundle } from "@/contexts/BundleContext";
+import { useBundle } from "@/hooks/useBundle";
 
 export function BundlePage() {
     const { t, i18n } = useTranslation();

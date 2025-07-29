@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { PageLayout } from "../layout";
-import { useTypeExplore } from "@/contexts/TypeExploreContext";
+import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { Fragment, useState, useRef, useEffect } from "react";
 import { searchTypeByName, getType, getLocalizationByLang } from "@/native/data";
 import { useTranslation as useTranslationI18n } from "react-i18next";
@@ -17,7 +17,6 @@ import TypeCard from "../TypeCard";
 function TypeHistoryButton() {
     const { history, setCurrentTypeID } = useTypeExplore();
     const [open, setOpen] = useState(false);
-    const { t } = useTranslation();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

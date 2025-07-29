@@ -11,17 +11,17 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import { generateBreadcrumbs } from "@/config/routes";
-import { useSPARouter } from "@/contexts/SPARouterContext";
+import { useSPARouter } from "@/hooks/useSPARouter";
 
 interface BreadcrumbProps {
     className?: string;
 }
 
 export const Breadcrumb = ({ className }: BreadcrumbProps) => {
-    const { state, navigate } = useSPARouter();
+    const { currentPath, navigate } = useSPARouter();
     const { t } = useTranslation();
 
-    const breadcrumbItems = generateBreadcrumbs(state.currentPath);
+    const breadcrumbItems = generateBreadcrumbs(currentPath);
 
     return (
         <BreadcrumbRoot className={className}>
@@ -40,7 +40,7 @@ export const Breadcrumb = ({ className }: BreadcrumbProps) => {
                                     <BreadcrumbLink asChild>
                                         <button
                                             type="button"
-                                            onClick={() => navigate(item.path)}
+                                            onClick={() => navigate(item.path, t(item.labelKey))}
                                             className="hover:text-foreground"
                                         >
                                             {t(item.labelKey)}

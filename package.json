@@ -56,7 +56,8 @@
         "sonner": "^2.0.6",
         "tailwind-merge": "^3.3.1",
         "tailwindcss-animate": "^1.0.7",
-        "vaul": "^1.1.2"
+        "vaul": "^1.1.2",
+        "zustand": "^5.0.6"
     },
     "devDependencies": {
         "@biomejs/biome": "2.0.6",
@@ -65,6 +66,7 @@
         "@eslint/js": "9.25.1",
         "@next/eslint-plugin-next": "15.3.1",
         "@react-types/shared": "3.30.0",
+        "@redux-devtools/extension": "^3.3.0",
         "@tailwindcss/postcss": "^4.1.11",
         "@tauri-apps/cli": "^2.6.2",
         "@types/node": "22.15.3",

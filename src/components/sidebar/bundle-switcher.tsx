@@ -19,7 +19,7 @@ import {
 import type { BundleMetadata } from "@/native/bundle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
-import { useBundle } from "@/contexts/BundleContext";
+import { useBundle } from "@/hooks/useBundle";
 
 export function BundleSwitcher() {
     const { t } = useTranslation();
