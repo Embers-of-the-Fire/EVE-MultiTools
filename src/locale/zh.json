@@ -28,6 +28,7 @@
         "database.systems": "星系",
         "explore": "探索",
         "explore.type": "物品",
+        "explore.type.detail": "物品详情",
         "explore.localization": "本地化",
         "explore.universe": "宇宙",
         "bundle": "数据包",
@@ -74,7 +75,13 @@
         "chinese": "中文",
         "english": "English",
         "log": "输出到控制台",
-        "enabling": "启用中"
+        "enabling": "启用中",
+        "error": "出错了",
+        "image_placeholder": "未知图像",
+        "unknown": "未知",
+        "image": "图像",
+        "category_icon": "Category 图标",
+        "unknown_group": "未知组别"
     },
     "bundle": {
         "title": "数据包管理",
@@ -181,8 +188,49 @@
             "title": "探索：物品",
             "desc": "探索 EVE 所有物品",
             "search": {
-                "placeholder": "搜索物品"
-            }
+                "placeholder": "搜索物品",
+                "results": "搜索结果",
+                "no_results": "无结果"
+            },
+            "detail": {
+                "title": "物品详情",
+                "type_not_found": "没有找到该物品",
+                "no_type_selected": "未选择物品",
+                "load_error": "加载物品详情失败",
+                "type": "物品详情 - {{typeId}}",
+                "description": "物品详情",
+                "basic_info": "基本信息",
+                "description_label": "描述",
+                "published": "已公开",
+                "dynamic_type": "动态物品",
+                "tech_level": "科技等级 {{techLevel}}",
+                "meta_level": "Meta {{metaLevel}}",
+                "unpublished": "未公开",
+                "category_info": "分类信息",
+                "category": "分类",
+                "group": "组别",
+                "anchorable": "可锚定",
+                "fittable": "可装配",
+                "anchored": "已锚定",
+                "use_base_price": "使用基准价格",
+                "meta_group": "元分组",
+                "attributes": "属性",
+                "base_price": "基准价格",
+                "volume": "体积",
+                "capacity": "容量",
+                "radius": "半径",
+                "portion_size": "单体规模",
+                "market_group_id": "市场组 ID",
+                "other_info": "其他信息",
+                "faction_id": "势力 ID",
+                "race_id": "种族 ID",
+                "variation_parent_type_id": "衍生源类型 ID",
+                "wreck_type_id": "残骸 ID"
+            },
+            "history": {
+                "empty": "无历史记录"
+            },
+            "category": "分类"
         },
         "localization": {
             "title": "探索：本地化",

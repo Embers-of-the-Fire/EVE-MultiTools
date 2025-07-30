@@ -9,14 +9,18 @@ import { Toaster } from "@/components/ui/sonner";
 import { AppInitializer } from "@/components/AppInitializer";
 import { globalConfig } from "@/lib/global-config";
 import { i18n } from "@/locale/i18n";
-import { 
-  useGlobalLoadingStore, 
-  useIsLoading, 
-  useLoadingMessage, 
-  useLoadingProgress 
+import {
+    useGlobalLoadingStore,
+    useIsLoading,
+    useLoadingMessage,
+    useLoadingProgress,
 } from "@/stores/globalLoadingStore";
 import { useSettingsStore } from "@/stores/settingsStore";
-import { useBundleStore, initializeBundleListeners, cleanupBundleListeners } from "@/stores/bundleStore";
+import {
+    useBundleStore,
+    initializeBundleListeners,
+    cleanupBundleListeners,
+} from "@/stores/bundleStore";
 
 export interface ProvidersProps {
     children: React.ReactNode;

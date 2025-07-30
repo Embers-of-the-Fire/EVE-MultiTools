@@ -1,5 +1,5 @@
-import { useTypeExploreStore } from '@/stores/typeExploreStore';
+import { useTypeExploreStore } from "@/stores/typeExploreStore";
 
 export function useTypeExplore() {
-  return useTypeExploreStore();
+    return useTypeExploreStore();
 }

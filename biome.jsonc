@@ -36,5 +36,12 @@
         "formatter": {
             "indentWidth": 4
         }
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
     }
 }

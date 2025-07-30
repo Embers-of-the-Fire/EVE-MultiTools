@@ -1,18 +1,28 @@
 import { useEffect, useState } from "react";
-import TypeImage from "./TypeImage";
-import { getCategory, getGroup, getMetaGroup, getSkinMaterialIdByLicense } from "@/native/data";
-import { getType, getLocalizationByLang } from "@/native/data";
-import { useLanguage } from "@/hooks/useAppSettings";
-import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { useTranslation } from "react-i18next";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
+import { useLanguage } from "@/hooks/useAppSettings";
+import { cn } from "@/lib/utils";
+import {
+    getCategory,
+    getGroup,
+    getLocalizationByLang,
+    getMetaGroup,
+    getSkinMaterialIdByLicense,
+    getType,
+} from "@/native/data";
 import { GraphicType } from "@/types/data";
+import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import TypeImage from "./TypeImage";
 
 interface TypeCardProps {
     typeId: number;
     className?: string;
+    onClick?: (typeId: number) => void;
 }
 
-const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
+const TypeCard: React.FC<TypeCardProps> = ({ typeId, className, onClick }) => {
+    const { t } = useTranslation();
     const { language } = useLanguage();
     const [name, setName] = useState<string>("");
     const [desc, setDesc] = useState<string>("");
@@ -94,9 +104,33 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
         };
     }, [typeId, language]);
 
+    const handleClick = () => onClick?.(typeId);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClick?.(typeId);
+        }
+    };
+
+    const containerProps = onClick
+        ? {
+              onClick: handleClick,
+              onKeyDown: handleKeyDown,
+              role: "button" as const,
+              tabIndex: 0,
+          }
+        : {};
+
     return (
         <div
-            className={`flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full ${className || ""}`}
+            className={cn(
+                "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full",
+                onClick
+                    ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                    : "",
+                className
+            )}
+            {...containerProps}
         >
             {/* 图片 */}
             <TypeImage
@@ -109,14 +143,14 @@ const TypeCard: React.FC<TypeCardProps> = ({ typeId, className }) => {
             />
             <div className="flex flex-col flex-1 min-w-0">
                 <div className="font-semibold text-base truncate">
-                    {loading ? "加载中..." : name}
+                    {loading ? t("common.loading") : name}
                 </div>
                 <div className="text-sm text-gray-500 mt-1 line-clamp-2">{loading ? "" : desc}</div>
             </div>
             <div className="shrink-0 text-sm text-gray-500">
                 ID {typeId}
                 <br />
-                Category {categoryName ? categoryName : "未知"}
+                {t("explore.type.category")} {categoryName ? categoryName : t("common.unknown")}
             </div>
         </div>
     );

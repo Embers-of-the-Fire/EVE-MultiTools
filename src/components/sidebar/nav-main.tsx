@@ -79,7 +79,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                             <ChevronRight
                                 className={cn(
                                     "ml-auto transition-transform duration-200",
-                                    "group-data-[state=open]/collapsible:rotate-90",
+                                    "group-data-[state=open]/collapsible:rotate-90"
                                 )}
                                 onClick={(e) => {
                                     e.stopPropagation();

@@ -1,5 +1,5 @@
-import { useSettingsStore } from '@/stores/settingsStore';
-import { useEffect } from 'react';
+import { useSettingsStore } from "@/stores/settingsStore";
+import { useEffect } from "react";
 
 export function useAppSettings() {
     const { settings, loading, error, setTheme, setLanguage, updateSettings, resetToDefault } =
@@ -10,12 +10,12 @@ export function useAppSettings() {
     useEffect(() => {
         if (isReady) {
             // Apply theme to document
-            const theme = settings?.theme === 'Dark' ? 'dark' : 'light';
-            document.documentElement.classList.toggle('dark', theme === 'dark');
+            const theme = settings?.theme === "Dark" ? "dark" : "light";
+            document.documentElement.classList.toggle("dark", theme === "dark");
 
             // Apply language to document
-            const language = settings?.language === 'zh' ? 'zh' : 'en';
-            document.documentElement.setAttribute('lang', language);
+            const language = settings?.language === "zh" ? "zh" : "en";
+            document.documentElement.setAttribute("lang", language);
         }
     }, [isReady, settings]);
 
@@ -35,7 +35,7 @@ export function useAppSettings() {
 export function useTheme() {
     const { settings, setTheme } = useSettingsStore();
     return {
-        theme: settings?.theme || 'Dark',
+        theme: settings?.theme || "Dark",
         setTheme,
     };
 }
@@ -43,7 +43,7 @@ export function useTheme() {
 export function useLanguage() {
     const { settings, setLanguage } = useSettingsStore();
     return {
-        language: settings?.language || 'en',
+        language: settings?.language || "en",
         setLanguage,
     };
 }

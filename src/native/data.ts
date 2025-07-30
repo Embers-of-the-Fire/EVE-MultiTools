@@ -3,7 +3,7 @@ import { tauriInvoke } from "./base";
 
 export async function getGraphicPath(
     graphicId: number,
-    graphicType = GraphicType.Icon,
+    graphicType = GraphicType.Icon
 ): Promise<string> {
     return await tauriInvoke<string>("get_graphic_path", {
         graphicId,
@@ -15,9 +15,7 @@ export async function getIconPath(iconId: number): Promise<string> {
     return await tauriInvoke<string>("get_icon_path", { iconId });
 }
 
-export async function getSkinMaterialPath(
-    skinMaterialId: number,
-): Promise<string> {
+export async function getSkinMaterialPath(skinMaterialId: number): Promise<string> {
     return await tauriInvoke<string>("get_skin_material_path", {
         skinMaterialId,
     });
@@ -39,7 +37,7 @@ export async function getLocalization(key: number): Promise<LocString | null> {
 
 export async function getLocalizationByLang(
     key: number,
-    lang: "en" | "zh",
+    lang: "en" | "zh"
 ): Promise<string | null> {
     const loc = await getLocalization(key);
     if (!loc) return null;
@@ -74,9 +72,7 @@ export interface Category {
     published: boolean;
 }
 
-export async function getCategory(
-    categoryId: number,
-): Promise<Category | null> {
+export async function getCategory(categoryId: number): Promise<Category | null> {
     return await tauriInvoke<Category | null>("get_category", { categoryId });
 }
 
@@ -84,9 +80,7 @@ export interface MetaGroup {
     name_id: number;
     icon_id?: number;
 }
-export async function getMetaGroup(
-    metaGroupId: number,
-): Promise<MetaGroup | null> {
+export async function getMetaGroup(metaGroupId: number): Promise<MetaGroup | null> {
     return await tauriInvoke<MetaGroup | null>("get_meta_group", {
         metaGroupId,
     });
@@ -129,7 +123,7 @@ export async function getType(typeId: number): Promise<Type | null> {
 export async function searchTypeByName(
     name: string,
     language: "en" | "zh",
-    limit: number = 20,
+    limit: number = 20
 ): Promise<number[]> {
     return await tauriInvoke<number[]>("search_type_by_name", {
         name,
@@ -141,7 +135,7 @@ export async function searchTypeByName(
 export async function searchTypeByDescription(
     desc: string,
     language: "en" | "zh",
-    limit: number = 20,
+    limit: number = 20
 ): Promise<number[]> {
     return await tauriInvoke<number[]>("search_type_by_description", {
         desc,
@@ -176,33 +170,25 @@ export async function getSkin(skinId: number): Promise<Skin | null> {
     return await tauriInvoke<Skin | null>("get_skin", { skinId });
 }
 
-export async function getSkinMaterial(
-    skinMaterialId: number,
-): Promise<SkinMaterial | null> {
+export async function getSkinMaterial(skinMaterialId: number): Promise<SkinMaterial | null> {
     return await tauriInvoke<SkinMaterial | null>("get_skin_material", {
         skinMaterialId,
     });
 }
 
-export async function getSkinLicense(
-    licenseId: number,
-): Promise<SkinLicense | null> {
+export async function getSkinLicense(licenseId: number): Promise<SkinLicense | null> {
     return await tauriInvoke<SkinLicense | null>("get_skin_license", {
         licenseId,
     });
 }
 
-export async function getSkinMaterialIdByLicense(
-    licenseId: number,
-): Promise<number | null> {
+export async function getSkinMaterialIdByLicense(licenseId: number): Promise<number | null> {
     return await tauriInvoke<number | null>("get_skin_material_id_by_license", {
         licenseId,
     });
 }
 
-export async function getLicensesBySkin(
-    skinId: number,
-): Promise<SkinLicense[]> {
+export async function getLicensesBySkin(skinId: number): Promise<SkinLicense[]> {
     return await tauriInvoke<SkinLicense[]>("get_licenses_by_skin", { skinId });
 }
 

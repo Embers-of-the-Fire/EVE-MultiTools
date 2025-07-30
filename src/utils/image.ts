@@ -1,14 +1,10 @@
 import { convertFileSrc } from "@tauri-apps/api/core";
-import {
-    getGraphicPath,
-    getIconPath,
-    getSkinMaterialPath,
-} from "@/native/data";
+import { getGraphicPath, getIconPath, getSkinMaterialPath } from "@/native/data";
 import { GraphicType } from "@/types/data";
 
 export async function getGraphicUrl(
     graphicId: number,
-    graphicType = GraphicType.Icon,
+    graphicType = GraphicType.Icon
 ): Promise<string> {
     const path = await getGraphicPath(graphicId, graphicType);
     const url = convertFileSrc(path);

@@ -1,5 +1,5 @@
-import { useSPARouterStore } from '@/stores/spaRouterStore';
+import { useSPARouterStore } from "@/stores/spaRouterStore";
 
 export function useSPARouter() {
-  return useSPARouterStore();
+    return useSPARouterStore();
 }

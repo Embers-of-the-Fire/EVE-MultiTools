@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -20,6 +21,7 @@ const TypeImage: React.FC<TypeImageProps> = ({
     metaGroupIconUrl,
     metaGroupName,
 }) => {
+    const { t } = useTranslation();
     return (
         <div className="w-16 h-16 shrink-0 bg-transparent rounded flex items-center justify-center overflow-hidden relative">
             {iconUrl && !loading ? (
@@ -38,16 +40,16 @@ const TypeImage: React.FC<TypeImageProps> = ({
                     viewBox="0 0 64 64"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    aria-label="物品图片占位"
+                    aria-label={t("common.image_placeholder")}
                 >
-                    <title>物品图片占位</title>
+                    <title>{t("common.image_placeholder")}</title>
                     <rect width="64" height="64" rx="8" fill="#00000000" />
                     <text x="50%" y="45%" textAnchor="middle" fontSize="14" fill="gray">
                         <tspan x="50%" dy="0em">
-                            未知
+                            {t("common.unknown")}
                         </tspan>
                         <tspan x="50%" dy="1.2em">
-                            图像
+                            {t("common.image")}
                         </tspan>
                     </text>
                 </svg>
@@ -58,7 +60,7 @@ const TypeImage: React.FC<TypeImageProps> = ({
                         <div className="absolute left-0 top-0 w-6 h-6 cursor-pointer">
                             <Image
                                 src={metaGroupIconUrl}
-                                alt="分类图标"
+                                alt={t("common.category_icon")}
                                 width={24}
                                 height={24}
                                 className="w-6 h-6 object-contain rounded"
@@ -67,7 +69,7 @@ const TypeImage: React.FC<TypeImageProps> = ({
                         </div>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="text-xs">
-                        {metaGroupName || "未知分组"}
+                        {metaGroupName || t("common.unknown_group")}
                     </TooltipContent>
                 </Tooltip>
             )}

@@ -1,5 +1,5 @@
-import { useSettingsStore } from '@/stores/settingsStore';
+import { useSettingsStore } from "@/stores/settingsStore";
 
 export function useSettings() {
-  return useSettingsStore();
+    return useSettingsStore();
 }

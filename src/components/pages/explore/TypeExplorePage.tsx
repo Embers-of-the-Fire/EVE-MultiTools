@@ -1,21 +1,25 @@
-import { useTranslation } from "react-i18next";
-import { PageLayout } from "../../layout";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { useTranslation, useTranslation as useTranslationI18n } from "react-i18next";
+import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
-import { Fragment, useState, useRef, useEffect } from "react";
-import { searchTypeByName, getType, getLocalizationByLang } from "@/native/data";
-import { useTranslation as useTranslationI18n } from "react-i18next";
+import { getLocalizationByLang, getType, searchTypeByName } from "@/native/data";
+import { PageLayout } from "../../layout";
+
 type SearchResult = { id: number; name: string };
-import { Input } from "../../ui/input";
-import { cn } from "@/lib/utils";
-import { Button } from "../../ui/button";
+
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { History, Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import TypeCard from "../../TypeCard";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import { Separator } from "../../ui/separator";
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import TypeCard from "../../TypeCard";
 
 function TypeHistoryButton() {
+    const { t } = useTranslation();
     const { history, setCurrentTypeID } = useTypeExplore();
+    const { navigate } = useSPARouter();
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +58,7 @@ function TypeHistoryButton() {
                     <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] max-h-72">
                         <div className="my-1">
                             {history.length === 0 ? (
-                                <div className="p-3">暂无历史</div>
+                                <div className="p-3">{t("explore.type.history.empty")}</div>
                             ) : (
                                 history.map((id) => (
                                     <Fragment key={id}>
@@ -63,6 +67,10 @@ function TypeHistoryButton() {
                                             className={`w-full text-left px-4 py-2 cursor-pointer transition-colors focus:outline-hidden hover:bg-gray-100 dark:hover:bg-gray-800`}
                                             onClick={() => {
                                                 setCurrentTypeID(id);
+                                                navigate(
+                                                    "/explore/type/detail",
+                                                    t("explore.type.detail.title")
+                                                );
                                                 setOpen(false);
                                             }}
                                         >
@@ -84,6 +92,8 @@ function TypeHistoryButton() {
 
 export function TypeExplorePage() {
     const { t } = useTranslation();
+    const { setCurrentTypeID } = useTypeExplore();
+    const { navigate } = useSPARouter();
     const [search, setSearch] = useState("");
     const [focused, setFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -91,6 +101,12 @@ export function TypeExplorePage() {
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const { i18n } = useTranslationI18n();
+
+    // Handle type card click event
+    const handleTypeClick = (typeId: number) => {
+        setCurrentTypeID(typeId);
+        navigate("/explore/type/detail", t("explore.type.detail.title"));
+    };
 
     useEffect(() => {
         let ignore = false;
@@ -166,24 +182,26 @@ export function TypeExplorePage() {
                     <X />
                 </Button>
             </div>
-            {/* 搜索结果整体列表卡片展示 */}
             <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
-                {loading && <div>加载中...</div>}
+                {loading && <div>{t("common.loading")}</div>}
                 {!loading && results.length > 0 && (
                     <ScrollArea className="border rounded bg-white dark:bg-black/30 shadow-sm p-4 my-2 flex flex-col min-h-0 flex-1 w-full max-w-none">
-                        <div className="font-bold mb-2">搜索结果</div>
+                        <div className="font-bold mb-2">{t("explore.type.search.results")}</div>
                         <div className="flex flex-col gap-2 flex-1 min-h-0 w-full max-w-none">
                             {results.map((item) => (
                                 <TypeCard
                                     key={item.id}
                                     typeId={item.id}
                                     className="border-b last:border-b-0 py-1 w-full max-w-none"
+                                    onClick={handleTypeClick}
                                 />
                             ))}
                         </div>
                     </ScrollArea>
                 )}
-                {!loading && search && results.length === 0 && <div>无结果</div>}
+                {!loading && search && results.length === 0 && (
+                    <div>{t("explore.type.search.no_results")}</div>
+                )}
             </div>
         </PageLayout>
     );

@@ -42,7 +42,13 @@
         "log": "Log to Console",
         "page_not_found": "Page not found",
         "go_home": "Go Home",
-        "enabling": "Enabling"
+        "enabling": "Enabling",
+        "error": "Error",
+        "image_placeholder": "Unknown Image",
+        "unknown": "Unknown",
+        "image": "Image",
+        "category_icon": "Category Icon",
+        "unknown_group": "Unknown group"
     },
     "nav": {
         "home": "Home",
@@ -69,6 +75,7 @@
         "database.systems": "Systems",
         "explore": "Explore",
         "explore.type": "Type",
+        "explore.type.detail": "Type Detail",
         "explore.localization": "Localization",
         "explore.universe": "Universe",
         "bundle": "Data Package",
@@ -194,8 +201,47 @@
             "title": "Explore: Type",
             "desc": "Explore all items in EVE",
             "search": {
-                "placeholder": "Search type"
-            }
+                "placeholder": "Search type",
+                "results": "Search Results",
+                "no_results": "No Results"
+            },
+            "detail": {
+                "title": "Type Detail",
+                "type_not_found": "Type not found",
+                "no_type_selected": "No type selected",
+                "load_error": "Failed to load type details",
+                "description": "Detailed type information",
+                "basic_info": "Basic Information",
+                "description_label": "Description",
+                "published": "Published",
+                "dynamic_type": "Dynamic Type",
+                "tech_level": "Tech {{techLevel}}",
+                "meta_level": "Meta {{metaLevel}}",
+                "unpublished": "Unpublished",
+                "category_info": "Category Information",
+                "category": "Category",
+                "anchorable": "Anchorable",
+                "fittable": "Fittable",
+                "anchored": "Anchored",
+                "use_base_price": "Use base price",
+                "meta_group": "Meta Group",
+                "attributes": "Attributes",
+                "base_price": "Base Price",
+                "volume": "Volume",
+                "capacity": "Capacity",
+                "radius": "Radius",
+                "portion_size": "Portion Size",
+                "market_group_id": "Market Group ID",
+                "other_info": "Other Information",
+                "faction_id": "Faction ID",
+                "race_id": "Race ID",
+                "variation_parent_type_id": "Variation Parent Type ID",
+                "wreck_type_id": "Wreck Type ID"
+            },
+            "history": {
+                "empty": "Empty History"
+            },
+            "category": "Category"
         },
         "localization": {
             "title": "Explore: Localization",

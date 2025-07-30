@@ -1,8 +1,21 @@
-import type { AppRoute } from "@/types/router";
-import { HomePage } from "@/components/pages/HomePage";
 import { BundlePage } from "@/components/pages/BundlePage";
+import {
+    CharacterAssetsPage,
+    CharacterSkillsPage,
+    CharacterWalletPage,
+} from "@/components/pages/CharacterPages";
 import { DatabasePage } from "@/components/pages/DatabasePage";
-import { SettingsPage } from "@/components/pages/SettingsPage";
+import { ExplorePage } from "@/components/pages/ExplorePage";
+import { LocalizationExplorePage } from "@/components/pages/explore/LocalizationExplorePage";
+import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPageWrapper";
+import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
+import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
+import { HomePage } from "@/components/pages/HomePage";
+import {
+    IndustryManufacturingPage,
+    IndustryMiningPage,
+    IndustryResearchPage,
+} from "@/components/pages/IndustryPages";
 import {
     MarketAnalysisPage,
     MarketCalculatorPage,
@@ -10,20 +23,8 @@ import {
     MarketOrdersPage,
     MarketPredictorPage,
 } from "@/components/pages/MarketPages";
-import {
-    IndustryManufacturingPage,
-    IndustryMiningPage,
-    IndustryResearchPage,
-} from "@/components/pages/IndustryPages";
-import {
-    CharacterAssetsPage,
-    CharacterSkillsPage,
-    CharacterWalletPage,
-} from "@/components/pages/CharacterPages";
-import { ExplorePage } from "@/components/pages/ExplorePage";
-import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
-import { LocalizationExplorePage } from "@/components/pages/explore/LocalizationExplorePage";
-import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
+import { SettingsPage } from "@/components/pages/SettingsPage";
+import type { AppRoute } from "@/types/router";
 
 export const routes: AppRoute[] = [
     {
@@ -143,6 +144,12 @@ export const routes: AppRoute[] = [
                 path: "/explore/type",
                 labelKey: "nav.explore.type",
                 component: TypeExplorePage,
+            },
+            {
+                key: "explore-type-detail",
+                path: "/explore/type/detail",
+                labelKey: "nav.explore.type.detail",
+                component: TypeDetailPageWrapper,
             },
             {
                 key: "explore-localization",
