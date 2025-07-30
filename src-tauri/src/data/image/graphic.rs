@@ -50,5 +50,5 @@ pub async fn get_graphic_path(
         .activated_bundle
         .as_ref()
         .ok_or("No activated bundle found".to_string())
-        .map(|bundle| bundle.images.graphic.get_path(graphic_id, dbg!(graphic_type)))
+        .map(|bundle| bundle.images.graphic.get_path(graphic_id, graphic_type))
 }
