@@ -1,18 +1,18 @@
 import { useTranslation } from "react-i18next";
-import { PageLayout } from "../layout";
+import { PageLayout } from "../../layout";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { Fragment, useState, useRef, useEffect } from "react";
 import { searchTypeByName, getType, getLocalizationByLang } from "@/native/data";
 import { useTranslation as useTranslationI18n } from "react-i18next";
 type SearchResult = { id: number; name: string };
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { History, Search, X } from "lucide-react";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
+import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
+import { Separator } from "../../ui/separator";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import TypeCard from "../TypeCard";
+import TypeCard from "../../TypeCard";
 
 function TypeHistoryButton() {
     const { history, setCurrentTypeID } = useTypeExplore();

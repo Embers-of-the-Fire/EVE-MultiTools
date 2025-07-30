@@ -21,9 +21,9 @@ import {
     CharacterWalletPage,
 } from "@/components/pages/CharacterPages";
 import { ExplorePage } from "@/components/pages/ExplorePage";
-import { TypeExplorePage } from "@/components/pages/TypeExplorePage";
-import { LocalizationExplorePage } from "@/components/pages/LocalizationExplorePage";
-import { UniverseExplorePage } from "@/components/pages/UniverseExplorePage";
+import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
+import { LocalizationExplorePage } from "@/components/pages/explore/LocalizationExplorePage";
+import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
 
 export const routes: AppRoute[] = [
     {

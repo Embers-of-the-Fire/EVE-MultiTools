@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { PageLayout } from "../layout";
+import { PageLayout } from "../../layout";
 
 export function LocalizationExplorePage() {
     const { t } = useTranslation();
