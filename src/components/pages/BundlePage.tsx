@@ -172,7 +172,7 @@ export function BundlePage() {
         >
             {/* Import Progress */}
             {importProgress && (
-                <Card>
+                <Card className="mb-2">
                     <CardHeader>
                         <CardTitle>{t("bundle.importing")}</CardTitle>
                     </CardHeader>
