@@ -9,7 +9,9 @@ interface PageContainerProps {
 export function PageContainer({ children, className }: PageContainerProps) {
     return (
         <div className={cn("container mx-auto p-6 space-y-6 h-full overflow-auto", className)}>
-            <div className="h-full flex flex-col"><div className="pb-4">{children}</div></div>
+            <div className="mb-4">
+                <div className="h-full flex flex-col">{children}</div>
+            </div>
         </div>
     );
 }
