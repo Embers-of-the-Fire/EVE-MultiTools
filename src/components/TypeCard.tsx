@@ -264,6 +264,7 @@ interface EmbeddedTypeCardProps {
     className?: string;
     compact?: boolean;
     onClick?: (typeId: number) => void;
+    noBorder?: boolean;
 }
 
 export const EmbeddedTypeCard: React.FC<EmbeddedTypeCardProps> = ({
@@ -272,6 +273,7 @@ export const EmbeddedTypeCard: React.FC<EmbeddedTypeCardProps> = ({
     className,
     compact = false,
     onClick,
+    noBorder = false,
 }) => {
     const typeData = useTypeData(typeId);
 
@@ -279,7 +281,11 @@ export const EmbeddedTypeCard: React.FC<EmbeddedTypeCardProps> = ({
 
     if (typeData.loading) {
         return (
-            <Card className={cn("w-full", className)}>
+            <Card className={cn(
+                "w-full",
+                noBorder ? "border-0 shadow-none" : undefined,
+                className
+            )}>
                 {title && (
                     <CardHeader className={cn("pb-2", compact && "py-2")}>
                         <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -310,6 +316,7 @@ export const EmbeddedTypeCard: React.FC<EmbeddedTypeCardProps> = ({
                 "w-full",
                 onClick &&
                     "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors",
+                noBorder ? "border-0 shadow-none" : undefined,
                 className
             )}
             onClick={onClick ? handleClick : undefined}

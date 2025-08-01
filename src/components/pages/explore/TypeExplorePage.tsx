@@ -47,25 +47,26 @@ export function TypeHistoryButton() {
                 <History size="64" />
             </Button>
             <div
-                className={`absolute right-0 mt-2 rounded-md max-h-72 min-w-[180px] z-50 bg-white dark:bg-black shadow-lg
+                className={`absolute right-0 mt-2 rounded-md max-h-72 min-w-[180px] z-50 bg-white dark:bg-black/80 border border-gray-200 dark:border-gray-700
                     transition-all duration-200 ease-in-out
                     ${open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
                 style={{
                     transitionProperty: "opacity, transform",
                 }}
             >
-                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 border-2 min-w-[240px]">
-                    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] max-h-72">
+                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 min-w-[240px] border-1 shadow-none">
+                    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-none max-h-72">
                         <div className="my-1">
                             {history.length === 0 ? (
-                                <div className="p-3">{t("explore.type.history.empty")}</div>
+                                <div className="p-3 text-muted-foreground text-sm">{t("explore.type.history.empty")}</div>
                             ) : (
-                                history.map((id) => (
+                                history.map((id, idx) => (
                                     <Fragment key={id}>
                                         <EmbeddedTypeCard
                                             compact={true}
                                             typeId={id}
-                                            className="w-full"
+                                            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
+                                            noBorder
                                             onClick={() => {
                                                 setCurrentTypeID(id);
                                                 navigate(
@@ -75,7 +76,9 @@ export function TypeHistoryButton() {
                                                 setOpen(false);
                                             }}
                                         />
-                                        <Separator className="last:hidden" />
+                                        {idx !== history.length - 1 && (
+                                            <Separator className="w-full mx-0" />
+                                        )}
                                     </Fragment>
                                 ))
                             )}
@@ -184,16 +187,23 @@ export function TypeExplorePage() {
             <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
                 {loading && <div>{t("common.loading")}</div>}
                 {!loading && results.length > 0 && (
-                    <ScrollArea className="border rounded bg-white dark:bg-black/30 shadow-sm p-4 my-2 flex flex-col min-h-0 flex-1 w-full max-w-none">
-                        <div className="font-bold mb-2">{t("explore.type.search.results")}</div>
-                        <div className="flex flex-col gap-2 flex-1 min-h-0 w-full max-w-none">
-                            {results.map((item) => (
-                                <SearchTypeCard
-                                    key={item.id}
-                                    typeId={item.id}
-                                    className="border-b last:border-b-0 py-1 w-full max-w-none"
-                                    onClick={handleTypeClick}
-                                />
+                    <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 my-2 flex-1 min-h-0 flex flex-col">
+                        <div className="font-bold mb-2 px-4 pt-4">{t("explore.type.search.results")}</div>
+                        <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
+                            {results.map((item, idx) => (
+                                <>
+                                    <EmbeddedTypeCard
+                                        key={item.id}
+                                        typeId={item.id}
+                                        compact={false}
+                                        noBorder
+                                        onClick={handleTypeClick}
+                                        className="cursor-pointer hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"
+                                    />
+                                    {idx !== results.length - 1 && (
+                                        <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
+                                    )}
+                                </>
                             ))}
                         </div>
                     </ScrollArea>

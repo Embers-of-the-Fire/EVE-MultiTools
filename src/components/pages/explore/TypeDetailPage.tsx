@@ -317,16 +317,22 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                     <div className="relative">
                         {searchLoading && <div className="p-2">{t("common.loading")}</div>}
                         {!searchLoading && results.length > 0 && (
-                            <ScrollArea className="border rounded-xl bg-white dark:bg-black/30 shadow-sm p-4">
-                                <div className="flex flex-col gap-2 min-h-0 max-h-60">
-                                    {results.map((item) => (
-                                        <EmbeddedTypeCard
-                                            compact={true}
-                                            key={item.id}
-                                            typeId={item.id}
-                                            onClick={handleTypeSelect}
-                                            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        />
+                            <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 max-h-60">
+                                <div className="flex flex-col min-h-0 max-h-60">
+                                    {results.map((item, idx) => (
+                                        <>
+                                            <EmbeddedTypeCard
+                                                compact={true}
+                                                key={item.id}
+                                                typeId={item.id}
+                                                onClick={handleTypeSelect}
+                                                noBorder
+                                                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"
+                                            />
+                                            {idx !== results.length - 1 && (
+                                                <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
+                                            )}
+                                        </>
                                     ))}
                                 </div>
                             </ScrollArea>
