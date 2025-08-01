@@ -10,13 +10,13 @@ type SearchResult = { id: number; name: string };
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { History, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import TypeCard from "../../TypeCard";
+import { EmbeddedTypeCard, SearchTypeCard } from "../../TypeCard";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import { Separator } from "../../ui/separator";
 
-function TypeHistoryButton() {
+export function TypeHistoryButton() {
     const { t } = useTranslation();
     const { history, setCurrentTypeID } = useTypeExplore();
     const { navigate } = useSPARouter();
@@ -37,7 +37,7 @@ function TypeHistoryButton() {
     }, [open]);
 
     return (
-        <div className="relative inline-block mr-6" ref={dropdownRef}>
+        <div className="relative inline-block" ref={dropdownRef}>
             <Button
                 variant="default"
                 size="icon"
@@ -54,7 +54,7 @@ function TypeHistoryButton() {
                     transitionProperty: "opacity, transform",
                 }}
             >
-                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 border-2">
+                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 border-2 min-w-[240px]">
                     <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] max-h-72">
                         <div className="my-1">
                             {history.length === 0 ? (
@@ -62,9 +62,10 @@ function TypeHistoryButton() {
                             ) : (
                                 history.map((id) => (
                                     <Fragment key={id}>
-                                        <Button
-                                            variant="ghost"
-                                            className={`w-full text-left px-4 py-2 cursor-pointer transition-colors focus:outline-hidden hover:bg-gray-100 dark:hover:bg-gray-800`}
+                                        <EmbeddedTypeCard
+                                            compact={true}
+                                            typeId={id}
+                                            className="w-full"
                                             onClick={() => {
                                                 setCurrentTypeID(id);
                                                 navigate(
@@ -73,9 +74,7 @@ function TypeHistoryButton() {
                                                 );
                                                 setOpen(false);
                                             }}
-                                        >
-                                            TypeID: {id}
-                                        </Button>
+                                        />
                                         <Separator className="last:hidden" />
                                     </Fragment>
                                 ))
@@ -189,7 +188,7 @@ export function TypeExplorePage() {
                         <div className="font-bold mb-2">{t("explore.type.search.results")}</div>
                         <div className="flex flex-col gap-2 flex-1 min-h-0 w-full max-w-none">
                             {results.map((item) => (
-                                <TypeCard
+                                <SearchTypeCard
                                     key={item.id}
                                     typeId={item.id}
                                     className="border-b last:border-b-0 py-1 w-full max-w-none"

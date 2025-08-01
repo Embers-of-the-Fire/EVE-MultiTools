@@ -1,8 +1,8 @@
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { ArrowLeft, History, Search, X } from "lucide-react";
+import { ArrowLeft, Search, X } from "lucide-react";
 import type React from "react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EmbeddedTypeCard } from "@/components/TypeCard";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useSPARouter } from "@/hooks/useSPARouter";
@@ -26,8 +26,8 @@ import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Input } from "../../ui/input";
-import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
-import { Separator } from "../../ui/separator";
+import { ScrollArea } from "../../ui/scroll-area";
+import { TypeHistoryButton } from "./TypeExplorePage";
 
 interface TypeDetailPageProps {
     typeId: number;
@@ -35,85 +35,14 @@ interface TypeDetailPageProps {
 
 type SearchResult = { id: number; name: string };
 
-function TypeHistoryButton() {
-    const { t } = useTranslation();
-    const { history, setCurrentTypeID } = useTypeExplore();
-    const [open, setOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!open) return;
-        function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [open]);
-
-    return (
-        <div className="relative inline-block mr-6" ref={dropdownRef}>
-            <Button
-                variant="default"
-                size="icon"
-                className="size-12 [&_svg]:size-5"
-                onClick={() => setOpen(!open)}
-            >
-                <History size="64" />
-            </Button>
-            <div
-                className={`absolute right-0 mt-2 rounded-md max-h-72 min-w-[180px] z-50 bg-white dark:bg-black shadow-lg
-                    transition-all duration-200 ease-in-out
-                    ${open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
-                style={{
-                    transitionProperty: "opacity, transform",
-                }}
-            >
-                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 border-2">
-                    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] max-h-72">
-                        <div className="my-1">
-                            {history.length === 0 ? (
-                                <div className="p-3">{t("explore.type.history.empty")}</div>
-                            ) : (
-                                history.map((id) => (
-                                    <Fragment key={id}>
-                                        <Button
-                                            variant="ghost"
-                                            className={`w-full text-left px-4 py-2 cursor-pointer transition-colors focus:outline-hidden hover:bg-gray-100 dark:hover:bg-gray-800`}
-                                            onClick={() => {
-                                                setCurrentTypeID(id);
-                                                setOpen(false);
-                                            }}
-                                        >
-                                            TypeID: {id}
-                                        </Button>
-                                        <Separator className="last:hidden" />
-                                    </Fragment>
-                                ))
-                            )}
-                        </div>
-                    </ScrollAreaPrimitive.Viewport>
-                    <ScrollBar />
-                    <ScrollAreaPrimitive.Corner />
-                </ScrollAreaPrimitive.Root>
-            </div>
-        </div>
-    );
-}
-
 function BackToExploreButton() {
-    const { t } = useTranslation();
     const { navigate } = useSPARouter();
 
     return (
         <Button
-            variant="ghost"
             size="icon"
             className="size-12 [&_svg]:size-5"
-            onClick={() => navigate("/explore/type", t("nav.explore.type"))}
+            onClick={() => navigate("/explore/type", "")}
         >
             <ArrowLeft size="64" />
         </Button>
@@ -388,22 +317,16 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                     <div className="relative">
                         {searchLoading && <div className="p-2">{t("common.loading")}</div>}
                         {!searchLoading && results.length > 0 && (
-                            <ScrollArea className="border rounded bg-white dark:bg-black/30 shadow-sm p-4 max-h-60">
-                                <div className="flex flex-col gap-2">
+                            <ScrollArea className="border rounded-xl bg-white dark:bg-black/30 shadow-sm p-4">
+                                <div className="flex flex-col gap-2 min-h-0 max-h-60">
                                     {results.map((item) => (
-                                        <Button
+                                        <EmbeddedTypeCard
+                                            compact={true}
                                             key={item.id}
-                                            variant="ghost"
-                                            className="w-full text-left px-4 py-2 cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-                                            onClick={() => handleTypeSelect(item.id)}
-                                        >
-                                            <div className="flex justify-between w-full">
-                                                <span>{item.name}</span>
-                                                <span className="text-muted-foreground">
-                                                    ID: {item.id}
-                                                </span>
-                                            </div>
-                                        </Button>
+                                            typeId={item.id}
+                                            onClick={handleTypeSelect}
+                                            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        />
                                     ))}
                                 </div>
                             </ScrollArea>
@@ -466,20 +389,20 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                             {t("explore.type.detail.dynamic_type")}
                                         </Badge>
                                     )}
-                                    {type.tech_level && (
+                                    {type.tech_level !== null ? (
                                         <Badge variant="outline">
                                             {t("explore.type.detail.tech_level", {
                                                 techLevel: type.tech_level,
                                             })}
                                         </Badge>
-                                    )}
-                                    {type.meta_level && (
+                                    ) : null}
+                                    {type.meta_level !== null ? (
                                         <Badge variant="outline">
                                             {t("explore.type.detail.meta_level", {
                                                 metaLevel: type.meta_level,
                                             })}
                                         </Badge>
-                                    )}
+                                    ) : null}
                                 </div>
                             </div>
                         </div>
@@ -644,7 +567,11 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                         <h4 className="font-medium text-sm text-muted-foreground">
                                             {t("explore.type.detail.variation_parent_type_id")}
                                         </h4>
-                                        <p className="font-mono">{type.variation_parent_type_id}</p>
+                                        <EmbeddedTypeCard
+                                            className="mt-2"
+                                            typeId={type.variation_parent_type_id}
+                                            onClick={setCurrentTypeID}
+                                        />
                                     </div>
                                 )}
 
@@ -653,7 +580,11 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                         <h4 className="font-medium text-sm text-muted-foreground">
                                             {t("explore.type.detail.wreck_type_id")}
                                         </h4>
-                                        <p className="font-mono">{type.wreck_type_id}</p>
+                                        <EmbeddedTypeCard
+                                            className="mt-2"
+                                            typeId={type.wreck_type_id}
+                                            onClick={setCurrentTypeID}
+                                        />
                                     </div>
                                 )}
                             </div>

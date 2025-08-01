@@ -20,7 +20,7 @@ export const useTypeExploreStore = create<TypeExploreStore>()(
         (set, get) => ({
             // 初始状态
             currentTypeID: null,
-            history: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            history: [],
 
             // Actions
             setCurrentTypeID: (typeID: number | null) => {
