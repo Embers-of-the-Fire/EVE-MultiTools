@@ -10,7 +10,7 @@ type SearchResult = { id: number; name: string };
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { History, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { EmbeddedTypeCard, SearchTypeCard } from "../../TypeCard";
+import { EmbeddedTypeCard } from "../../TypeCard";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
