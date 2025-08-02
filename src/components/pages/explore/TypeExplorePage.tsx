@@ -58,7 +58,9 @@ export function TypeHistoryButton() {
                     <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-none max-h-72">
                         <div className="my-1">
                             {history.length === 0 ? (
-                                <div className="p-3 text-muted-foreground text-sm">{t("explore.type.history.empty")}</div>
+                                <div className="p-3 text-muted-foreground text-sm">
+                                    {t("explore.type.history.empty")}
+                                </div>
                             ) : (
                                 history.map((id, idx) => (
                                     <Fragment key={id}>
@@ -188,12 +190,13 @@ export function TypeExplorePage() {
                 {loading && <div>{t("common.loading")}</div>}
                 {!loading && results.length > 0 && (
                     <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 my-2 flex-1 min-h-0 flex flex-col">
-                        <div className="font-bold mb-2 px-4 pt-4">{t("explore.type.search.results")}</div>
+                        <div className="font-bold mb-2 px-4 pt-4">
+                            {t("explore.type.search.results")}
+                        </div>
                         <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
                             {results.map((item, idx) => (
-                                <>
+                                <Fragment key={item.id}>
                                     <EmbeddedTypeCard
-                                        key={item.id}
                                         typeId={item.id}
                                         compact={false}
                                         noBorder
@@ -203,7 +206,7 @@ export function TypeExplorePage() {
                                     {idx !== results.length - 1 && (
                                         <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
                                     )}
-                                </>
+                                </Fragment>
                             ))}
                         </div>
                     </ScrollArea>

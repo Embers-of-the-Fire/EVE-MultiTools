@@ -1,6 +1,6 @@
 import { ArrowLeft, Search, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedTypeCard } from "@/components/TypeCard";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
@@ -320,10 +320,9 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                             <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 max-h-60">
                                 <div className="flex flex-col min-h-0 max-h-60">
                                     {results.map((item, idx) => (
-                                        <>
+                                        <Fragment key={item.id}>
                                             <EmbeddedTypeCard
                                                 compact={true}
-                                                key={item.id}
                                                 typeId={item.id}
                                                 onClick={handleTypeSelect}
                                                 noBorder
@@ -332,7 +331,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                             {idx !== results.length - 1 && (
                                                 <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
                                             )}
-                                        </>
+                                        </Fragment>
                                     ))}
                                 </div>
                             </ScrollArea>
