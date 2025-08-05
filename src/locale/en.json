@@ -1,256 +1,259 @@
 {
-    "main": {
-        "description": "A collection of multifunctional tools for EVE Online.",
-        "get_started_hint": "Get started by editing "
+  "main": {
+    "description": "A collection of multifunctional tools for EVE Online.",
+    "get_started_hint": "Get started by editing "
+  },
+  "locale": "en",
+  "errors": {
+    "bundle_load_failed": "Failed to load bundles",
+    "bundle_import_failed": "Failed to import bundle",
+    "bundle_switch_failed": "Failed to switch bundle",
+    "bundle_remove_failed": "Failed to remove bundle",
+    "bundle_import_DirectoryExists": "Directory already exists",
+    "bundle_import_InvalidFileName": "Invalid file name",
+    "bundle_import_IoError": "IO error",
+    "bundle_import_ZipError": "ZIP file error",
+    "bundle_import_RegistrationError": "Registration error",
+    "bundle_import_unknown": "Unknown error",
+    "something_went_wrong": "Something went wrong!",
+    "try_again": "Try again",
+    "failed_to_load_settings": "Failed to load settings",
+    "failed_to_set_theme": "Failed to set theme",
+    "failed_to_set_language": "Failed to set language",
+    "failed_to_update_settings": "Failed to update settings",
+    "failed_to_reset_settings": "Failed to reset settings",
+    "use_settings_outside_provider": "useSettings must be used within SettingsProvider"
+  },
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "close": "Close",
+    "more": "More",
+    "reload": "Reload",
+    "get_started": "Get Started",
+    "edit_page": "Edit Page",
+    "documentation": "Documentation",
+    "github": "GitHub",
+    "language": "Language",
+    "chinese": "中文",
+    "english": "English",
+    "log": "Log to Console",
+    "page_not_found": "Page not found",
+    "go_home": "Go Home",
+    "enabling": "Enabling",
+    "error": "Error",
+    "image_placeholder": "Unknown Image",
+    "unknown": "Unknown",
+    "image": "Image",
+    "category_icon": "Category Icon",
+    "unknown_group": "Unknown group"
+  },
+  "nav": {
+    "home": "Home",
+    "platform": "Platform",
+    "bookmarks": "Bookmarks",
+    "market": "Market",
+    "market.analysis": "Market Analysis",
+    "market.orders": "Market Orders",
+    "market.history": "Market History",
+    "market.tools": "Market Tools",
+    "market.tools.calculator": "Price Calculator",
+    "market.tools.predictor": "Price Predictor",
+    "industry": "Industry",
+    "industry.manufacturing": "Manufacturing",
+    "industry.mining": "Mining",
+    "industry.research": "Research",
+    "character": "Character",
+    "character.skills": "Skills",
+    "character.assets": "Assets",
+    "character.wallet": "Wallet",
+    "database": "Database",
+    "database.items": "Items",
+    "database.ships": "Ships",
+    "database.systems": "Systems",
+    "explore": "Explore",
+    "explore.type": "Type",
+    "explore.type.detail": "Type Detail",
+    "explore.localization": "Localization",
+    "explore.universe": "Universe",
+    "bundle": "Data Package",
+    "bundle.viewer": "Bundle Viewer",
+    "bundle.analyzer": "Bundle Analyzer",
+    "settings": "Settings"
+  },
+  "database": {
+    "title": "Database",
+    "description": "Access EVE Online database information"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Application settings and preferences",
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
     },
-    "locale": "en",
-    "errors": {
-        "bundle_load_failed": "Failed to load bundles",
-        "bundle_import_failed": "Failed to import bundle",
-        "bundle_switch_failed": "Failed to switch bundle",
-        "bundle_remove_failed": "Failed to remove bundle",
-        "bundle_import_DirectoryExists": "Directory already exists",
-        "bundle_import_InvalidFileName": "Invalid file name",
-        "bundle_import_IoError": "IO error",
-        "bundle_import_ZipError": "ZIP file error",
-        "bundle_import_RegistrationError": "Registration error",
-        "bundle_import_unknown": "Unknown error",
-        "something_went_wrong": "Something went wrong!",
-        "try_again": "Try again",
-        "failed_to_load_settings": "Failed to load settings",
-        "failed_to_set_theme": "Failed to set theme",
-        "failed_to_set_language": "Failed to set language",
-        "failed_to_update_settings": "Failed to update settings",
-        "failed_to_reset_settings": "Failed to reset settings",
-        "use_settings_outside_provider": "useSettings must be used within SettingsProvider"
-    },
-    "common": {
-        "loading": "Loading...",
-        "cancel": "Cancel",
-        "confirm": "Confirm",
-        "save": "Save",
-        "close": "Close",
-        "more": "More",
-        "reload": "Reload",
-        "get_started": "Get Started",
-        "edit_page": "Edit Page",
-        "documentation": "Documentation",
-        "github": "GitHub",
-        "language": "Language",
-        "chinese": "中文",
-        "english": "English",
-        "log": "Log to Console",
-        "page_not_found": "Page not found",
-        "go_home": "Go Home",
-        "enabling": "Enabling",
-        "error": "Error",
-        "image_placeholder": "Unknown Image",
-        "unknown": "Unknown",
-        "image": "Image",
-        "category_icon": "Category Icon",
-        "unknown_group": "Unknown group"
-    },
-    "nav": {
-        "home": "Home",
-        "platform": "Platform",
-        "bookmarks": "Bookmarks",
-        "market": "Market",
-        "market.analysis": "Market Analysis",
-        "market.orders": "Market Orders",
-        "market.history": "Market History",
-        "market.tools": "Market Tools",
-        "market.tools.calculator": "Price Calculator",
-        "market.tools.predictor": "Price Predictor",
-        "industry": "Industry",
-        "industry.manufacturing": "Manufacturing",
-        "industry.mining": "Mining",
-        "industry.research": "Research",
-        "character": "Character",
-        "character.skills": "Skills",
-        "character.assets": "Assets",
-        "character.wallet": "Wallet",
-        "database": "Database",
-        "database.items": "Items",
-        "database.ships": "Ships",
-        "database.systems": "Systems",
-        "explore": "Explore",
-        "explore.type": "Type",
-        "explore.type.detail": "Type Detail",
-        "explore.localization": "Localization",
-        "explore.universe": "Universe",
-        "bundle": "Data Package",
-        "bundle.viewer": "Bundle Viewer",
-        "bundle.analyzer": "Bundle Analyzer",
-        "settings": "Settings"
-    },
-    "database": {
-        "title": "Database",
-        "description": "Access EVE Online database information"
-    },
-    "settings": {
-        "title": "Settings",
-        "description": "Application settings and preferences",
-        "theme": {
-            "label": "Theme",
-            "light": "Light",
-            "dark": "Dark",
-            "system": "System"
-        },
-        "language": {
-            "label": "Language",
-            "description": "Select the language for the application interface"
-        }
-    },
-    "bundle": {
-        "title": "Data Package Management",
-        "description": "Manage your EVE data packages, enable data for different servers",
-        "import": "Import Bundle",
-        "import_button": "Import Data Package File",
-        "importing": "Importing...",
-        "enable": "Enable",
-        "enabled": "Enabled",
-        "delete": "Delete",
-        "deleting": "Deleting...",
-        "no_data": "No data package data available, please import data package files first.",
-        "no_bundles": "No bundles found",
-        "server_id": "Server ID",
-        "created": "Created",
-        "game_version": "Game Version",
-        "game_build": "Game Build",
-        "delete_confirm_title": "Confirm Delete Data Package",
-        "delete_confirm_message": "Are you sure you want to delete data package \"{{name}}\"?",
-        "no_active": "No Active Bundle",
-        "please_import": "Please import a bundle",
-        "please_select": "Please select a bundle",
-        "no_bundles_available": "No bundles available",
-        "available_bundles": "Available Bundles",
-        "version": "Version: {{version}}",
-        "errors": {
-            "directoryexists": "Directory already exists",
-            "invalidfilename": "Invalid filename",
-            "ioerror": "File operation error",
-            "ziperror": "Archive error",
-            "registrationerror": "Registration error",
-            "unknown": "Unknown error"
-        },
-        "enable_failed": "Failed to enable"
-    },
-    "market": {
-        "analysis": {
-            "title": "Market Analysis",
-            "description": "Analyze market trends and data"
-        },
-        "orders": {
-            "title": "Market Orders",
-            "description": "View and manage market orders"
-        },
-        "history": {
-            "title": "Market History",
-            "description": "Browse historical market data"
-        },
-        "calculator": {
-            "title": "Price Calculator",
-            "description": "Calculate item prices and profits"
-        },
-        "predictor": {
-            "title": "Price Predictor",
-            "description": "Predict future price movements"
-        }
-    },
-    "industry": {
-        "manufacturing": {
-            "title": "Manufacturing",
-            "description": "Manage manufacturing operations"
-        },
-        "mining": {
-            "title": "Mining",
-            "description": "Track mining activities"
-        },
-        "research": {
-            "title": "Research",
-            "description": "Manage research and development"
-        }
-    },
-    "character": {
-        "skills": {
-            "title": "Character Skills",
-            "description": "View and plan character skills"
-        },
-        "assets": {
-            "title": "Character Assets",
-            "description": "Manage character assets"
-        },
-        "wallet": {
-            "title": "Character Wallet",
-            "description": "Track wallet transactions"
-        }
-    },
-    "error": {
-        "something_went_wrong": "Something went wrong!",
-        "try_again": "Try again",
-        "failed_to_load_settings": "Failed to load settings",
-        "failed_to_set_theme": "Failed to set theme",
-        "failed_to_set_language": "Failed to set language",
-        "failed_to_update_settings": "Failed to update settings",
-        "failed_to_reset_settings": "Failed to reset settings",
-        "use_settings_outside_provider": "useSettings must be used within a SettingsProvider"
-    },
-    "explore": {
-        "description": "Explore the EVE world, dig out data, and find connections",
-        "type": {
-            "title": "Explore: Type",
-            "desc": "Explore all items in EVE",
-            "search": {
-                "placeholder": "Search type",
-                "results": "Search Results",
-                "no_results": "No Results"
-            },
-            "detail": {
-                "title": "Type Detail",
-                "type_not_found": "Type not found",
-                "no_type_selected": "No type selected",
-                "load_error": "Failed to load type details",
-                "description": "Detailed type information",
-                "basic_info": "Basic Information",
-                "description_label": "Description",
-                "published": "Published",
-                "dynamic_type": "Dynamic Type",
-                "tech_level": "Tech {{techLevel}}",
-                "meta_level": "Meta {{metaLevel}}",
-                "unpublished": "Unpublished",
-                "category_info": "Category Information",
-                "category": "Category",
-                "anchorable": "Anchorable",
-                "fittable": "Fittable",
-                "anchored": "Anchored",
-                "use_base_price": "Use base price",
-                "meta_group": "Meta Group",
-                "attributes": "Attributes",
-                "base_price": "Base Price",
-                "volume": "Volume",
-                "capacity": "Capacity",
-                "radius": "Radius",
-                "portion_size": "Portion Size",
-                "market_group_id": "Market Group ID",
-                "other_info": "Other Information",
-                "faction_id": "Faction ID",
-                "race_id": "Race ID",
-                "variation_parent_type_id": "Variation Parent Type",
-                "wreck_type_id": "Wreck Type",
-                "group": "Group"
-            },
-            "history": {
-                "empty": "Empty History"
-            },
-            "category": "Category"
-        },
-        "localization": {
-            "title": "Explore: Localization",
-            "desc": "Explore the localized text of EVE"
-        },
-        "universe": {
-            "title": "Explore: The New Eden",
-            "desc": "Explore the EVE universe"
-        }
+    "language": {
+      "label": "Language",
+      "description": "Select the language for the application interface"
     }
+  },
+  "bundle": {
+    "title": "Data Package Management",
+    "description": "Manage your EVE data packages, enable data for different servers",
+    "import": "Import Bundle",
+    "import_button": "Import Data Package File",
+    "importing": "Importing...",
+    "enable": "Enable",
+    "enabled": "Enabled",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "no_data": "No data package data available, please import data package files first.",
+    "no_bundles": "No bundles found",
+    "server_id": "Server ID",
+    "created": "Created",
+    "game_version": "Game Version",
+    "game_build": "Game Build",
+    "delete_confirm_title": "Confirm Delete Data Package",
+    "delete_confirm_message": "Are you sure you want to delete data package \"{{name}}\"?",
+    "no_active": "No Active Bundle",
+    "please_import": "Please import a bundle",
+    "please_select": "Please select a bundle",
+    "no_bundles_available": "No bundles available",
+    "available_bundles": "Available Bundles",
+    "version": "Version: {{version}}",
+    "errors": {
+      "directoryexists": "Directory already exists",
+      "invalidfilename": "Invalid filename",
+      "ioerror": "File operation error",
+      "ziperror": "Archive error",
+      "registrationerror": "Registration error",
+      "unknown": "Unknown error"
+    },
+    "enable_failed": "Failed to enable"
+  },
+  "market": {
+    "analysis": {
+      "title": "Market Analysis",
+      "description": "Analyze market trends and data"
+    },
+    "orders": {
+      "title": "Market Orders",
+      "description": "View and manage market orders"
+    },
+    "history": {
+      "title": "Market History",
+      "description": "Browse historical market data"
+    },
+    "calculator": {
+      "title": "Price Calculator",
+      "description": "Calculate item prices and profits"
+    },
+    "predictor": {
+      "title": "Price Predictor",
+      "description": "Predict future price movements"
+    }
+  },
+  "industry": {
+    "manufacturing": {
+      "title": "Manufacturing",
+      "description": "Manage manufacturing operations"
+    },
+    "mining": {
+      "title": "Mining",
+      "description": "Track mining activities"
+    },
+    "research": {
+      "title": "Research",
+      "description": "Manage research and development"
+    }
+  },
+  "character": {
+    "skills": {
+      "title": "Character Skills",
+      "description": "View and plan character skills"
+    },
+    "assets": {
+      "title": "Character Assets",
+      "description": "Manage character assets"
+    },
+    "wallet": {
+      "title": "Character Wallet",
+      "description": "Track wallet transactions"
+    }
+  },
+  "error": {
+    "something_went_wrong": "Something went wrong!",
+    "try_again": "Try again",
+    "failed_to_load_settings": "Failed to load settings",
+    "failed_to_set_theme": "Failed to set theme",
+    "failed_to_set_language": "Failed to set language",
+    "failed_to_update_settings": "Failed to update settings",
+    "failed_to_reset_settings": "Failed to reset settings",
+    "use_settings_outside_provider": "useSettings must be used within a SettingsProvider"
+  },
+  "explore": {
+    "description": "Explore the EVE world, dig out data, and find connections",
+    "type": {
+      "title": "Explore: Type",
+      "desc": "Explore all items in EVE",
+      "search": {
+        "placeholder": "Search type",
+        "results": "Search Results",
+        "no_results": "No Results"
+      },
+      "detail": {
+        "title": "Type Detail",
+        "type_not_found": "Type not found",
+        "no_type_selected": "No type selected",
+        "load_error": "Failed to load type details",
+        "description": "Detailed type information",
+        "basic_info": "Basic Information",
+        "description_label": "Description",
+        "published": "Published",
+        "dynamic_type": "Dynamic Type",
+        "tech_level": "Tech {{techLevel}}",
+        "meta_level": "Meta {{metaLevel}}",
+        "unpublished": "Unpublished",
+        "category_info": "Category Information",
+        "category": "Category",
+        "anchorable": "Anchorable",
+        "fittable": "Fittable",
+        "anchored": "Anchored",
+        "use_base_price": "Use base price",
+        "meta_group": "Meta Group",
+        "attributes": "Attributes",
+        "base_price": "Base Price",
+        "volume": "Volume",
+        "capacity": "Capacity",
+        "radius": "Radius",
+        "portion_size": "Portion Size",
+        "market_group_id": "Market Group ID",
+        "other_info": "Other Information",
+        "faction_id": "Faction ID",
+        "race_id": "Race ID",
+        "variation_parent_type_id": "Variation Parent Type",
+        "wreck_type_id": "Wreck Type",
+        "group": "Group"
+      },
+      "history": {
+        "empty": "Empty History"
+      },
+      "category": "Category"
+    },
+    "localization": {
+      "title": "Explore: Localization",
+      "desc": "Explore the localized text of EVE"
+    },
+    "universe": {
+      "title": "Explore: The New Eden",
+      "desc": "Explore the EVE universe"
+    }
+  },
+  "faction": {
+    "unique_name": "Unique Faction"
+  }
 }

@@ -56,7 +56,7 @@ export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
             const badgeArr: BadgeConfig[] = [];
             if (f.unique_name) {
                 badgeArr.push({
-                    text: t("faction.unique_name", "独特阵营"),
+                    text: t("faction.unique_name"),
                     key: "unique",
                     variant: "secondary",
                 });
