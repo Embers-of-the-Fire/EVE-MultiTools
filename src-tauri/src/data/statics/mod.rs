@@ -5,6 +5,7 @@ pub mod groups;
 pub mod meta_groups;
 pub mod skins;
 pub mod types;
+pub mod factions;
 
 pub struct StaticsService {
     pub types: types::TypesService,
@@ -12,6 +13,7 @@ pub struct StaticsService {
     pub groups: groups::GroupsService,
     pub meta_groups: meta_groups::MetaGroupsService,
     pub skins: skins::SkinService,
+    pub factions: factions::FactionsService,
 }
 
 impl StaticsService {
@@ -22,6 +24,7 @@ impl StaticsService {
         let groups = groups::GroupsService::init(&static_path).await?;
         let meta_groups = meta_groups::MetaGroupsService::init(&static_path).await?;
         let skins = skins::SkinService::init(&static_path).await?;
+        let factions = factions::FactionsService::init(&static_path).await?;
 
         Ok(Self {
             types,
@@ -29,6 +32,7 @@ impl StaticsService {
             groups,
             meta_groups,
             skins,
+            factions,
         })
     }
 }

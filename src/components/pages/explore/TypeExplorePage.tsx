@@ -10,7 +10,7 @@ type SearchResult = { id: number; name: string };
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { History, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { EmbeddedTypeCard } from "../../TypeCard";
+import { EmbeddedTypeCard } from "../../card/TypeCard";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
@@ -66,6 +66,7 @@ export function TypeHistoryButton() {
                                     <Fragment key={id}>
                                         <EmbeddedTypeCard
                                             compact={true}
+                                            showBadges={false}
                                             typeId={id}
                                             className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
                                             noBorder

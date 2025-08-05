@@ -170,3 +170,29 @@ message TypeLocalizationLookup {
     }
     repeated TypeLocEntry type_entries = 1;
 }
+
+
+// Faction definition
+message Faction {
+    required int32 name_id = 1;
+    required int32 description_id = 2;
+    optional int32 short_description_id = 3;
+    optional int32 corporation_id = 4;
+    required int32 icon_id = 5;
+    repeated int32 member_races = 6;
+    required bool unique_name = 7;
+    optional string flat_logo = 8;
+    optional string flat_logo_with_name = 9;
+    required int32 solar_system_id = 10;
+    optional int32 militia_corporation_id = 11;
+    required double size_factor = 12;
+}
+
+// Collection of all factions
+message FactionCollection {
+    message FactionEntry {
+        required int32 faction_id = 1;
+        required Faction faction_data = 2;
+    }
+    repeated FactionEntry factions = 1;
+}

@@ -13,7 +13,7 @@ interface TypeImageProps {
     metaGroupName?: string;
 }
 
-const TypeImage: React.FC<TypeImageProps> = ({
+export const TypeImage: React.FC<TypeImageProps> = ({
     iconUrl,
     alt,
     loading,
@@ -76,5 +76,3 @@ const TypeImage: React.FC<TypeImageProps> = ({
         </div>
     );
 };
-
-export default TypeImage;

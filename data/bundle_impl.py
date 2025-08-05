@@ -66,27 +66,27 @@ class BundleProcessor:
         cprint("Error: ", "red", attrs=["bold"], end="")
         cprint(*args, **kwargs)
         raise RuntimeError(f"Bundle processing error: {args}")
-    
+
     def clean_bundles(self) -> None:
         """Clean up existing bundles."""
         cprint("Cleaning up existing bundles...", "green", attrs=["bold"])
-        
+
         final_bundle_dir = self.project_root / "data" / "bundle"
         final_bundle_file = final_bundle_dir / f"{self.server_id}.bundle"
         if final_bundle_file.exists():
             final_bundle_file.unlink()
             self._success(f"Removed existing bundle file: {final_bundle_file}")
-    
+
     def clean_cache(self) -> None:
         """Clean up existing cache."""
         cprint("Cleaning up existing cache...", "green", attrs=["bold"])
-        
+
         if self.bundle_root.exists():
             shutil.rmtree(self.bundle_root)
             self._success(f"Removed existing bundle directory: {self.bundle_root}")
         else:
             self._warning(f"Bundle directory does not exist: {self.bundle_root}")
-            
+
         if self.bundle_cache.exists():
             shutil.rmtree(self.bundle_cache)
             self._success(f"Removed existing cache directory: {self.bundle_cache}")
@@ -119,7 +119,7 @@ class BundleProcessor:
             self._success(f"Found {description}: {file_path}.")
 
         return True
-    
+
     def load_workspace_descriptor(self) -> None:
         """Load workspace descriptor."""
         cprint("Loading workspace descriptor...", "green", attrs=["bold"])
@@ -245,11 +245,12 @@ class BundleProcessor:
         """Collect all images."""
         bundle_images = self.bundle_root / "images"
 
-        await self.collect_graphics_async(bundle_images)
-        await self.collect_icons_async(bundle_images)
-        await self.collect_skin_material_icons_async(bundle_images)
+        await self._collect_graphics(bundle_images)
+        await self._collect_icons(bundle_images)
+        await self._collect_skin_material_icons(bundle_images)
+        await self._collect_faction_icons(bundle_images)
 
-    async def collect_graphics_async(self, bundle_images: Path) -> None:
+    async def _collect_graphics(self, bundle_images: Path) -> None:
         """Collect graphics images."""
         cprint("Collecting graphics...", "green", attrs=["bold"])
         bundle_graphics = bundle_images / "graphics"
@@ -311,7 +312,7 @@ class BundleProcessor:
         if download_tasks:
             await asyncio.gather(*download_tasks)
 
-    async def collect_icons_async(self, bundle_images: Path) -> None:
+    async def _collect_icons(self, bundle_images: Path) -> None:
         """Collect icons."""
         cprint("Collecting icons...", "green", attrs=["bold"])
         bundle_icons = bundle_images / "icons"
@@ -344,7 +345,7 @@ class BundleProcessor:
         if download_tasks:
             await asyncio.gather(*download_tasks)
 
-    async def collect_skin_material_icons_async(self, bundle_images: Path) -> None:
+    async def _collect_skin_material_icons(self, bundle_images: Path) -> None:
         """Collect skin material icons."""
         cprint("Collecting skin material icons...", "green", attrs=["bold"])
         bundle_skin_materials = bundle_images / "skins" / "materials"
@@ -363,6 +364,64 @@ class BundleProcessor:
                 skin_material.res_id,
                 target_path,
                 f"skin material icon {skin_material.file_name}",
+            )
+            download_tasks.append(task)
+
+        if download_tasks:
+            await asyncio.gather(*download_tasks)
+
+    async def _collect_faction_icons(self, bundle_images: Path) -> None:
+        """Collect faction icons."""
+        cprint("Collecting faction icons...", "green", attrs=["bold"])
+        bundle_factions = bundle_images / "factions"
+        bundle_factions.mkdir(parents=True, exist_ok=True)
+
+        faction_ids = self.fsd.get_fsd("factions")
+        if not faction_ids:
+            self._error("No factions found in FSD data.")
+
+        download_tasks = []
+        for faction_id, faction_data in faction_ids.items():
+            if not isinstance(faction_data, dict):
+                continue
+
+            flat_logo = faction_data.get("flatLogo")
+            if not flat_logo:
+                self._warning(f"Faction ID {faction_id} has no flat logo defined, skipping.")
+                continue
+            flat_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo}_256px.png"
+            icon = await self.res_file_index.get_resource(flat_logo_res, download=False)
+            if not icon:
+                self._warning(
+                    f"Flat logo '{flat_logo_res}' for faction ID {faction_id} not found, skipping."
+                )
+                continue
+            target_path = bundle_factions / f"{flat_logo}.png"
+            task = self._download_and_copy_icon(
+                icon.res_id,
+                target_path,
+                f"faction flag logo for faction ID {faction_id}",
+            )
+            download_tasks.append(task)
+
+            flat_logo_with_name = faction_data.get("flatLogoWithName")
+            if not flat_logo_with_name:
+                self._warning(
+                    f"Faction ID {faction_id} has no flat logo with name defined, skipping."
+                )
+                continue
+            flag_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo_with_name}_256px.png"
+            icon = await self.res_file_index.get_resource(flag_logo_res, download=False)
+            if not icon:
+                self._warning(
+                    f"Flat logo '{flag_logo_res}' for faction ID {faction_id} not found, skipping."
+                )
+                continue
+            target_path = bundle_factions / f"{flat_logo_with_name}.png"
+            task = self._download_and_copy_icon(
+                icon.res_id,
+                target_path,
+                f"faction flat logo with name for faction ID {faction_id}",
             )
             download_tasks.append(task)
 
@@ -475,6 +534,7 @@ class BundleProcessor:
         self._collect_groups(bundle_static)
         self._collect_meta_groups(bundle_static)
         await self._collect_skin_infos(bundle_static)
+        self._collect_factions(bundle_static)
 
     def _collect_type_definitions(self, bundle_static: Path) -> None:
         """Collect type definitions."""
@@ -859,6 +919,30 @@ class BundleProcessor:
             self._error(f"SQLite error while initializing skins.db: {e}")
         finally:
             skins_db.close()
+
+    def _collect_factions(self, bundle_static: Path) -> None:
+        """Collect factions."""
+        factions = self.fsd.get_fsd("factions")
+        faction_collection = schema_pb2.FactionCollection()
+        for faction_id, faction_def in factions.items():
+            try:
+                validated = Faction(**faction_def)
+            except ValidationError:
+                self._error(f"Failed to validate faction info for faction {faction_id}")
+                continue
+            faction_entry = faction_collection.factions.add()
+            faction_entry.faction_id = int(faction_id)
+            faction_entry.faction_data.CopyFrom(pydantic_to_protobuf_faction(validated))
+
+        bundle_static_factions = bundle_static / "factions.pb"
+        if bundle_static_factions.exists():
+            self._warning(
+                f"Factions protobuf file '{bundle_static_factions}' already exists. It will be overwritten."
+            )
+            bundle_static_factions.unlink()
+        with open(bundle_static_factions, "wb+") as f:
+            f.write(faction_collection.SerializeToString())
+        self._success("Processed factions information.")
 
     def package_bundle(self) -> Path:
         """Package the bundle."""
@@ -1320,4 +1404,41 @@ def pydantic_to_protobuf_meta_group(pydantic_obj: "MetaGroup") -> schema_pb2.Met
     pb_obj.name_id = pydantic_obj.nameID
     if pydantic_obj.iconID is not None:
         pb_obj.icon_id = pydantic_obj.iconID
+    return pb_obj
+
+
+class Faction(BaseModel):
+    nameID: int
+    descriptionID: int
+    shortDescriptionID: int | None = Field(default=None)
+    corporationID: int | None = Field(default=None)
+    iconID: int
+    memberRaces: list[int] = Field(default_factory=list)
+    uniqueName: BoolInt = Field(default=False)
+    flatLogo: str | None = Field(default=None)
+    flatLogoWithName: str | None = Field(default=None)
+    solarSystemID: int
+    militiaCorporationID: int | None = Field(default=None)
+    sizeFactor: float
+
+
+def pydantic_to_protobuf_faction(pydantic_obj: "Faction") -> schema_pb2.Faction:
+    pb_obj = schema_pb2.Faction()
+    pb_obj.name_id = pydantic_obj.nameID
+    pb_obj.description_id = pydantic_obj.descriptionID
+    if pydantic_obj.shortDescriptionID is not None:
+        pb_obj.short_description_id = pydantic_obj.shortDescriptionID
+    if pydantic_obj.corporationID is not None:
+        pb_obj.corporation_id = pydantic_obj.corporationID
+    pb_obj.icon_id = pydantic_obj.iconID
+    pb_obj.unique_name = pydantic_obj.uniqueName
+    if pydantic_obj.flatLogo is not None:
+        pb_obj.flat_logo = pydantic_obj.flatLogo
+    if pydantic_obj.flatLogoWithName is not None:
+        pb_obj.flat_logo_with_name = pydantic_obj.flatLogoWithName
+    pb_obj.solar_system_id = pydantic_obj.solarSystemID
+    if pydantic_obj.militiaCorporationID is not None:
+        pb_obj.militia_corporation_id = pydantic_obj.militiaCorporationID
+    pb_obj.size_factor = pydantic_obj.sizeFactor
+    pb_obj.member_races.extend(pydantic_obj.memberRaces)
     return pb_obj

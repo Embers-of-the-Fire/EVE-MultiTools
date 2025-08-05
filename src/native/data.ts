@@ -21,10 +21,11 @@ export async function getSkinMaterialPath(skinMaterialId: number): Promise<strin
     });
 }
 
-export const imageCommands = {
-    getGraphicPath,
-    getIconPath,
-} as const;
+export async function getFactionIconPath(iconId: string): Promise<string | null> {
+    return await tauriInvoke<string | null>("get_faction_icon_path", {
+        iconId,
+    });
+}
 
 export type LocString = {
     en: string;
@@ -192,10 +193,21 @@ export async function getLicensesBySkin(skinId: number): Promise<SkinLicense[]> 
     return await tauriInvoke<SkinLicense[]>("get_licenses_by_skin", { skinId });
 }
 
-export const skinCommands = {
-    getSkin,
-    getSkinMaterial,
-    getSkinLicense,
-    getSkinMaterialIdByLicense,
-    getLicensesBySkin,
-} as const;
+export interface Faction {
+    name_id: number;
+    description_id: number;
+    short_description_id?: number;
+    corporation_id?: number;
+    icon_id: number;
+    member_races: number[];
+    unique_name: boolean;
+    flat_logo?: string;
+    flat_logo_with_name?: string;
+    solar_system_id: number;
+    militia_corporation_id?: number;
+    size_factor: number;
+}
+
+export async function getFaction(factionId: number): Promise<Faction | null> {
+    return await tauriInvoke<Faction | null>("get_faction", { factionId });
+}

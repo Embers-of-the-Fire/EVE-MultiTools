@@ -1,30 +1,30 @@
 "use client";
 
+import { open } from "@tauri-apps/plugin-dialog";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    bundleCommands,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { useBundle } from "@/hooks/useBundle";
+import {
     type BundleMetadata,
+    bundleCommands,
     type ImportProgress,
     type ImportResult,
     ImportStage,
 } from "@/native";
-import { open } from "@tauri-apps/plugin-dialog";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/components/ui/dialog";
-import { useTranslation } from "react-i18next";
-import { PageLayout } from "@/components/layout/PageLayout";
-import { Loader2 } from "lucide-react";
-import { useBundle } from "@/hooks/useBundle";
 
 export function BundlePage() {
     const { t, i18n } = useTranslation();

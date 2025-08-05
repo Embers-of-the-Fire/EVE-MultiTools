@@ -1,0 +1,331 @@
+import Image from "next/image";
+import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
+import { Badge } from "../ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+
+interface BadgeConfig {
+    text: string;
+    variant?: "default" | "secondary" | "destructive" | "outline";
+    className?: string;
+    key?: string;
+}
+
+interface GenericData {
+    name: string;
+    description?: string;
+    iconUrl?: string | null;
+    badges?: BadgeConfig[];
+    loading?: boolean;
+    id?: string | number;
+    imageComponent?: React.ReactNode;
+}
+
+interface HoverCardProps {
+    data: GenericData;
+    className?: string;
+}
+
+const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
+    if (data.loading) {
+        return (
+            <Card className={cn("w-80 shadow-lg", className)}>
+                <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        <div className="flex-1">
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 animate-pulse" />
+                            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <Card className={cn("w-80 shadow-lg", className)}>
+            <CardHeader className="pb-2">
+                <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 shrink-0">
+                        {data.imageComponent ||
+                            (data.iconUrl ? (
+                                <Image
+                                    src={data.iconUrl}
+                                    alt={data.name}
+                                    width={48}
+                                    height={48}
+                                    className="w-full h-full object-cover rounded"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                    <span className="text-xs text-muted-foreground">N/A</span>
+                                </div>
+                            ))}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <CardTitle className="text-lg truncate">{data.name}</CardTitle>
+                        {data.id && (
+                            <div className="text-sm text-muted-foreground">ID: {data.id}</div>
+                        )}
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+                {data.description && (
+                    <p className="text-sm text-muted-foreground mb-2 line-clamp-3">
+                        {data.description}
+                    </p>
+                )}
+                <div className="flex gap-2 flex-wrap">
+                    {data.badges?.map((badge, index) => (
+                        <Badge
+                            key={badge.key || `badge-${index}`}
+                            variant={badge.variant || "secondary"}
+                            className={cn("text-xs", badge.className)}
+                        >
+                            {badge.text}
+                        </Badge>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+interface EmbedCardProps {
+    data: GenericData;
+    title?: string;
+    className?: string;
+    compact?: boolean;
+    showBadges?: boolean;
+    onClick?: (id: string | number | undefined) => void;
+    noBorder?: boolean;
+}
+
+const EmbedCard: React.FC<EmbedCardProps> = ({
+    data,
+    title,
+    className,
+    compact = false,
+    showBadges = true,
+    onClick,
+    noBorder = false,
+}) => {
+    const handleClick = () => onClick?.(data.id);
+
+    if (data.loading) {
+        return (
+            <Card
+                className={cn("w-full", noBorder ? "border-0 shadow-none" : undefined, className)}
+            >
+                {title && (
+                    <CardHeader className={cn("pb-2", compact && "py-2")}>
+                        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                    </CardHeader>
+                )}
+                <CardContent className={cn("p-4", compact && "p-3")}>
+                    <div className="flex items-center gap-3">
+                        <div
+                            className={cn(
+                                "bg-gray-200 dark:bg-gray-700 rounded animate-pulse shrink-0",
+                                compact ? "w-8 h-8" : "w-12 h-12"
+                            )}
+                        />
+                        <div className="flex-1">
+                            <div
+                                className={cn(
+                                    "bg-gray-200 dark:bg-gray-700 rounded mb-1 animate-pulse",
+                                    compact ? "h-3" : "h-4"
+                                )}
+                            />
+                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <Card
+            className={cn(
+                "w-full",
+                onClick &&
+                    "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors",
+                noBorder ? "border-0 shadow-none" : undefined,
+                className
+            )}
+            onClick={onClick ? handleClick : undefined}
+        >
+            {title && (
+                <CardHeader className={cn("pb-2", compact && "py-2")}>
+                    <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                </CardHeader>
+            )}
+            <CardContent className={cn("p-4", compact && "p-3")}>
+                <div className="flex items-center gap-3">
+                    <div
+                        className={cn(
+                            "shrink-0 relative overflow-hidden rounded",
+                            compact ? "w-8 h-8" : "w-12 h-12"
+                        )}
+                    >
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="transform origin-center">
+                                {data.imageComponent ||
+                                    (data.iconUrl ? (
+                                        <Image
+                                            src={data.iconUrl}
+                                            alt={data.name}
+                                            width={48}
+                                            height={48}
+                                            className="w-full h-full object-cover rounded"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                            <span className="text-xs text-muted-foreground">
+                                                N/A
+                                            </span>
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div
+                            className={cn(
+                                "font-medium truncate leading-tight",
+                                compact ? "text-sm" : "text-base"
+                            )}
+                        >
+                            {data.name}
+                        </div>
+                        {data.id && (
+                            <div className="text-xs text-muted-foreground leading-tight">
+                                ID: {data.id}
+                            </div>
+                        )}
+                        {!compact && data.description && (
+                            <div className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-tight">
+                                {data.description}
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex gap-1 flex-wrap shrink-0">
+                        {showBadges &&
+                            data.badges &&
+                            data.badges.length > 0 &&
+                            data.badges?.map((badge, index) => (
+                                <Badge
+                                    key={badge.key || `badge-${index}`}
+                                    variant={badge.variant || "outline"}
+                                    className={cn("text-xs", badge.className)}
+                                >
+                                    {badge.text}
+                                </Badge>
+                            ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+interface BaseCardProps {
+    data: GenericData;
+    className?: string;
+    onClick?: (id: string | number | undefined) => void;
+}
+
+const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
+    const { t } = useTranslation();
+
+    const handleClick = () => onClick?.(data.id);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClick?.(data.id);
+        }
+    };
+
+    const containerProps = onClick
+        ? {
+              onClick: handleClick,
+              onKeyDown: handleKeyDown,
+              role: "button" as const,
+              tabIndex: 0,
+          }
+        : {};
+
+    return (
+        <div
+            className={cn(
+                "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full",
+                onClick
+                    ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                    : "",
+                className
+            )}
+            {...containerProps}
+        >
+            <div className="w-12 h-12 shrink-0">
+                {data.imageComponent ||
+                    (data.iconUrl ? (
+                        <Image
+                            src={data.iconUrl}
+                            alt={data.name}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-cover rounded"
+                        />
+                    ) : data.loading ? (
+                        <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                    ) : (
+                        <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                            <span className="text-xs text-muted-foreground">N/A</span>
+                        </div>
+                    ))}
+            </div>
+            <div className="flex flex-col flex-1 min-w-0">
+                <div className="font-semibold text-base truncate">
+                    {data.loading ? t("common.loading") : data.name}
+                </div>
+                <div className="text-sm text-gray-500 mt-1 line-clamp-2">
+                    {data.loading ? "" : data.description}
+                </div>
+            </div>
+            <div className="shrink-0 text-sm text-gray-500">
+                {data.id && (
+                    <>
+                        ID {data.id}
+                        <br />
+                    </>
+                )}
+                {data.badges && data.badges.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                        {data.badges.map((badge, index) => (
+                            <Badge
+                                key={badge.key || `badge-${index}`}
+                                variant={badge.variant || "secondary"}
+                                className={cn("text-xs", badge.className)}
+                            >
+                                {badge.text}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// 主要导出接口
+const GenericCard = {
+    Card: BaseCard,
+    Hover: HoverCard,
+    Embed: EmbedCard,
+};
+
+export default GenericCard;
+export type { BadgeConfig, GenericData, HoverCardProps, EmbedCardProps, BaseCardProps };

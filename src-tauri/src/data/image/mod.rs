@@ -2,6 +2,7 @@ use std::path::Path;
 
 use crate::data::image::{graphic::GraphicService, icon::IconService, skin::SkinService};
 
+pub mod faction;
 pub mod graphic;
 pub mod icon;
 pub mod skin;
@@ -11,6 +12,7 @@ pub struct ImageService {
     pub graphic: GraphicService,
     pub icon: IconService,
     pub skin: SkinService,
+    pub faction: faction::FactionIconService,
 }
 
 impl ImageService {
@@ -20,6 +22,7 @@ impl ImageService {
             graphic: GraphicService::init(&image_path)?,
             icon: IconService::init(&image_path)?,
             skin: SkinService::init(&image_path)?,
+            faction: faction::FactionIconService::init(&image_path)?,
         })
     }
 }

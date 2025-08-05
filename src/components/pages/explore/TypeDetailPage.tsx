@@ -2,7 +2,8 @@ import { ArrowLeft, Search, X } from "lucide-react";
 import type React from "react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EmbeddedTypeCard } from "@/components/TypeCard";
+import { EmbeddedFactionCard } from "@/components/card/FactionCard";
+import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useSPARouter } from "@/hooks/useSPARouter";
@@ -21,7 +22,7 @@ import {
 import { GraphicType } from "@/types/data";
 import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
 import { PageLayout } from "../../layout";
-import TypeImage from "../../TypeImage";
+import { TypeImage } from "../../TypeImage";
 import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
@@ -425,12 +426,14 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                     <h4 className="font-medium text-sm text-muted-foreground">
                                         {t("explore.type.detail.category")}
                                     </h4>
-                                    <p className="font-medium">
-                                        {categoryName ||
-                                            `${t("explore.type.detail.category")} ${category.category_id}`}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        ID: {category.category_id}
+                                    <p>
+                                        <span className="font-medium">
+                                            {categoryName ||
+                                                `${t("explore.type.detail.category")} ${category.category_id}`}
+                                        </span>
+                                        <span className="ml-2 text-sm text-muted-foreground">
+                                            ID: {category.category_id}
+                                        </span>
                                     </p>
                                 </div>
                             )}
@@ -440,13 +443,16 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                     <h4 className="font-medium text-sm text-muted-foreground">
                                         {t("explore.type.detail.group")}
                                     </h4>
-                                    <p className="font-medium">
-                                        {groupName ||
-                                            `${t("explore.type.detail.group")} ${group.group_id}`}
+                                    <p>
+                                        <span className="font-medium">
+                                            {groupName ||
+                                                `${t("explore.type.detail.group")} ${group.group_id}`}
+                                        </span>
+                                        <span className="ml-2 text-sm text-muted-foreground">
+                                            ID: {group.group_id}
+                                        </span>
                                     </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        ID: {group.group_id}
-                                    </p>
+                                    {/* {JSON.stringify(group)} */}
                                     <div className="flex flex-wrap gap-1 mt-2">
                                         {group.anchorable && (
                                             <Badge variant="secondary" className="text-xs">
@@ -554,7 +560,11 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                         <h4 className="font-medium text-sm text-muted-foreground">
                                             {t("explore.type.detail.faction_id")}
                                         </h4>
-                                        <p className="font-mono">{type.faction_id}</p>
+                                        {/* <p className="font-mono">{type.faction_id}</p> */}
+                                        <EmbeddedFactionCard
+                                            className="mt-2"
+                                            factionId={type.faction_id}
+                                        />
                                     </div>
                                 )}
 
