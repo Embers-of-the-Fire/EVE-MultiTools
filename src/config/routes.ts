@@ -6,6 +6,8 @@ import {
 } from "@/components/pages/CharacterPages";
 import { DatabasePage } from "@/components/pages/DatabasePage";
 import { ExplorePage } from "@/components/pages/ExplorePage";
+import { FactionDetailPageWrapper } from "@/components/pages/explore/FactionDetailPageWrapper";
+import { FactionExplorePage } from "@/components/pages/explore/FactionExplorePage";
 import { LocalizationExplorePage } from "@/components/pages/explore/LocalizationExplorePage";
 import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPageWrapper";
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
@@ -152,6 +154,18 @@ export const routes: AppRoute[] = [
                 component: TypeDetailPageWrapper,
             },
             {
+                key: "explore-faction",
+                path: "/explore/faction",
+                labelKey: "nav.explore.faction",
+                component: FactionExplorePage,
+            },
+            {
+                key: "explore-faction-detail",
+                path: "/explore/faction/detail",
+                labelKey: "nav.explore.faction.detail",
+                component: FactionDetailPageWrapper,
+            },
+            {
                 key: "explore-localization",
                 path: "/explore/localization",
                 labelKey: "nav.explore.localization",
@@ -208,7 +222,9 @@ export function findRouteByPath(path: string): AppRoute | undefined {
 /**
  * 生成面包屑导航
  */
-export function generateBreadcrumbs(path: string): { labelKey: string; path: string }[] {
+export function generateBreadcrumbs(
+    path: string,
+): { labelKey: string; path: string }[] {
     const breadcrumbs: { labelKey: string; path: string }[] = [];
     const pathSegments = path.split("/").filter(Boolean);
 

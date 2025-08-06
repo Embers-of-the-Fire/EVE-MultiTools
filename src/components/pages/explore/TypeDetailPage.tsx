@@ -1,14 +1,13 @@
-import { ArrowLeft, Search, X } from "lucide-react";
 import type React from "react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
+import { DetailPageActions } from "@/components/common/DetailPageActions";
+import { SearchBar } from "@/components/common/SearchBar";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
 import { useLanguage } from "@/hooks/useAppSettings";
-import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
-import { cn } from "@/lib/utils";
 import type { Category, Group, MetaGroup, Type } from "@/native/data";
 import {
     getCategory,
@@ -24,38 +23,25 @@ import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
 import { PageLayout } from "../../layout";
 import { TypeImage } from "../../TypeImage";
 import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { Input } from "../../ui/input";
-import { ScrollArea } from "../../ui/scroll-area";
-import { TypeHistoryButton } from "./TypeExplorePage";
 
 interface TypeDetailPageProps {
     typeId: number;
 }
 
-type SearchResult = { id: number; name: string };
-
-function BackToExploreButton() {
-    const { navigate } = useSPARouter();
+function TypeDetailPageActions() {
+    const { history, setCurrentTypeID } = useTypeExplore();
 
     return (
-        <Button
-            size="icon"
-            className="size-12 [&_svg]:size-5"
-            onClick={() => navigate("/explore/type", "")}
-        >
-            <ArrowLeft size="64" />
-        </Button>
-    );
-}
-
-function DetailPageActions() {
-    return (
-        <div className="flex items-center gap-2">
-            <BackToExploreButton />
-            <TypeHistoryButton />
-        </div>
+        <DetailPageActions
+            type="type"
+            history={history}
+            onItemClick={setCurrentTypeID}
+            backRoute="/explore/type"
+            emptyMessageKey="explore.type.history.empty"
+            detailRoute="/explore/type/detail"
+            detailTitleKey="explore.type.detail.title"
+        />
     );
 }
 
@@ -80,49 +66,22 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Search functionality
-    const [search, setSearch] = useState("");
-    const [focused, setFocused] = useState(false);
-    const [results, setResults] = useState<SearchResult[]>([]);
-    const [searchLoading, setSearchLoading] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    // Search helper functions
+    const searchFunction = async (query: string, language: string) => {
+        return await searchTypeByName(query, language === "zh" ? "zh" : "en");
+    };
 
-    // Handle type search
-    useEffect(() => {
-        let ignore = false;
-        if (!search.trim()) {
-            setResults([]);
-            return;
-        }
-        setSearchLoading(true);
-        (async () => {
-            try {
-                const ids = await searchTypeByName(search, language === "zh" ? "zh" : "en");
-                const items: SearchResult[] = [];
-                for (const id of ids) {
-                    const type = await getType(id);
-                    if (!type) continue;
-                    const name = await getLocalizationByLang(
-                        type.type_name_id,
-                        language === "zh" ? "zh" : "en"
-                    );
-                    items.push({ id, name: name || String(id) });
-                }
-                if (!ignore) setResults(items);
-            } finally {
-                if (!ignore) setSearchLoading(false);
-            }
-        })();
-        return () => {
-            ignore = true;
-        };
-    }, [search, language]);
+    const getItemName = async (id: number, language: string) => {
+        const type = await getType(id);
+        if (!type) return null;
+        return await getLocalizationByLang(
+            type.type_name_id,
+            language === "zh" ? "zh" : "en"
+        );
+    };
 
     const handleTypeSelect = (selectedTypeId: number) => {
         setCurrentTypeID(selectedTypeId);
-        setSearch("");
-        setResults([]);
-        inputRef.current?.blur();
     };
 
     useEffect(() => {
@@ -270,80 +229,19 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
         <PageLayout
             title={name || t("explore.type.detail.type", { typeId })}
             description=""
-            actions={<DetailPageActions />}
+            actions={<TypeDetailPageActions />}
         >
             {/* Search Bar */}
             <div className="mb-6">
-                <div
-                    className={cn(
-                        "flex items-center w-full px-4 border-b-2 mb-4",
-                        "transition-all duration-300",
-                        focused ? "w-full border-black dark:border-white" : "w-48 md:w-64"
-                    )}
-                >
-                    <Search />
-                    <Input
-                        ref={inputRef}
-                        className={cn(
-                            "px-2 h-14 w-full font-sans text-lg outline-hidden rounded-none",
-                            "bg-transparent text-default-700 placeholder-default-500",
-                            "dark:text-default-500 dark:placeholder:text-default-300",
-                            "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                        )}
-                        placeholder={t("explore.type.search.placeholder")}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        onFocus={() => setFocused(true)}
-                        onBlur={() => setFocused(false)}
-                        autoComplete="off"
-                        spellCheck={false}
-                        style={{ minWidth: 0 }}
-                    />
-                    <Button
-                        variant="ghost"
-                        className="size-10"
-                        size="icon"
-                        onClick={() => {
-                            setSearch("");
-                            inputRef.current?.blur();
-                        }}
-                        tabIndex={-1}
-                    >
-                        <X />
-                    </Button>
-                </div>
-
-                {/* Search Results */}
-                {search && (
-                    <div className="relative">
-                        {searchLoading && <div className="p-2">{t("common.loading")}</div>}
-                        {!searchLoading && results.length > 0 && (
-                            <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 max-h-60">
-                                <div className="flex flex-col min-h-0 max-h-60">
-                                    {results.map((item, idx) => (
-                                        <Fragment key={item.id}>
-                                            <EmbeddedTypeCard
-                                                compact={true}
-                                                typeId={item.id}
-                                                onClick={handleTypeSelect}
-                                                noBorder
-                                                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"
-                                            />
-                                            {idx !== results.length - 1 && (
-                                                <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
-                                            )}
-                                        </Fragment>
-                                    ))}
-                                </div>
-                            </ScrollArea>
-                        )}
-                        {!searchLoading && search && results.length === 0 && (
-                            <div className="p-2 text-muted-foreground">
-                                {t("explore.type.search.no_results")}
-                            </div>
-                        )}
-                    </div>
-                )}
+                <SearchBar
+                    type="type"
+                    onItemSelect={handleTypeSelect}
+                    searchFunction={searchFunction}
+                    getItemName={getItemName}
+                    placeholder={t("explore.type.search.placeholder")}
+                    noResultsMessage={t("explore.type.search.no_results")}
+                    language={language}
+                />
             </div>
             <div className="space-y-6">
                 <Card>

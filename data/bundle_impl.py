@@ -182,6 +182,20 @@ class BundleProcessor:
                 "Resource service URL not found in metadata. Please check the metadata file."
             )
 
+        # Setup image service URL formatter
+        try:
+            _image_faction_url = self.metadata["image-service"]["npc-faction"]
+
+            def image_faction_url(faction_id: int) -> str:
+                """Format faction image URL."""
+                return _image_faction_url.format(factionId=faction_id)
+
+            self.image_faction_url = image_faction_url
+        except KeyError:
+            self._error(
+                "Image service URL for NPC factions not found in metadata. Please check the metadata file."
+            )
+
         # Load resource indexes
         with open(self.res_file_index_path, "r", encoding="utf-8") as f:
             try:
@@ -191,6 +205,7 @@ class BundleProcessor:
                     url_formatter=lambda x: self.resource_url("resources", x),
                     cache_dir=self.bundle_cache / "index-cache" / "resources",
                     index=raw_res_file_index,
+                    semaphore=self.download_semaphore
                 )
                 self._success("Loaded resource file index")
             except Exception as e:
@@ -204,6 +219,7 @@ class BundleProcessor:
                     url_formatter=lambda x: self.resource_url("binaries", x),
                     cache_dir=self.bundle_cache / "index-cache" / "applications",
                     index=raw_app_index,
+                    semaphore=self.download_semaphore
                 )
                 self._success("Loaded app index")
             except Exception as e:
@@ -376,6 +392,12 @@ class BundleProcessor:
         bundle_factions = bundle_images / "factions"
         bundle_factions.mkdir(parents=True, exist_ok=True)
 
+        bundle_faction_logos = bundle_factions / "logos"
+        bundle_faction_logos.mkdir(parents=True, exist_ok=True)
+
+        bundle_faction_icons = bundle_factions / "icons"
+        bundle_faction_icons.mkdir(parents=True, exist_ok=True)
+
         faction_ids = self.fsd.get_fsd("factions")
         if not faction_ids:
             self._error("No factions found in FSD data.")
@@ -386,44 +408,56 @@ class BundleProcessor:
                 continue
 
             flat_logo = faction_data.get("flatLogo")
-            if not flat_logo:
+            if flat_logo:
+                flat_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo}_256px.png"
+                icon = await self.res_file_index.get_resource(flat_logo_res, download=False)
+                if icon:
+                    target_path = bundle_faction_logos / f"{flat_logo}.png"
+                    task = self._download_and_copy_icon(
+                        icon.res_id,
+                        target_path,
+                        f"faction flag logo for faction ID {faction_id}",
+                    )
+                    download_tasks.append(task)
+                else:
+                    self._warning(
+                        f"Flat logo '{flat_logo_res}' for faction ID {faction_id} not found, skipping."
+                    )
+            else:
                 self._warning(f"Faction ID {faction_id} has no flat logo defined, skipping.")
-                continue
-            flat_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo}_256px.png"
-            icon = await self.res_file_index.get_resource(flat_logo_res, download=False)
-            if not icon:
-                self._warning(
-                    f"Flat logo '{flat_logo_res}' for faction ID {faction_id} not found, skipping."
-                )
-                continue
-            target_path = bundle_factions / f"{flat_logo}.png"
-            task = self._download_and_copy_icon(
-                icon.res_id,
-                target_path,
-                f"faction flag logo for faction ID {faction_id}",
-            )
-            download_tasks.append(task)
 
             flat_logo_with_name = faction_data.get("flatLogoWithName")
-            if not flat_logo_with_name:
+            if flat_logo_with_name:
+                flag_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo_with_name}_256px.png"
+                icon = await self.res_file_index.get_resource(flag_logo_res, download=False)
+                if icon:
+                    target_path = bundle_faction_logos / f"{flat_logo_with_name}.png"
+                    task = self._download_and_copy_icon(
+                        icon.res_id,
+                        target_path,
+                        f"faction flat logo with name for faction ID {faction_id}",
+                    )
+                    download_tasks.append(task)
+                else:
+                    self._warning(
+                        f"Flat logo '{flag_logo_res}' for faction ID {faction_id} not found, skipping."
+                    )
+            else:
                 self._warning(
                     f"Faction ID {faction_id} has no flat logo with name defined, skipping."
                 )
-                continue
-            flag_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo_with_name}_256px.png"
-            icon = await self.res_file_index.get_resource(flag_logo_res, download=False)
-            if not icon:
-                self._warning(
-                    f"Flat logo '{flag_logo_res}' for faction ID {faction_id} not found, skipping."
+
+            image_url = self.image_faction_url(int(faction_id))
+            if image_url:
+                target_path = bundle_faction_icons / f"{faction_id}.png"
+                task = self._download_and_copy_image(
+                    image_url,
+                    target_path,
+                    f"faction icon for faction ID {faction_id}",
                 )
-                continue
-            target_path = bundle_factions / f"{flat_logo_with_name}.png"
-            task = self._download_and_copy_icon(
-                icon.res_id,
-                target_path,
-                f"faction flat logo with name for faction ID {faction_id}",
-            )
-            download_tasks.append(task)
+                download_tasks.append(task)
+            else:
+                self._warning(f"No image URL for faction ID {faction_id}, skipping.")
 
         if download_tasks:
             await asyncio.gather(*download_tasks)
@@ -436,6 +470,21 @@ class BundleProcessor:
 
         downloaded_file = await self.res_file_index.get_resource(res_id, download=True)
         shutil.copyfile(downloaded_file.file_path, target_path)
+        self._success(f"Copied {description}.")
+
+    async def _download_and_copy_image(self, image_url: str, target_path: Path, description: str):
+        """Download and copy image."""
+        if target_path.exists():
+            self._warning(f"Skipped {description} (file already exists).")
+            return
+        async with self.download_semaphore:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(image_url) as response:
+                    if response.status != 200:
+                        self._error(f"Failed to download {description} from {image_url}.")
+                    content = await response.read()
+                    with open(target_path, "wb") as f:
+                        f.write(content)
         self._success(f"Copied {description}.")
 
     async def collect_localizations(self) -> None:
@@ -1029,16 +1078,19 @@ class ResourceTree:
     __tree: dict[str, "_Node"]
     __cache_dir: Path
     __url_formatter: collections.abc.Callable[[str], str]
+    __semaphore: asyncio.Semaphore
 
     def __init__(
         self,
         url_formatter: collections.abc.Callable[[str], str],
         cache_dir: Path,
         index: list[tuple[str, str, str, str, str]],
+        semaphore: asyncio.Semaphore,
     ):
         self.__cache_dir = cache_dir
         self.__url_formatter = url_formatter
         self.__tree = {}
+        self.__semaphore = semaphore
         for res_id, url, checksum, *_ in index:
             prev = self.__tree
             prev_d = cache_dir
@@ -1075,7 +1127,7 @@ class ResourceTree:
         if el.file_path.exists():
             return el
 
-        async with asyncio.Semaphore(4):  # Use global semaphore or pass it as parameter
+        async with self.__semaphore:  # Use global semaphore or pass it as parameter
             async with aiohttp.ClientSession() as session:
                 async with session.get(self.__url_formatter(el.url)) as response:
                     response.raise_for_status()

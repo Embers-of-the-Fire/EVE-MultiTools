@@ -102,6 +102,10 @@ The bundler will create the bundle based on what provided in the workspace.
 >    {
 >        "server": "tq", // server id
 >        "resource-service": "https://{type}.eveonline.com/{url}", // resource service url
+>        "image-service": { // image-related service urls
+>            // faction url
+>            "npc-faction": "https://images.evetech.net/corporations/{factionId}/logo?size=128",
+>        },
 >        "server-name": { // server name
 >            "en": "Tranquility",
 >            "zh": "宁静"
@@ -114,6 +118,13 @@ The bundler will create the bundle based on what provided in the workspace.
 >    like the serenity server. 
 >    For NetEase owned resource service, the URL pattern
 >    should be `https://ma79.gdl.netease.com/eve/{type}/{url}`.
+>    **Note:** The image-service might differs a lot between maintainers.
+>    For NetEase owned resource service, the image service should be:
+>    ```jsonc
+>    {
+>        "npc-faction": "https://image.evepc.163.com/Alliance/{factionId}_128.png",
+>    }
+>    ```
 > 2. `start.ini`, `resfileindex.txt` and `index_application.txt`
 > are all provided by the game client. See [this section](#preparation).
 > 3. `index_application.txt` is renamed from `index_<server>.txt`.

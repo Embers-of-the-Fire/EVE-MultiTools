@@ -12,7 +12,7 @@ pub struct ImageService {
     pub graphic: GraphicService,
     pub icon: IconService,
     pub skin: SkinService,
-    pub faction: faction::FactionIconService,
+    pub faction: faction::FactionService,
 }
 
 impl ImageService {
@@ -22,7 +22,7 @@ impl ImageService {
             graphic: GraphicService::init(&image_path)?,
             icon: IconService::init(&image_path)?,
             skin: SkinService::init(&image_path)?,
-            faction: faction::FactionIconService::init(&image_path)?,
+            faction: faction::FactionService::init(&image_path)?,
         })
     }
 }

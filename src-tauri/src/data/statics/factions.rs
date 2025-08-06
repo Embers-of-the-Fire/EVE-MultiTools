@@ -1,4 +1,3 @@
-
 use std::path::Path;
 
 use nohash_hasher::IntMap;
@@ -25,24 +24,35 @@ impl FactionsService {
             factions: proto
                 .factions
                 .into_iter()
-                .map(|def| (def.faction_id, Faction {
-                    // faction_id 由 FactionEntry 提供
-                    faction_id: def.faction_id,
-                    name_id: def.faction_data.name_id,
-                    description_id: def.faction_data.description_id,
-                    short_description_id: def.faction_data.short_description_id,
-                    corporation_id: def.faction_data.corporation_id,
-                    icon_id: def.faction_data.icon_id,
-                    member_races: def.faction_data.member_races,
-                    unique_name: def.faction_data.unique_name,
-                    flat_logo: def.faction_data.flat_logo,
-                    flat_logo_with_name: def.faction_data.flat_logo_with_name,
-                    solar_system_id: def.faction_data.solar_system_id,
-                    militia_corporation_id: def.faction_data.militia_corporation_id,
-                    size_factor: def.faction_data.size_factor,
-                }))
+                .map(|def| {
+                    (
+                        def.faction_id,
+                        Faction {
+                            // faction_id 由 FactionEntry 提供
+                            faction_id: def.faction_id,
+                            name_id: def.faction_data.name_id,
+                            description_id: def.faction_data.description_id,
+                            short_description_id: def.faction_data.short_description_id,
+                            corporation_id: def.faction_data.corporation_id,
+                            icon_id: def.faction_data.icon_id,
+                            member_races: def.faction_data.member_races,
+                            unique_name: def.faction_data.unique_name,
+                            flat_logo: def.faction_data.flat_logo,
+                            flat_logo_with_name: def.faction_data.flat_logo_with_name,
+                            solar_system_id: def.faction_data.solar_system_id,
+                            militia_corporation_id: def.faction_data.militia_corporation_id,
+                            size_factor: def.faction_data.size_factor,
+                        },
+                    )
+                })
                 .collect(),
         })
+    }
+
+    pub fn get_faction_ids(&self) -> Vec<i32> {
+        let mut ids: Vec<_> = self.factions.keys().copied().collect();
+        ids.sort();
+        ids
     }
 
     pub fn get_faction(&self, faction_id: i32) -> Option<&Faction> {
@@ -82,4 +92,19 @@ pub async fn get_faction(
         .factions
         .get_faction(faction_id)
         .cloned())
+}
+
+#[tauri::command]
+pub async fn get_faction_ids(
+    app_bundle: tauri::State<'_, AppBundleState>,
+) -> Result<Vec<i32>, String> {
+    Ok(app_bundle
+        .lock()
+        .await
+        .activated_bundle
+        .as_ref()
+        .ok_or("No activated bundle found".to_string())?
+        .statics
+        .factions
+        .get_faction_ids())
 }

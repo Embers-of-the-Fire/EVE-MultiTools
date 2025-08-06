@@ -1,8 +1,8 @@
+import { Box, Earth, Languages, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PageLayout } from "../layout";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { PageLayout } from "../layout";
 import { ShortcutCard } from "../ShortcutCard";
-import { Box, Earth, Languages } from "lucide-react";
 
 export function ExplorePage() {
     const { t } = useTranslation();
@@ -10,12 +10,18 @@ export function ExplorePage() {
 
     return (
         <PageLayout title={t("nav.explore")} description={t("explore.description")}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                 <ShortcutCard
                     title={t("explore.type.title")}
                     description={t("explore.type.desc", "探索所有物品类型")}
                     icon={<Box />}
                     onClick={() => navigate("/explore/type", "Type Explorer")}
+                />
+                <ShortcutCard
+                    title={t("explore.faction.title")}
+                    description={t("explore.faction.desc", "探索所有势力")}
+                    icon={<Shield />}
+                    onClick={() => navigate("/explore/faction", "Faction Explorer")}
                 />
                 <ShortcutCard
                     title={t("explore.localization.title")}

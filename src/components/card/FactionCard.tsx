@@ -1,34 +1,23 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getFaction, getLocalizationByLang } from "@/native/data";
-import { getIconUrl } from "@/utils/image";
+import { getFactionIconUrl } from "@/utils/image";
 import GenericCard, { type BadgeConfig, type GenericData } from "./GenericCard";
 
-interface EmbeddedFactionCardProps {
-    factionId: number;
-    title?: string;
-    className?: string;
-    compact?: boolean;
-    onClick?: (factionId: number) => void;
-    noBorder?: boolean;
+interface FactionData extends GenericData {
+    uniqueName?: boolean;
 }
 
-export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
-    factionId,
-    title,
-    className,
-    compact = false,
-    onClick,
-    noBorder = false,
-}) => {
+function useFactionData(factionId: number): FactionData {
     const { i18n, t } = useTranslation();
-    const [data, setData] = useState<GenericData>({
+    const [data, setData] = useState<FactionData>({
         name: "",
         description: "",
         iconUrl: null,
         badges: [],
         loading: true,
         id: factionId,
+        uniqueName: false,
     });
 
     useEffect(() => {
@@ -40,6 +29,7 @@ export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
             name: "",
             description: "",
             iconUrl: null,
+            uniqueName: false,
         }));
         getFaction(factionId).then(async (f) => {
             if (!f) {
@@ -65,10 +55,11 @@ export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
                 setData({
                     name: nameText || "",
                     description: descText || "",
-                    iconUrl: await getIconUrl(f.icon_id),
+                    iconUrl: await getFactionIconUrl(factionId),
                     badges: badgeArr,
                     loading: false,
                     id: factionId,
+                    uniqueName: f.unique_name,
                 });
             }
         });
@@ -77,14 +68,67 @@ export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
         };
     }, [factionId, i18n.language, t]);
 
+    return data;
+}
+
+interface HoverFactionCardProps {
+    factionId: number;
+    className?: string;
+}
+
+export const HoverFactionCard: React.FC<HoverFactionCardProps> = ({ factionId, className }) => {
+    const factionData = useFactionData(factionId);
+
+    return <GenericCard.Hover data={factionData} className={className} />;
+};
+
+interface EmbeddedFactionCardProps {
+    factionId: number;
+    title?: string;
+    className?: string;
+    compact?: boolean;
+    showBadges?: boolean;
+    onClick?: (factionId: number) => void;
+    noBorder?: boolean;
+}
+
+export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
+    factionId,
+    title,
+    className,
+    compact = false,
+    showBadges = true,
+    onClick,
+    noBorder = false,
+}) => {
+    const factionData = useFactionData(factionId);
+
     return (
         <GenericCard.Embed
-            data={data}
+            data={factionData}
             title={title}
             className={className}
             compact={compact}
+            showBadges={showBadges}
             onClick={onClick ? () => onClick(factionId) : undefined}
             noBorder={noBorder}
+        />
+    );
+};
+
+interface FactionCardProps {
+    factionId: number;
+    className?: string;
+    onClick?: (factionId: number) => void;
+}
+
+export const FactionCard: React.FC<FactionCardProps> = ({ factionId, className, onClick }) => {
+    const factionData = useFactionData(factionId);
+    return (
+        <GenericCard.Card
+            data={factionData}
+            className={className}
+            onClick={onClick ? () => onClick(factionId) : undefined}
         />
     );
 };

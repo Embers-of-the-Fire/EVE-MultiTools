@@ -29,6 +29,8 @@
     "explore": "探索",
     "explore.type": "物品",
     "explore.type.detail": "物品详情",
+    "explore.faction": "势力",
+    "explore.faction.detail": "势力详情",
     "explore.localization": "本地化",
     "explore.universe": "宇宙",
     "bundle": "数据包",
@@ -231,6 +233,43 @@
         "empty": "无历史记录"
       },
       "category": "分类"
+    },
+    "faction": {
+      "title": "探索：势力",
+      "desc": "探索 EVE 所有势力",
+      "all_factions": "所有势力",
+      "no_factions": "未找到势力",
+      "search": {
+        "placeholder": "搜索势力",
+        "results": "搜索结果",
+        "no_results": "无结果",
+        "hint": "输入势力名称进行搜索"
+      },
+      "detail": {
+        "title": "势力详情",
+        "faction": "势力 {{factionId}}",
+        "faction_id": "势力 ID",
+        "faction_not_found": "没有找到该势力",
+        "load_error": "加载势力详情失败",
+        "short_description": "简短描述",
+        "description": "描述",
+        "properties": "属性",
+        "size_factor": "规模因子",
+        "unique_name": "独特名称",
+        "corporation_id": "公司 ID",
+        "militia_corporation_id": "民兵公司 ID",
+        "solar_system_id": "星系 ID",
+        "icon_id": "图标 ID",
+        "member_races": "成员种族",
+        "race_id": "种族 {{raceId}}",
+        "logos": "标志",
+        "flat_logo": "平面标志",
+        "flat_logo_with_name": "带名称的平面标志"
+      },
+      "history": {
+        "empty": "无历史记录",
+        "item": "势力 {{factionId}}"
+      }
     },
     "localization": {
       "title": "探索：本地化",

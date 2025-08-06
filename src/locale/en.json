@@ -76,6 +76,8 @@
     "explore": "Explore",
     "explore.type": "Type",
     "explore.type.detail": "Type Detail",
+    "explore.faction": "Faction",
+    "explore.faction.detail": "Faction Detail",
     "explore.localization": "Localization",
     "explore.universe": "Universe",
     "bundle": "Data Package",
@@ -243,6 +245,37 @@
         "empty": "Empty History"
       },
       "category": "Category"
+    },
+    "faction": {
+      "title": "Explore: Faction",
+      "desc": "Explore all factions in EVE",
+      "all_factions": "All Factions",
+      "no_factions": "No factions found",
+      "detail": {
+        "title": "Faction Detail",
+        "faction": "Faction {{factionId}}",
+        "faction_id": "Faction ID",
+        "faction_not_found": "Faction not found",
+        "load_error": "Failed to load faction details",
+        "short_description": "Short Description",
+        "description": "Description",
+        "properties": "Properties",
+        "size_factor": "Size Factor",
+        "unique_name": "Unique Name",
+        "corporation_id": "Corporation ID",
+        "militia_corporation_id": "Militia Corporation ID",
+        "solar_system_id": "Solar System ID",
+        "icon_id": "Icon ID",
+        "member_races": "Member Races",
+        "race_id": "Race {{raceId}}",
+        "logos": "Logos",
+        "flat_logo": "Flat Logo",
+        "flat_logo_with_name": "Flat Logo with Name"
+      },
+      "history": {
+        "empty": "Empty History",
+        "item": "Faction {{factionId}}"
+      }
     },
     "localization": {
       "title": "Explore: Localization",
