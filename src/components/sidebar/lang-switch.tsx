@@ -1,5 +1,9 @@
 "use client";
 
+import clsx from "clsx";
+import { Languages } from "lucide-react";
+import type { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -7,10 +11,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Languages } from "lucide-react";
-import clsx from "clsx";
-import type { FC } from "react";
-import { useTranslation } from "react-i18next";
 import { useSettings } from "@/hooks/useSettings";
 import type { Language } from "@/types";
 
@@ -42,7 +42,7 @@ export const LangSwitch: FC<LangSwitchProps> = ({ className }) => {
                     <span className="sr-only">Change language</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="space-y-1">
                 <DropdownMenuItem
                     onClick={() => handleLanguageChange("en")}
                     className={currentLang === "en" ? "bg-accent" : ""}
