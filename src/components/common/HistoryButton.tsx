@@ -4,6 +4,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { EmbeddedFactionCard } from "../card/FactionCard";
 import { Button } from "../ui/button";
 import { ScrollBar } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
@@ -78,17 +79,14 @@ export function HistoryButton({
                                 history.map((id, idx) => (
                                     <Fragment key={id}>
                                         {type === "faction" ? (
-                                            <Button
-                                                variant="ghost"
-                                                className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none justify-start text-left"
+                                            <EmbeddedFactionCard
+                                                compact={true}
+                                                showBadges={false}
+                                                factionId={id}
+                                                className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
+                                                noBorder
                                                 onClick={() => handleItemClick(id)}
-                                            >
-                                                <div className="text-sm font-medium">
-                                                    {t("explore.faction.history.item", {
-                                                        factionId: id,
-                                                    })}
-                                                </div>
-                                            </Button>
+                                            />
                                         ) : (
                                             <EmbeddedTypeCard
                                                 compact={true}
