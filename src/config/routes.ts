@@ -222,9 +222,7 @@ export function findRouteByPath(path: string): AppRoute | undefined {
 /**
  * 生成面包屑导航
  */
-export function generateBreadcrumbs(
-    path: string,
-): { labelKey: string; path: string }[] {
+export function generateBreadcrumbs(path: string): { labelKey: string; path: string }[] {
     const breadcrumbs: { labelKey: string; path: string }[] = [];
     const pathSegments = path.split("/").filter(Boolean);
 

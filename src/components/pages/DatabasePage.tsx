@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function DatabasePage() {
     const { t } = useTranslation();

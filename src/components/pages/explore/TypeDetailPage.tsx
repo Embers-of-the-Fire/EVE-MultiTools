@@ -74,10 +74,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const getItemName = async (id: number, language: string) => {
         const type = await getType(id);
         if (!type) return null;
-        return await getLocalizationByLang(
-            type.type_name_id,
-            language === "zh" ? "zh" : "en"
-        );
+        return await getLocalizationByLang(type.type_name_id, language === "zh" ? "zh" : "en");
     };
 
     const handleTypeSelect = (selectedTypeId: number) => {
