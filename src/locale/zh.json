@@ -1,301 +1,301 @@
 {
-    "main": {
-        "description": "EVE Online 多功能工具合集。",
-        "get_started_hint": "开始使用，请编辑 "
+  "main": {
+    "description": "EVE Online 多功能工具合集。",
+    "get_started_hint": "开始使用，请编辑 "
+  },
+  "nav": {
+    "home": "主页",
+    "platform": "平台",
+    "bookmarks": "书签",
+    "market": "市场",
+    "market.analysis": "市场分析",
+    "market.orders": "市场订单",
+    "market.history": "市场历史",
+    "market.tools": "市场工具",
+    "market.tools.calculator": "价格计算器",
+    "market.tools.predictor": "价格预测器",
+    "industry": "工业",
+    "industry.manufacturing": "制造业",
+    "industry.mining": "采矿业",
+    "industry.research": "研发",
+    "character": "角色",
+    "character.skills": "技能",
+    "character.assets": "资产",
+    "character.wallet": "钱包",
+    "database": "数据库",
+    "database.items": "物品",
+    "database.ships": "舰船",
+    "database.systems": "星系",
+    "explore": "探索",
+    "explore.type": "物品",
+    "explore.type.detail": "物品详情",
+    "explore.faction": "势力",
+    "explore.faction.detail": "势力详情",
+    "explore.localization": "本地化",
+    "explore.universe": "宇宙",
+    "bundle": "数据包",
+    "bundle.viewer": "数据包查看器",
+    "bundle.analyzer": "数据包分析器",
+    "settings": "设置"
+  },
+  "locale": "zh",
+  "errors": {
+    "bundle_load_failed": "加载数据包失败",
+    "bundle_import_failed": "导入数据包失败",
+    "bundle_switch_failed": "切换数据包失败",
+    "bundle_remove_failed": "删除数据包失败",
+    "bundle_import_DirectoryExists": "目录已存在",
+    "bundle_import_InvalidFileName": "无效的文件名",
+    "bundle_import_IoError": "IO错误",
+    "bundle_import_ZipError": "ZIP文件错误",
+    "bundle_import_RegistrationError": "注册错误",
+    "bundle_import_unknown": "未知错误",
+    "something_went_wrong": "出现了一些问题！",
+    "try_again": "重试",
+    "failed_to_load_settings": "加载设置失败",
+    "failed_to_set_theme": "设置主题失败",
+    "failed_to_set_language": "设置语言失败",
+    "failed_to_update_settings": "更新设置失败",
+    "failed_to_reset_settings": "重置设置失败",
+    "use_settings_outside_provider": "useSettings必须在SettingsProvider内使用"
+  },
+  "common": {
+    "loading": "加载中...",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "close": "关闭",
+    "more": "更多",
+    "reload": "重新加载",
+    "error_loading_config": "加载配置时发生错误：{{error}}",
+    "loading_app_config": "正在加载应用配置...",
+    "get_started": "开始使用",
+    "edit_page": "编辑页面",
+    "documentation": "文档",
+    "github": "GitHub",
+    "language": "语言",
+    "chinese": "中文",
+    "english": "English",
+    "log": "输出到控制台",
+    "enabling": "启用中",
+    "error": "出错了",
+    "image_placeholder": "未知图像",
+    "unknown": "未知",
+    "image": "图像",
+    "category_icon": "Category 图标",
+    "unknown_group": "未知组别",
+    "yes": "是",
+    "no": "否",
+    "go_home": "返回首页",
+    "page_not_found": "没有找到页面"
+  },
+  "bundle": {
+    "title": "数据包管理",
+    "description": "管理您的EVE数据包，启用不同服务器的数据",
+    "import_button": "导入数据包文件",
+    "importing": "导入中...",
+    "enable": "启用",
+    "enabled": "已启用",
+    "delete": "删除",
+    "deleting": "删除中...",
+    "no_data": "暂无数据包数据，请先导入数据包文件。",
+    "server_id": "服务器ID",
+    "created": "创建时间",
+    "game_version": "游戏版本",
+    "game_build": "游戏构建",
+    "delete_confirm_title": "确认删除数据包",
+    "delete_confirm_message": "确定要删除数据包 \"{{name}}\" 吗？",
+    "no_active": "无活动数据包",
+    "please_import": "请导入数据包",
+    "available_bundles": "可用数据包",
+    "no_bundles": "没有可用的数据包",
+    "import": "导入数据包",
+    "version": "版本: {{version}}",
+    "toast": {
+      "import_success": "导入成功",
+      "import_success_message": "数据包 \"{{name}}\" 导入成功！",
+      "import_failed": "导入失败",
+      "import_failed_message": "导入数据包失败: {{error}}",
+      "enable_success": "启用成功",
+      "enable_success_message": "数据包启用成功！",
+      "enable_failed": "启用失败",
+      "enable_failed_message": "启用数据包失败: {{error}}",
+      "delete_success": "删除成功",
+      "delete_success_message": "数据包 \"{{name}}\" 删除成功！",
+      "delete_failed": "删除失败",
+      "delete_failed_message": "删除数据包失败: {{error}}",
+      "load_failed": "加载失败",
+      "load_failed_message": "加载数据包列表失败: {{error}}"
     },
-    "nav": {
-        "home": "主页",
-        "platform": "平台",
-        "bookmarks": "书签",
-        "market": "市场",
-        "market.analysis": "市场分析",
-        "market.orders": "市场订单",
-        "market.history": "市场历史",
-        "market.tools": "市场工具",
-        "market.tools.calculator": "价格计算器",
-        "market.tools.predictor": "价格预测器",
-        "industry": "工业",
-        "industry.manufacturing": "制造业",
-        "industry.mining": "采矿业",
-        "industry.research": "研发",
-        "character": "角色",
-        "character.skills": "技能",
-        "character.assets": "资产",
-        "character.wallet": "钱包",
-        "database": "数据库",
-        "database.items": "物品",
-        "database.ships": "舰船",
-        "database.systems": "星系",
-        "explore": "探索",
-        "explore.type": "物品",
-        "explore.type.detail": "物品详情",
-        "explore.faction": "势力",
-        "explore.faction.detail": "势力详情",
-        "explore.localization": "本地化",
-        "explore.universe": "宇宙",
-        "bundle": "数据包",
-        "bundle.viewer": "数据包查看器",
-        "bundle.analyzer": "数据包分析器",
-        "settings": "设置"
+    "delete_confirm": {
+      "title": "确认删除数据包",
+      "message": "您确定要删除数据包 \"{{name}}\" 吗？",
+      "warning": "此操作将永久删除数据包及其所有相关文件，且无法恢复。",
+      "cancel": "取消",
+      "confirm": "确认删除"
     },
-    "locale": "zh",
+    "info": {
+      "game_version": "游戏版本",
+      "build_version": "构建版本",
+      "created_time": "创建时间"
+    },
+    "progress": {
+      "stage": "阶段",
+      "start": "开始导入数据包...",
+      "directory_exists": "数据包目录 '{{name}}' 已存在",
+      "opening_file": "正在打开数据包文件...",
+      "creating_directory": "正在创建目标目录...",
+      "extracting_files": "正在解压 {{total}} 个文件...",
+      "extracting_file": "正在解压文件 {{current}}/{{total}}",
+      "complete": "数据包导入完成!"
+    },
     "errors": {
-        "bundle_load_failed": "加载数据包失败",
-        "bundle_import_failed": "导入数据包失败",
-        "bundle_switch_failed": "切换数据包失败",
-        "bundle_remove_failed": "删除数据包失败",
-        "bundle_import_DirectoryExists": "目录已存在",
-        "bundle_import_InvalidFileName": "无效的文件名",
-        "bundle_import_IoError": "IO错误",
-        "bundle_import_ZipError": "ZIP文件错误",
-        "bundle_import_RegistrationError": "注册错误",
-        "bundle_import_unknown": "未知错误",
-        "something_went_wrong": "出现了一些问题！",
-        "try_again": "重试",
-        "failed_to_load_settings": "加载设置失败",
-        "failed_to_set_theme": "设置主题失败",
-        "failed_to_set_language": "设置语言失败",
-        "failed_to_update_settings": "更新设置失败",
-        "failed_to_reset_settings": "重置设置失败",
-        "use_settings_outside_provider": "useSettings必须在SettingsProvider内使用"
+      "directoryexists": "目录已存在",
+      "invalidfilename": "无效的文件名",
+      "ioerror": "文件操作错误",
+      "ziperror": "压缩包错误",
+      "registrationerror": "注册错误",
+      "unknown": "未知错误"
     },
-    "common": {
-        "loading": "加载中...",
-        "cancel": "取消",
-        "confirm": "确认",
-        "save": "保存",
-        "close": "关闭",
-        "more": "更多",
-        "reload": "重新加载",
-        "error_loading_config": "加载配置时发生错误：{{error}}",
-        "loading_app_config": "正在加载应用配置...",
-        "get_started": "开始使用",
-        "edit_page": "编辑页面",
-        "documentation": "文档",
-        "github": "GitHub",
-        "language": "语言",
-        "chinese": "中文",
-        "english": "English",
-        "log": "输出到控制台",
-        "enabling": "启用中",
-        "error": "出错了",
-        "image_placeholder": "未知图像",
-        "unknown": "未知",
-        "image": "图像",
-        "category_icon": "Category 图标",
-        "unknown_group": "未知组别",
-        "yes": "是",
-        "no": "否",
-        "go_home": "返回首页",
-        "page_not_found": "没有找到页面"
+    "please_select": "请选择数据包",
+    "no_bundles_available": "没有可用的数据包",
+    "enable_failed": "启用失败"
+  },
+  "workspace": {
+    "teams": "团队",
+    "add_team": "添加团队"
+  },
+  "bookmarks": {
+    "favorite": "添加到收藏夹",
+    "remove": "移除书签",
+    "more": "更多"
+  },
+  "user": {
+    "upgrade": "升级至专业版",
+    "account": "账户",
+    "billing": "账单",
+    "notifications": "通知",
+    "logout": "退出登录"
+  },
+  "settings": {
+    "theme": {
+      "label": "主题",
+      "light": "亮色",
+      "dark": "暗色",
+      "system": "系统默认"
     },
-    "bundle": {
-        "title": "数据包管理",
-        "description": "管理您的EVE数据包，启用不同服务器的数据",
-        "import_button": "导入数据包文件",
-        "importing": "导入中...",
-        "enable": "启用",
-        "enabled": "已启用",
-        "delete": "删除",
-        "deleting": "删除中...",
-        "no_data": "暂无数据包数据，请先导入数据包文件。",
-        "server_id": "服务器ID",
-        "created": "创建时间",
-        "game_version": "游戏版本",
-        "game_build": "游戏构建",
-        "delete_confirm_title": "确认删除数据包",
-        "delete_confirm_message": "确定要删除数据包 \"{{name}}\" 吗？",
-        "no_active": "无活动数据包",
-        "please_import": "请导入数据包",
-        "available_bundles": "可用数据包",
-        "no_bundles": "没有可用的数据包",
-        "import": "导入数据包",
-        "version": "版本: {{version}}",
-        "toast": {
-            "import_success": "导入成功",
-            "import_success_message": "数据包 \"{{name}}\" 导入成功！",
-            "import_failed": "导入失败",
-            "import_failed_message": "导入数据包失败: {{error}}",
-            "enable_success": "启用成功",
-            "enable_success_message": "数据包启用成功！",
-            "enable_failed": "启用失败",
-            "enable_failed_message": "启用数据包失败: {{error}}",
-            "delete_success": "删除成功",
-            "delete_success_message": "数据包 \"{{name}}\" 删除成功！",
-            "delete_failed": "删除失败",
-            "delete_failed_message": "删除数据包失败: {{error}}",
-            "load_failed": "加载失败",
-            "load_failed_message": "加载数据包列表失败: {{error}}"
-        },
-        "delete_confirm": {
-            "title": "确认删除数据包",
-            "message": "您确定要删除数据包 \"{{name}}\" 吗？",
-            "warning": "此操作将永久删除数据包及其所有相关文件，且无法恢复。",
-            "cancel": "取消",
-            "confirm": "确认删除"
-        },
-        "info": {
-            "game_version": "游戏版本",
-            "build_version": "构建版本",
-            "created_time": "创建时间"
-        },
-        "progress": {
-            "stage": "阶段",
-            "start": "开始导入数据包...",
-            "directory_exists": "数据包目录 '{{name}}' 已存在",
-            "opening_file": "正在打开数据包文件...",
-            "creating_directory": "正在创建目标目录...",
-            "extracting_files": "正在解压 {{total}} 个文件...",
-            "extracting_file": "正在解压文件 {{current}}/{{total}}",
-            "complete": "数据包导入完成!"
-        },
-        "errors": {
-            "directoryexists": "目录已存在",
-            "invalidfilename": "无效的文件名",
-            "ioerror": "文件操作错误",
-            "ziperror": "压缩包错误",
-            "registrationerror": "注册错误",
-            "unknown": "未知错误"
-        },
-        "please_select": "请选择数据包",
-        "no_bundles_available": "没有可用的数据包",
-        "enable_failed": "启用失败"
+    "language": {
+      "label": "语言"
     },
-    "workspace": {
-        "teams": "团队",
-        "add_team": "添加团队"
-    },
-    "bookmarks": {
-        "favorite": "添加到收藏夹",
-        "remove": "移除书签",
-        "more": "更多"
-    },
-    "user": {
-        "upgrade": "升级至专业版",
-        "account": "账户",
-        "billing": "账单",
-        "notifications": "通知",
-        "logout": "退出登录"
-    },
-    "settings": {
-        "theme": {
-            "label": "主题",
-            "light": "亮色",
-            "dark": "暗色",
-            "system": "系统默认"
-        },
-        "language": {
-            "label": "语言"
-        },
-        "title": "设置"
-    },
-    "explore": {
-        "description": "探索 EVE 世界，查阅数据，寻找关联",
-        "type": {
-            "title": "探索：物品",
-            "desc": "探索 EVE 所有物品",
-            "search": {
-                "placeholder": "搜索物品",
-                "results": "搜索结果",
-                "no_results": "无结果"
-            },
-            "detail": {
-                "title": "物品详情",
-                "type_not_found": "没有找到该物品",
-                "no_type_selected": "未选择物品",
-                "load_error": "加载物品详情失败",
-                "type": "物品详情 - {{typeId}}",
-                "description": "物品详情",
-                "basic_info": "基本信息",
-                "description_label": "描述",
-                "published": "已公开",
-                "dynamic_type": "动态物品",
-                "tech_level": "科技等级 {{techLevel}}",
-                "meta_level": "Meta {{metaLevel}}",
-                "unpublished": "未公开",
-                "category_info": "分类信息",
-                "category": "分类",
-                "group": "组别",
-                "anchorable": "可锚定",
-                "fittable": "可装配",
-                "anchored": "已锚定",
-                "use_base_price": "使用基准价格",
-                "meta_group": "元分组",
-                "attributes": "属性",
-                "base_price": "基准价格",
-                "volume": "体积",
-                "capacity": "容量",
-                "radius": "半径",
-                "portion_size": "单体规模",
-                "market_group_id": "市场组 ID",
-                "other_info": "其他信息",
-                "faction_id": "势力 ID",
-                "race_id": "种族 ID",
-                "variation_parent_type_id": "衍生源类型",
-                "wreck_type_id": "残骸"
-            },
-            "history": {
-                "empty": "无历史记录"
-            },
-            "category": "分类"
-        },
-        "faction": {
-            "title": "探索：势力",
-            "desc": "探索 EVE 所有势力",
-            "all_factions": "所有势力",
-            "no_factions": "未找到势力",
-            "search": {
-                "placeholder": "搜索势力",
-                "results": "搜索结果",
-                "no_results": "无结果",
-                "hint": "输入势力名称进行搜索"
-            },
-            "detail": {
-                "title": "势力详情",
-                "faction": "势力 {{factionId}}",
-                "faction_id": "势力 ID",
-                "faction_not_found": "没有找到该势力",
-                "load_error": "加载势力详情失败",
-                "short_description": "简短描述",
-                "description": "描述",
-                "properties": "属性",
-                "size_factor": "规模因子",
-                "unique_name": "独特名称",
-                "corporation_id": "公司 ID",
-                "militia_corporation_id": "民兵公司 ID",
-                "solar_system_id": "星系 ID",
-                "icon_id": "图标 ID",
-                "member_races": "成员种族",
-                "race_id": "种族 {{raceId}}",
-                "logos": "标志",
-                "flat_logo": "平面标志",
-                "flat_logo_with_name": "带名称的平面标志"
-            },
-            "history": {
-                "empty": "无历史记录",
-                "item": "势力 {{factionId}}"
-            }
-        },
-        "localization": {
-            "title": "探索：本地化",
-            "desc": "探索 EVE 的本地化文本"
-        },
-        "universe": {
-            "title": "探索：新伊甸",
-            "desc": "探索 EVE 宇宙"
-        }
+    "title": "设置"
+  },
+  "explore": {
+    "description": "探索 EVE 世界，查阅数据，寻找关联",
+    "type": {
+      "title": "探索：物品",
+      "desc": "探索 EVE 所有物品",
+      "search": {
+        "placeholder": "搜索物品",
+        "results": "搜索结果",
+        "no_results": "无结果"
+      },
+      "detail": {
+        "title": "物品详情",
+        "type_not_found": "没有找到该物品",
+        "no_type_selected": "未选择物品",
+        "load_error": "加载物品详情失败",
+        "type": "物品详情 - {{typeId}}",
+        "description": "物品详情",
+        "basic_info": "基本信息",
+        "description_label": "描述",
+        "published": "已公开",
+        "dynamic_type": "动态物品",
+        "tech_level": "科技等级 {{techLevel}}",
+        "meta_level": "Meta {{metaLevel}}",
+        "unpublished": "未公开",
+        "category_info": "分类信息",
+        "category": "分类",
+        "group": "组别",
+        "anchorable": "可锚定",
+        "fittable": "可装配",
+        "anchored": "已锚定",
+        "use_base_price": "使用基准价格",
+        "meta_group": "元分组",
+        "attributes": "属性",
+        "base_price": "基准价格",
+        "volume": "体积",
+        "capacity": "容量",
+        "radius": "半径",
+        "portion_size": "单体规模",
+        "market_group_id": "市场组 ID",
+        "other_info": "其他信息",
+        "faction_id": "势力 ID",
+        "race_id": "种族 ID",
+        "variation_parent_type_id": "衍生源类型",
+        "wreck_type_id": "残骸"
+      },
+      "history": {
+        "empty": "无历史记录"
+      },
+      "category": "分类"
     },
     "faction": {
-        "unique_name": "特殊势力"
+      "title": "探索：势力",
+      "desc": "探索 EVE 所有势力",
+      "all_factions": "所有势力",
+      "no_factions": "未找到势力",
+      "search": {
+        "placeholder": "搜索势力",
+        "results": "搜索结果",
+        "no_results": "无结果",
+        "hint": "输入势力名称进行搜索"
+      },
+      "detail": {
+        "title": "势力详情",
+        "faction": "势力 {{factionId}}",
+        "faction_id": "势力 ID",
+        "faction_not_found": "没有找到该势力",
+        "load_error": "加载势力详情失败",
+        "short_description": "简短描述",
+        "description": "描述",
+        "properties": "属性",
+        "size_factor": "规模因子",
+        "unique_name": "独特名称",
+        "corporation_id": "执行军团 ID",
+        "militia_corporation_id": "卫队军团 ID",
+        "solar_system_id": "首都星系 ID",
+        "icon_id": "图标 ID",
+        "member_races": "成员种族",
+        "race_id": "种族 {{raceId}}",
+        "logos": "标志",
+        "flat_logo": "平面标志",
+        "flat_logo_with_name": "带名称的平面标志"
+      },
+      "history": {
+        "empty": "无历史记录",
+        "item": "势力 {{factionId}}"
+      }
     },
-    "error": {
-        "failed_to_load_settings": "无法加载设置",
-        "failed_to_set_language": "无法重置设置",
-        "failed_to_set_theme": "无法设置风格",
-        "failed_to_reset_settings": "无法重置设置",
-        "failed_to_update_settings": "无法更新设置",
-        "something_went_wrong": "出错了！",
-        "try_again": "请重试",
-        "use_settings_outside_provider": "useSettings 必须在 SettingsProvider 中使用"
+    "localization": {
+      "title": "探索：本地化",
+      "desc": "探索 EVE 的本地化文本"
+    },
+    "universe": {
+      "title": "探索：新伊甸",
+      "desc": "探索 EVE 宇宙"
     }
+  },
+  "faction": {
+    "unique_name": "特殊势力"
+  },
+  "error": {
+    "failed_to_load_settings": "无法加载设置",
+    "failed_to_set_language": "无法重置设置",
+    "failed_to_set_theme": "无法设置风格",
+    "failed_to_reset_settings": "无法重置设置",
+    "failed_to_update_settings": "无法更新设置",
+    "something_went_wrong": "出错了！",
+    "try_again": "请重试",
+    "use_settings_outside_provider": "useSettings 必须在 SettingsProvider 中使用"
+  }
 }
