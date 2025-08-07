@@ -7,6 +7,8 @@ import { DetailPageActions } from "@/components/common/DetailPageActions";
 import { SearchBar } from "@/components/common/SearchBar";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
 import { useLanguage } from "@/hooks/useAppSettings";
+import { useFactionExplore } from "@/hooks/useFactionExplore";
+import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import type { Category, Group, MetaGroup, Type } from "@/native/data";
 import {
@@ -49,6 +51,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const { setCurrentTypeID } = useTypeExplore();
+    const { navigate } = useSPARouter();
 
     const [type, setType] = useState<Type | null>(null);
     const [group, setGroup] = useState<Group | null>(null);
@@ -66,6 +69,8 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const { setCurrentFactionID } = useFactionExplore();
+
     // Search helper functions
     const searchFunction = async (query: string, language: string) => {
         return await searchTypeByName(query, language === "zh" ? "zh" : "en");
@@ -79,6 +84,13 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
 
     const handleTypeSelect = (selectedTypeId: number) => {
         setCurrentTypeID(selectedTypeId);
+    };
+
+    const handleFactionSelect = () => {
+        if (!type || !type.faction_id) return;
+
+        setCurrentFactionID(type.faction_id);
+        navigate("/explore/faction/detail", t("explore.faction.detail.title"));
     };
 
     useEffect(() => {
@@ -455,10 +467,10 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                         <h4 className="font-medium text-sm text-muted-foreground">
                                             {t("explore.type.detail.faction_id")}
                                         </h4>
-                                        {/* <p className="font-mono">{type.faction_id}</p> */}
                                         <EmbeddedFactionCard
                                             className="mt-2"
                                             factionId={type.faction_id}
+                                            onClick={handleFactionSelect}
                                         />
                                     </div>
                                 )}
