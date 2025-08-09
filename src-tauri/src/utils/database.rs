@@ -5,6 +5,7 @@ use sqlx::{
 use std::path::Path;
 use std::str::FromStr;
 
+#[derive(Clone)]
 pub struct SqliteConnection {
     pool: SqlitePool,
 }
@@ -12,7 +13,7 @@ pub struct SqliteConnection {
 impl SqliteConnection {
     pub async fn connect<P: AsRef<Path>>(db_path: P) -> Result<Self, sqlx::Error> {
         let options = SqliteConnectOptions::from_str(db_path.as_ref().to_str().unwrap())?
-            .create_if_missing(false)
+            .create_if_missing(true)
             .journal_mode(sqlx::sqlite::SqliteJournalMode::Wal)
             .busy_timeout(std::time::Duration::from_secs(5))
             .to_owned();

@@ -245,8 +245,6 @@ impl BundleState {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BundleDescriptor {
     pub metadata: BundleMetadata,
-    /// The root path of the bundle, which is the directory containing the `bundle.json` file.
-    /// This is used to locate the bundle's assets.
     pub root: PathBuf,
 }
 

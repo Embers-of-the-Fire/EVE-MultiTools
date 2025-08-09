@@ -40,6 +40,7 @@ class BundleProcessor:
         self.res_file_index_path = workspace_path / "resfileindex.txt"
         self.app_index_path = workspace_path / "index_application.txt"
         self.fsd_dir_path = workspace_path / "fsd"
+        self.esi_path = workspace_path / "esi.json"
 
         # Will be set during initialization
         self.metadata = None
@@ -50,6 +51,7 @@ class BundleProcessor:
         self.res_file_index = None
         self.app_index = None
         self.fsd = None
+        self.esi = None
 
     def _success(self, *args, **kwargs) -> None:
         """Print success message."""
@@ -134,6 +136,26 @@ class BundleProcessor:
             except Exception as e:
                 self._error(f"Unable to load metadata: {e}")
 
+        with open(self.esi_path, "r", encoding="utf-8") as f:
+            try:
+                self.esi = json.load(f)
+                self._success("Loaded ESI configuration.")
+                ESI_KEYS = Path(__file__).parent / "esi-keys.list.json"
+                if ESI_KEYS.exists():
+                    with open(ESI_KEYS, "r", encoding="utf-8") as keys_file:
+                        esi_keys = json.load(keys_file)
+                        for key in esi_keys:
+                            if key not in self.esi:
+                                self._error(
+                                    f"ESI key '{key}' not found in configuration. Please check the ESI keys file."
+                                )
+                            else:
+                                self._success(f"ESI key '{key}' verified.")
+                else:
+                    self._warning(f"ESI keys file '{ESI_KEYS}' does not exist. No keys verified.")
+            except Exception as e:
+                self._error(f"Unable to load ESI configuration: {e}")
+
         # Load start config
         try:
             self.start_cfg = configparser.ConfigParser()
@@ -205,7 +227,7 @@ class BundleProcessor:
                     url_formatter=lambda x: self.resource_url("resources", x),
                     cache_dir=self.bundle_cache / "index-cache" / "resources",
                     index=raw_res_file_index,
-                    semaphore=self.download_semaphore
+                    semaphore=self.download_semaphore,
                 )
                 self._success("Loaded resource file index")
             except Exception as e:
@@ -219,7 +241,7 @@ class BundleProcessor:
                     url_formatter=lambda x: self.resource_url("binaries", x),
                     cache_dir=self.bundle_cache / "index-cache" / "applications",
                     index=raw_app_index,
-                    semaphore=self.download_semaphore
+                    semaphore=self.download_semaphore,
                 )
                 self._success("Loaded app index")
             except Exception as e:
@@ -256,6 +278,16 @@ class BundleProcessor:
                 )
             except Exception as e:
                 self._error(f"Unable to write metadata descriptor: {e}")
+
+    def create_esi_config(self) -> None:
+        """Create ESI configuration file."""
+        esi_config_path = self.bundle_root / "esi.json"
+        with open(esi_config_path, "w+", encoding="utf-8") as f:
+            try:
+                json.dump(self.esi, f, indent=4, ensure_ascii=False)
+                self._success(f"Wrote ESI configuration: {esi_config_path}.")
+            except Exception as e:
+                self._error(f"Unable to write ESI configuration: {e}")
 
     async def collect_images(self) -> None:
         """Collect all images."""
@@ -428,7 +460,9 @@ class BundleProcessor:
 
             flat_logo_with_name = faction_data.get("flatLogoWithName")
             if flat_logo_with_name:
-                flag_logo_res = f"res:/ui/texture/eveicon/faction_logos/{flat_logo_with_name}_256px.png"
+                flag_logo_res = (
+                    f"res:/ui/texture/eveicon/faction_logos/{flat_logo_with_name}_256px.png"
+                )
                 icon = await self.res_file_index.get_resource(flag_logo_res, download=False)
                 if icon:
                     target_path = bundle_faction_logos / f"{flat_logo_with_name}.png"
@@ -1045,6 +1079,9 @@ class BundleProcessor:
 
         # Create metadata descriptor
         self.create_metadata_descriptor()
+        
+        # Create ESI configuration
+        self.create_esi_config()
 
         # Collect images
         await self.collect_images()

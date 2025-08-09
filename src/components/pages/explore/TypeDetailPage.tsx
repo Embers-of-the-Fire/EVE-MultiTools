@@ -15,6 +15,7 @@ import {
     getCategory,
     getGroup,
     getLocalizationByLang,
+    getMarketPrice,
     getMetaGroup,
     getSkinMaterialIdByLicense,
     getType,
@@ -68,6 +69,8 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const [metaGroupIconUrl, setMetaGroupIconUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const [priceText, setPriceText] = useState<string | null>(null);
 
     const { setCurrentFactionID } = useFactionExplore();
 
@@ -187,6 +190,14 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                     if (mounted) {
                         setMetaGroupName(mgNameText || "");
                         setMetaGroupIconUrl(mgIcon);
+                    }
+                }
+
+                const marketPrice = await getMarketPrice(typeId);
+                if (marketPrice) {
+                    const priceText = `卖单：${marketPrice.sell_min} ISK / 买单：${marketPrice.buy_max} ISK`;
+                    if (mounted) {
+                        setPriceText(priceText);
                     }
                 }
 
@@ -510,6 +521,17 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                     </div>
                                 )}
                             </div>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {priceText && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>{t("explore.type.detail.market_price")}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-lg font-semibold">{priceText}</div>
                         </CardContent>
                     </Card>
                 )}

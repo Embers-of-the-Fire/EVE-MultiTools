@@ -221,3 +221,19 @@ export async function getFaction(factionId: number): Promise<Faction | null> {
 export async function getFactionIds(): Promise<number[]> {
     return await tauriInvoke<number[]>("get_faction_ids");
 }
+
+export interface Price {
+    type_id: number;
+    sell_min: number;
+    buy_max: number;
+}
+
+export async function getMarketPrice(typeId: number): Promise<Price | null> {
+    return await tauriInvoke<Price | null>("get_market_price", { typeId });
+}
+
+export async function getMarketPrices(typeIds: number[]): Promise<Price[]> {
+    return await tauriInvoke<Price[]>("get_market_prices", {
+        typeIds,
+    });
+}

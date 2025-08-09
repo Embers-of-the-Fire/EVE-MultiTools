@@ -1,0 +1,221 @@
+use std::f64;
+
+use futures::{stream::FuturesUnordered, TryStreamExt};
+use serde::{Deserialize, Serialize};
+use sqlx::prelude::FromRow;
+
+use crate::{
+    __map,
+    bundle::BundleDescriptor,
+    data::esi::{EsiKey, EsiService},
+    utils::database::SqliteConnection,
+};
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, FromRow)]
+pub struct Price {
+    pub type_id: i64,
+    pub sell_min: f64,
+    pub buy_max: f64,
+}
+
+impl Price {
+    pub fn init(type_id: i64) -> Self {
+        Self {
+            type_id,
+            sell_min: f64::MAX,
+            buy_max: 0.0,
+        }
+    }
+
+    fn from_orders<'a>(type_id: i64, orders: impl Iterator<Item = &'a Order>) -> Self {
+        let mut p = Self::init(type_id);
+        for order in orders {
+            if order.is_buy_order {
+                if order.price > p.buy_max {
+                    p.buy_max = order.price;
+                }
+            } else if order.price < p.sell_min {
+                p.sell_min = order.price;
+            }
+        }
+        p
+    }
+
+    pub fn merge(&self, rhs: &Self) -> Self {
+        Self {
+            type_id: self.type_id,
+            sell_min: self.sell_min.min(rhs.sell_min),
+            buy_max: self.buy_max.max(rhs.buy_max),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, FromRow)]
+pub struct PriceRecord {
+    pub type_id: i64,
+    pub sell_min: f64,
+    pub buy_max: f64,
+    pub updated_at: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Order {
+    pub duration: i64,
+    pub is_buy_order: bool,
+    pub issued: String,
+    pub location_id: i64,
+    pub min_volume: i64,
+    pub order_id: i64,
+    pub price: f64,
+    pub range: String,
+    pub system_id: i64,
+    pub type_id: i64,
+    pub volume_remain: i64,
+}
+
+#[derive(Clone)]
+pub struct MarketService {
+    db: SqliteConnection,
+}
+
+impl MarketService {
+    pub async fn init(descriptor: &BundleDescriptor) -> anyhow::Result<Self> {
+        let db_path = descriptor.root.join("market.db");
+        let db = SqliteConnection::connect(db_path).await?;
+
+        sqlx::query!(
+            "
+            CREATE TABLE IF NOT EXISTS market (
+                type_id INTEGER PRIMARY KEY,
+                sell_min REAL NOT NULL,
+                buy_max REAL NOT NULL,
+                updated_at INTEGER NOT NULL
+            )
+            "
+        )
+        .execute(db.pool())
+        .await?;
+
+        Ok(Self { db })
+    }
+
+    pub async fn fetch_market_price(
+        &self,
+        esi: &EsiService,
+        type_id: i64,
+    ) -> anyhow::Result<Price> {
+        let now = chrono::Utc::now().timestamp();
+
+        let price_record = sqlx::query_as!(
+            PriceRecord,
+            "SELECT type_id, sell_min, buy_max, updated_at FROM market WHERE type_id = ?",
+            type_id
+        )
+        .fetch_optional(self.db.pool())
+        .await?;
+
+        if let Some(record) = price_record {
+            if now - record.updated_at < 10 * 60 {
+                return Ok(Price {
+                    type_id: record.type_id,
+                    sell_min: record.sell_min,
+                    buy_max: record.buy_max,
+                });
+            }
+        }
+
+        let (price, pages) = Self::fetch_esi_market_first(esi, type_id).await?;
+        if pages > 1 {
+            for page in 2..=pages {
+                let p = Self::fetch_esi_market(esi, type_id, page).await?;
+                price.merge(&p);
+            }
+        }
+
+        sqlx::query!(
+            "INSERT OR REPLACE INTO market (type_id, sell_min, buy_max, updated_at) VALUES (?, ?, ?, ?)",
+            price.type_id,
+            price.sell_min,
+            price.buy_max,
+            now,
+        ).execute(self.db.pool()).await?;
+
+        Ok(price)
+    }
+
+    async fn fetch_esi_market_first(
+        esi: &EsiService,
+        type_id: i64,
+    ) -> anyhow::Result<(Price, i32)> {
+        let params = __map! {
+            "regionId".to_string() => format!("10000002"),
+            "typeId".to_string() => format!("{type_id}"),
+            "page".to_string() => format!("1"),
+        };
+
+        let (m, h): (Vec<Order>, _) = esi.query_with_header(EsiKey::MarketOrders, &params).await?;
+        let pages = h
+            .get("X-Pages")
+            .and_then(|p| p.to_str().ok())
+            .and_then(|p| p.parse().ok())
+            .unwrap_or(1);
+        Ok((Price::from_orders(type_id, m.iter()), pages))
+    }
+
+    async fn fetch_esi_market(esi: &EsiService, type_id: i64, page: i32) -> anyhow::Result<Price> {
+        let params = __map! {
+            "regionId".to_string() => format!("10000002"),
+            "typeId".to_string() => format!("{type_id}"),
+            "page".to_string() => format!("{page}"),
+        };
+
+        let m: Vec<Order> = esi.query(EsiKey::MarketOrders, &params).await?;
+        Ok(Price::from_orders(type_id, m.iter()))
+    }
+}
+
+#[tauri::command]
+pub async fn get_market_price(
+    app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
+    type_id: i64,
+) -> Result<Price, String> {
+    let bundle = app_bundle.lock().await;
+    let activated_bundle = bundle
+        .activated_bundle
+        .as_ref()
+        .ok_or("No activated bundle found".to_string())?;
+
+    activated_bundle
+        .market
+        .fetch_market_price(&activated_bundle.esi, type_id)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn get_market_prices(
+    app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
+    type_ids: Vec<i64>,
+) -> Result<Vec<Price>, String> {
+    let bundle = app_bundle.lock().await;
+    let activated_bundle = bundle
+        .activated_bundle
+        .as_ref()
+        .ok_or("No activated bundle found".to_string())?;
+
+    // We use unordered future to fetch prices concurrently
+    let futures: FuturesUnordered<_> = type_ids
+        .into_iter()
+        .map(|type_id| {
+            let esi = activated_bundle.esi.clone();
+            let market = activated_bundle.market.clone();
+            async move { market.fetch_market_price(&esi, type_id).await }
+        })
+        .collect();
+
+    let out = futures
+        .try_collect::<Vec<_>>()
+        .await
+        .map_err(|e| format!("Unable to fetch all market prices: {e:?}"))?;
+    Ok(out)
+}

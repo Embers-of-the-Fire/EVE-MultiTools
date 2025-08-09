@@ -94,7 +94,8 @@ The bundler will create the bundle based on what provided in the workspace.
     - start.ini              *2
     - resfileindex.txt       *2
     - index_application.txt  *2 *3
-    - fsd/                   *4
+    - esi.json               *4
+    - fsd/                   *5
 ```
 
 > 1. The metadata JSON file should be like:
@@ -128,7 +129,10 @@ The bundler will create the bundle based on what provided in the workspace.
 > 2. `start.ini`, `resfileindex.txt` and `index_application.txt`
 > are all provided by the game client. See [this section](#preparation).
 > 3. `index_application.txt` is renamed from `index_<server>.txt`.
-> 4. `fsd` folder contains all fsd files converted from fsd binaries. 
+> 4. `esi.json` contains some ESI-related configurations. 
+>    Those are mainly several URL patterns.
+>    For more information about ESI configs, see [this section](#esi-configurations).
+> 5. `fsd` folder contains all fsd files converted from fsd binaries. 
 > See [EVE FSD Dumper](https://github.com/Embers-of-the-Fire/EVE-FSD-Dumper) 
 > for more information.
 
@@ -138,6 +142,65 @@ To create the bundle, simply run:
 ```bash
 python3 bundle.py
 ```
+
+#### ESI Configurations
+
+The esi configuration file is `<bundle-id>/esi.json` like this:
+```jsonc
+{
+    "<another random key>": {
+        "url": "<some url pattern>",
+        "method": "Get | Post",
+        "query": {
+            "<query key>": "<query value>"
+        },
+        "header": {
+            "<header key>": "<header value>"
+        }
+    }
+}
+```
+
+The currently used keys are:
+
+##### `MARKET-ORDERS`
+
+The `/markets/{region_id}/orders/` route.
+  
+Required parameter:
+- `regionId`: Market region ID.
+- `typeId`: Type to fetch.
+- `page`: Which page to get.
+
+Example:
+- Tranquility, CCP:
+  ```json
+  {
+      "url": "https://esi.evetech.net/markets/{regionId}/orders",
+      "method": "Get",
+      "query": {
+        "order_type": "all",
+        "type_id": "{typeId}",
+        "page": "{page}"
+      },
+      "header": {
+        "Accept-Language": "en",
+        "X-Tenant": "tranquility"
+      }
+  }
+  ```
+- Serenity, NetEase:
+  ```json
+  {
+      "url": "https://ali-esi.evepc.163.com/latest/markets/{regionId}/orders/",
+      "method": "Get",
+      "query": {
+        "order_type": "all",
+        "type_id": "{typeId}",
+        "page": "{page}",
+        "datasource": "serenity"
+      }
+  }
 
 ## Mock DB
 

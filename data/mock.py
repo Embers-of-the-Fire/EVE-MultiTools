@@ -31,3 +31,20 @@ with sqlite3.connect(output_path) as conn:
         print(f"Creating table {table} in mock database.")
         cursor.execute(sql)
     conn.commit()
+
+# Attach external SQL files if needed
+def attach_external_sql(db_path: Path, sql_files: list[Path]) -> None:
+    """Attach external SQL files to the mock database."""
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
+        for sql_file in sql_files:
+            if sql_file.is_file():
+                print(f"Attaching external SQL file {sql_file.name} to mock database.")
+                with open(sql_file, 'r') as f:
+                    sql_script = f.read()
+                    cursor.executescript(sql_script)
+        conn.commit()
+
+external_sql_files = list((Path(__file__).parent / "external-sql").glob("*.sql"))
+if external_sql_files:
+    attach_external_sql(output_path, external_sql_files)
