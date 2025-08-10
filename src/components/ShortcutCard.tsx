@@ -15,7 +15,6 @@ export function ShortcutCard({ title, description, icon, onClick }: ShortcutCard
             className={cn(
                 "cursor-pointer backdrop-blur-lg transition-shadow duration-200",
                 "shadow-lg hover:shadow-2xl",
-                // 暗色模式下hover时发白光
                 "dark:hover:shadow-[0_8px_32px_0_rgba(255,255,255,0.18)]"
             )}
             onClick={onClick}
