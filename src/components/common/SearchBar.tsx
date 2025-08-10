@@ -1,40 +1,40 @@
 import { Search, X } from "lucide-react";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { EmbeddedFactionCard } from "@/components/card/FactionCard";
-import { EmbeddedTypeCard } from "@/components/card/TypeCard";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { ScrollArea } from "../ui/scroll-area";
 
-interface SearchResult {
+export interface SearchResult {
     id: number;
     name: string;
 }
 
 interface SearchBarProps {
-    type: "faction" | "type";
-    onItemSelect: (id: number) => void;
+    onItemSelect?: (id: number) => void;
     searchFunction: (query: string, language: string) => Promise<number[]>;
     getItemName: (id: number, language: string) => Promise<string | null>;
     placeholder: string;
-    noResultsMessage: string;
-    resultsTitle?: string;
+    noResultsMessage?: string;
     language: string;
+    children?: (ctx: {
+        results: SearchResult[];
+        loading: boolean;
+        query: string;
+        onSelect: (id: number) => void;
+        onClear: () => void;
+        noResultsMessage?: string;
+    }) => React.ReactNode;
 }
 
 export function SearchBar({
-    type,
     onItemSelect,
     searchFunction,
     getItemName,
     placeholder,
     noResultsMessage,
-    resultsTitle,
     language,
+    children,
 }: SearchBarProps) {
-    const { t } = useTranslation();
     const [search, setSearch] = useState("");
     const [focused, setFocused] = useState(false);
     const [results, setResults] = useState<SearchResult[]>([]);
@@ -69,7 +69,7 @@ export function SearchBar({
     }, [search, language, searchFunction, getItemName]);
 
     const handleItemSelect = (id: number) => {
-        onItemSelect(id);
+        onItemSelect?.(id);
         setSearch("");
         setResults([]);
         inputRef.current?.blur();
@@ -118,50 +118,15 @@ export function SearchBar({
                 </Button>
             </div>
 
-            {/* Search Results */}
-            {search && (
-                <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
-                    {loading && <div className="p-2">{t("common.loading")}</div>}
-                    {!loading && results.length > 0 && (
-                        <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 my-2 flex-1 min-h-0 flex flex-col">
-                            {resultsTitle && (
-                                <div className="font-bold mb-2 px-4 pt-4">{resultsTitle}</div>
-                            )}
-                            <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
-                                {results.map((item, idx) => (
-                                    <Fragment key={item.id}>
-                                        {type === "type" ? (
-                                            <EmbeddedTypeCard
-                                                typeId={item.id}
-                                                compact={false}
-                                                noBorder
-                                                onClick={handleItemSelect}
-                                                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"
-                                            />
-                                        ) : (
-                                            <EmbeddedFactionCard
-                                                factionId={item.id}
-                                                compact={false}
-                                                noBorder
-                                                onClick={handleItemSelect}
-                                                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"
-                                            />
-                                        )}
-                                        {idx !== results.length - 1 && (
-                                            <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
-                                        )}
-                                    </Fragment>
-                                ))}
-                            </div>
-                        </ScrollArea>
-                    )}
-                    {!loading && search && results.length === 0 && (
-                        <div className="text-center text-muted-foreground mt-8">
-                            <p>{noResultsMessage}</p>
-                        </div>
-                    )}
-                </div>
-            )}
+            {search &&
+                children?.({
+                    results,
+                    loading,
+                    query: search,
+                    onSelect: handleItemSelect,
+                    onClear: handleClear,
+                    noResultsMessage,
+                })}
         </div>
     );
 }

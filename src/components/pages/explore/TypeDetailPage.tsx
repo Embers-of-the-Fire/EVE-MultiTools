@@ -27,6 +27,7 @@ import { PageLayout } from "../../layout";
 import { TypeImage } from "../../TypeImage";
 import { Badge } from "../../ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import { ScrollArea } from "../../ui/scroll-area";
 
 interface TypeDetailPageProps {
     typeId: number;
@@ -244,14 +245,44 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
             {/* Search Bar */}
             <div className="mb-6">
                 <SearchBar
-                    type="type"
                     onItemSelect={handleTypeSelect}
                     searchFunction={searchFunction}
                     getItemName={getItemName}
                     placeholder={t("explore.type.search.placeholder")}
                     noResultsMessage={t("explore.type.search.no_results")}
                     language={language}
-                />
+                >
+                    {({ results, loading, query, onSelect, noResultsMessage }) => (
+                        <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
+                            {loading && <div className="p-2">{t("common.loading")}</div>}
+                            {!loading && results.length > 0 && (
+                                <ScrollArea className="max-h-72 border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 my-2 flex-1 min-h-0 flex flex-col">
+                                    <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
+                                        {results.map((item, idx) => (
+                                            <div key={item.id}>
+                                                <EmbeddedTypeCard
+                                                    typeId={item.id}
+                                                    compact={true}
+                                                    noBorder
+                                                    onClick={onSelect}
+                                                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"
+                                                />
+                                                {idx !== results.length - 1 && (
+                                                    <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mx-0" />
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
+                            )}
+                            {!loading && query && results.length === 0 && (
+                                <div className="text-center text-muted-foreground mt-8">
+                                    <p>{noResultsMessage}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </SearchBar>
             </div>
             <div className="space-y-6">
                 <Card>
