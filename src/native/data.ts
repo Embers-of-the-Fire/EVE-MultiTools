@@ -1,3 +1,4 @@
+import { MarketGroupCollection } from "@/data/schema";
 import { GraphicType } from "@/types/data";
 import { tauriInvoke } from "./base";
 
@@ -222,14 +223,41 @@ export async function getFactionIds(): Promise<number[]> {
     return await tauriInvoke<number[]>("get_faction_ids");
 }
 
+export interface MarketGroup {
+    name_id: number;
+    description_id?: number;
+    icon_id?: number;
+    parent_group_id?: number;
+    types: number[];
+    groups: number[];
+}
+
+export async function getMarketGroup(marketGroupId: number): Promise<MarketGroup | null> {
+    return await tauriInvoke<MarketGroup | null>("get_market_group", {
+        marketGroupId,
+    });
+}
+
+export async function getMarketGroupRaw(): Promise<MarketGroupCollection> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_market_group_raw");
+    if (!bytes) {
+        throw new Error("Failed to fetch market group data");
+    }
+    return MarketGroupCollection.fromBinary(new Uint8Array(bytes));
+}
+
 export interface Price {
     type_id: number;
     sell_min: number;
     buy_max: number;
+    updated_at: number;
 }
 
 export async function getMarketPrice(typeId: number): Promise<Price | null> {
-    return await tauriInvoke<Price | null>("get_market_price", { typeId });
+    return await tauriInvoke<Price | null>("get_market_price", {
+        typeId,
+        doRequest: false,
+    });
 }
 
 export async function getMarketPrices(typeIds: number[]): Promise<Price[]> {

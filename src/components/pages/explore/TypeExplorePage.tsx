@@ -1,7 +1,7 @@
 import { useTranslation, useTranslation as useTranslationI18n } from "react-i18next";
+import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { HistoryButton } from "@/components/common/HistoryButton";
 import { SearchBar } from "@/components/common/SearchBar";
-import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { getLocalizationByLang, getType, searchTypeByName } from "@/native/data";
@@ -57,7 +57,7 @@ export function TypeExplorePage() {
                 searchFunction={searchFunction}
                 getItemName={getItemName}
                 placeholder={t("explore.type.search.placeholder")}
-                noResultsMessage={t("explore.type.search.no_results")}
+                noResultsMessage={t("common.no_results")}
                 language={i18n.language}
             >
                 {({ results, loading, query, onSelect, noResultsMessage }) => (
@@ -66,7 +66,7 @@ export function TypeExplorePage() {
                         {!loading && results.length > 0 && (
                             <ScrollArea className="border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 my-2 flex-1 min-h-0 flex flex-col">
                                 <div className="font-bold mb-2 px-4 pt-4">
-                                    {t("explore.type.search.results")} ({results.length})
+                                    {t("common.search.results")} ({results.length})
                                 </div>
                                 <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
                                     {results.map((item, idx) => (

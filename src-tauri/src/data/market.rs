@@ -1,6 +1,6 @@
 use std::f64;
 
-use futures::{stream::FuturesUnordered, TryStreamExt};
+use futures::{stream, StreamExt, TryStreamExt};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
@@ -103,26 +103,8 @@ impl MarketService {
         &self,
         esi: &EsiService,
         type_id: i64,
-    ) -> anyhow::Result<Price> {
+    ) -> anyhow::Result<PriceRecord> {
         let now = chrono::Utc::now().timestamp();
-
-        let price_record = sqlx::query_as!(
-            PriceRecord,
-            "SELECT type_id, sell_min, buy_max, updated_at FROM market WHERE type_id = ?",
-            type_id
-        )
-        .fetch_optional(self.db.pool())
-        .await?;
-
-        if let Some(record) = price_record {
-            if now - record.updated_at < 10 * 60 {
-                return Ok(Price {
-                    type_id: record.type_id,
-                    sell_min: record.sell_min,
-                    buy_max: record.buy_max,
-                });
-            }
-        }
 
         let (price, pages) = Self::fetch_esi_market_first(esi, type_id).await?;
         if pages > 1 {
@@ -132,12 +114,19 @@ impl MarketService {
             }
         }
 
+        let price = PriceRecord {
+            type_id: price.type_id,
+            sell_min: price.sell_min,
+            buy_max: price.buy_max,
+            updated_at: now,
+        };
+
         sqlx::query!(
             "INSERT OR REPLACE INTO market (type_id, sell_min, buy_max, updated_at) VALUES (?, ?, ?, ?)",
             price.type_id,
             price.sell_min,
             price.buy_max,
-            now,
+            price.updated_at
         ).execute(self.db.pool()).await?;
 
         Ok(price)
@@ -178,7 +167,7 @@ impl MarketService {
 pub async fn get_market_price(
     app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
     type_id: i64,
-) -> Result<Price, String> {
+) -> Result<PriceRecord, String> {
     let bundle = app_bundle.lock().await;
     let activated_bundle = bundle
         .activated_bundle
@@ -196,7 +185,7 @@ pub async fn get_market_price(
 pub async fn get_market_prices(
     app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
     type_ids: Vec<i64>,
-) -> Result<Vec<Price>, String> {
+) -> Result<Vec<PriceRecord>, String> {
     let bundle = app_bundle.lock().await;
     let activated_bundle = bundle
         .activated_bundle
@@ -204,14 +193,13 @@ pub async fn get_market_prices(
         .ok_or("No activated bundle found".to_string())?;
 
     // We use unordered future to fetch prices concurrently
-    let futures: FuturesUnordered<_> = type_ids
-        .into_iter()
+    let futures = stream::iter(type_ids)
         .map(|type_id| {
             let esi = activated_bundle.esi.clone();
             let market = activated_bundle.market.clone();
             async move { market.fetch_market_price(&esi, type_id).await }
         })
-        .collect();
+        .buffered(4);
 
     let out = futures
         .try_collect::<Vec<_>>()

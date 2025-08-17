@@ -52,7 +52,11 @@
         "yes": "Yes",
         "no": "No",
         "error_loading_config": "An error occurred while loading the configuration: {{error}}",
-        "loading_app_config": "Loading the application configuration..."
+        "loading_app_config": "Loading the application configuration...",
+        "no_results": "No Results",
+        "search": {
+            "results": "Search Results"
+        }
     },
     "nav": {
         "home": "Home",
@@ -60,6 +64,7 @@
         "bookmarks": "Bookmarks",
         "market": "Market",
         "market.analysis": "Market Analysis",
+        "market.list": "Market Overview",
         "market.orders": "Market Orders",
         "market.history": "Market History",
         "market.tools": "Market Tools",
@@ -199,7 +204,19 @@
         "predictor": {
             "title": "Price Predictor",
             "description": "Predict future price movements"
-        }
+        },
+        "market_list": {
+            "title": "Market Overview",
+            "desc": "Current market status of all items.",
+            "search": {
+                "placeholder": "Seach in market"
+            }
+        },
+        "market_group_tree": {
+            "title": "Market Group"
+        },
+        "sell_min": "Sell",
+        "buy_max": "Buy"
     },
     "industry": {
         "manufacturing": {

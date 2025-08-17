@@ -196,3 +196,22 @@ message FactionCollection {
     }
     repeated FactionEntry factions = 1;
 }
+
+// Market group definition
+message MarketGroup {
+    required int32 name_id = 1;
+    optional int32 description_id = 2;
+    optional int32 icon_id = 3;
+    optional int32 parent_group_id = 4;
+    repeated int32 groups = 5;
+    repeated int32 types = 6;
+}
+
+message MarketGroupCollection {
+    message MarketGroupEntry {
+        required int32 market_group_id = 1;
+        required MarketGroup market_group_data = 2;
+    }
+
+    repeated MarketGroupEntry market_groups = 1;
+}

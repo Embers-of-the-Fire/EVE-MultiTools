@@ -570,6 +570,59 @@ export interface FactionCollection_FactionEntry {
      */
     factionData?: Faction;
 }
+/**
+ * Market group definition
+ *
+ * @generated from protobuf message eve_multitools.data.MarketGroup
+ */
+export interface MarketGroup {
+    /**
+     * @generated from protobuf field: required int32 name_id = 1
+     */
+    nameId: number;
+    /**
+     * @generated from protobuf field: optional int32 description_id = 2
+     */
+    descriptionId?: number;
+    /**
+     * @generated from protobuf field: optional int32 icon_id = 3
+     */
+    iconId?: number;
+    /**
+     * @generated from protobuf field: optional int32 parent_group_id = 4
+     */
+    parentGroupId?: number;
+    /**
+     * @generated from protobuf field: repeated int32 groups = 5
+     */
+    groups: number[];
+    /**
+     * @generated from protobuf field: repeated int32 types = 6
+     */
+    types: number[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.MarketGroupCollection
+ */
+export interface MarketGroupCollection {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.MarketGroupCollection.MarketGroupEntry market_groups = 1
+     */
+    marketGroups: MarketGroupCollection_MarketGroupEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.MarketGroupCollection.MarketGroupEntry
+ */
+export interface MarketGroupCollection_MarketGroupEntry {
+    /**
+     * @generated from protobuf field: required int32 market_group_id = 1
+     */
+    marketGroupId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.MarketGroup market_group_data = 2
+     */
+    marketGroupData?: MarketGroup;
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class TypeID$Type extends MessageType<TypeID> {
     constructor() {
@@ -3210,3 +3263,291 @@ class FactionCollection_FactionEntry$Type extends MessageType<FactionCollection_
  * @generated MessageType for protobuf message eve_multitools.data.FactionCollection.FactionEntry
  */
 export const FactionCollection_FactionEntry = new FactionCollection_FactionEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MarketGroup$Type extends MessageType<MarketGroup> {
+    constructor() {
+        super("eve_multitools.data.MarketGroup", [
+            { no: 1, name: "name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "description_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "icon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 4,
+                name: "parent_group_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 5,
+                name: "groups",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 6,
+                name: "types",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<MarketGroup>): MarketGroup {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.nameId = 0;
+        message.groups = [];
+        message.types = [];
+        if (value !== undefined) reflectionMergePartial<MarketGroup>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MarketGroup
+    ): MarketGroup {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 name_id */ 1:
+                    message.nameId = reader.int32();
+                    break;
+                case /* optional int32 description_id */ 2:
+                    message.descriptionId = reader.int32();
+                    break;
+                case /* optional int32 icon_id */ 3:
+                    message.iconId = reader.int32();
+                    break;
+                case /* optional int32 parent_group_id */ 4:
+                    message.parentGroupId = reader.int32();
+                    break;
+                case /* repeated int32 groups */ 5:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.groups.push(reader.int32());
+                    else message.groups.push(reader.int32());
+                    break;
+                case /* repeated int32 types */ 6:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.types.push(reader.int32());
+                    else message.types.push(reader.int32());
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: MarketGroup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 name_id = 1; */
+        if (message.nameId !== 0) writer.tag(1, WireType.Varint).int32(message.nameId);
+        /* optional int32 description_id = 2; */
+        if (message.descriptionId !== undefined)
+            writer.tag(2, WireType.Varint).int32(message.descriptionId);
+        /* optional int32 icon_id = 3; */
+        if (message.iconId !== undefined) writer.tag(3, WireType.Varint).int32(message.iconId);
+        /* optional int32 parent_group_id = 4; */
+        if (message.parentGroupId !== undefined)
+            writer.tag(4, WireType.Varint).int32(message.parentGroupId);
+        /* repeated int32 groups = 5; */
+        for (let i = 0; i < message.groups.length; i++)
+            writer.tag(5, WireType.Varint).int32(message.groups[i]);
+        /* repeated int32 types = 6; */
+        for (let i = 0; i < message.types.length; i++)
+            writer.tag(6, WireType.Varint).int32(message.types[i]);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.MarketGroup
+ */
+export const MarketGroup = new MarketGroup$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MarketGroupCollection$Type extends MessageType<MarketGroupCollection> {
+    constructor() {
+        super("eve_multitools.data.MarketGroupCollection", [
+            {
+                no: 1,
+                name: "market_groups",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => MarketGroupCollection_MarketGroupEntry,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<MarketGroupCollection>): MarketGroupCollection {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.marketGroups = [];
+        if (value !== undefined)
+            reflectionMergePartial<MarketGroupCollection>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MarketGroupCollection
+    ): MarketGroupCollection {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.MarketGroupCollection.MarketGroupEntry market_groups */ 1:
+                    message.marketGroups.push(
+                        MarketGroupCollection_MarketGroupEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: MarketGroupCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.MarketGroupCollection.MarketGroupEntry market_groups = 1; */
+        for (let i = 0; i < message.marketGroups.length; i++)
+            MarketGroupCollection_MarketGroupEntry.internalBinaryWrite(
+                message.marketGroups[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.MarketGroupCollection
+ */
+export const MarketGroupCollection = new MarketGroupCollection$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MarketGroupCollection_MarketGroupEntry$Type extends MessageType<MarketGroupCollection_MarketGroupEntry> {
+    constructor() {
+        super("eve_multitools.data.MarketGroupCollection.MarketGroupEntry", [
+            { no: 1, name: "market_group_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "market_group_data", kind: "message", T: () => MarketGroup },
+        ]);
+    }
+    create(
+        value?: PartialMessage<MarketGroupCollection_MarketGroupEntry>
+    ): MarketGroupCollection_MarketGroupEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.marketGroupId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<MarketGroupCollection_MarketGroupEntry>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MarketGroupCollection_MarketGroupEntry
+    ): MarketGroupCollection_MarketGroupEntry {
+        let message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 market_group_id */ 1:
+                    message.marketGroupId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.MarketGroup market_group_data */ 2:
+                    message.marketGroupData = MarketGroup.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.marketGroupData
+                    );
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: MarketGroupCollection_MarketGroupEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 market_group_id = 1; */
+        if (message.marketGroupId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.marketGroupId);
+        /* required eve_multitools.data.MarketGroup market_group_data = 2; */
+        if (message.marketGroupData)
+            MarketGroup.internalBinaryWrite(
+                message.marketGroupData,
+                writer.tag(2, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.MarketGroupCollection.MarketGroupEntry
+ */
+export const MarketGroupCollection_MarketGroupEntry =
+    new MarketGroupCollection_MarketGroupEntry$Type();

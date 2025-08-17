@@ -25,6 +25,7 @@ import {
     MarketOrdersPage,
     MarketPredictorPage,
 } from "@/components/pages/MarketPages";
+import { MarketListPage } from "@/components/pages/market/MarketListPage";
 import { SettingsPage } from "@/components/pages/SettingsPage";
 import type { AppRoute } from "@/types/router";
 
@@ -42,11 +43,17 @@ export const routes: AppRoute[] = [
         labelKey: "nav.market",
         icon: "trending",
         children: [
+            // {
+            //     key: "market-analysis",
+            //     path: "/market/analysis",
+            //     labelKey: "nav.market.analysis",
+            //     component: MarketAnalysisPage,
+            // },
             {
-                key: "market-analysis",
-                path: "/market/analysis",
-                labelKey: "nav.market.analysis",
-                component: MarketAnalysisPage,
+                key: "market-list",
+                path: "/market/list",
+                labelKey: "nav.market.list",
+                component: MarketListPage,
             },
             {
                 key: "market-orders",

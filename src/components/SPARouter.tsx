@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSPARouter } from "@/hooks/useSPARouter";
-import { findRouteByPath } from "@/config/routes";
 import { useTranslation } from "react-i18next";
+import { findRouteByPath } from "@/config/routes";
+import { useSPARouter } from "@/hooks/useSPARouter";
 
 function LoadingSpinner() {
     return (

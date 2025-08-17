@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
@@ -13,9 +14,11 @@ interface BadgeConfig {
 
 interface GenericData {
     name: string;
-    description?: string;
+    description?: ReactNode;
+    orientation?: "vertical" | "horizontal";
     iconUrl?: string | null;
     badges?: BadgeConfig[];
+    actions?: ReactNode[];
     loading?: boolean;
     id?: string | number;
     imageComponent?: React.ReactNode;
@@ -27,6 +30,15 @@ interface HoverCardProps {
 }
 
 const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
+    const isHorizontal = data.orientation === "horizontal";
+    const description = data.description ? (
+        typeof data.description === "string" ? (
+            <p className="text-sm text-muted-foreground mb-2 line-clamp-3">{data.description}</p>
+        ) : (
+            data.description
+        )
+    ) : null;
+
     if (data.loading) {
         return (
             <Card className={cn("w-80 shadow-lg", className)}>
@@ -43,6 +55,79 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
         );
     }
 
+    if (isHorizontal) {
+        // 横向布局：图标、名称+ID组合、描述、Badge 同行
+        return (
+            <Card className={cn("w-80 shadow-lg", className)}>
+                <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                        {/* 图标 */}
+                        <div className="w-12 h-12 shrink-0">
+                            {data.imageComponent ||
+                                (data.iconUrl ? (
+                                    <Image
+                                        src={data.iconUrl}
+                                        alt={data.name}
+                                        width={48}
+                                        height={48}
+                                        className="w-full h-full object-cover rounded"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                        <span className="text-xs text-muted-foreground">N/A</span>
+                                    </div>
+                                ))}
+                        </div>
+
+                        {/* 名称+ID组合 */}
+                        <div className="shrink-0">
+                            <CardTitle className="text-lg">{data.name}</CardTitle>
+                            {data.id && (
+                                <div className="text-sm text-muted-foreground">ID: {data.id}</div>
+                            )}
+                        </div>
+
+                        {/* 描述 */}
+                        <div className="flex-1 min-w-0">{description}</div>
+
+                        {/* Badge */}
+                        <div className="shrink-0">
+                            <div className="flex gap-2 flex-wrap">
+                                {data.badges?.map((badge, index) => (
+                                    <Badge
+                                        key={badge.key || `badge-${index}`}
+                                        variant={badge.variant || "secondary"}
+                                        className={cn("text-xs", badge.className)}
+                                    >
+                                        {badge.text}
+                                    </Badge>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        {data.actions && data.actions.length > 0 && (
+                            <div className="shrink-0 flex gap-1 ml-2">
+                                {data.actions.map((action, index) => (
+                                    <div
+                                        key={
+                                            data.id
+                                                ? `${data.id}-action-${index}`
+                                                : `action-${index}`
+                                        }
+                                    >
+                                        {action}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    // 纵向布局（默认）
     return (
         <Card className={cn("w-80 shadow-lg", className)}>
             <CardHeader className="pb-2">
@@ -77,16 +162,31 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
                         {data.description}
                     </p>
                 )}
-                <div className="flex gap-2 flex-wrap">
-                    {data.badges?.map((badge, index) => (
-                        <Badge
-                            key={badge.key || `badge-${index}`}
-                            variant={badge.variant || "secondary"}
-                            className={cn("text-xs", badge.className)}
-                        >
-                            {badge.text}
-                        </Badge>
-                    ))}
+                <div className="flex items-center justify-between">
+                    <div className="flex gap-2 flex-wrap">
+                        {data.badges?.map((badge, index) => (
+                            <Badge
+                                key={badge.key || `badge-${index}`}
+                                variant={badge.variant || "secondary"}
+                                className={cn("text-xs", badge.className)}
+                            >
+                                {badge.text}
+                            </Badge>
+                        ))}
+                    </div>
+
+                    {/* Actions */}
+                    {data.actions && data.actions.length > 0 && (
+                        <div className="flex gap-1 ml-2">
+                            {data.actions.map((action, index) => (
+                                <div
+                                    key={data.id ? `${data.id}-action-${index}` : `action-${index}`}
+                                >
+                                    {action}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </CardContent>
         </Card>
@@ -112,7 +212,15 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
     onClick,
     noBorder = false,
 }) => {
+    const isHorizontal = data.orientation === "horizontal";
     const handleClick = () => onClick?.(data.id);
+    const description = data.description ? (
+        typeof data.description === "string" ? (
+            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{data.description}</p>
+        ) : (
+            data.description
+        )
+    ) : null;
 
     if (data.loading) {
         return (
@@ -164,69 +272,177 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                 </CardHeader>
             )}
             <CardContent className={cn("p-4", compact && "p-3")}>
-                <div className="flex items-center gap-3">
-                    <div
-                        className={cn(
-                            "shrink-0 relative overflow-hidden rounded",
-                            compact ? "w-8 h-8" : "w-12 h-12"
-                        )}
-                    >
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="transform origin-center">
-                                {data.imageComponent ||
-                                    (data.iconUrl ? (
-                                        <Image
-                                            src={data.iconUrl}
-                                            alt={data.name}
-                                            width={48}
-                                            height={48}
-                                            className="w-full h-full object-cover rounded"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                                            <span className="text-xs text-muted-foreground">
-                                                N/A
-                                            </span>
-                                        </div>
+                {isHorizontal ? (
+                    // 横向布局：图标、名称+ID组合、描述、Badge 同行
+                    <div className="flex items-center gap-3">
+                        {/* 图标 */}
+                        <div
+                            className={cn(
+                                "shrink-0 relative overflow-hidden rounded",
+                                compact ? "w-8 h-8" : "w-12 h-12"
+                            )}
+                        >
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="transform origin-center">
+                                    {data.imageComponent ||
+                                        (data.iconUrl ? (
+                                            <Image
+                                                src={data.iconUrl}
+                                                alt={data.name}
+                                                width={48}
+                                                height={48}
+                                                className="w-full h-full object-cover rounded"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                                <span className="text-xs text-muted-foreground">
+                                                    N/A
+                                                </span>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 名称+ID组合 */}
+                        <div className="shrink-0">
+                            <div
+                                className={cn(
+                                    "font-medium leading-tight",
+                                    compact ? "text-sm" : "text-base"
+                                )}
+                            >
+                                {data.name}
+                            </div>
+                            {data.id && (
+                                <div className="text-xs text-muted-foreground leading-tight">
+                                    ID: {data.id}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 描述 */}
+                        <div className="flex-1 min-w-0">{!compact && description}</div>
+
+                        {/* Badge */}
+                        <div className="shrink-0">
+                            <div className="flex gap-1 flex-wrap">
+                                {showBadges &&
+                                    data.badges &&
+                                    data.badges.length > 0 &&
+                                    data.badges?.map((badge, index) => (
+                                        <Badge
+                                            key={badge.key || `badge-${index}`}
+                                            variant={badge.variant || "outline"}
+                                            className={cn("text-xs", badge.className)}
+                                        >
+                                            {badge.text}
+                                        </Badge>
                                     ))}
                             </div>
                         </div>
+
+                        {/* Actions */}
+                        {data.actions && data.actions.length > 0 && (
+                            <div className="shrink-0 flex gap-1 ml-2">
+                                {data.actions.map((action, index) => (
+                                    <div
+                                        key={
+                                            data.id
+                                                ? `${data.id}-action-${index}`
+                                                : `action-${index}`
+                                        }
+                                    >
+                                        {action}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                    <div className="flex-1 min-w-0">
+                ) : (
+                    // 纵向布局（默认）：仅名称+ID组合与描述纵向排布，其他保持横向
+                    <div className="flex items-center gap-3">
+                        {/* 图标 */}
                         <div
                             className={cn(
-                                "font-medium truncate leading-tight",
-                                compact ? "text-sm" : "text-base"
+                                "shrink-0 relative overflow-hidden rounded",
+                                compact ? "w-8 h-8" : "w-12 h-12"
                             )}
                         >
-                            {data.name}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="transform origin-center">
+                                    {data.imageComponent ||
+                                        (data.iconUrl ? (
+                                            <Image
+                                                src={data.iconUrl}
+                                                alt={data.name}
+                                                width={48}
+                                                height={48}
+                                                className="w-full h-full object-cover rounded"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                                <span className="text-xs text-muted-foreground">
+                                                    N/A
+                                                </span>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
                         </div>
-                        {data.id && (
-                            <div className="text-xs text-muted-foreground leading-tight">
-                                ID: {data.id}
+
+                        {/* 名称+ID组合与描述纵向排布 */}
+                        <div className="flex-1 min-w-0">
+                            <div
+                                className={cn(
+                                    "font-medium truncate leading-tight",
+                                    compact ? "text-sm" : "text-base"
+                                )}
+                            >
+                                {data.name}
                             </div>
-                        )}
-                        {!compact && data.description && (
-                            <div className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-tight">
-                                {data.description}
+                            {data.id && (
+                                <div className="text-xs text-muted-foreground leading-tight">
+                                    ID: {data.id}
+                                </div>
+                            )}
+                            {!compact && description}
+                        </div>
+
+                        {/* Badge */}
+                        <div className="flex gap-1 flex-wrap shrink-0">
+                            {showBadges &&
+                                data.badges &&
+                                data.badges.length > 0 &&
+                                data.badges?.map((badge, index) => (
+                                    <Badge
+                                        key={badge.key || `badge-${index}`}
+                                        variant={badge.variant || "outline"}
+                                        className={cn("text-xs", badge.className)}
+                                    >
+                                        {badge.text}
+                                    </Badge>
+                                ))}
+                        </div>
+
+                        {/* Actions */}
+                        {data.actions && data.actions.length > 0 && (
+                            <div className="shrink-0 flex gap-1 ml-2">
+                                {data.actions.map((action, index) => (
+                                    <div
+                                        key={
+                                            data.id
+                                                ? `${data.id}-action-${index}`
+                                                : `action-${index}`
+                                        }
+                                    >
+                                        {action}
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>
-                    <div className="flex gap-1 flex-wrap shrink-0">
-                        {showBadges &&
-                            data.badges &&
-                            data.badges.length > 0 &&
-                            data.badges?.map((badge, index) => (
-                                <Badge
-                                    key={badge.key || `badge-${index}`}
-                                    variant={badge.variant || "outline"}
-                                    className={cn("text-xs", badge.className)}
-                                >
-                                    {badge.text}
-                                </Badge>
-                            ))}
-                    </div>
-                </div>
+                )}
             </CardContent>
         </Card>
     );
@@ -240,6 +456,7 @@ interface BaseCardProps {
 
 const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
     const { t } = useTranslation();
+    const isHorizontal = data.orientation === "horizontal";
 
     const handleClick = () => onClick?.(data.id);
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -258,6 +475,90 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
           }
         : {};
 
+    const description = data.loading ? null : data.description ? (
+        typeof data.description === "string" ? (
+            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{data.description}</p>
+        ) : (
+            data.description
+        )
+    ) : null;
+
+    if (isHorizontal) {
+        // 横向布局：图标、名称+ID组合、描述、Badge 四者同行
+        return (
+            <div
+                className={cn(
+                    "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full",
+                    onClick
+                        ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                        : "",
+                    className
+                )}
+                {...containerProps}
+            >
+                {/* 图标 */}
+                <div className="w-12 h-12 shrink-0">
+                    {data.imageComponent ||
+                        (data.iconUrl ? (
+                            <Image
+                                src={data.iconUrl}
+                                alt={data.name}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover rounded"
+                            />
+                        ) : data.loading ? (
+                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        ) : (
+                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <span className="text-xs text-muted-foreground">N/A</span>
+                            </div>
+                        ))}
+                </div>
+
+                {/* 名称+ID组合 */}
+                <div className="shrink-0">
+                    <div className="font-semibold text-base">
+                        {data.loading ? t("common.loading") : data.name}
+                    </div>
+                    {data.id && <div className="text-sm text-gray-500">ID: {data.id}</div>}
+                </div>
+
+                {/* 描述 */}
+                <div className="flex-1 min-w-0">{description}</div>
+
+                {/* Badge */}
+                <div className="shrink-0">
+                    {data.badges && data.badges.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                            {data.badges.map((badge, index) => (
+                                <Badge
+                                    key={badge.key || `badge-${index}`}
+                                    variant={badge.variant || "secondary"}
+                                    className={cn("text-xs", badge.className)}
+                                >
+                                    {badge.text}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Actions */}
+                {data.actions && data.actions.length > 0 && (
+                    <div className="shrink-0 flex gap-1 ml-2">
+                        {data.actions.map((action, index) => (
+                            <div key={data.id ? `${data.id}-action-${index}` : `action-${index}`}>
+                                {action}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    // 纵向布局（默认）：仅名称+ID组合与描述纵向排布，其他保持横向
     return (
         <div
             className={cn(
@@ -269,6 +570,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
             )}
             {...containerProps}
         >
+            {/* 图标 */}
             <div className="w-12 h-12 shrink-0">
                 {data.imageComponent ||
                     (data.iconUrl ? (
@@ -287,23 +589,20 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                         </div>
                     ))}
             </div>
+
+            {/* 名称+ID组合与描述纵向排布 */}
             <div className="flex flex-col flex-1 min-w-0">
                 <div className="font-semibold text-base truncate">
                     {data.loading ? t("common.loading") : data.name}
                 </div>
-                <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                    {data.loading ? "" : data.description}
-                </div>
+                {data.id && <div className="text-sm text-gray-500">ID: {data.id}</div>}
+                {description}
             </div>
-            <div className="shrink-0 text-sm text-gray-500">
-                {data.id && (
-                    <>
-                        ID {data.id}
-                        <br />
-                    </>
-                )}
+
+            {/* Badge */}
+            <div className="shrink-0">
                 {data.badges && data.badges.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1">
+                    <div className="flex flex-wrap gap-1">
                         {data.badges.map((badge, index) => (
                             <Badge
                                 key={badge.key || `badge-${index}`}
@@ -316,6 +615,17 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                     </div>
                 )}
             </div>
+
+            {/* Actions */}
+            {data.actions && data.actions.length > 0 && (
+                <div className="shrink-0 flex gap-1 ml-2">
+                    {data.actions.map((action, index) => (
+                        <div key={data.id ? `${data.id}-action-${index}` : `action-${index}`}>
+                            {action}
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

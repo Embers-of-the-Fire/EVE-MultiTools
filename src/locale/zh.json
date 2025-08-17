@@ -9,6 +9,7 @@
         "bookmarks": "书签",
         "market": "市场",
         "market.analysis": "市场分析",
+        "market.list": "市场总览",
         "market.orders": "市场订单",
         "market.history": "市场历史",
         "market.tools": "市场工具",
@@ -87,7 +88,11 @@
         "yes": "是",
         "no": "否",
         "go_home": "返回首页",
-        "page_not_found": "没有找到页面"
+        "page_not_found": "没有找到页面",
+        "no_results": "无结果",
+        "search": {
+            "results": "搜索结果"
+        }
     },
     "bundle": {
         "title": "数据包管理",
@@ -195,9 +200,7 @@
             "title": "探索：物品",
             "desc": "探索 EVE 所有物品",
             "search": {
-                "placeholder": "搜索物品",
-                "results": "搜索结果",
-                "no_results": "无结果"
+                "placeholder": "搜索物品"
             },
             "detail": {
                 "title": "物品详情",
@@ -244,12 +247,6 @@
             "desc": "探索 EVE 所有势力",
             "all_factions": "所有势力",
             "no_factions": "未找到势力",
-            "search": {
-                "placeholder": "搜索势力",
-                "results": "搜索结果",
-                "no_results": "无结果",
-                "hint": "输入势力名称进行搜索"
-            },
             "detail": {
                 "title": "势力详情",
                 "faction": "势力 {{factionId}}",
@@ -297,5 +294,19 @@
         "something_went_wrong": "出错了！",
         "try_again": "请重试",
         "use_settings_outside_provider": "useSettings 必须在 SettingsProvider 中使用"
+    },
+    "market": {
+        "market_list": {
+            "title": "市场总览",
+            "desc": "所有物品的当前市场状态",
+            "search": {
+                "placeholder": "搜索市场物品"
+            }
+        },
+        "market_group_tree": {
+            "title": "市场分类"
+        },
+        "sell_min": "卖单",
+        "buy_max": "买单"
     }
 }

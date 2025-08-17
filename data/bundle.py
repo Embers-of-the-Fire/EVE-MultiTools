@@ -92,7 +92,7 @@ async def process_workspace(workspace_path: Path) -> bool:
             _error(f"Failed to process workspace '{workspace_name}'")
             return False
     except Exception as e:
-        _error(f"Error processing workspace '{workspace_name}': {e}")
+        _error(f"Error processing workspace '{workspace_name}': {e!r}")
         return False
 
 

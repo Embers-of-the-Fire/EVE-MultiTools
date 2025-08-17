@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections import defaultdict
 import pickle
 import sqlite3
 import aiohttp
@@ -618,6 +619,7 @@ class BundleProcessor:
         self._collect_meta_groups(bundle_static)
         await self._collect_skin_infos(bundle_static)
         self._collect_factions(bundle_static)
+        self._collect_market_groups(bundle_static)
 
     def _collect_type_definitions(self, bundle_static: Path) -> None:
         """Collect type definitions."""
@@ -1027,6 +1029,57 @@ class BundleProcessor:
             f.write(faction_collection.SerializeToString())
         self._success("Processed factions information.")
 
+    def _collect_market_groups(self, bundle_static: Path) -> None:
+        """Collect market groups."""
+        market_groups = self.fsd.get_fsd("marketgroups")
+        market_group_collection = schema_pb2.MarketGroupCollection()
+        to_export: defaultdict[
+            int, dict[typing.Literal["model", "types", "groups"], MarketGroup | list[int]]
+        ] = defaultdict(dict)
+
+        for market_group_id, market_group_def in market_groups.items():
+            try:
+                validated = MarketGroup(**market_group_def)
+            except ValidationError:
+                self._error(f"Failed to validate market group info for group {market_group_id}")
+                continue
+
+            to_export[int(market_group_id)]["model"] = validated
+            if validated.parentGroupID is not None:
+                to_export[validated.parentGroupID].setdefault("groups", []).append(int(market_group_id))
+
+        for type_id, type_def in self.fsd.get_fsd("types").items():
+            if "marketGroupID" in type_def and type_def["marketGroupID"] is not None:
+                to_export[type_def["marketGroupID"]].setdefault("types", []).append(int(type_id))
+
+        for market_group_id, data in to_export.items():
+            if "model" not in data:
+                self._warning(f"Market group {market_group_id} has no model, skipping.")
+                continue
+
+            market_group_entry = market_group_collection.market_groups.add()
+            market_group_entry.market_group_id = market_group_id
+            market_group_entry.market_group_data.name_id = data["model"].nameID
+            if data["model"].iconID is not None:
+                market_group_entry.market_group_data.icon_id = data["model"].iconID
+            if data["model"].descriptionID is not None:
+                market_group_entry.market_group_data.description_id = data["model"].descriptionID
+            if data["model"].parentGroupID is not None:
+                market_group_entry.market_group_data.parent_group_id = data["model"].parentGroupID
+
+            market_group_entry.market_group_data.types.extend(data.get("types") or [])
+            market_group_entry.market_group_data.groups.extend(data.get("groups") or [])
+
+        bundle_static_market_groups = bundle_static / "market_groups.pb"
+        if bundle_static_market_groups.exists():
+            self._warning(
+                f"Market groups protobuf file '{bundle_static_market_groups}' already exists. It will be overwritten."
+            )
+            bundle_static_market_groups.unlink()
+        with open(bundle_static_market_groups, "wb+") as f:
+            f.write(market_group_collection.SerializeToString())
+        self._success("Processed market groups information.")
+
     def package_bundle(self) -> Path:
         """Package the bundle."""
         cprint("Packaging bundle...", "green", attrs=["bold"])
@@ -1079,7 +1132,7 @@ class BundleProcessor:
 
         # Create metadata descriptor
         self.create_metadata_descriptor()
-        
+
         # Create ESI configuration
         self.create_esi_config()
 
@@ -1531,3 +1584,11 @@ def pydantic_to_protobuf_faction(pydantic_obj: "Faction") -> schema_pb2.Faction:
     pb_obj.size_factor = pydantic_obj.sizeFactor
     pb_obj.member_races.extend(pydantic_obj.memberRaces)
     return pb_obj
+
+
+class MarketGroup(BaseModel):
+    nameID: int
+    descriptionID: int | None = Field(default=None)
+    iconID: int | None = Field(default=None)
+    parentGroupID: int | None = Field(default=None)
+    hasTypes: BoolInt

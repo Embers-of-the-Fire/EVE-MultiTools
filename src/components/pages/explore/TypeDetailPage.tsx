@@ -15,7 +15,6 @@ import {
     getCategory,
     getGroup,
     getLocalizationByLang,
-    getMarketPrice,
     getMetaGroup,
     getSkinMaterialIdByLicense,
     getType,
@@ -249,7 +248,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                     searchFunction={searchFunction}
                     getItemName={getItemName}
                     placeholder={t("explore.type.search.placeholder")}
-                    noResultsMessage={t("explore.type.search.no_results")}
+                    noResultsMessage={t("common.no_results")}
                     language={language}
                 >
                     {({ results, loading, query, onSelect, noResultsMessage }) => (

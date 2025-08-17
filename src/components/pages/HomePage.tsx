@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { siteConfig } from "@/config/site";
-import { GithubIcon } from "@/components/icons";
-import { subtitle } from "@/components/primitives";
 import { useTranslation } from "react-i18next";
+import { GithubIcon } from "@/components/icons";
 import { PageContainer } from "@/components/layout/PageContainer";
+import { subtitle } from "@/components/primitives";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/config/site";
 
 export function HomePage() {
     const { t } = useTranslation();
