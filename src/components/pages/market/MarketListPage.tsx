@@ -9,10 +9,10 @@ import { PageLayout } from "@/components/layout";
 import { type TreeDataItem, TreeView } from "@/components/tree-view";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useMarketGroupTree } from "@/hooks/useMarketGroupTree";
+import { useMarketList } from "@/hooks/useMarketList";
 import { getLocalizationByLang, getMarketGroup } from "@/native/data";
 import type { MarketGroupNode } from "@/stores/marketGroupTreeStore";
 import { getIconUrl } from "@/utils/image";
-import { useMarketList } from "@/hooks/useMarketList";
 
 interface MarketGroupTreeViewStore {
     treeView: TreeDataItem[];
@@ -108,7 +108,7 @@ export const MarketListPage: React.FunctionComponent = () => {
                 initTreeView(tree, language, setSelectedGroupId);
             }
         });
-    }, [loadMarketGroupTree, initTreeView, tree, language]);
+    }, [loadMarketGroupTree, initTreeView, tree, language, setSelectedGroupId]);
 
     const [types, setTypes] = useState<number[]>([]);
 

@@ -1,9 +1,9 @@
 use std::path::Path;
 
 use nohash_hasher::IntMap;
+use prost::Message;
 use serde::{Deserialize, Serialize};
 use tokio::{fs::File, io::AsyncReadExt};
-use prost::Message;
 
 use crate::bundle::AppBundleState;
 

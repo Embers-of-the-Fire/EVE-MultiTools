@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::anyhow;
-use serde_repr::{Serialize_repr, Deserialize_repr};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, Serialize_repr, Deserialize_repr)]
@@ -30,11 +30,14 @@ impl GraphicService {
     }
 
     pub fn get_path(&self, graphic_id: u32, graphic_type: GraphicType) -> PathBuf {
-        self.graphic_path.join(format!("{graphic_id}{}.png", match graphic_type {
-            GraphicType::Icon => "",
-            GraphicType::Blueprint => "_bp",
-            GraphicType::BlueprintCopy => "_bpc",
-        }))
+        self.graphic_path.join(format!(
+            "{graphic_id}{}.png",
+            match graphic_type {
+                GraphicType::Icon => "",
+                GraphicType::Blueprint => "_bp",
+                GraphicType::BlueprintCopy => "_bpc",
+            }
+        ))
     }
 }
 

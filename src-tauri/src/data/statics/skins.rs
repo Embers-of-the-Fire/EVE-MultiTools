@@ -137,21 +137,35 @@ impl SkinService {
         Ok(out)
     }
 
-    pub async fn get_skin_material(&self, skin_material_id: i32) -> anyhow::Result<Option<SkinMaterial>> {
-        let out = sqlx::query_as!(SkinMaterial, "SELECT * FROM skin_materials WHERE skin_material_id = ?", skin_material_id)
-            .fetch_optional(self.db.pool())
-            .await?;
+    pub async fn get_skin_material(
+        &self,
+        skin_material_id: i32,
+    ) -> anyhow::Result<Option<SkinMaterial>> {
+        let out = sqlx::query_as!(
+            SkinMaterial,
+            "SELECT * FROM skin_materials WHERE skin_material_id = ?",
+            skin_material_id
+        )
+        .fetch_optional(self.db.pool())
+        .await?;
         Ok(out)
     }
 
     pub async fn get_skin_license(&self, license_id: i32) -> anyhow::Result<Option<SkinLicense>> {
-        let out = sqlx::query_as!(SkinLicense, "SELECT * FROM skin_licenses WHERE license_id = ?", license_id)
-            .fetch_optional(self.db.pool())
-            .await?;
+        let out = sqlx::query_as!(
+            SkinLicense,
+            "SELECT * FROM skin_licenses WHERE license_id = ?",
+            license_id
+        )
+        .fetch_optional(self.db.pool())
+        .await?;
         Ok(out)
     }
 
-    pub async fn get_skin_material_id_by_license(&self, license_id: i32) -> anyhow::Result<Option<i64>> {
+    pub async fn get_skin_material_id_by_license(
+        &self,
+        license_id: i32,
+    ) -> anyhow::Result<Option<i64>> {
         let row = sqlx::query!(
             "SELECT s.skin_material_id FROM skin_licenses l JOIN skins s ON l.skin_id = s.skin_id WHERE l.license_id = ?",
             license_id
@@ -162,9 +176,13 @@ impl SkinService {
     }
 
     pub async fn get_licenses_by_skin(&self, skin_id: i32) -> anyhow::Result<Vec<SkinLicense>> {
-        let out = sqlx::query_as!(SkinLicense, "SELECT * FROM skin_licenses WHERE skin_id = ?", skin_id)
-            .fetch_all(self.db.pool())
-            .await?;
+        let out = sqlx::query_as!(
+            SkinLicense,
+            "SELECT * FROM skin_licenses WHERE skin_id = ?",
+            skin_id
+        )
+        .fetch_all(self.db.pool())
+        .await?;
         Ok(out)
     }
 }

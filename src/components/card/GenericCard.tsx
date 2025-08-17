@@ -107,7 +107,7 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
 
                         {/* Actions */}
                         {data.actions && data.actions.length > 0 && (
-                            <div className="shrink-0 flex gap-1 ml-2">
+                            <div className="shrink-0 flex gap-2 ml-2">
                                 {data.actions.map((action, index) => (
                                     <div
                                         key={
@@ -177,7 +177,7 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
 
                     {/* Actions */}
                     {data.actions && data.actions.length > 0 && (
-                        <div className="flex gap-1 ml-2">
+                        <div className="flex gap-2 ml-2">
                             {data.actions.map((action, index) => (
                                 <div
                                     key={data.id ? `${data.id}-action-${index}` : `action-${index}`}
@@ -344,7 +344,7 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
 
                         {/* Actions */}
                         {data.actions && data.actions.length > 0 && (
-                            <div className="shrink-0 flex gap-1 ml-2">
+                            <div className="shrink-0 flex gap-2 ml-2">
                                 {data.actions.map((action, index) => (
                                     <div
                                         key={
@@ -427,7 +427,7 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
 
                         {/* Actions */}
                         {data.actions && data.actions.length > 0 && (
-                            <div className="shrink-0 flex gap-1 ml-2">
+                            <div className="shrink-0 flex gap-2 ml-2">
                                 {data.actions.map((action, index) => (
                                     <div
                                         key={
@@ -546,7 +546,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
 
                 {/* Actions */}
                 {data.actions && data.actions.length > 0 && (
-                    <div className="shrink-0 flex gap-1 ml-2">
+                    <div className="shrink-0 flex gap-2 ml-2">
                         {data.actions.map((action, index) => (
                             <div key={data.id ? `${data.id}-action-${index}` : `action-${index}`}>
                                 {action}
@@ -618,7 +618,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
 
             {/* Actions */}
             {data.actions && data.actions.length > 0 && (
-                <div className="shrink-0 flex gap-1 ml-2">
+                <div className="shrink-0 flex gap-2 ml-2">
                     {data.actions.map((action, index) => (
                         <div key={data.id ? `${data.id}-action-${index}` : `action-${index}`}>
                             {action}

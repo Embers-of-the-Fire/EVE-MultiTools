@@ -1,8 +1,8 @@
 use std::{collections::HashMap, path::Path, sync::Arc};
 
+use prost::Message;
 use serde::{Deserialize, Serialize};
 use tokio::{fs::File, io::AsyncReadExt};
-use prost::Message;
 
 pub struct LocalizationService {
     localizations: Arc<HashMap<u32, LocString>>,
@@ -58,7 +58,8 @@ impl LocalizationService {
         let mut lookup_file = File::open(&type_lookup_path).await?;
         let mut lookup_buf = Vec::new();
         lookup_file.read_to_end(&mut lookup_buf).await?;
-        let lookup_proto = crate::data::proto::schema::TypeLocalizationLookup::decode(&lookup_buf[..])?;
+        let lookup_proto =
+            crate::data::proto::schema::TypeLocalizationLookup::decode(&lookup_buf[..])?;
 
         // Convert to HashMap for fast lookup
         let type_lookup: HashMap<i32, TypeLocEntry> = lookup_proto
@@ -97,9 +98,9 @@ impl LocalizationService {
             return Ok(vec![]);
         }
         let name_lower = name.to_lowercase();
-        
+
         let mut filtered: Vec<(i32, usize)> = Vec::new();
-        
+
         // Search through all type entries
         for (type_id, type_entry) in self.type_lookup.iter() {
             if let Some(loc_string) = self.localizations.get(&type_entry.type_name_id) {
@@ -107,7 +108,7 @@ impl LocalizationService {
                     LocLanguage::English => &loc_string.en,
                     LocLanguage::Chinese => &loc_string.zh,
                 };
-                
+
                 let text_lower = text.to_lowercase();
                 if text_lower.contains(&name_lower) {
                     let score = levenshtein::levenshtein(&text_lower, &name_lower);
@@ -115,11 +116,11 @@ impl LocalizationService {
                 }
             }
         }
-        
+
         // Sort by relevance (lower score = better match)
         filtered.sort_by_key(|(_, score)| *score);
         filtered.truncate(limit as usize);
-        
+
         Ok(filtered.into_iter().map(|(id, _)| id).collect())
     }
 
@@ -134,9 +135,9 @@ impl LocalizationService {
             return Ok(vec![]);
         }
         let desc_lower = desc.to_lowercase();
-        
+
         let mut filtered: Vec<(i32, usize)> = Vec::new();
-        
+
         // Search through all type entries that have description
         for (type_id, type_entry) in self.type_lookup.iter() {
             if let Some(desc_id) = type_entry.type_description_id {
@@ -145,7 +146,7 @@ impl LocalizationService {
                         LocLanguage::English => &loc_string.en,
                         LocLanguage::Chinese => &loc_string.zh,
                     };
-                    
+
                     let text_lower = text.to_lowercase();
                     if text_lower.contains(&desc_lower) {
                         let score = levenshtein::levenshtein(&text_lower, &desc_lower);
@@ -154,11 +155,11 @@ impl LocalizationService {
                 }
             }
         }
-        
+
         // Sort by relevance (lower score = better match)
         filtered.sort_by_key(|(_, score)| *score);
         filtered.truncate(limit as usize);
-        
+
         Ok(filtered.into_iter().map(|(id, _)| id).collect())
     }
 }

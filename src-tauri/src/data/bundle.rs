@@ -2,7 +2,10 @@ use log::info;
 
 use crate::{
     bundle::BundleDescriptor,
-    data::{esi::EsiService, image::ImageService, localization::LocalizationService, market::MarketService, statics::StaticsService},
+    data::{
+        esi::EsiService, image::ImageService, localization::LocalizationService,
+        market::MarketService, statics::StaticsService,
+    },
 };
 
 pub struct Bundle {

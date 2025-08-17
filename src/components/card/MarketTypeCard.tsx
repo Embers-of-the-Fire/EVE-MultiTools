@@ -1,4 +1,4 @@
-import { Info } from "lucide-react";
+import { Info, SquareArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
@@ -7,7 +7,6 @@ import { useMarketRecord } from "@/hooks/useMarketCache";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import {
-    getCategory,
     getGroup,
     getLocalizationByLang,
     getMetaGroup,
@@ -16,8 +15,10 @@ import {
 } from "@/native/data";
 import { GraphicType } from "@/types/data";
 import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { ExternalLink } from "../ExternalLink";
 import { Button } from "../ui/button";
-import type { BadgeConfig, GenericData } from "./GenericCard";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import type { GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
 interface TypeData extends GenericData {
@@ -139,6 +140,20 @@ const useMarketTypeData = (typeId: number) => {
             >
                 <Info size="32" />
             </Button>,
+            <Popover key="external-link-popover">
+                <PopoverTrigger asChild>
+                    <Button size="icon" variant="default" className="size-8" key="market-button">
+                        <SquareArrowUpRight size="32" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end">
+                    <ExternalLink
+                        link={`https://evemarketer.com/types/${typeId}`}
+                        text={t("market.view_on_evemarketer")}
+                        className="w-full justify-start"
+                    />
+                </PopoverContent>
+            </Popover>,
         ],
         description: (
             <div className="flex flex-col items-end">
