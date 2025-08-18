@@ -95,7 +95,8 @@ The bundler will create the bundle based on what provided in the workspace.
     - resfileindex.txt       *2
     - index_application.txt  *2 *3
     - esi.json               *4
-    - fsd/                   *5
+    - links.json             *5
+    - fsd/                   *6
 ```
 
 > 1. The metadata JSON file should be like:
@@ -132,7 +133,9 @@ The bundler will create the bundle based on what provided in the workspace.
 > 4. `esi.json` contains some ESI-related configurations. 
 >    Those are mainly several URL patterns.
 >    For more information about ESI configs, see [this section](#esi-configurations).
-> 5. `fsd` folder contains all fsd files converted from fsd binaries. 
+> 5. `links.json` contains some external link formatter, like external market website urls.
+>    For more information, see [this section](#external-link-configurations).
+> 6. `fsd` folder contains all fsd files converted from fsd binaries. 
 > See [EVE FSD Dumper](https://github.com/Embers-of-the-Fire/EVE-FSD-Dumper) 
 > for more information.
 
@@ -201,6 +204,85 @@ Example:
         "datasource": "serenity"
       }
   }
+
+#### External Link Configurations
+
+The external link config file is `<bundle-id>/links.json`:
+```jsonc
+{
+    "<url key>": "<url pattern>"
+}
+```
+
+Note that some server might not be covered by external providers,
+so leaving the url pattern to be a explicit `null` makes sense.
+
+##### Market
+
+##### EVE-C3Q-CC
+
+Key: `MARKET-EVE-C3Q-CC`
+
+Homepage: [EVE Market](https://eve.c3q.cc/market/)
+
+Required parameter:
+- `typeId`: target type ID.
+
+Examples:
+- Tranquility:
+  ```json
+  {
+      "MARKET-EVE-C3Q-CC": "https://eve.c3q.cc/market/type/{typeId}/sell/"
+  }
+  ```
+- Serenity:
+  ```json
+  {
+      "MARKET-EVE-C3Q-CC": "https://eve.c3q.cc/market/gf/type/{typeId}/sell/"
+  }
+  ```
+
+##### EVE-C3Q-CC English variant
+
+Key: `MARKET-EVE-C3Q-CC-EN`
+
+Homepage: [EVE Market](https://eve.c3q.cc/market/en)
+
+Required parameter:
+- `typeId`: target type ID.
+
+Examples:
+- Tranquility:
+  ```json
+  {
+      "MARKET-EVE-C3Q-CC-EN": "https://eve.c3q.cc/market/en/type/{typeId}/sell/"
+  }
+  ```
+- Serenity:
+  ```json
+  {
+      "MARKET-EVE-C3Q-CC-EN": "https://eve.c3q.cc/market/en/gf/type/{typeId}/sell/"
+  }
+  ```
+
+##### EVE Tycoon
+
+Key: `MARKET-EVE-TYCOON`
+
+Homepage: [EVE Tycoon](https://evetycoon.com/market)
+
+> Note: This provider contains only Tranquility market details.
+
+Required parameter:
+- `typeId`: target type ID.
+
+Examples:
+- Tranquility:
+  ```json
+  {
+      "MARKET-EVE-TYCOON": "https://evetycoon.com/market/{typeId}"
+  }
+  ```
 
 ## Mock DB
 

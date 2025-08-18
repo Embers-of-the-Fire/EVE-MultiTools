@@ -42,6 +42,7 @@ class BundleProcessor:
         self.app_index_path = workspace_path / "index_application.txt"
         self.fsd_dir_path = workspace_path / "fsd"
         self.esi_path = workspace_path / "esi.json"
+        self.links_path = workspace_path / "links.json"
 
         # Will be set during initialization
         self.metadata = None
@@ -53,6 +54,7 @@ class BundleProcessor:
         self.app_index = None
         self.fsd = None
         self.esi = None
+        self.links = None
 
     def _success(self, *args, **kwargs) -> None:
         """Print success message."""
@@ -113,6 +115,8 @@ class BundleProcessor:
             (self.res_file_index_path, "resource file index"),
             (self.app_index_path, "application index"),
             (self.fsd_dir_path, "FSD directory"),
+            (self.esi_path, "ESI configuration file"),
+            (self.links_path, "external links file"),
         ]
 
         for file_path, description in required_files:
@@ -156,6 +160,28 @@ class BundleProcessor:
                     self._warning(f"ESI keys file '{ESI_KEYS}' does not exist. No keys verified.")
             except Exception as e:
                 self._error(f"Unable to load ESI configuration: {e}")
+
+        with open(self.links_path, "r", encoding="utf-8") as f:
+            try:
+                self.links = json.load(f)
+                self._success("Loaded external links.")
+                LINKS_KEYS = Path(__file__).parent / "links.list.json"
+                if LINKS_KEYS.exists():
+                    with open(LINKS_KEYS, "r", encoding="utf-8") as keys_file:
+                        links_keys = json.load(keys_file)
+                        for key in links_keys:
+                            if key not in self.links:
+                                self._error(
+                                    f"Link '{key}' not found in configuration. Please check the links file."
+                                )
+                            else:
+                                self._success(f"Link '{key}' verified.")
+                else:
+                    self._warning(
+                        f"Links keys file '{LINKS_KEYS}' does not exist. No links verified."
+                    )
+            except Exception as e:
+                self._error(f"Unable to load external links: {e}")
 
         # Load start config
         try:
@@ -289,6 +315,16 @@ class BundleProcessor:
                 self._success(f"Wrote ESI configuration: {esi_config_path}.")
             except Exception as e:
                 self._error(f"Unable to write ESI configuration: {e}")
+    
+    def create_links_config(self) -> None:
+        """Create links configuration file."""
+        links_config_path = self.bundle_root / "links.json"
+        with open(links_config_path, "w+", encoding="utf-8") as f:
+            try:
+                json.dump(self.links, f, indent=4, ensure_ascii=False)
+                self._success(f"Wrote links configuration: {links_config_path}.")
+            except Exception as e:
+                self._error(f"Unable to write links configuration: {e}")
 
     async def collect_images(self) -> None:
         """Collect all images."""
@@ -1046,7 +1082,9 @@ class BundleProcessor:
 
             to_export[int(market_group_id)]["model"] = validated
             if validated.parentGroupID is not None:
-                to_export[validated.parentGroupID].setdefault("groups", []).append(int(market_group_id))
+                to_export[validated.parentGroupID].setdefault("groups", []).append(
+                    int(market_group_id)
+                )
 
         for type_id, type_def in self.fsd.get_fsd("types").items():
             if "marketGroupID" in type_def and type_def["marketGroupID"] is not None:
@@ -1135,6 +1173,9 @@ class BundleProcessor:
 
         # Create ESI configuration
         self.create_esi_config()
+
+        # Create links configuration
+        self.create_links_config()
 
         # Collect images
         await self.collect_images()

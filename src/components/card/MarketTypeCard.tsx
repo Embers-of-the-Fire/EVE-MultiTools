@@ -8,10 +8,12 @@ import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import {
     getGroup,
+    getLinkUrl,
     getLocalizationByLang,
     getMetaGroup,
     getSkinMaterialIdByLicense,
     getType,
+    LinkKey,
 } from "@/native/data";
 import { GraphicType } from "@/types/data";
 import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
@@ -45,6 +47,8 @@ const useMarketTypeData = (typeId: number) => {
 
     const marketRecord = useMarketRecord(typeId, shouldLoadMarketData);
 
+    const [links, setLinks] = useState<{ url: string, name: string }[]>([]);
+
     useEffect(() => {
         let mounted = true;
 
@@ -69,13 +73,13 @@ const useMarketTypeData = (typeId: number) => {
                 type.icon_id
                     ? getIconUrl(type.icon_id)
                     : type.graphic_id
-                      ? getGraphicUrl(
+                        ? getGraphicUrl(
                             type.graphic_id,
                             categoryId === CATEGORY_ID_BLUEPRINT
                                 ? GraphicType.Blueprint
                                 : GraphicType.Icon
                         )
-                      : (async () => {
+                        : (async () => {
                             const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
                             if (skinMatId === null) return null;
                             return getSkinMaterialUrl(skinMatId);
@@ -116,6 +120,21 @@ const useMarketTypeData = (typeId: number) => {
         }
     }, [staticDataLoaded, shouldLoadMarketData]);
 
+    useEffect(() => {
+        (async () => {
+            const newLinks = [];
+            newLinks.push({
+                url: language === 'zh' ? await getLinkUrl(LinkKey.MarketEveC3qCc, { typeId: typeId.toString() }) : await getLinkUrl(LinkKey.MarketEveC3qCcEn, { typeId: typeId.toString() }),
+                name: t("market.link.eve_c3q_cc")
+            });
+            newLinks.push({ url: await getLinkUrl(LinkKey.MarketEveTycoon, { typeId: typeId.toString() }), name: t("market.link.eve_tycoon") });
+            setLinks(
+                newLinks
+                    .filter((link): link is { url: string; name: string } => link.url !== null)
+            );
+        })();
+    }, [typeId, language, t]);
+
     const isMarketDataLoading = marketRecord.state === "missing";
 
     const { setCurrentTypeID } = useTypeExplore();
@@ -146,12 +165,14 @@ const useMarketTypeData = (typeId: number) => {
                         <SquareArrowUpRight size="32" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent align="end">
+                <PopoverContent align="end" >{links.map((link) => (
                     <ExternalLink
-                        link={`https://evemarketer.com/types/${typeId}`}
-                        text={t("market.view_on_evemarketer")}
+                        key={link.url}
+                        link={link.url}
+                        text={link.name}
                         className="w-full justify-start"
                     />
+                ))}
                 </PopoverContent>
             </Popover>,
         ],
@@ -166,9 +187,9 @@ const useMarketTypeData = (typeId: number) => {
                             <p className="text-sm font-semibold text-red-600 dark:text-red-400">
                                 {marketRecord.sellMin > 0
                                     ? marketRecord.sellMin.toLocaleString("en-US", {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                      })
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })
                                     : "N/A"}
                             </p>
                         )}
@@ -181,9 +202,9 @@ const useMarketTypeData = (typeId: number) => {
                             <p className="text-sm font-semibold text-green-600 dark:text-green-400">
                                 {marketRecord.buyMax > 0
                                     ? marketRecord.buyMax.toLocaleString("en-US", {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                      })
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })
                                     : "N/A"}
                             </p>
                         )}

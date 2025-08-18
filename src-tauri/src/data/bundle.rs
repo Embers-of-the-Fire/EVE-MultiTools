@@ -3,8 +3,8 @@ use log::info;
 use crate::{
     bundle::BundleDescriptor,
     data::{
-        esi::EsiService, image::ImageService, localization::LocalizationService,
-        market::MarketService, statics::StaticsService,
+        esi::EsiService, image::ImageService, links::LinkService,
+        localization::LocalizationService, market::MarketService, statics::StaticsService,
     },
 };
 
@@ -15,6 +15,7 @@ pub struct Bundle {
     pub statics: StaticsService,
     pub market: MarketService,
     pub esi: EsiService,
+    pub links: LinkService,
 }
 
 impl Bundle {
@@ -26,6 +27,7 @@ impl Bundle {
             statics: StaticsService::init(&descriptor.root).await?,
             market: MarketService::init(&descriptor).await?,
             esi: EsiService::init(&descriptor.root).await?,
+            links: LinkService::init(&descriptor.root).await?,
             descriptor,
         })
     }

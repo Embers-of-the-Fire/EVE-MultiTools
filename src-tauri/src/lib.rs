@@ -83,6 +83,7 @@ pub fn run() {
             data::statics::factions::get_faction_ids,
             data::statics::market_group::get_market_group,
             data::statics::market_group::get_market_group_raw,
+            data::links::get_link_url,
             data::localization::get_localization,
             data::localization::search_type_by_name,
             data::localization::search_type_by_description,

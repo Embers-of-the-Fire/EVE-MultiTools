@@ -117,6 +117,7 @@ dependencies = [
  "levenshtein",
  "log",
  "nohash-hasher",
+ "num_enum",
  "ordered-float",
  "prost",
  "prost-build",

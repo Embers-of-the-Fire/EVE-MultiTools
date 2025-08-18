@@ -11,7 +11,7 @@ export interface ExternalLinkProps {
 export const ExternalLink: React.FC<ExternalLinkProps> = ({ link, text, className }) => {
     return (
         <Button
-            variant="default"
+            variant="link"
             size="default"
             className={className}
             onClick={() => openUrl(link)}
