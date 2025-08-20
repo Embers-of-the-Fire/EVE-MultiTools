@@ -1,24 +1,19 @@
 "use client";
 
-import type * as React from "react";
 import {
+    Archive,
     AudioWaveform,
     Command,
-    GalleryVerticalEnd,
-    Factory,
-    TrendingUp,
+    Compass,
     Database,
-    Users,
+    Factory,
+    GalleryVerticalEnd,
     Home,
     Settings,
-    Archive,
-    Compass,
+    TrendingUp,
+    Users,
 } from "lucide-react";
-
-import { NavMain } from "./nav-main";
-import { NavBookmarks } from "./nav-bookmarks";
-import { NavUser } from "./nav-user";
-import { BundleSwitcher } from "./bundle-switcher";
+import type * as React from "react";
 import {
     Sidebar,
     SidebarContent,
@@ -28,6 +23,12 @@ import {
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { openExternalLink } from "@/utils/opener";
+import { Button } from "../ui/button";
+import { BundleSwitcher } from "./bundle-switcher";
+import { NavBookmarks } from "./nav-bookmarks";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
 
 // 图标映射
 const iconMap = {
@@ -120,17 +121,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavBookmarks bookmarks={data.bookmarks} />
             </SidebarContent>
             <SidebarFooter>
-                <div className="w-full flex items-center justify-center">
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-current"
-                        href="https://ui.shadcn.com?utm_source=next-app-template"
-                        title="shadcn/ui homepage"
+                <div className="w-full flex items-center justify-center flex-col space-y-0">
+                    <Button
+                        size="sm"
+                        variant="link"
+                        className="flex items-center gap-2 text-current p-0 m-1 h-min"
+                        onClick={() => openExternalLink("https://tauri.app")}
                     >
                         <span className="text-muted-foreground text-xs">Powered by</span>
+                        <span className="text-primary text-xs">Tauri</span>
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="link"
+                        className="flex items-center gap-2 text-current p-0 m-1 h-min"
+                        onClick={() => openExternalLink("https://ui.shadcn.com")}
+                    >
+                        <span className="text-muted-foreground text-xs">Designed with</span>
                         <span className="text-primary text-xs">shadcn/ui</span>
-                    </a>
+                    </Button>
                 </div>
                 <NavUser user={data.user} />
             </SidebarFooter>
