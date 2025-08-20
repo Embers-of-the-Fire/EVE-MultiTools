@@ -63,14 +63,14 @@ const useMarketGroupTreeViewStore = create<MarketGroupTreeViewStore>()(
                                 )) || `ID: ${node.marketGroupID}`,
                             icon: iconUrl
                                 ? () => (
-                                    <Image
-                                        className="mr-1"
-                                        src={iconUrl}
-                                        alt={iconUrl}
-                                        width={16}
-                                        height={16}
-                                    />
-                                )
+                                      <Image
+                                          className="mr-1"
+                                          src={iconUrl}
+                                          alt={iconUrl}
+                                          width={16}
+                                          height={16}
+                                      />
+                                  )
                                 : undefined,
                             children: children.length > 0 ? children : undefined,
                             onClick: () => onClick(node.marketGroupID),
@@ -129,12 +129,15 @@ export const MarketListPage: React.FunctionComponent = () => {
 
     useEffect(() => {
         if (types.length > 0) {
-            requestIdleCallback(() => {
-                (async () => {
-                    await asyncSleep(0);
-                    await preloadMarketPrices(types);
-                })();
-            }, { timeout: 500 });
+            requestIdleCallback(
+                () => {
+                    (async () => {
+                        await asyncSleep(0);
+                        await preloadMarketPrices(types);
+                    })();
+                },
+                { timeout: 500 }
+            );
         }
     }, [types, preloadMarketPrices]);
 
@@ -185,8 +188,8 @@ export const MarketListPage: React.FunctionComponent = () => {
                         <div className="flex-1 overflow-y-auto p-4 space-y-2">
                             {types.length > 0
                                 ? types.map((typeId) => (
-                                    <EmbeddedMarketTypeCard typeId={typeId} key={typeId} />
-                                ))
+                                      <EmbeddedMarketTypeCard typeId={typeId} key={typeId} />
+                                  ))
                                 : null}
                         </div>
                     </div>

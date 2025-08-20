@@ -10,12 +10,7 @@ export interface ExternalLinkProps {
 
 export const ExternalLink: React.FC<ExternalLinkProps> = ({ link, text, className }) => {
     return (
-        <Button
-            variant="link"
-            size="default"
-            className={className}
-            onClick={() => openUrl(link)}
-        >
+        <Button variant="link" size="default" className={className} onClick={() => openUrl(link)}>
             <SquareArrowUpRight />
             {text}
         </Button>

@@ -1,21 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { getMarketPrice, getMarketPrices } from "@/native/data";
-import {
-    type MarketRecord as BMarketRecord,
-    useMarketCacheStore,
-} from "@/stores/marketCacheStore";
+import { type MarketRecord as BMarketRecord, useMarketCacheStore } from "@/stores/marketCacheStore";
 
 const STALE_TIME = 5 * 60 * 1000; // 5 minutes
 
 export const useMarketCache = () => {
-    const {
-        clearCache,
-        clearTypeCache,
-        setInFlight,
-        getInFlight,
-        deleteInFlight,
-        hasInFlight,
-    } = useMarketCacheStore();
+    const { clearCache, clearTypeCache, setInFlight, getInFlight, deleteInFlight, hasInFlight } =
+        useMarketCacheStore();
 
     const preloadMarketPrices = useCallback(
         async (typeIDs: number[], force = false) => {
@@ -43,29 +34,31 @@ export const useMarketCache = () => {
 
             const batchPromise = getMarketPrices(pending);
             pending.forEach((id) => {
-                const p = batchPromise.then((prices) => {
-                    const found = prices.find((p) => p.type_id === id) || null;
-                    if (found) {
-                        useMarketCacheStore.getState().updateCache(id, {
-                            typeID: found.type_id,
-                            sellMin: found.sell_min,
-                            buyMax: found.buy_max,
-                            lastUpdate: found.updated_at,
-                        });
-                        return found;
-                    } else {
-                        useMarketCacheStore.getState().clearTypeCache(id);
-                        return null;
-                    }
-                }).finally(() => {
-                    deleteInFlight(id);
-                });
+                const p = batchPromise
+                    .then((prices) => {
+                        const found = prices.find((p) => p.type_id === id) || null;
+                        if (found) {
+                            useMarketCacheStore.getState().updateCache(id, {
+                                typeID: found.type_id,
+                                sellMin: found.sell_min,
+                                buyMax: found.buy_max,
+                                lastUpdate: found.updated_at,
+                            });
+                            return found;
+                        } else {
+                            useMarketCacheStore.getState().clearTypeCache(id);
+                            return null;
+                        }
+                    })
+                    .finally(() => {
+                        deleteInFlight(id);
+                    });
                 setInFlight(id, p);
             });
 
             await Promise.all(pending.map((id) => getInFlight(id)!));
         },
-        [setInFlight, getInFlight, deleteInFlight, hasInFlight],
+        [setInFlight, getInFlight, deleteInFlight, hasInFlight]
     );
 
     return {
@@ -82,12 +75,8 @@ export type MarketRecord = BMarketRecord & {
     refresh: (force?: boolean) => void;
 };
 
-export const useMarketRecord = (
-    typeID: number,
-    shouldLoad: boolean,
-): MarketRecord => {
-    const { marketCache, setInFlight, getInFlight, deleteInFlight } =
-        useMarketCacheStore();
+export const useMarketRecord = (typeID: number, shouldLoad: boolean): MarketRecord => {
+    const { marketCache, setInFlight, getInFlight, deleteInFlight } = useMarketCacheStore();
     const [isLoading, setIsLoading] = useState(false);
     const [state, setState] = useState<MarketRecordState>("missing");
     const [record, setRecord] = useState<BMarketRecord | null>(null);
@@ -133,26 +122,26 @@ export const useMarketRecord = (
                 setIsLoading(true);
 
                 const existing = getInFlight(typeID);
-                const promise = existing ?? (getMarketPrice(typeID)
-                    .then((data) => {
-                        if (data) {
-                            useMarketCacheStore.getState().updateCache(typeID, {
-                                typeID: data.type_id,
-                                sellMin: data.sell_min,
-                                buyMax: data.buy_max,
-                                lastUpdate: data.updated_at,
-                            });
-                            return data;
-                        } else {
-                            useMarketCacheStore.getState().clearTypeCache(
-                                typeID,
-                            );
-                            return null;
-                        }
-                    })
-                    .finally(() => {
-                        deleteInFlight(typeID);
-                    }));
+                const promise =
+                    existing ??
+                    getMarketPrice(typeID)
+                        .then((data) => {
+                            if (data) {
+                                useMarketCacheStore.getState().updateCache(typeID, {
+                                    typeID: data.type_id,
+                                    sellMin: data.sell_min,
+                                    buyMax: data.buy_max,
+                                    lastUpdate: data.updated_at,
+                                });
+                                return data;
+                            } else {
+                                useMarketCacheStore.getState().clearTypeCache(typeID);
+                                return null;
+                            }
+                        })
+                        .finally(() => {
+                            deleteInFlight(typeID);
+                        });
 
                 if (!existing) setInFlight(typeID, promise);
 
@@ -161,7 +150,7 @@ export const useMarketRecord = (
                 });
             }
         },
-        [isLoading, state, typeID, getInFlight, setInFlight, deleteInFlight],
+        [isLoading, state, typeID, getInFlight, setInFlight, deleteInFlight]
     );
 
     useEffect(() => {

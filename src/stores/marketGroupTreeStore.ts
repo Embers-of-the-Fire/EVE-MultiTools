@@ -26,11 +26,7 @@ const buildTree = (rawData: MarketGroupCollection): MarketGroupNode[] => {
     // Key: parent market group ID
     const groupMap: Map<number | null, MarketGroupNode[]> = new Map();
     rawData.marketGroups.forEach((group) => {
-        mapSetDefault(
-            groupMap,
-            group.marketGroupData?.parentGroupId ?? null,
-            [],
-        ).push({
+        mapSetDefault(groupMap, group.marketGroupData?.parentGroupId ?? null, []).push({
             marketGroupID: group.marketGroupId,
             marketGroupData: group.marketGroupData!,
         });
@@ -76,6 +72,6 @@ export const useMarketGroupTreeStore = create<MarketGroupTreeStore>()(
         }),
         {
             name: "market-group-tree-store",
-        },
-    ),
+        }
+    )
 );

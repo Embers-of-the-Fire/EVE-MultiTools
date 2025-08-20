@@ -76,13 +76,13 @@ const useMarketTypeData = (typeId: number) => {
                 type.icon_id
                     ? getIconUrl(type.icon_id)
                     : type.graphic_id
-                        ? getGraphicUrl(
+                      ? getGraphicUrl(
                             type.graphic_id,
                             categoryId === CATEGORY_ID_BLUEPRINT
                                 ? GraphicType.Blueprint
                                 : GraphicType.Icon
                         )
-                        : (async () => {
+                      : (async () => {
                             const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
                             if (skinMatId === null) return null;
                             return getSkinMaterialUrl(skinMatId);
@@ -200,9 +200,9 @@ const useMarketTypeData = (typeId: number) => {
                             <p className="text-sm font-semibold text-red-600 dark:text-red-400">
                                 {marketRecord.sellMin && marketRecord.sellMin > 0
                                     ? marketRecord.sellMin.toLocaleString("en-US", {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    })
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })
                                     : "N/A"}
                             </p>
                         )}
@@ -215,9 +215,9 @@ const useMarketTypeData = (typeId: number) => {
                             <p className="text-sm font-semibold text-green-600 dark:text-green-400">
                                 {marketRecord.buyMax && marketRecord.buyMax > 0
                                     ? marketRecord.buyMax.toLocaleString("en-US", {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    })
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })
                                     : "N/A"}
                             </p>
                         )}
