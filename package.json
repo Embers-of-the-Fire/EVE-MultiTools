@@ -13,7 +13,8 @@
         "check": "biome check ./src",
         "check:fix": "biome check ./src --write",
         "tauri": "tauri",
-        "fmt": "biome format ./src --write"
+        "fmt": "biome format ./src --write",
+        "prepare": "husky || true"
     },
     "dependencies": {
         "@protobuf-ts/runtime": "2.11.1",
@@ -89,6 +90,8 @@
         "eslint-plugin-react-hooks": "5.2.0",
         "eslint-plugin-unused-imports": "4.1.4",
         "globals": "16.0.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.1.5",
         "postcss": "8.5.3",
         "tailwind-variants": "1.0.0",
         "tailwindcss": "4.1.11",
