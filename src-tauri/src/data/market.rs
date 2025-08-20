@@ -14,16 +14,16 @@ use crate::{
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, FromRow)]
 pub struct Price {
     pub type_id: i64,
-    pub sell_min: f64,
-    pub buy_max: f64,
+    pub sell_min: Option<f64>,
+    pub buy_max: Option<f64>,
 }
 
 impl Price {
     pub fn init(type_id: i64) -> Self {
         Self {
             type_id,
-            sell_min: f64::MAX,
-            buy_max: 0.0,
+            sell_min: None,
+            buy_max: None,
         }
     }
 
@@ -31,11 +31,11 @@ impl Price {
         let mut p = Self::init(type_id);
         for order in orders {
             if order.is_buy_order {
-                if order.price > p.buy_max {
-                    p.buy_max = order.price;
+                if p.buy_max.is_none_or(|t| t < order.price) {
+                    p.buy_max = Some(order.price);
                 }
-            } else if order.price < p.sell_min {
-                p.sell_min = order.price;
+            } else if p.sell_min.is_none_or(|t| t > order.price) {
+                p.sell_min = Some(order.price);
             }
         }
         p
@@ -44,8 +44,18 @@ impl Price {
     pub fn merge(&self, rhs: &Self) -> Self {
         Self {
             type_id: self.type_id,
-            sell_min: self.sell_min.min(rhs.sell_min),
-            buy_max: self.buy_max.max(rhs.buy_max),
+            sell_min: match (self.sell_min, rhs.sell_min) {
+                (Some(a), Some(b)) => Some(a.min(b)),
+                (Some(a), None) => Some(a),
+                (None, Some(b)) => Some(b),
+                (None, None) => None,
+            },
+            buy_max: match (self.buy_max, rhs.buy_max) {
+                (Some(a), Some(b)) => Some(a.max(b)),
+                (Some(a), None) => Some(a),
+                (None, Some(b)) => Some(b),
+                (None, None) => None,
+            },
         }
     }
 }
@@ -53,8 +63,8 @@ impl Price {
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, FromRow)]
 pub struct PriceRecord {
     pub type_id: i64,
-    pub sell_min: f64,
-    pub buy_max: f64,
+    pub sell_min: Option<f64>,
+    pub buy_max: Option<f64>,
     pub updated_at: i64,
 }
 
@@ -87,8 +97,8 @@ impl MarketService {
             "
             CREATE TABLE IF NOT EXISTS market (
                 type_id INTEGER PRIMARY KEY,
-                sell_min REAL NOT NULL,
-                buy_max REAL NOT NULL,
+                sell_min REAL,
+                buy_max REAL,
                 updated_at INTEGER NOT NULL
             )
             "

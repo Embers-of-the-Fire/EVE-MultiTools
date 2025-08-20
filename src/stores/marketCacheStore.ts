@@ -3,8 +3,8 @@ import { devtools } from "zustand/middleware";
 
 export interface MarketRecord {
     typeID: number;
-    sellMin: number;
-    buyMax: number;
+    sellMin: number | null;
+    buyMax: number | null;
     lastUpdate: number;
 }
 

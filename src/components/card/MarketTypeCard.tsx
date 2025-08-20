@@ -185,7 +185,7 @@ const useMarketTypeData = (typeId: number) => {
                             <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                         ) : (
                             <p className="text-sm font-semibold text-red-600 dark:text-red-400">
-                                {marketRecord.sellMin > 0
+                                {marketRecord.sellMin && marketRecord.sellMin > 0
                                     ? marketRecord.sellMin.toLocaleString("en-US", {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,
@@ -200,7 +200,7 @@ const useMarketTypeData = (typeId: number) => {
                             <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                         ) : (
                             <p className="text-sm font-semibold text-green-600 dark:text-green-400">
-                                {marketRecord.buyMax > 0
+                                {marketRecord.buyMax && marketRecord.buyMax > 0
                                     ? marketRecord.buyMax.toLocaleString("en-US", {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,

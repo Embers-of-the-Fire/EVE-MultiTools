@@ -268,8 +268,8 @@ export async function getMarketGroupRaw(): Promise<MarketGroupCollection> {
 
 export interface Price {
     type_id: number;
-    sell_min: number;
-    buy_max: number;
+    sell_min: number | null;
+    buy_max: number | null;
     updated_at: number;
 }
 
