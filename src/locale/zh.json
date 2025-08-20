@@ -92,7 +92,8 @@
     "no_results": "无结果",
     "search": {
       "results": "搜索结果"
-    }
+    },
+    "data_outdated": "数据已过期"
   },
   "bundle": {
     "title": "数据包管理",

@@ -56,7 +56,8 @@
     "no_results": "No Results",
     "search": {
       "results": "Search Results"
-    }
+    },
+    "data_outdated": "Outdated Data"
   },
   "nav": {
     "home": "Home",

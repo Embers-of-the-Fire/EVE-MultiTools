@@ -1,4 +1,4 @@
-import { Info, SquareArrowUpRight } from "lucide-react";
+import { ClockAlert, Info, SquareArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
@@ -17,6 +17,7 @@ import {
 } from "@/native/data";
 import { GraphicType } from "@/types/data";
 import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { OutdatedNote } from "../common/OutdatedNote";
 import { ExternalLink } from "../ExternalLink";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -111,8 +112,7 @@ const useMarketTypeData = (typeId: number) => {
                 });
                 setStaticDataLoaded(true);
             }
-        }
-        )();
+        })();
 
         return () => {
             mounted = false;
@@ -146,6 +146,7 @@ const useMarketTypeData = (typeId: number) => {
     }, [typeId, language, t]);
 
     const isMarketDataLoading = marketRecord.state === "missing";
+    const isMarketDataOutdated = marketRecord.state === "outdated";
 
     const { setCurrentTypeID } = useTypeExplore();
     const { navigate } = useSPARouter();
@@ -190,6 +191,7 @@ const useMarketTypeData = (typeId: number) => {
         description: (
             <div className="flex flex-col items-end">
                 <div className="flex space-x-4 mt-2">
+                    {isMarketDataOutdated && <OutdatedNote />}
                     <div>
                         <p className="text-xs text-muted-foreground">{t("market.sell_min")}</p>
                         {isMarketDataLoading ? (
