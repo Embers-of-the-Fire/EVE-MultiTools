@@ -276,7 +276,6 @@ export interface Price {
 export async function getMarketPrice(typeId: number): Promise<Price | null> {
     return await tauriInvoke<Price | null>("get_market_price", {
         typeId,
-        doRequest: false,
     });
 }
 

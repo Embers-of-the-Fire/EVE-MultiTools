@@ -47,14 +47,16 @@ const useMarketTypeData = (typeId: number) => {
 
     const marketRecord = useMarketRecord(typeId, shouldLoadMarketData);
 
-    const [links, setLinks] = useState<{ url: string, name: string }[]>([]);
+    const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
 
     useEffect(() => {
+        console.log("加载类型静态数据", typeId, language);
         let mounted = true;
 
         setStaticDataLoaded(false);
+        (async () => {
+            const type = await getType(typeId);
 
-        getType(typeId).then(async (type) => {
             if (!type) {
                 return;
             }
@@ -97,6 +99,7 @@ const useMarketTypeData = (typeId: number) => {
                     mgName = await getLocalizationByLang(meta.name_id, language);
                 }
             }
+            console.log("Loaded static data for type", typeId);
 
             if (mounted) {
                 setStaticData({
@@ -108,7 +111,9 @@ const useMarketTypeData = (typeId: number) => {
                 });
                 setStaticDataLoaded(true);
             }
-        });
+        }
+        )();
+
         return () => {
             mounted = false;
         };
@@ -124,13 +129,18 @@ const useMarketTypeData = (typeId: number) => {
         (async () => {
             const newLinks = [];
             newLinks.push({
-                url: language === 'zh' ? await getLinkUrl(LinkKey.MarketEveC3qCc, { typeId: typeId.toString() }) : await getLinkUrl(LinkKey.MarketEveC3qCcEn, { typeId: typeId.toString() }),
-                name: t("market.link.eve_c3q_cc")
+                url:
+                    language === "zh"
+                        ? await getLinkUrl(LinkKey.MarketEveC3qCc, { typeId: typeId.toString() })
+                        : await getLinkUrl(LinkKey.MarketEveC3qCcEn, { typeId: typeId.toString() }),
+                name: t("market.link.eve_c3q_cc"),
             });
-            newLinks.push({ url: await getLinkUrl(LinkKey.MarketEveTycoon, { typeId: typeId.toString() }), name: t("market.link.eve_tycoon") });
+            newLinks.push({
+                url: await getLinkUrl(LinkKey.MarketEveTycoon, { typeId: typeId.toString() }),
+                name: t("market.link.eve_tycoon"),
+            });
             setLinks(
-                newLinks
-                    .filter((link): link is { url: string; name: string } => link.url !== null)
+                newLinks.filter((link): link is { url: string; name: string } => link.url !== null)
             );
         })();
     }, [typeId, language, t]);
@@ -165,14 +175,15 @@ const useMarketTypeData = (typeId: number) => {
                         <SquareArrowUpRight size="32" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent align="end" >{links.map((link) => (
-                    <ExternalLink
-                        key={link.url}
-                        link={link.url}
-                        text={link.name}
-                        className="w-full justify-start"
-                    />
-                ))}
+                <PopoverContent align="end">
+                    {links.map((link) => (
+                        <ExternalLink
+                            key={link.url}
+                            link={link.url}
+                            text={link.name}
+                            className="w-full justify-start"
+                        />
+                    ))}
                 </PopoverContent>
             </Popover>,
         ],

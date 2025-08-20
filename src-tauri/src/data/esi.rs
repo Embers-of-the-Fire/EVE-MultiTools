@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs, io, path::Path, sync::Arc};
 
 use anyhow::anyhow;
+use log::info;
 use reqwest::Client;
 use serde::de::DeserializeOwned;
 use string_enum::StringEnum;
@@ -33,6 +34,7 @@ impl EsiService {
         key: EsiKey,
         params: &HashMap<String, String>,
     ) -> anyhow::Result<T> {
+        info!("Querying ESI key: {key:?}");
         self.urls
             .get(&key)
             .ok_or(anyhow!("Unknown esi key: {key}"))?

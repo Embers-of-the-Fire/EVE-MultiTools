@@ -10,6 +10,7 @@ export interface MarketRecord {
 
 interface MarketCacheState {
     marketCache: Map<number, MarketRecord>;
+    inFlight: Map<number, Promise<any>>;
 }
 
 interface MarketCacheActions {
@@ -18,14 +19,20 @@ interface MarketCacheActions {
 
     updateCache: (typeID: number, record: MarketRecord) => void;
     updateCacheBulk: (records: MarketRecord[]) => void;
+
+    setInFlight: (typeID: number, promise: Promise<any>) => void;
+    getInFlight: (typeID: number) => Promise<any> | undefined;
+    deleteInFlight: (typeID: number) => void;
+    hasInFlight: (typeID: number) => boolean;
 }
 
 type MarketCacheStore = MarketCacheState & MarketCacheActions;
 
 export const useMarketCacheStore = create<MarketCacheStore>()(
     devtools(
-        (set) => ({
+        (set, get) => ({
             marketCache: new Map(),
+            inFlight: new Map(),
 
             clearCache: () => {
                 set({ marketCache: new Map() });
@@ -55,6 +62,30 @@ export const useMarketCacheStore = create<MarketCacheStore>()(
                     });
                     return { marketCache: newCache };
                 });
+            },
+
+            setInFlight: (typeID: number, promise: Promise<any>) => {
+                set((state) => {
+                    const newInFlight = new Map(state.inFlight);
+                    newInFlight.set(typeID, promise);
+                    return { inFlight: newInFlight };
+                });
+            },
+
+            getInFlight: (typeID: number) => {
+                return get().inFlight.get(typeID);
+            },
+
+            deleteInFlight: (typeID: number) => {
+                set((state) => {
+                    const newInFlight = new Map(state.inFlight);
+                    newInFlight.delete(typeID);
+                    return { inFlight: newInFlight };
+                });
+            },
+
+            hasInFlight: (typeID: number) => {
+                return get().inFlight.has(typeID);
             },
         }),
         {

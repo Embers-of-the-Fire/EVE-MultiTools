@@ -1,13 +1,77 @@
 import { useCallback, useEffect, useState } from "react";
-import { getMarketPrice } from "@/native/data";
-import { type MarketRecord as BMarketRecord, useMarketCacheStore } from "@/stores/marketCacheStore";
+import { getMarketPrice, getMarketPrices } from "@/native/data";
+import {
+    type MarketRecord as BMarketRecord,
+    useMarketCacheStore,
+} from "@/stores/marketCacheStore";
+
+const STALE_TIME = 5 * 60 * 1000; // 5 minutes
 
 export const useMarketCache = () => {
-    const { clearCache, clearTypeCache } = useMarketCacheStore();
+    const {
+        clearCache,
+        clearTypeCache,
+        setInFlight,
+        getInFlight,
+        deleteInFlight,
+        hasInFlight,
+    } = useMarketCacheStore();
+
+    const preloadMarketPrices = useCallback(
+        async (typeIDs: number[], force = false) => {
+            if (!typeIDs || typeIDs.length === 0) return;
+
+            const uniqueIds = Array.from(new Set(typeIDs));
+
+            const { marketCache } = useMarketCacheStore.getState();
+            let toLoad = uniqueIds;
+            if (!force) {
+                toLoad = uniqueIds.filter((id) => {
+                    const rec = marketCache.get(id);
+                    if (!rec) return true;
+                    const timeDiff = Date.now() - rec.lastUpdate * 1000;
+                    return timeDiff >= STALE_TIME;
+                });
+            }
+            if (toLoad.length === 0) return;
+
+            const pending = toLoad.filter((id) => !hasInFlight(id));
+            if (pending.length === 0) {
+                await Promise.all(uniqueIds.map((id) => getInFlight(id)!));
+                return;
+            }
+
+            const batchPromise = getMarketPrices(pending);
+            pending.forEach((id) => {
+                const p = batchPromise.then((prices) => {
+                    const found = prices.find((p) => p.type_id === id) || null;
+                    if (found) {
+                        useMarketCacheStore.getState().updateCache(id, {
+                            typeID: found.type_id,
+                            sellMin: found.sell_min,
+                            buyMax: found.buy_max,
+                            lastUpdate: found.updated_at,
+                        });
+                        return found;
+                    } else {
+                        useMarketCacheStore.getState().clearTypeCache(id);
+                        return null;
+                    }
+                }).finally(() => {
+                    deleteInFlight(id);
+                });
+                setInFlight(id, p);
+            });
+
+            await Promise.all(pending.map((id) => getInFlight(id)!));
+        },
+        [setInFlight, getInFlight, deleteInFlight, hasInFlight],
+    );
 
     return {
         clearCache,
         clearTypeCache,
+        preloadMarketPrices,
     };
 };
 
@@ -18,11 +82,12 @@ export type MarketRecord = BMarketRecord & {
     refresh: (force?: boolean) => void;
 };
 
-const STALE_TIME = 5 * 60 * 1000; // 5 minutes
-
-// 支持延迟加载的市场记录 hook，成为正式实现
-export const useMarketRecord = (typeID: number, shouldLoad: boolean): MarketRecord => {
-    const { marketCache } = useMarketCacheStore();
+export const useMarketRecord = (
+    typeID: number,
+    shouldLoad: boolean,
+): MarketRecord => {
+    const { marketCache, setInFlight, getInFlight, deleteInFlight } =
+        useMarketCacheStore();
     const [isLoading, setIsLoading] = useState(false);
     const [state, setState] = useState<MarketRecordState>("missing");
     const [record, setRecord] = useState<BMarketRecord | null>(null);
@@ -65,9 +130,10 @@ export const useMarketRecord = (typeID: number, shouldLoad: boolean): MarketReco
                 return;
             }
             if (force || state === "missing" || state === "outdated") {
-                console.log("Refreshing market data for typeID:", typeID);
                 setIsLoading(true);
-                getMarketPrice(typeID)
+
+                const existing = getInFlight(typeID);
+                const promise = existing ?? (getMarketPrice(typeID)
                     .then((data) => {
                         if (data) {
                             useMarketCacheStore.getState().updateCache(typeID, {
@@ -76,26 +142,31 @@ export const useMarketRecord = (typeID: number, shouldLoad: boolean): MarketReco
                                 buyMax: data.buy_max,
                                 lastUpdate: data.updated_at,
                             });
+                            return data;
                         } else {
-                            useMarketCacheStore.getState().clearTypeCache(typeID);
+                            useMarketCacheStore.getState().clearTypeCache(
+                                typeID,
+                            );
+                            return null;
                         }
                     })
                     .finally(() => {
-                        console.log("Market data refresh completed for typeID:", typeID);
-                        setIsLoading(false);
-                    });
+                        deleteInFlight(typeID);
+                    }));
+
+                if (!existing) setInFlight(typeID, promise);
+
+                promise.finally(() => {
+                    setIsLoading(false);
+                });
             }
         },
-        [isLoading, state, typeID]
+        [isLoading, state, typeID, getInFlight, setInFlight, deleteInFlight],
     );
 
-    // 只有在 shouldLoad 为 true 时才自动加载
     useEffect(() => {
         if (shouldLoad && state === "missing" && !isLoading) {
-            const animationFrameId = requestAnimationFrame(() => {
-                refresh();
-            });
-            return () => cancelAnimationFrame(animationFrameId);
+            refresh();
         }
     }, [shouldLoad, state, refresh, isLoading]);
 
