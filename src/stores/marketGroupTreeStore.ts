@@ -26,7 +26,11 @@ const buildTree = (rawData: MarketGroupCollection): MarketGroupNode[] => {
     // Key: parent market group ID
     const groupMap: Map<number | null, MarketGroupNode[]> = new Map();
     rawData.marketGroups.forEach((group) => {
-        mapSetDefault(groupMap, group.marketGroupData?.parentGroupId ?? null, []).push({
+        mapSetDefault(
+            groupMap,
+            group.marketGroupData?.parentGroupId ?? null,
+            [],
+        ).push({
             marketGroupID: group.marketGroupId,
             marketGroupData: group.marketGroupData!,
         });
@@ -58,15 +62,6 @@ export const useMarketGroupTreeStore = create<MarketGroupTreeStore>()(
 
                 set({ isLoading: true, error: null });
 
-                setTimeout(() => {
-                    if (get().isLoading) {
-                        set({
-                            error: "Market group tree loading timed out.",
-                            isLoading: false,
-                        });
-                    }
-                }, 5000); // 5 seconds timeout
-
                 try {
                     const raw = await getMarketGroupRaw();
                     const tree = buildTree(raw);
@@ -81,6 +76,6 @@ export const useMarketGroupTreeStore = create<MarketGroupTreeStore>()(
         }),
         {
             name: "market-group-tree-store",
-        }
-    )
+        },
+    ),
 );
