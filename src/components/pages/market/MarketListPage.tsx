@@ -1,17 +1,18 @@
+import { ListFilter } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { EmbeddedMarketTypeCard } from "@/components/card/MarketTypeCard";
-
+import { SearchInput } from "@/components/common/SearchBar";
 import { PageLayout } from "@/components/layout";
 import { type TreeDataItem, TreeView } from "@/components/tree-view";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useMarketCache } from "@/hooks/useMarketCache";
 import { useMarketGroupTree } from "@/hooks/useMarketGroupTree";
 import { useMarketList } from "@/hooks/useMarketList";
-import { getLocalizationByLang, getMarketGroup } from "@/native/data";
+import { getLocalizationByLang, getMarketGroup, searchTypeByName } from "@/native/data";
 import type { MarketGroupNode } from "@/stores/marketGroupTreeStore";
 import { asyncSleep } from "@/utils/async";
 import { getIconUrl } from "@/utils/image";
@@ -31,19 +32,14 @@ interface MarketGroupTreeViewStore {
 
 const useMarketGroupTreeViewStore = create<MarketGroupTreeViewStore>()(
     devtools(
-        (set, get) => ({
+        (set) => ({
             treeView: [],
             currentLanguage: "en",
             isLoading: false,
             error: null,
 
             initTreeView: async (tree, language, onClick) => {
-                const { treeView, currentLanguage } = get();
-                if (treeView.length > 0 && currentLanguage === language) {
-                    // If the tree is already initialized with the same language, skip re-initialization
-                    return;
-                }
-
+                // Always re-render if tree changes or language changes
                 set({ isLoading: true, currentLanguage: language });
                 try {
                     const renderTree = async (node: MarketGroupNode): Promise<TreeDataItem> => {
@@ -100,19 +96,47 @@ export const MarketListPage: React.FunctionComponent = () => {
 
     const { selectedGroupId, setSelectedGroupId } = useMarketList();
 
-    const { tree, isLoading, error, loadMarketGroupTree } = useMarketGroupTree();
+    const { filteredTree, isLoading, error, loadMarketGroupTree, filterTreeByName, clearFilter } =
+        useMarketGroupTree();
     const { initTreeView, treeView, error: treeError } = useMarketGroupTreeViewStore();
 
     const { preloadMarketPrices } = useMarketCache();
 
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [matchingTypeIds, setMatchingTypeIds] = useState<Set<number>>(new Set());
+
+    // Handle search query changes
+    useEffect(() => {
+        const delayTimeout = setTimeout(() => {
+            if (searchQuery.trim()) {
+                filterTreeByName(searchQuery, language);
+                // Also get the matching type IDs for filtering the price list
+                (async () => {
+                    try {
+                        const typeIds = await searchTypeByName(searchQuery, language, 1000);
+                        setMatchingTypeIds(new Set(typeIds));
+                    } catch (error) {
+                        console.error("Failed to search types:", error);
+                        setMatchingTypeIds(new Set());
+                    }
+                })();
+            } else {
+                clearFilter();
+                setMatchingTypeIds(new Set());
+            }
+        }, 500); // Debounce search
+
+        return () => clearTimeout(delayTimeout);
+    }, [searchQuery, language, filterTreeByName, clearFilter]);
+
     // Load market group tree on component mount
     useEffect(() => {
         loadMarketGroupTree().then(() => {
-            if (tree && tree.length > 0) {
-                initTreeView(tree, language, setSelectedGroupId);
+            if (filteredTree && filteredTree.length > 0) {
+                initTreeView(filteredTree, language, setSelectedGroupId);
             }
         });
-    }, [loadMarketGroupTree, initTreeView, tree, language, setSelectedGroupId]);
+    }, [loadMarketGroupTree, initTreeView, filteredTree, language, setSelectedGroupId]);
 
     const [types, setTypes] = useState<number[]>([]);
 
@@ -120,12 +144,20 @@ export const MarketListPage: React.FunctionComponent = () => {
         if (selectedGroupId === null) return;
         (async () => {
             const mg = await getMarketGroup(selectedGroupId);
-            const types = mg?.types;
-            if (types && types.length > 0) {
-                setTypes(types);
+            const allTypes = mg?.types;
+            if (allTypes && allTypes.length > 0) {
+                // If there's a search query, filter types to only show matching ones
+                if (matchingTypeIds.size > 0) {
+                    const filteredTypes = allTypes.filter((typeId) => matchingTypeIds.has(typeId));
+                    setTypes(filteredTypes);
+                } else {
+                    setTypes(allTypes);
+                }
+            } else {
+                setTypes([]);
             }
         })();
-    }, [selectedGroupId]);
+    }, [selectedGroupId, matchingTypeIds]);
 
     useEffect(() => {
         if (types.length > 0) {
@@ -146,6 +178,11 @@ export const MarketListPage: React.FunctionComponent = () => {
             title={t("market.market_list.title")}
             description={t("market.market_list.desc")}
         >
+            <SearchInput
+                leading={<ListFilter />}
+                onValueChange={(value: string) => setSearchQuery(value)}
+                placeholder={t("market.market_list.search.placeholder")}
+            />
             <ResizablePanelGroup direction="horizontal" className="w-full h-full">
                 <ResizablePanel defaultSize={20} minSize={10} maxSize={30}>
                     <div className="flex flex-col h-full">

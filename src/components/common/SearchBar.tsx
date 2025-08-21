@@ -16,7 +16,8 @@ export interface SearchInputRef {
 }
 
 interface SearchInputProps {
-    placeholder: string;
+    leading?: React.ReactNode;
+    placeholder?: string;
     onValueChange?: (value: string) => void;
     ref?: React.Ref<SearchInputRef>;
 }
@@ -37,7 +38,12 @@ interface SearchBarProps extends SearchInputProps {
     }) => React.ReactNode;
 }
 
-export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onValueChange, ref }) => {
+export const SearchInput: React.FC<SearchInputProps> = ({
+    placeholder,
+    leading,
+    onValueChange,
+    ref,
+}) => {
     const [focused, setFocused] = useState(false);
     const [search, setSearch] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +73,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onValueCh
                 focused ? "w-full border-black dark:border-white" : "w-48 md:w-64"
             )}
         >
-            <Search />
+            {leading ?? <Search />}
             <Input
                 ref={inputRef}
                 className={cn(
