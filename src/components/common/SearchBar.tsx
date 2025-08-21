@@ -1,5 +1,5 @@
 import { Search, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -9,11 +9,22 @@ export interface SearchResult {
     name: string;
 }
 
-interface SearchBarProps {
+export interface SearchInputRef {
+    focus: () => void;
+    blur: () => void;
+    clear: () => void;
+}
+
+interface SearchInputProps {
+    placeholder: string;
+    onValueChange?: (value: string) => void;
+    ref?: React.Ref<SearchInputRef>;
+}
+
+interface SearchBarProps extends SearchInputProps {
     onItemSelect?: (id: number) => void;
     searchFunction: (query: string, language: string) => Promise<number[]>;
     getItemName: (id: number, language: string) => Promise<string | null>;
-    placeholder: string;
     noResultsMessage?: string;
     language: string;
     children?: (ctx: {
@@ -26,6 +37,67 @@ interface SearchBarProps {
     }) => React.ReactNode;
 }
 
+export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onValueChange, ref }) => {
+    const [focused, setFocused] = useState(false);
+    const [search, setSearch] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (onValueChange) {
+            onValueChange(search);
+        }
+    }, [search, onValueChange]);
+
+    const handleClear = () => {
+        setSearch("");
+        inputRef.current?.blur();
+    };
+
+    useImperativeHandle(ref, () => ({
+        focus: () => inputRef.current?.focus(),
+        blur: () => inputRef.current?.blur(),
+        clear: handleClear,
+    }));
+
+    return (
+        <div
+            className={cn(
+                "flex items-center w-full px-4 border-b-2 mb-4",
+                "transition-all duration-300",
+                focused ? "w-full border-black dark:border-white" : "w-48 md:w-64"
+            )}
+        >
+            <Search />
+            <Input
+                ref={inputRef}
+                className={cn(
+                    "px-2 h-14 w-full font-sans text-lg outline-hidden rounded-none",
+                    "bg-transparent text-default-700 placeholder-default-500",
+                    "dark:text-default-500 dark:placeholder:text-default-300",
+                    "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                )}
+                placeholder={placeholder}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                autoComplete="off"
+                spellCheck={false}
+                style={{ minWidth: 0 }}
+            />
+            <Button
+                variant="ghost"
+                className="size-10"
+                size="icon"
+                onClick={handleClear}
+                tabIndex={-1}
+            >
+                <X />
+            </Button>
+        </div>
+    );
+};
+
 export function SearchBar({
     onItemSelect,
     searchFunction,
@@ -36,10 +108,9 @@ export function SearchBar({
     children,
 }: SearchBarProps) {
     const [search, setSearch] = useState("");
-    const [focused, setFocused] = useState(false);
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<SearchInputRef>(null);
 
     useEffect(() => {
         let ignore = false;
@@ -77,46 +148,13 @@ export function SearchBar({
 
     const handleClear = () => {
         setSearch("");
+        setResults([]);
         inputRef.current?.blur();
     };
 
     return (
         <div className="w-full">
-            <div
-                className={cn(
-                    "flex items-center w-full px-4 border-b-2 mb-4",
-                    "transition-all duration-300",
-                    focused ? "w-full border-black dark:border-white" : "w-48 md:w-64"
-                )}
-            >
-                <Search />
-                <Input
-                    ref={inputRef}
-                    className={cn(
-                        "px-2 h-14 w-full font-sans text-lg outline-hidden rounded-none",
-                        "bg-transparent text-default-700 placeholder-default-500",
-                        "dark:text-default-500 dark:placeholder:text-default-300",
-                        "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                    )}
-                    placeholder={placeholder}
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
-                    autoComplete="off"
-                    spellCheck={false}
-                    style={{ minWidth: 0 }}
-                />
-                <Button
-                    variant="ghost"
-                    className="size-10"
-                    size="icon"
-                    onClick={handleClear}
-                    tabIndex={-1}
-                >
-                    <X />
-                </Button>
-            </div>
+            <SearchInput ref={inputRef} placeholder={placeholder} onValueChange={setSearch} />
 
             {search &&
                 children?.({
