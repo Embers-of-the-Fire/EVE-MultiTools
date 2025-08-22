@@ -253,16 +253,14 @@ export interface Price {
     updated_at: number;
 }
 
-export async function getMarketPrice(typeId: number): Promise<Price | null> {
-    return await tauriInvoke<Price | null>("get_market_price", {
+export async function getMarketPrice(typeId: number): Promise<void> {
+    await tauriInvoke<void>("get_market_price", {
         typeId,
     });
 }
 
-export async function getMarketPrices(typeIds: number[]): Promise<Price[]> {
-    return await tauriInvoke<Price[]>("get_market_prices", {
-        typeIds,
-    });
+export async function getMarketPrices(typeIds: number[]): Promise<void> {
+    await Promise.all(typeIds.map((typeId) => getMarketPrice(typeId)));
 }
 
 export enum LinkKey {

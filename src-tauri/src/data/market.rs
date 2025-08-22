@@ -1,8 +1,11 @@
 use std::f64;
+use std::sync::Arc;
 
-use futures::{stream, StreamExt, TryStreamExt};
+use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
+use tauri::{Emitter, Manager};
+use tokio::sync::Semaphore;
 
 use crate::{
     __map,
@@ -10,6 +13,10 @@ use crate::{
     data::esi::{EsiKey, EsiService},
     utils::database::SqliteConnection,
 };
+
+// 创建一个低优先级任务的信号量来控制并发
+static LOW_PRIORITY_SEMAPHORE: once_cell::sync::Lazy<Arc<Semaphore>> =
+    once_cell::sync::Lazy::new(|| Arc::new(Semaphore::new(2))); // 限制同时最多2个低优先级任务
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, FromRow)]
 pub struct Price {
@@ -175,45 +182,36 @@ impl MarketService {
 
 #[tauri::command]
 pub async fn get_market_price(
-    app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
+    window: tauri::Window,
+    app_handle: tauri::AppHandle,
     type_id: i64,
-) -> Result<PriceRecord, String> {
-    let bundle = app_bundle.lock().await;
-    let activated_bundle = bundle
-        .activated_bundle
-        .as_ref()
-        .ok_or("No activated bundle found".to_string())?;
+) -> Result<(), String> {
+    tokio::spawn(async move {
+        let _permit = LOW_PRIORITY_SEMAPHORE.acquire().await?;
 
-    activated_bundle
-        .market
-        .fetch_market_price(&activated_bundle.esi, type_id)
-        .await
-        .map_err(|e| e.to_string())
-}
+        let bundle = app_handle.state::<crate::bundle::AppBundleState>();
 
-#[tauri::command]
-pub async fn get_market_prices(
-    app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
-    type_ids: Vec<i64>,
-) -> Result<Vec<PriceRecord>, String> {
-    let bundle = app_bundle.lock().await;
-    let activated_bundle = bundle
-        .activated_bundle
-        .as_ref()
-        .ok_or("No activated bundle found".to_string())?;
+        let cache = bundle.lock().await;
+        let activated_bundle = cache
+            .activated_bundle
+            .as_ref()
+            .ok_or(anyhow!("No activated bundle found"))?;
 
-    // We use unordered future to fetch prices concurrently
-    let futures = stream::iter(type_ids)
-        .map(|type_id| {
-            let esi = activated_bundle.esi.clone();
-            let market = activated_bundle.market.clone();
-            async move { market.fetch_market_price(&esi, type_id).await }
-        })
-        .buffered(4);
+        match activated_bundle
+            .market
+            .fetch_market_price(&activated_bundle.esi, type_id)
+            .await
+        {
+            Ok(price_data) => {
+                let _ = window.emit("market_price_success", &price_data);
+            }
+            Err(e) => {
+                let _ = window.emit("market_price_error", &format!("Type {type_id}: {e}"));
+            }
+        }
 
-    let out = futures
-        .try_collect::<Vec<_>>()
-        .await
-        .map_err(|e| format!("Unable to fetch all market prices: {e:?}"))?;
-    Ok(out)
+        Ok::<_, anyhow::Error>(())
+    });
+
+    Ok(())
 }

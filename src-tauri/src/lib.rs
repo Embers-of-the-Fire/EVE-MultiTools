@@ -88,7 +88,6 @@ pub fn run() {
             data::localization::search_type_by_name,
             data::localization::search_type_by_description,
             data::market::get_market_price,
-            data::market::get_market_prices,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
