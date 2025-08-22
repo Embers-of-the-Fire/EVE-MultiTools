@@ -3,19 +3,24 @@ import { EmbeddedMarketTypeCard } from "@/components/card/MarketTypeCard";
 import { SearchBar } from "@/components/common/SearchBar";
 import { PageLayout } from "@/components/layout";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getLocalizationByLang, getType, searchTypeByName } from "@/native/data";
+import { useLanguage } from "@/hooks/useAppSettings";
+import { useLocalization } from "@/hooks/useLocalization";
+import type { Language } from "@/native";
+import { getType, searchTypeByName } from "@/native/data";
 
 export function MarketSearchPage() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+    const { language } = useLanguage();
+    const { loc } = useLocalization();
 
-    const searchFunction = async (query: string, language: string) => {
-        return await searchTypeByName(query, language === "zh" ? "zh" : "en", 100);
+    const searchFunction = async (query: string, language: Language) => {
+        return await searchTypeByName(query, language, 100);
     };
 
-    const getItemName = async (id: number, language: string) => {
+    const getItemName = async (id: number) => {
         const type = await getType(id);
         if (!type || !type.market_group_id) return null;
-        return await getLocalizationByLang(type.type_name_id, language === "zh" ? "zh" : "en");
+        return await loc(type.type_name_id);
     };
 
     return (
@@ -25,7 +30,7 @@ export function MarketSearchPage() {
                 getItemName={getItemName}
                 placeholder={t("market.search.placeholder")}
                 noResultsMessage={t("common.no_results")}
-                language={i18n.language}
+                language={language}
             >
                 {({ results, loading, query, noResultsMessage }) => (
                     <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">

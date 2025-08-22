@@ -101,7 +101,6 @@ export const useMarketCacheStore = create<MarketCacheStore>()(
                     return { requestedTypes: newRequested };
                 });
 
-                // 并发请求多个价格
                 toRequest.forEach((typeID) => {
                     getMarketPrice(typeID).catch((error: unknown) => {
                         console.error(`Failed to request price for type ${typeID}:`, error);

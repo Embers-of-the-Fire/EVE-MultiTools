@@ -1,10 +1,13 @@
-import { useTranslation, useTranslation as useTranslationI18n } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { HistoryButton } from "@/components/common/HistoryButton";
 import { SearchBar } from "@/components/common/SearchBar";
+import { useLanguage } from "@/hooks/useAppSettings";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
-import { getLocalizationByLang, getType, searchTypeByName } from "@/native/data";
+import type { Language } from "@/native";
+import { getType, searchTypeByName } from "@/native/data";
 import { PageLayout } from "../../layout";
 import { ScrollArea } from "../../ui/scroll-area";
 
@@ -25,9 +28,11 @@ export function TypeHistoryButton() {
 
 export function TypeExplorePage() {
     const { t } = useTranslation();
+    const { loc } = useLocalization();
+    const { language } = useLanguage();
+
     const { setCurrentTypeID } = useTypeExplore();
     const { navigate } = useSPARouter();
-    const { i18n } = useTranslationI18n();
 
     // Handle type card click event
     const handleTypeClick = (typeId: number) => {
@@ -36,14 +41,14 @@ export function TypeExplorePage() {
     };
 
     // Search helper functions
-    const searchFunction = async (query: string, language: string) => {
-        return await searchTypeByName(query, language === "zh" ? "zh" : "en");
+    const searchFunction = async (query: string, language: Language) => {
+        return await searchTypeByName(query, language);
     };
 
-    const getItemName = async (id: number, language: string) => {
+    const getItemName = async (id: number) => {
         const type = await getType(id);
         if (!type) return null;
-        return await getLocalizationByLang(type.type_name_id, language === "zh" ? "zh" : "en");
+        return await loc(type.type_name_id);
     };
 
     return (
@@ -58,7 +63,7 @@ export function TypeExplorePage() {
                 getItemName={getItemName}
                 placeholder={t("explore.type.search.placeholder")}
                 noResultsMessage={t("common.no_results")}
-                language={i18n.language}
+                language={language}
             >
                 {({ results, loading, query, onSelect, noResultsMessage }) => (
                     <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">

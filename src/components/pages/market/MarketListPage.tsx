@@ -11,10 +11,13 @@ import { type TreeDataItem, TreeView } from "@/components/tree-view";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useLanguage } from "@/hooks/useAppSettings";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useMarketCache } from "@/hooks/useMarketCache";
 import { useMarketGroupTree } from "@/hooks/useMarketGroupTree";
 import { useMarketList } from "@/hooks/useMarketList";
-import { getLocalizationByLang, getMarketGroup, searchTypeByName } from "@/native/data";
+import type { Language } from "@/native";
+import { getMarketGroup, searchTypeByName } from "@/native/data";
 import type { MarketGroupNode } from "@/stores/marketGroupTreeStore";
 import { asyncSleep } from "@/utils/async";
 import { getIconUrl } from "@/utils/image";
@@ -27,7 +30,8 @@ interface MarketGroupTreeViewStore {
 
     initTreeView: (
         tree: MarketGroupNode[],
-        language: "zh" | "en",
+        loc: (id: number) => Promise<string>,
+        language: Language,
         onClick: (groupId: number) => void
     ) => Promise<void>;
 }
@@ -40,7 +44,7 @@ const useMarketGroupTreeViewStore = create<MarketGroupTreeViewStore>()(
             isLoading: false,
             error: null,
 
-            initTreeView: async (tree, language, onClick) => {
+            initTreeView: async (tree, loc, language, onClick) => {
                 // Always re-render if tree changes or language changes
                 set({ isLoading: true, currentLanguage: language });
                 try {
@@ -55,10 +59,8 @@ const useMarketGroupTreeViewStore = create<MarketGroupTreeViewStore>()(
                         return {
                             id: node.marketGroupID.toString(),
                             name:
-                                (await getLocalizationByLang(
-                                    node.marketGroupData?.nameId,
-                                    language
-                                )) || `ID: ${node.marketGroupID}`,
+                                (await loc(node.marketGroupData?.nameId)) ||
+                                `ID: ${node.marketGroupID}`,
                             icon: iconUrl
                                 ? () => (
                                       <Image
@@ -92,9 +94,8 @@ const useMarketGroupTreeViewStore = create<MarketGroupTreeViewStore>()(
 
 export const MarketListPage: React.FunctionComponent = () => {
     const { t } = useTranslation();
-    const { i18n } = useTranslation();
-
-    const language = i18n.language === "zh" ? "zh" : "en";
+    const { language } = useLanguage();
+    const { loc } = useLocalization();
 
     const { selectedGroupId, setSelectedGroupId } = useMarketList();
 
@@ -135,10 +136,10 @@ export const MarketListPage: React.FunctionComponent = () => {
     useEffect(() => {
         loadMarketGroupTree().then(() => {
             if (filteredTree && filteredTree.length > 0) {
-                initTreeView(filteredTree, language, setSelectedGroupId);
+                initTreeView(filteredTree, loc, language, setSelectedGroupId);
             }
         });
-    }, [loadMarketGroupTree, initTreeView, filteredTree, language, setSelectedGroupId]);
+    }, [loadMarketGroupTree, initTreeView, filteredTree, loc, language, setSelectedGroupId]);
 
     const [types, internalSetTypes] = useState<number[]>([]);
 

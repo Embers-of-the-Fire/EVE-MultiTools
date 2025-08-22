@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::anyhow;
 
-use crate::bundle::AppBundleState;
+use crate::{bundle::AppBundleState, utils::path::IfExists};
 
 #[derive(Debug)]
 pub struct IconService {
@@ -21,8 +21,8 @@ impl IconService {
         Ok(Self { icon_path: path })
     }
 
-    pub fn get_path(&self, icon_id: u32) -> PathBuf {
-        self.icon_path.join(format!("{icon_id}.png"))
+    pub fn get_path(&self, icon_id: u32) -> Option<PathBuf> {
+        self.icon_path.join(format!("{icon_id}.png")).if_exists()
     }
 }
 
@@ -30,7 +30,7 @@ impl IconService {
 pub async fn get_icon_path(
     bundle_state: tauri::State<'_, AppBundleState>,
     icon_id: u32,
-) -> Result<PathBuf, String> {
+) -> Result<Option<PathBuf>, String> {
     bundle_state
         .lock()
         .await

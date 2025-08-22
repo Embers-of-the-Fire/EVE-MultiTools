@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getFaction, getLocalizationByLang } from "@/native/data";
+import { useLocalization } from "@/hooks/useLocalization";
+import { getFaction } from "@/native/data";
 import { getFactionIconUrl } from "@/utils/image";
 import GenericCard, { type BadgeConfig, type GenericData } from "./GenericCard";
 
@@ -9,16 +10,17 @@ interface FactionData extends GenericData {
 }
 
 function useFactionData(factionId: number): FactionData {
-    const { i18n, t } = useTranslation();
+    const { t } = useTranslation();
     const [data, setData] = useState<FactionData>({
         name: "",
         description: "",
-        iconUrl: null,
         badges: [],
         loading: true,
         id: factionId,
         uniqueName: false,
     });
+
+    const { loc } = useLocalization();
 
     useEffect(() => {
         let mounted = true;
@@ -36,12 +38,9 @@ function useFactionData(factionId: number): FactionData {
                 if (mounted) setData((d) => ({ ...d, loading: false }));
                 return;
             }
-            const lang = i18n.language === "zh" ? "zh" : "en";
             const [nameText, descText] = await Promise.all([
-                getLocalizationByLang(f.name_id, lang),
-                f.description_id
-                    ? getLocalizationByLang(f.description_id, lang)
-                    : Promise.resolve(""),
+                loc(f.name_id),
+                f.description_id ? loc(f.description_id) : Promise.resolve(""),
             ]);
             const badgeArr: BadgeConfig[] = [];
             if (f.unique_name) {
@@ -55,7 +54,7 @@ function useFactionData(factionId: number): FactionData {
                 setData({
                     name: nameText || "",
                     description: descText || "",
-                    iconUrl: await getFactionIconUrl(factionId),
+                    iconUrl: (await getFactionIconUrl(factionId)) || undefined,
                     badges: badgeArr,
                     loading: false,
                     id: factionId,
@@ -66,7 +65,7 @@ function useFactionData(factionId: number): FactionData {
         return () => {
             mounted = false;
         };
-    }, [factionId, i18n.language, t]);
+    }, [factionId, t, loc]);
 
     return data;
 }

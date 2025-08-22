@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { HistoryButton } from "@/components/common/HistoryButton";
 import { useFactionExplore } from "@/hooks/useFactionExplore";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { getFaction, getFactionIds, getLocalizationByLang } from "@/native/data";
+import { getFaction, getFactionIds } from "@/native/data";
 import { PageLayout } from "../../layout";
 import { ScrollArea } from "../../ui/scroll-area";
 
@@ -27,13 +28,13 @@ export function FactionHistoryButton() {
 
 export function FactionExplorePage() {
     const { t } = useTranslation();
+    const { loc } = useLocalization();
+
     const { setCurrentFactionID } = useFactionExplore();
     const { navigate } = useSPARouter();
 
     const [factions, setFactions] = useState<FactionData[]>([]);
     const [loading, setLoading] = useState(true);
-    const { i18n } = useTranslation();
-    const language = i18n.language === "zh" ? "zh" : "en";
 
     // Handle faction card click event
     const handleFactionClick = (factionId: number) => {
@@ -41,26 +42,23 @@ export function FactionExplorePage() {
         navigate("/explore/faction/detail", t("explore.faction.detail.title"));
     };
 
-    // 加载所有势力数据
     useEffect(() => {
         let ignore = false;
         setLoading(true);
 
         (async () => {
             try {
-                // 获取所有势力 ID
                 const factionIds = await getFactionIds();
                 const items: FactionData[] = [];
 
-                // 并行获取所有势力的详细信息
                 const factionPromises = factionIds.map(async (id) => {
                     try {
                         const faction = await getFaction(id);
                         if (!faction) return null;
 
-                        const name = await getLocalizationByLang(faction.name_id, language);
+                        const name = await loc(faction.name_id);
                         const shortDesc = faction.short_description_id
-                            ? await getLocalizationByLang(faction.short_description_id, language)
+                            ? await loc(faction.short_description_id)
                             : undefined;
 
                         return {
@@ -97,7 +95,7 @@ export function FactionExplorePage() {
         return () => {
             ignore = true;
         };
-    }, [language]);
+    }, [loc]);
 
     return (
         <PageLayout

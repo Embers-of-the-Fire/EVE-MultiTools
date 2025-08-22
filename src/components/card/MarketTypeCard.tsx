@@ -1,22 +1,13 @@
 import { Info, SquareArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
 import { useLanguage } from "@/hooks/useAppSettings";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useMarketRecord } from "@/hooks/useMarketCache";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
-import {
-    getGroup,
-    getLinkUrl,
-    getLocalizationByLang,
-    getMetaGroup,
-    getSkinMaterialIdByLicense,
-    getType,
-    LinkKey,
-} from "@/native/data";
-import { GraphicType } from "@/types/data";
-import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { getGroup, getLinkUrl, getMetaGroup, getType, LinkKey } from "@/native/data";
+import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import { OutdatedNote } from "../common/OutdatedNote";
 import { ExternalLink } from "../ExternalLink";
 import { Button } from "../ui/button";
@@ -25,8 +16,9 @@ import type { GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
 const useMarketTypeData = (typeId: number) => {
-    const { language } = useLanguage();
+    const { loc } = useLocalization();
     const { t } = useTranslation();
+    const { language } = useLanguage();
 
     const [staticData, setStaticData] = useState<
         Omit<GenericData, "loading" | "orientation" | "badges" | "id">
@@ -36,9 +28,8 @@ const useMarketTypeData = (typeId: number) => {
     });
 
     const [staticDataLoaded, setStaticDataLoaded] = useState(false);
-    const [shouldLoadMarketData, setShouldLoadMarketData] = useState(false);
 
-    const marketRecord = useMarketRecord(typeId, shouldLoadMarketData);
+    const marketRecord = useMarketRecord(typeId, false);
 
     const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
 
@@ -60,24 +51,9 @@ const useMarketTypeData = (typeId: number) => {
             }
 
             const [nameText, descText, iconPath] = await Promise.all([
-                getLocalizationByLang(type.type_name_id, language),
-                type.description_id
-                    ? getLocalizationByLang(type.description_id, language)
-                    : Promise.resolve(""),
-                type.graphic_id
-                    ? getGraphicUrl(
-                          type.graphic_id,
-                          categoryId === CATEGORY_ID_BLUEPRINT
-                              ? GraphicType.Blueprint
-                              : GraphicType.Icon
-                      )
-                    : type.icon_id
-                      ? getIconUrl(type.icon_id)
-                      : (async () => {
-                            const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
-                            if (skinMatId === null) return null;
-                            return getSkinMaterialUrl(skinMatId);
-                        })(),
+                loc(type.type_name_id),
+                type.description_id ? loc(type.description_id) : Promise.resolve(""),
+                getTypeImageUrl(type, categoryId),
             ]);
 
             let mgIcon: string | null = null;
@@ -88,7 +64,7 @@ const useMarketTypeData = (typeId: number) => {
                     mgIcon = await getIconUrl(meta.icon_id);
                 }
                 if (meta?.name_id) {
-                    mgName = await getLocalizationByLang(meta.name_id, language);
+                    mgName = await loc(meta.name_id);
                 }
             }
 
@@ -107,13 +83,14 @@ const useMarketTypeData = (typeId: number) => {
         return () => {
             mounted = false;
         };
-    }, [typeId, language]);
+    }, [typeId, loc]);
 
     useEffect(() => {
-        if (staticDataLoaded && !shouldLoadMarketData) {
-            setShouldLoadMarketData(true);
+        if (staticDataLoaded) {
+            console.log(`Market data for type ${typeId} loaded successfully.`);
+            marketRecord.refresh(true);
         }
-    }, [staticDataLoaded, shouldLoadMarketData]);
+    }, [staticDataLoaded, marketRecord.refresh, typeId]);
 
     useEffect(() => {
         (async () => {

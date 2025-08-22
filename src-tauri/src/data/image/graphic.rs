@@ -3,6 +3,8 @@ use std::path::{Path, PathBuf};
 use anyhow::anyhow;
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
+use crate::utils::path::IfExists;
+
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, Serialize_repr, Deserialize_repr)]
 #[serde(untagged)]
@@ -29,15 +31,17 @@ impl GraphicService {
         Ok(Self { graphic_path: path })
     }
 
-    pub fn get_path(&self, graphic_id: u32, graphic_type: GraphicType) -> PathBuf {
-        self.graphic_path.join(format!(
-            "{graphic_id}{}.png",
-            match graphic_type {
-                GraphicType::Icon => "",
-                GraphicType::Blueprint => "_bp",
-                GraphicType::BlueprintCopy => "_bpc",
-            }
-        ))
+    pub fn get_path(&self, graphic_id: u32, graphic_type: GraphicType) -> Option<PathBuf> {
+        self.graphic_path
+            .join(format!(
+                "{graphic_id}{}.png",
+                match graphic_type {
+                    GraphicType::Icon => "",
+                    GraphicType::Blueprint => "_bp",
+                    GraphicType::BlueprintCopy => "_bpc",
+                }
+            ))
+            .if_exists()
     }
 }
 
@@ -46,7 +50,7 @@ pub async fn get_graphic_path(
     bundle_state: tauri::State<'_, crate::bundle::AppBundleState>,
     graphic_id: u32,
     graphic_type: GraphicType,
-) -> Result<PathBuf, String> {
+) -> Result<Option<PathBuf>, String> {
     bundle_state
         .lock()
         .await

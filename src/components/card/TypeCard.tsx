@@ -1,21 +1,12 @@
 import { useEffect, useState } from "react";
-import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
-import { useLanguage } from "@/hooks/useAppSettings";
-import {
-    getCategory,
-    getGroup,
-    getLocalizationByLang,
-    getMetaGroup,
-    getSkinMaterialIdByLicense,
-    getType,
-} from "@/native/data";
-import { GraphicType } from "@/types/data";
-import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { useLocalization } from "@/hooks/useLocalization";
+import { getCategory, getGroup, getMetaGroup, getType } from "@/native/data";
+import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import type { BadgeConfig, GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
 function useTypeData(typeId: number): GenericData {
-    const { language } = useLanguage();
+    const { loc } = useLocalization();
     const [data, setData] = useState<GenericData>({
         name: "",
         description: "",
@@ -51,24 +42,9 @@ function useTypeData(typeId: number): GenericData {
             }
 
             const [nameText, descText, iconPath] = await Promise.all([
-                getLocalizationByLang(type.type_name_id, language),
-                type.description_id
-                    ? getLocalizationByLang(type.description_id, language)
-                    : Promise.resolve(""),
-                type.graphic_id
-                    ? getGraphicUrl(
-                          type.graphic_id,
-                          categoryId === CATEGORY_ID_BLUEPRINT
-                              ? GraphicType.Blueprint
-                              : GraphicType.Icon
-                      )
-                    : type.icon_id
-                      ? getIconUrl(type.icon_id)
-                      : (async () => {
-                            const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
-                            if (skinMatId === null) return null;
-                            return getSkinMaterialUrl(skinMatId);
-                        })(),
+                loc(type.type_name_id),
+                type.description_id ? loc(type.description_id) : Promise.resolve(""),
+                getTypeImageUrl(type, categoryId),
             ]);
 
             const badgeArr: BadgeConfig[] = [];
@@ -76,9 +52,7 @@ function useTypeData(typeId: number): GenericData {
                 const category = await getCategory(categoryId);
                 if (category) {
                     badgeArr.push({
-                        text:
-                            (await getLocalizationByLang(category.category_name_id, language)) ??
-                            "",
+                        text: (await loc(category.category_name_id)) ?? "",
                         variant: "secondary",
                         key: `category-${categoryId}`,
                     });
@@ -88,7 +62,7 @@ function useTypeData(typeId: number): GenericData {
                 const meta = await getMetaGroup(type.meta_group_id);
                 if (meta?.name_id) {
                     badgeArr.push({
-                        text: (await getLocalizationByLang(meta.name_id, language)) ?? "",
+                        text: (await loc(meta.name_id)) ?? "",
                         variant: "outline",
                         key: `meta-${type.meta_group_id}`,
                     });
@@ -103,7 +77,7 @@ function useTypeData(typeId: number): GenericData {
                     mgIcon = await getIconUrl(meta.icon_id);
                 }
                 if (meta?.name_id) {
-                    mgName = await getLocalizationByLang(meta.name_id, language);
+                    mgName = await loc(meta.name_id);
                 }
             }
 
@@ -123,7 +97,7 @@ function useTypeData(typeId: number): GenericData {
         return () => {
             mounted = false;
         };
-    }, [typeId, language]);
+    }, [typeId, loc]);
 
     return data;
 }

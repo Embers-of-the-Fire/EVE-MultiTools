@@ -1,6 +1,7 @@
 import { Search, X } from "lucide-react";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import type { Language } from "@/native";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
@@ -24,10 +25,10 @@ interface SearchInputProps {
 
 interface SearchBarProps extends SearchInputProps {
     onItemSelect?: (id: number) => void;
-    searchFunction: (query: string, language: string) => Promise<number[]>;
+    searchFunction: (query: string, language: Language) => Promise<number[]>;
     getItemName: (id: number, language: string) => Promise<string | null>;
     noResultsMessage?: string;
-    language: string;
+    language: Language;
     children?: (ctx: {
         results: SearchResult[];
         loading: boolean;

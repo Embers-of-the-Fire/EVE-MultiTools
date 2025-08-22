@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DetailPageActions } from "@/components/common/DetailPageActions";
 import { useFactionExplore } from "@/hooks/useFactionExplore";
-import { type Faction, getFaction, getLocalizationByLang } from "@/native/data";
+import { useLocalization } from "@/hooks/useLocalization";
+import { type Faction, getFaction } from "@/native/data";
 import { getFactionIconUrl, getFactionLogoUrl } from "@/utils/image";
 import { PageLayout } from "../../layout";
 import { Badge } from "../../ui/badge";
@@ -31,8 +32,7 @@ function FactionDetailPageActions() {
 
 export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId }) => {
     const { t } = useTranslation();
-    const { i18n } = useTranslation();
-    const language = i18n.language === "zh" ? "zh" : "en";
+    const { loc } = useLocalization();
 
     const [faction, setFaction] = useState<Faction | null>(null);
     const [name, setName] = useState<string>("");
@@ -73,10 +73,10 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                     factionLogoUrl,
                     factionLogoNameUrl,
                 ] = await Promise.all([
-                    getLocalizationByLang(factionData.name_id, language),
-                    getLocalizationByLang(factionData.description_id, language),
+                    loc(factionData.name_id),
+                    loc(factionData.description_id),
                     factionData.short_description_id
-                        ? getLocalizationByLang(factionData.short_description_id, language)
+                        ? loc(factionData.short_description_id)
                         : Promise.resolve(""),
                     getFactionIconUrl(factionId),
                     factionData.flat_logo
@@ -114,7 +114,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
         return () => {
             mounted = false;
         };
-    }, [factionId, language, t]);
+    }, [factionId, t, loc]);
 
     if (loading) {
         return (

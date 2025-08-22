@@ -5,15 +5,15 @@ import { tauriInvoke } from "./base";
 export async function getGraphicPath(
     graphicId: number,
     graphicType = GraphicType.Icon
-): Promise<string> {
-    return await tauriInvoke<string>("get_graphic_path", {
+): Promise<string | null> {
+    return await tauriInvoke<string | null>("get_graphic_path", {
         graphicId,
         graphicType,
     });
 }
 
-export async function getIconPath(iconId: number): Promise<string> {
-    return await tauriInvoke<string>("get_icon_path", { iconId });
+export async function getIconPath(iconId: number): Promise<string | null> {
+    return await tauriInvoke<string | null>("get_icon_path", { iconId });
 }
 
 export async function getSkinMaterialPath(skinMaterialId: number): Promise<string> {

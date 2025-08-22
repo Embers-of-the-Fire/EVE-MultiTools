@@ -5,23 +5,15 @@ import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { DetailPageActions } from "@/components/common/DetailPageActions";
 import { SearchBar } from "@/components/common/SearchBar";
-import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useFactionExplore } from "@/hooks/useFactionExplore";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
+import type { Language } from "@/native";
 import type { Category, Group, MetaGroup, Type } from "@/native/data";
-import {
-    getCategory,
-    getGroup,
-    getLocalizationByLang,
-    getMetaGroup,
-    getSkinMaterialIdByLicense,
-    getType,
-    searchTypeByName,
-} from "@/native/data";
-import { GraphicType } from "@/types/data";
-import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
+import { getCategory, getGroup, getMetaGroup, getType, searchTypeByName } from "@/native/data";
+import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import { PageLayout } from "../../layout";
 import { TypeImage } from "../../TypeImage";
 import { Badge } from "../../ui/badge";
@@ -50,7 +42,9 @@ function TypeDetailPageActions() {
 
 export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const { t } = useTranslation();
+    const { loc } = useLocalization();
     const { language } = useLanguage();
+
     const { setCurrentTypeID } = useTypeExplore();
     const { navigate } = useSPARouter();
 
@@ -73,14 +67,14 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const { setCurrentFactionID } = useFactionExplore();
 
     // Search helper functions
-    const searchFunction = async (query: string, language: string) => {
-        return await searchTypeByName(query, language === "zh" ? "zh" : "en");
+    const searchFunction = async (query: string, language: Language) => {
+        return await searchTypeByName(query, language);
     };
 
-    const getItemName = async (id: number, language: string) => {
+    const getItemName = async (id: number) => {
         const type = await getType(id);
         if (!type) return null;
-        return await getLocalizationByLang(type.type_name_id, language === "zh" ? "zh" : "en");
+        return await loc(type.type_name_id);
     };
 
     const handleTypeSelect = (selectedTypeId: number) => {
@@ -115,35 +109,14 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                 }
 
                 // 并行获取相关数据
-                const [typeNameText, typeDescText, groupData, metaGroupData, iconPath] =
-                    await Promise.all([
-                        getLocalizationByLang(typeData.type_name_id, language),
-                        typeData.description_id
-                            ? getLocalizationByLang(typeData.description_id, language)
-                            : Promise.resolve(""),
-                        typeData.group_id ? getGroup(typeData.group_id) : Promise.resolve(null),
-                        typeData.meta_group_id
-                            ? getMetaGroup(typeData.meta_group_id)
-                            : Promise.resolve(null),
-                        typeData.icon_id
-                            ? getIconUrl(typeData.icon_id)
-                            : typeData.graphic_id
-                              ? getGraphicUrl(
-                                    typeData.graphic_id,
-                                    typeData.group_id &&
-                                        (await getGroup(typeData.group_id))?.category_id ===
-                                            CATEGORY_ID_BLUEPRINT
-                                        ? GraphicType.Blueprint
-                                        : GraphicType.Icon
-                                )
-                              : (async () => {
-                                    const skinMatId = await getSkinMaterialIdByLicense(
-                                        typeData.type_id
-                                    );
-                                    if (skinMatId === null) return null;
-                                    return getSkinMaterialUrl(skinMatId);
-                                })(),
-                    ]);
+                const [typeNameText, typeDescText, groupData, metaGroupData] = await Promise.all([
+                    loc(typeData.type_name_id),
+                    typeData.description_id ? loc(typeData.description_id) : Promise.resolve(""),
+                    typeData.group_id ? getGroup(typeData.group_id) : Promise.resolve(null),
+                    typeData.meta_group_id
+                        ? getMetaGroup(typeData.meta_group_id)
+                        : Promise.resolve(null),
+                ]);
 
                 if (!mounted) return;
 
@@ -151,11 +124,13 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                 setDescription(typeDescText || "");
                 setGroup(groupData);
                 setMetaGroup(metaGroupData);
+
+                const iconPath = await getTypeImageUrl(typeData, groupData?.category_id || null);
                 setIconUrl(iconPath);
 
                 if (groupData) {
                     const [groupNameText, categoryData] = await Promise.all([
-                        getLocalizationByLang(groupData.group_name_id, language),
+                        loc(groupData.group_name_id),
                         getCategory(groupData.category_id),
                     ]);
 
@@ -164,10 +139,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                         setCategory(categoryData);
 
                         if (categoryData) {
-                            const categoryNameText = await getLocalizationByLang(
-                                categoryData.category_name_id,
-                                language
-                            );
+                            const categoryNameText = await loc(categoryData.category_name_id);
                             if (mounted) {
                                 setCategoryName(categoryNameText || "");
                             }
@@ -177,9 +149,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
 
                 if (metaGroupData) {
                     const [mgNameText, mgIcon] = await Promise.all([
-                        metaGroupData.name_id
-                            ? getLocalizationByLang(metaGroupData.name_id, language)
-                            : Promise.resolve(""),
+                        metaGroupData.name_id ? loc(metaGroupData.name_id) : Promise.resolve(""),
                         metaGroupData.icon_id
                             ? getIconUrl(metaGroupData.icon_id)
                             : Promise.resolve(null),
@@ -209,7 +179,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
         return () => {
             mounted = false;
         };
-    }, [typeId, language, t]);
+    }, [typeId, loc, t]);
 
     if (loading) {
         return (
