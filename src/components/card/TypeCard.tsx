@@ -14,22 +14,16 @@ import { getGraphicUrl, getIconUrl, getSkinMaterialUrl } from "@/utils/image";
 import type { BadgeConfig, GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
-interface TypeData extends GenericData {
-    metaGroupIconUrl?: string | null;
-    metaGroupName?: string | null;
-}
-
-function useTypeData(typeId: number): TypeData {
+function useTypeData(typeId: number): GenericData {
     const { language } = useLanguage();
-    const [data, setData] = useState<TypeData>({
+    const [data, setData] = useState<GenericData>({
         name: "",
         description: "",
-        iconUrl: null,
         badges: [],
         loading: true,
         id: typeId,
-        metaGroupIconUrl: null,
-        metaGroupName: null,
+        metaGroupIconUrl: undefined,
+        metaGroupName: undefined,
     });
 
     useEffect(() => {
@@ -41,8 +35,8 @@ function useTypeData(typeId: number): TypeData {
             name: "",
             description: "",
             iconUrl: null,
-            metaGroupIconUrl: null,
-            metaGroupName: null,
+            metaGroupIconUrl: undefined,
+            metaGroupName: undefined,
         }));
         getType(typeId).then(async (type) => {
             if (!type) {
@@ -61,15 +55,15 @@ function useTypeData(typeId: number): TypeData {
                 type.description_id
                     ? getLocalizationByLang(type.description_id, language)
                     : Promise.resolve(""),
-                type.icon_id
-                    ? getIconUrl(type.icon_id)
-                    : type.graphic_id
-                      ? getGraphicUrl(
-                            type.graphic_id,
-                            categoryId === CATEGORY_ID_BLUEPRINT
-                                ? GraphicType.Blueprint
-                                : GraphicType.Icon
-                        )
+                type.graphic_id
+                    ? getGraphicUrl(
+                          type.graphic_id,
+                          categoryId === CATEGORY_ID_BLUEPRINT
+                              ? GraphicType.Blueprint
+                              : GraphicType.Icon
+                      )
+                    : type.icon_id
+                      ? getIconUrl(type.icon_id)
                       : (async () => {
                             const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
                             if (skinMatId === null) return null;
@@ -117,12 +111,12 @@ function useTypeData(typeId: number): TypeData {
                 setData({
                     name: nameText || "",
                     description: descText || "",
-                    iconUrl: iconPath,
+                    iconUrl: iconPath || undefined,
                     badges: badgeArr,
                     loading: false,
                     id: typeId,
-                    metaGroupIconUrl: mgIcon,
-                    metaGroupName: mgName,
+                    metaGroupIconUrl: mgIcon || undefined,
+                    metaGroupName: mgName || undefined,
                 });
             }
         });

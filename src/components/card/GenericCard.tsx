@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface BadgeConfig {
     text: string;
@@ -16,13 +17,101 @@ interface GenericData {
     name: string;
     description?: ReactNode;
     orientation?: "vertical" | "horizontal";
-    iconUrl?: string | null;
+    iconUrl?: string;
+    metaGroupIconUrl?: string;
+    metaGroupName?: string;
     badges?: BadgeConfig[];
     actions?: ReactNode[];
     loading?: boolean;
     id?: string | number;
     imageComponent?: React.ReactNode;
 }
+
+// 通用图像组件，支持meta group角标
+interface GenericImageProps {
+    iconUrl?: string | null;
+    alt: string;
+    loading: boolean;
+    metaGroupIconUrl?: string | null;
+    metaGroupName?: string;
+    width: number;
+    height: number;
+    className?: string;
+    imageComponent?: React.ReactNode;
+}
+
+const GenericImage: React.FC<GenericImageProps> = ({
+    iconUrl,
+    alt,
+    loading,
+    metaGroupIconUrl,
+    metaGroupName,
+    width,
+    height,
+    className,
+    imageComponent,
+}) => {
+    const { t } = useTranslation();
+
+    if (loading) {
+        return (
+            <div className={cn("bg-gray-200 dark:bg-gray-700 rounded animate-pulse", className)}>
+                <div style={{ width, height }} />
+            </div>
+        );
+    }
+
+    return (
+        <div
+            className={cn("relative overflow-hidden rounded", className)}
+            style={{ width, height }}
+        >
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div className="transform origin-center">
+                    {imageComponent ||
+                        (iconUrl ? (
+                            <Image
+                                src={iconUrl}
+                                alt={alt}
+                                width={width}
+                                height={height}
+                                className="w-full h-full object-cover rounded"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <span className="text-xs text-muted-foreground">N/A</span>
+                            </div>
+                        ))}
+                </div>
+            </div>
+            {metaGroupIconUrl && (
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div
+                            className="absolute left-0 top-0 cursor-pointer"
+                            style={{
+                                width: Math.max(16, width * 0.3),
+                                height: Math.max(16, height * 0.3),
+                            }}
+                        >
+                            <Image
+                                src={metaGroupIconUrl}
+                                alt={t("common.category_icon")}
+                                width={Math.max(16, width * 0.3)}
+                                height={Math.max(16, height * 0.3)}
+                                className="w-full h-full object-contain rounded"
+                                style={{ boxShadow: "0 0 4px rgba(0,0,0,0.2)" }}
+                            />
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs">
+                        {metaGroupName || t("common.unknown_group")}
+                    </TooltipContent>
+                </Tooltip>
+            )}
+        </div>
+    );
+};
 
 interface HoverCardProps {
     data: GenericData;
@@ -63,20 +152,17 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
                     <div className="flex items-center gap-3">
                         {/* 图标 */}
                         <div className="w-12 h-12 shrink-0">
-                            {data.imageComponent ||
-                                (data.iconUrl ? (
-                                    <Image
-                                        src={data.iconUrl}
-                                        alt={data.name}
-                                        width={48}
-                                        height={48}
-                                        className="w-full h-full object-cover rounded"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                                        <span className="text-xs text-muted-foreground">N/A</span>
-                                    </div>
-                                ))}
+                            <GenericImage
+                                iconUrl={data.iconUrl}
+                                alt={data.name}
+                                loading={false}
+                                metaGroupIconUrl={data.metaGroupIconUrl}
+                                metaGroupName={data.metaGroupName}
+                                width={48}
+                                height={48}
+                                className="w-12 h-12"
+                                imageComponent={data.imageComponent}
+                            />
                         </div>
 
                         {/* 名称+ID组合 */}
@@ -133,20 +219,17 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
             <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 shrink-0">
-                        {data.imageComponent ||
-                            (data.iconUrl ? (
-                                <Image
-                                    src={data.iconUrl}
-                                    alt={data.name}
-                                    width={48}
-                                    height={48}
-                                    className="w-full h-full object-cover rounded"
-                                />
-                            ) : (
-                                <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                                    <span className="text-xs text-muted-foreground">N/A</span>
-                                </div>
-                            ))}
+                        <GenericImage
+                            iconUrl={data.iconUrl}
+                            alt={data.name}
+                            loading={false}
+                            metaGroupIconUrl={data.metaGroupIconUrl}
+                            metaGroupName={data.metaGroupName}
+                            width={48}
+                            height={48}
+                            className="w-12 h-12"
+                            imageComponent={data.imageComponent}
+                        />
                     </div>
                     <div className="flex-1 min-w-0">
                         <CardTitle className="text-lg truncate">{data.name}</CardTitle>
@@ -273,38 +356,26 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
             )}
             <CardContent className={cn("p-4", compact && "p-3")}>
                 {isHorizontal ? (
-                    // 横向布局：图标、名称+ID组合、描述、Badge 同行
                     <div className="flex items-center gap-3">
-                        {/* 图标 */}
                         <div
                             className={cn(
                                 "shrink-0 relative overflow-hidden rounded",
                                 compact ? "w-8 h-8" : "w-12 h-12"
                             )}
                         >
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="transform origin-center">
-                                    {data.imageComponent ||
-                                        (data.iconUrl ? (
-                                            <Image
-                                                src={data.iconUrl}
-                                                alt={data.name}
-                                                width={48}
-                                                height={48}
-                                                className="w-full h-full object-cover rounded"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                                                <span className="text-xs text-muted-foreground">
-                                                    N/A
-                                                </span>
-                                            </div>
-                                        ))}
-                                </div>
-                            </div>
+                            <GenericImage
+                                iconUrl={data.iconUrl}
+                                alt={data.name}
+                                loading={false}
+                                metaGroupIconUrl={data.metaGroupIconUrl}
+                                metaGroupName={data.metaGroupName}
+                                width={compact ? 32 : 48}
+                                height={compact ? 32 : 48}
+                                className={cn(compact ? "w-8 h-8" : "w-12 h-12")}
+                                imageComponent={data.imageComponent}
+                            />
                         </div>
 
-                        {/* 名称+ID组合 */}
                         <div className="shrink-0">
                             <div
                                 className={cn(
@@ -321,10 +392,8 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                             )}
                         </div>
 
-                        {/* 描述 */}
                         <div className="flex-1 min-w-0">{!compact && description}</div>
 
-                        {/* Badge */}
                         <div className="shrink-0">
                             <div className="flex gap-1 flex-wrap">
                                 {showBadges &&
@@ -342,7 +411,6 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                             </div>
                         </div>
 
-                        {/* Actions */}
                         {data.actions && data.actions.length > 0 && (
                             <div className="shrink-0 flex gap-2 ml-2">
                                 {data.actions.map((action, index) => (
@@ -360,38 +428,26 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                         )}
                     </div>
                 ) : (
-                    // 纵向布局（默认）：仅名称+ID组合与描述纵向排布，其他保持横向
                     <div className="flex items-center gap-3">
-                        {/* 图标 */}
                         <div
                             className={cn(
                                 "shrink-0 relative overflow-hidden rounded",
                                 compact ? "w-8 h-8" : "w-12 h-12"
                             )}
                         >
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="transform origin-center">
-                                    {data.imageComponent ||
-                                        (data.iconUrl ? (
-                                            <Image
-                                                src={data.iconUrl}
-                                                alt={data.name}
-                                                width={48}
-                                                height={48}
-                                                className="w-full h-full object-cover rounded"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                                                <span className="text-xs text-muted-foreground">
-                                                    N/A
-                                                </span>
-                                            </div>
-                                        ))}
-                                </div>
-                            </div>
+                            <GenericImage
+                                iconUrl={data.iconUrl}
+                                alt={data.name}
+                                loading={false}
+                                metaGroupIconUrl={data.metaGroupIconUrl}
+                                metaGroupName={data.metaGroupName}
+                                width={compact ? 32 : 48}
+                                height={compact ? 32 : 48}
+                                className={cn(compact ? "w-8 h-8" : "w-12 h-12")}
+                                imageComponent={data.imageComponent}
+                            />
                         </div>
 
-                        {/* 名称+ID组合与描述纵向排布 */}
                         <div className="flex-1 min-w-0">
                             <div
                                 className={cn(
@@ -409,7 +465,6 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                             {!compact && description}
                         </div>
 
-                        {/* Badge */}
                         <div className="flex gap-1 flex-wrap shrink-0">
                             {showBadges &&
                                 data.badges &&
@@ -425,7 +480,6 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                                 ))}
                         </div>
 
-                        {/* Actions */}
                         {data.actions && data.actions.length > 0 && (
                             <div className="shrink-0 flex gap-2 ml-2">
                                 {data.actions.map((action, index) => (
@@ -498,22 +552,17 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
             >
                 {/* 图标 */}
                 <div className="w-12 h-12 shrink-0">
-                    {data.imageComponent ||
-                        (data.iconUrl ? (
-                            <Image
-                                src={data.iconUrl}
-                                alt={data.name}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-cover rounded"
-                            />
-                        ) : data.loading ? (
-                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                        ) : (
-                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                                <span className="text-xs text-muted-foreground">N/A</span>
-                            </div>
-                        ))}
+                    <GenericImage
+                        iconUrl={data.iconUrl}
+                        alt={data.name}
+                        loading={data.loading || false}
+                        metaGroupIconUrl={data.metaGroupIconUrl}
+                        metaGroupName={data.metaGroupName}
+                        width={48}
+                        height={48}
+                        className="w-12 h-12"
+                        imageComponent={data.imageComponent}
+                    />
                 </div>
 
                 {/* 名称+ID组合 */}
@@ -572,22 +621,17 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
         >
             {/* 图标 */}
             <div className="w-12 h-12 shrink-0">
-                {data.imageComponent ||
-                    (data.iconUrl ? (
-                        <Image
-                            src={data.iconUrl}
-                            alt={data.name}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-cover rounded"
-                        />
-                    ) : data.loading ? (
-                        <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                    ) : (
-                        <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                            <span className="text-xs text-muted-foreground">N/A</span>
-                        </div>
-                    ))}
+                <GenericImage
+                    iconUrl={data.iconUrl}
+                    alt={data.name}
+                    loading={data.loading || false}
+                    metaGroupIconUrl={data.metaGroupIconUrl}
+                    metaGroupName={data.metaGroupName}
+                    width={48}
+                    height={48}
+                    className="w-12 h-12"
+                    imageComponent={data.imageComponent}
+                />
             </div>
 
             {/* 名称+ID组合与描述纵向排布 */}
@@ -638,4 +682,11 @@ const GenericCard = {
 };
 
 export default GenericCard;
-export type { BadgeConfig, GenericData, HoverCardProps, EmbedCardProps, BaseCardProps };
+export type {
+    BadgeConfig,
+    GenericData,
+    HoverCardProps,
+    EmbedCardProps,
+    BaseCardProps,
+    GenericImageProps,
+};

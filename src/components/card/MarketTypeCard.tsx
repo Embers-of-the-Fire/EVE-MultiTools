@@ -1,4 +1,4 @@
-import { ClockAlert, Info, SquareArrowUpRight } from "lucide-react";
+import { Info, SquareArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CATEGORY_ID_BLUEPRINT } from "@/constant/eve";
@@ -24,23 +24,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import type { GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
-interface TypeData extends GenericData {
-    metaGroupIconUrl?: string | null;
-    metaGroupName?: string | null;
-}
-
 const useMarketTypeData = (typeId: number) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
 
     const [staticData, setStaticData] = useState<
-        Omit<TypeData, "loading" | "orientation" | "badges" | "id">
+        Omit<GenericData, "loading" | "orientation" | "badges" | "id">
     >({
         name: "",
         description: "",
-        iconUrl: null,
-        metaGroupIconUrl: null,
-        metaGroupName: null,
     });
 
     const [staticDataLoaded, setStaticDataLoaded] = useState(false);
@@ -51,7 +43,6 @@ const useMarketTypeData = (typeId: number) => {
     const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
 
     useEffect(() => {
-        console.log("加载类型静态数据", typeId, language);
         let mounted = true;
 
         setStaticDataLoaded(false);
@@ -73,15 +64,15 @@ const useMarketTypeData = (typeId: number) => {
                 type.description_id
                     ? getLocalizationByLang(type.description_id, language)
                     : Promise.resolve(""),
-                type.icon_id
-                    ? getIconUrl(type.icon_id)
-                    : type.graphic_id
-                      ? getGraphicUrl(
-                            type.graphic_id,
-                            categoryId === CATEGORY_ID_BLUEPRINT
-                                ? GraphicType.Blueprint
-                                : GraphicType.Icon
-                        )
+                type.graphic_id
+                    ? getGraphicUrl(
+                          type.graphic_id,
+                          categoryId === CATEGORY_ID_BLUEPRINT
+                              ? GraphicType.Blueprint
+                              : GraphicType.Icon
+                      )
+                    : type.icon_id
+                      ? getIconUrl(type.icon_id)
                       : (async () => {
                             const skinMatId = await getSkinMaterialIdByLicense(type.type_id);
                             if (skinMatId === null) return null;
@@ -100,15 +91,14 @@ const useMarketTypeData = (typeId: number) => {
                     mgName = await getLocalizationByLang(meta.name_id, language);
                 }
             }
-            console.log("Loaded static data for type", typeId);
 
             if (mounted) {
                 setStaticData({
                     name: nameText || "",
                     description: descText || "",
-                    iconUrl: iconPath,
-                    metaGroupIconUrl: mgIcon,
-                    metaGroupName: mgName,
+                    iconUrl: iconPath || undefined,
+                    metaGroupIconUrl: mgIcon || undefined,
+                    metaGroupName: mgName || undefined,
                 });
                 setStaticDataLoaded(true);
             }
@@ -151,8 +141,7 @@ const useMarketTypeData = (typeId: number) => {
     const { setCurrentTypeID } = useTypeExplore();
     const { navigate } = useSPARouter();
 
-    // 构建最终的 data 对象，将 loading 状态与数据分离
-    const data: TypeData = {
+    const data: GenericData = {
         ...staticData,
         loading: !staticDataLoaded,
         orientation: "horizontal",
