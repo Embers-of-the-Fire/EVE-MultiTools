@@ -19,13 +19,13 @@ import {
     IndustryResearchPage,
 } from "@/components/pages/IndustryPages";
 import {
-    MarketAnalysisPage,
     MarketCalculatorPage,
     MarketHistoryPage,
     MarketOrdersPage,
     MarketPredictorPage,
 } from "@/components/pages/MarketPages";
 import { MarketListPage } from "@/components/pages/market/MarketListPage";
+import { MarketSearchPage } from "@/components/pages/market/MarketSearchPage";
 import { SettingsPage } from "@/components/pages/SettingsPage";
 import type { AppRoute } from "@/types/router";
 
@@ -43,12 +43,6 @@ export const routes: AppRoute[] = [
         labelKey: "nav.market",
         icon: "trending",
         children: [
-            // {
-            //     key: "market-analysis",
-            //     path: "/market/analysis",
-            //     labelKey: "nav.market.analysis",
-            //     component: MarketAnalysisPage,
-            // },
             {
                 key: "market-list",
                 path: "/market/list",
@@ -56,10 +50,10 @@ export const routes: AppRoute[] = [
                 component: MarketListPage,
             },
             {
-                key: "market-orders",
-                path: "/market/orders",
-                labelKey: "nav.market.orders",
-                component: MarketOrdersPage,
+                key: "market-search",
+                path: "/market/search",
+                labelKey: "nav.market.search",
+                component: MarketSearchPage,
             },
             {
                 key: "market-history",

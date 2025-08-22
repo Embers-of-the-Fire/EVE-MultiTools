@@ -1,4 +1,4 @@
-import { ListFilter } from "lucide-react";
+import { ListFilter, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,9 @@ import { EmbeddedMarketTypeCard } from "@/components/card/MarketTypeCard";
 import { SearchInput } from "@/components/common/SearchBar";
 import { PageLayout } from "@/components/layout";
 import { type TreeDataItem, TreeView } from "@/components/tree-view";
+import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useMarketCache } from "@/hooks/useMarketCache";
 import { useMarketGroupTree } from "@/hooks/useMarketGroupTree";
 import { useMarketList } from "@/hooks/useMarketList";
@@ -178,11 +180,25 @@ export const MarketListPage: React.FunctionComponent = () => {
             title={t("market.market_list.title")}
             description={t("market.market_list.desc")}
         >
-            <SearchInput
-                leading={<ListFilter />}
-                onValueChange={(value: string) => setSearchQuery(value)}
-                placeholder={t("market.market_list.search.placeholder")}
-            />
+            <div className="flex flex-row w-full">
+                <SearchInput
+                    leading={<ListFilter />}
+                    onValueChange={(value: string) => setSearchQuery(value)}
+                    placeholder={t("market.market_list.search.placeholder")}
+                />
+                <span className="self-center ml-auto">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button size="icon" className="ml-2">
+                                <Search />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent align="end">
+                            {t("market.market_list.jump_to_search_page")}
+                        </TooltipContent>
+                    </Tooltip>
+                </span>
+            </div>
             <ResizablePanelGroup direction="horizontal" className="w-full h-full">
                 <ResizablePanel defaultSize={20} minSize={10} maxSize={30}>
                     <div className="flex flex-col h-full">
