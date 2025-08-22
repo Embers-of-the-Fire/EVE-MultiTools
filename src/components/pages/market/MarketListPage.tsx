@@ -140,8 +140,15 @@ export const MarketListPage: React.FunctionComponent = () => {
         });
     }, [loadMarketGroupTree, initTreeView, filteredTree, language, setSelectedGroupId]);
 
-    const [types, setTypes] = useState<number[]>([]);
+    const [types, internalSetTypes] = useState<number[]>([]);
 
+    const setTypes = (newTypes: number[]) => {
+        // Sort types by ID for consistent order
+        const sortedTypes = newTypes.sort((a, b) => a - b);
+        internalSetTypes(sortedTypes);
+    };
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: `setTypes` is stable
     useEffect(() => {
         if (selectedGroupId === null) return;
         (async () => {
