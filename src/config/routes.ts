@@ -7,6 +7,7 @@ import { LocalizationExplorePage } from "@/components/pages/explore/Localization
 import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPageWrapper";
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
+import { GetStartedPage } from "@/components/pages/GetStartedPage";
 import { HomePage } from "@/components/pages/HomePage";
 import { MarketListPage } from "@/components/pages/market/MarketListPage";
 import { MarketSearchPage } from "@/components/pages/market/MarketSearchPage";
@@ -19,6 +20,13 @@ export const routes: AppRoute[] = [
         labelKey: "nav.home",
         component: HomePage,
         icon: "home",
+    },
+    {
+        key: "get-started",
+        path: "/get-started",
+        labelKey: "nav.get_started",
+        component: GetStartedPage,
+        icon: "rocket",
     },
     {
         key: "market",

@@ -46,7 +46,8 @@
         "market.list": "Market List",
         "market.search": "Market Search",
         "bundle": "Data Package",
-        "about": "About"
+        "about": "About",
+        "get_started": "Get Started"
     },
     "settings": {
         "theme": {

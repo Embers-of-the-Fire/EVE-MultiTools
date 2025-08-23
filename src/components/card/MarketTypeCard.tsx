@@ -8,7 +8,7 @@ import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { getGroup, getLinkUrl, getMetaGroup, getType, LinkKey } from "@/native/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
-import { ExternalLink } from "../ExternalLink";
+import { ExternalLink } from "../Links";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import type { GenericData } from "./GenericCard";

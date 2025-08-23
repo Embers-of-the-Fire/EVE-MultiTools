@@ -10,6 +10,7 @@ import {
     GalleryVerticalEnd,
     Home,
     Info,
+    Rocket,
     Settings,
     TrendingUp,
     Users,
@@ -42,6 +43,7 @@ const iconMap = {
     settings: Settings,
     compass: Compass,
     info: Info,
+    rocket: Rocket,
 };
 
 const transformNavItems = (items: typeof routes) => {

@@ -18,7 +18,8 @@
         "market.list": "市场总览",
         "market.search": "市场搜索",
         "bundle": "数据包",
-        "about": "关于"
+        "about": "关于",
+        "get_started": "快速上手"
     },
     "common": {
         "loading": "加载中...",

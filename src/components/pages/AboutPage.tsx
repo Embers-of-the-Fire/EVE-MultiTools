@@ -1,8 +1,7 @@
-import { SquareArrowUpRight } from "lucide-react";
 import type React from "react";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { Described } from "../Described";
-import { ExternalLink } from "../ExternalLink";
+import { ExternalLink } from "../Links";
 import { PageLayout } from "../layout";
 
 const ABOUT = {
