@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronsUpDown, Database, AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, ChevronsUpDown, Database, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,27 +16,25 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar";
-import type { BundleMetadata } from "@/native/bundle";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useAppSettings";
 import { useBundle } from "@/hooks/useBundle";
+import { cn } from "@/lib/utils";
+import type { BundleMetadata } from "@/native/bundle";
 
 export function BundleSwitcher() {
     const { t } = useTranslation();
+    const { language } = useLanguage();
     const { isMobile } = useSidebar();
     const { bundles, activeBundle, switchingToBundleId, error, switchBundle, clearError } =
         useBundle();
 
-    // 获取显示的服务器名称
     const getLocalizedServerName = (bundle: BundleMetadata) => {
-        const locale = t("locale") as "en" | "zh";
-        return bundle.serverName[locale] || bundle.serverName.en;
+        return bundle.serverName[language] || bundle.serverName.en;
     };
 
     const noActiveBundle = activeBundle === null;
     const isSwitching = switchingToBundleId !== null;
 
-    // 点击错误警告时清除错误
     const handleErrorClick = () => {
         clearError();
     };
