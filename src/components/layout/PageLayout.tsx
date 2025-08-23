@@ -3,17 +3,21 @@ import { cn } from "@/lib/utils";
 import { PageContainer } from "./PageContainer";
 
 interface PageHeaderProps {
-    title: string;
+    title?: string;
     description?: string;
     actions?: ReactNode;
     className?: string;
 }
 
 export function PageHeader({ title, description, actions, className }: PageHeaderProps) {
+    if (!title && !description && !actions) {
+        return null;
+    }
+
     return (
         <div className={cn("flex items-center justify-between mb-4", className)}>
             <div>
-                <h1 className="text-3xl font-bold">{title}</h1>
+                {title && <h1 className="text-3xl font-bold">{title}</h1>}
                 {description && <p className="text-muted-foreground mt-2">{description}</p>}
             </div>
             {actions && <div>{actions}</div>}
@@ -22,7 +26,7 @@ export function PageHeader({ title, description, actions, className }: PageHeade
 }
 
 interface PageLayoutProps {
-    title: string;
+    title?: string;
     description?: string;
     actions?: ReactNode;
     children: ReactNode;

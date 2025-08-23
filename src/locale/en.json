@@ -8,7 +8,6 @@
         "cancel": "Cancel",
         "more": "More",
         "reload": "Reload",
-        "documentation": "Documentation",
         "github": "GitHub",
         "chinese": "中文",
         "english": "English",
@@ -29,7 +28,8 @@
         "search": {
             "results": "Search Results"
         },
-        "data_outdated": "Outdated Data"
+        "data_outdated": "Outdated Data",
+        "about": "About"
     },
     "nav": {
         "platform": "Platform",
@@ -45,7 +45,8 @@
         "market": "Market",
         "market.list": "Market List",
         "market.search": "Market Search",
-        "bundle": "Data Package"
+        "bundle": "Data Package",
+        "about": "About"
     },
     "settings": {
         "theme": {

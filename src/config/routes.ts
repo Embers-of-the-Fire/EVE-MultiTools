@@ -1,3 +1,4 @@
+import { AboutPage } from "@/components/pages/AboutPage";
 import { BundlePage } from "@/components/pages/BundlePage";
 import { ExplorePage } from "@/components/pages/ExplorePage";
 import { FactionDetailPageWrapper } from "@/components/pages/explore/FactionDetailPageWrapper";
@@ -92,6 +93,13 @@ export const routes: AppRoute[] = [
         labelKey: "nav.bundle",
         component: BundlePage,
         icon: "archive",
+    },
+    {
+        key: "about",
+        path: "/about",
+        labelKey: "nav.about",
+        component: AboutPage,
+        icon: "info",
     },
 ];
 

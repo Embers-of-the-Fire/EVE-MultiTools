@@ -9,6 +9,7 @@ import {
     Factory,
     GalleryVerticalEnd,
     Home,
+    Info,
     Settings,
     TrendingUp,
     Users,
@@ -31,7 +32,6 @@ import { NavBookmarks } from "./nav-bookmarks";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 
-// 图标映射
 const iconMap = {
     home: Home,
     trending: TrendingUp,
@@ -41,14 +41,14 @@ const iconMap = {
     archive: Archive,
     settings: Settings,
     compass: Compass,
+    info: Info,
 };
 
-// 转换routes到sidebar格式
 const transformNavItems = (items: typeof routes) => {
     const { currentPath } = useSPARouter();
 
     return items
-        .filter((item) => !item.hideFromNav) // 过滤掉隐藏的路由
+        .filter((item) => !item.hideFromNav)
         .map((item) => ({
             title: item.labelKey,
             url: item.path,
@@ -56,13 +56,13 @@ const transformNavItems = (items: typeof routes) => {
             icon: item.icon ? iconMap[item.icon as keyof typeof iconMap] : undefined,
             isActive: item.path === currentPath,
             items: item.children
-                ?.filter((child) => !child.hideFromNav) // 过滤掉隐藏的子路由
+                ?.filter((child) => !child.hideFromNav)
                 ?.map((child) => ({
                     title: child.labelKey,
                     url: child.path,
                     isActive: child.path === currentPath,
                     items: child.children
-                        ?.filter((grandChild) => !grandChild.hideFromNav) // 过滤掉隐藏的孙子路由
+                        ?.filter((grandChild) => !grandChild.hideFromNav)
                         ?.map((grandChild) => ({
                             title: grandChild.labelKey,
                             url: grandChild.path,

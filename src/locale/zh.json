@@ -17,7 +17,8 @@
         "market": "市场",
         "market.list": "市场总览",
         "market.search": "市场搜索",
-        "bundle": "数据包"
+        "bundle": "数据包",
+        "about": "关于"
     },
     "common": {
         "loading": "加载中...",
@@ -26,7 +27,6 @@
         "reload": "重新加载",
         "error_loading_config": "加载配置时发生错误：{{error}}",
         "loading_app_config": "正在加载应用配置...",
-        "documentation": "文档",
         "github": "GitHub",
         "chinese": "中文",
         "english": "English",
@@ -45,7 +45,8 @@
         "search": {
             "results": "搜索结果"
         },
-        "data_outdated": "数据已过期"
+        "data_outdated": "数据已过期",
+        "about": "关于"
     },
     "bundle": {
         "title": "数据包管理",

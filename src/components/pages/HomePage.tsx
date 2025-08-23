@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 import { GithubIcon } from "@/components/icons";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { subtitle } from "@/components/primitives";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
+import { useSPARouter } from "@/hooks/useSPARouter";
 
 export function HomePage() {
     const { t } = useTranslation();
+    const { navigate } = useSPARouter();
 
     return (
         <PageContainer className="flex flex-1 flex-col gap-4 pt-0">
@@ -25,10 +26,12 @@ export function HomePage() {
                 </div>
 
                 <div className="flex gap-3">
-                    <Button asChild size="lg" className="rounded-full">
-                        <a href={siteConfig.links.docs} target="_blank" rel="noopener noreferrer">
-                            {t("common.documentation")}
-                        </a>
+                    <Button
+                        size="lg"
+                        className="rounded-full"
+                        onClick={() => navigate("/about", "about")}
+                    >
+                        {t("common.about")}
                     </Button>
                     <Button asChild variant="outline" size="lg" className="rounded-full">
                         <a href={siteConfig.links.github} target="_blank" rel="noopener noreferrer">
