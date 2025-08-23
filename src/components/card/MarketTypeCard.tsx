@@ -138,9 +138,10 @@ const useMarketTypeData = (typeId: number) => {
                         <ExternalLink
                             key={link.url}
                             link={link.url}
-                            text={link.name}
                             className="w-full justify-start"
-                        />
+                        >
+                            {link.name}
+                        </ExternalLink>
                     ))}
                 </PopoverContent>
             </Popover>,
