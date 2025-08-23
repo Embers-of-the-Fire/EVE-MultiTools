@@ -2,5 +2,11 @@
     "*.ts|*.tsx": [
         "biome check --fix",
         "biome format --write"
+    ],
+    "*.rs": [
+        "rustfmt --edition 2024 --style-edition 2024"
+    ],
+    "*.json": [
+        "biome format --write"
     ]
 }
