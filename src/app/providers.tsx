@@ -1,14 +1,21 @@
 "use client";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { ThemeProviderProps } from "next-themes";
-import type * as React from "react";
-import { useEffect, useState, useCallback } from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import type * as React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
-import { Toaster } from "@/components/ui/sonner";
 import { AppInitializer } from "@/components/AppInitializer";
+import { Toaster } from "@/components/ui/sonner";
 import { globalConfig } from "@/lib/global-config";
 import { i18n } from "@/locale/i18n";
+import {
+    cleanupBundleListeners,
+    initializeBundleListeners,
+    useBundleStore,
+} from "@/stores/bundleStore";
 import {
     useGlobalLoadingStore,
     useIsLoading,
@@ -16,11 +23,19 @@ import {
     useLoadingProgress,
 } from "@/stores/globalLoadingStore";
 import { useSettingsStore } from "@/stores/settingsStore";
-import {
-    useBundleStore,
-    initializeBundleListeners,
-    cleanupBundleListeners,
-} from "@/stores/bundleStore";
+
+// 创建 QueryClient 实例
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            // 本地化数据不经常变化，可以设置较长的过期时间
+            staleTime: 1000 * 60 * 30, // 30分钟
+            gcTime: 1000 * 60 * 60 * 24, // 24小时后从内存中清除
+            retry: 3,
+            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        },
+    },
+});
 
 export interface ProvidersProps {
     children: React.ReactNode;
@@ -214,17 +229,21 @@ function GlobalLoadingManager({ children }: { children: React.ReactNode }) {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
     return (
-        <NextThemesProvider {...themeProps}>
-            <GlobalLoadingManager>
-                <GlobalConfigInitializer>
-                    <StoreInitializer>
-                        <I18nInitializer>
-                            <AppInitializer>{children}</AppInitializer>
-                            <Toaster />
-                        </I18nInitializer>
-                    </StoreInitializer>
-                </GlobalConfigInitializer>
-            </GlobalLoadingManager>
-        </NextThemesProvider>
+        <QueryClientProvider client={queryClient}>
+            <NextThemesProvider {...themeProps}>
+                <GlobalLoadingManager>
+                    <GlobalConfigInitializer>
+                        <StoreInitializer>
+                            <I18nInitializer>
+                                <AppInitializer>{children}</AppInitializer>
+                                <Toaster />
+                            </I18nInitializer>
+                        </StoreInitializer>
+                    </GlobalConfigInitializer>
+                </GlobalLoadingManager>
+            </NextThemesProvider>
+            {/* 仅在开发环境显示 React Query DevTools */}
+            {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
+        </QueryClientProvider>
     );
 }

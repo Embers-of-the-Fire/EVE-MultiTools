@@ -1,45 +1,31 @@
-import { LRUCache } from "lru-cache";
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { useQuery } from "@tanstack/react-query";
 import type { Language } from "@/native";
 import { getLocalizationByLang } from "@/native/data";
 
-interface LocalizationStoreState {
-    cache: LRUCache<[number, Language], string>;
-}
+// 本地化查询键工厂
+export const localizationKeys = {
+    all: ["localization"] as const,
+    byLang: (id: number, language: Language) =>
+        [...localizationKeys.all, "by-lang", id, language] as const,
+};
 
-interface LocalizationStoreActions {
-    getLocalizationByLang: (id: number, language: Language) => Promise<string>;
-    clearCache: () => void;
-}
+// 本地化查询选项
+export const createLocalizationQuery = (id: number, language: Language) => ({
+    queryKey: localizationKeys.byLang(id, language),
+    queryFn: async (): Promise<string> => {
+        const localization = await getLocalizationByLang(id, language);
+        if (localization) {
+            return localization;
+        }
+        console.warn(`Localization not found for id ${id} in language ${language}`);
+        return "";
+    },
+    // 本地化文本不会改变，设置为永不过期
+    staleTime: Number.POSITIVE_INFINITY,
+    gcTime: 1000 * 60 * 60 * 24, // 24小时后从内存中清除未使用的缓存
+});
 
-type LocalizationStore = LocalizationStoreState & LocalizationStoreActions;
-
-export const useLocalizationStore = create<LocalizationStore>()(
-    devtools((_, get) => ({
-        cache: new LRUCache({
-            max: 500,
-        }),
-
-        getLocalizationByLang: async (id, language) => {
-            const cacheKey: [number, Language] = [id, language];
-            const cachedValue = get().cache.get(cacheKey);
-            if (cachedValue) {
-                return cachedValue;
-            }
-
-            const localization = await getLocalizationByLang(id, language);
-            if (localization) {
-                get().cache.set(cacheKey, localization);
-                return localization;
-            }
-            console.warn(`Localization not found for id ${id} in language ${language}`);
-            return "";
-        },
-
-        clearCache: () => {
-            get().cache.clear();
-            console.log("Localization cache cleared");
-        },
-    }))
-);
+// Hook for getting localization
+export const useLocalizationQuery = (id: number, language: Language) => {
+    return useQuery(createLocalizationQuery(id, language));
+};
