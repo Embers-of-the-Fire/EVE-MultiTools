@@ -20,6 +20,7 @@ import {
     SidebarFooter,
     SidebarHeader,
     SidebarRail,
+    useSidebar,
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { useSPARouter } from "@/hooks/useSPARouter";
@@ -46,23 +47,29 @@ const iconMap = {
 const transformNavItems = (items: typeof routes) => {
     const { currentPath } = useSPARouter();
 
-    return items.map((item) => ({
-        title: item.labelKey,
-        url: item.path,
-        containsPage: !!item.component,
-        icon: item.icon ? iconMap[item.icon as keyof typeof iconMap] : undefined,
-        isActive: item.path === currentPath,
-        items: item.children?.map((child) => ({
-            title: child.labelKey,
-            url: child.path,
-            isActive: child.path === currentPath,
-            items: child.children?.map((grandChild) => ({
-                title: grandChild.labelKey,
-                url: grandChild.path,
-                isActive: grandChild.path === currentPath,
-            })),
-        })),
-    }));
+    return items
+        .filter((item) => !item.hideFromNav) // 过滤掉隐藏的路由
+        .map((item) => ({
+            title: item.labelKey,
+            url: item.path,
+            containsPage: !!item.component,
+            icon: item.icon ? iconMap[item.icon as keyof typeof iconMap] : undefined,
+            isActive: item.path === currentPath,
+            items: item.children
+                ?.filter((child) => !child.hideFromNav) // 过滤掉隐藏的子路由
+                ?.map((child) => ({
+                    title: child.labelKey,
+                    url: child.path,
+                    isActive: child.path === currentPath,
+                    items: child.children
+                        ?.filter((grandChild) => !grandChild.hideFromNav) // 过滤掉隐藏的孙子路由
+                        ?.map((grandChild) => ({
+                            title: grandChild.labelKey,
+                            url: grandChild.path,
+                            isActive: grandChild.path === currentPath,
+                        })),
+                })),
+        }));
 };
 
 // Default application data
@@ -89,27 +96,12 @@ const data = {
             plan: "Personal",
         },
     ],
-    bookmarks: [
-        {
-            name: "Market Analysis",
-            url: "/market/analysis",
-            icon: TrendingUp,
-        },
-        {
-            name: "Ship Database",
-            url: "/database/ships",
-            icon: Database,
-        },
-        {
-            name: "Character Skills",
-            url: "/character/skills",
-            icon: Users,
-        },
-    ],
+    bookmarks: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const navMain = transformNavItems(routes);
+    const { state } = useSidebar();
 
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -121,7 +113,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavBookmarks bookmarks={data.bookmarks} />
             </SidebarContent>
             <SidebarFooter>
-                <div className="w-full flex items-center justify-center flex-col space-y-0">
+                <div
+                    className={`w-full flex items-center justify-center flex-col space-y-0 transition-all duration-300 ease-in-out ${
+                        state === "expanded"
+                            ? "opacity-100 max-h-20 transform translate-y-0"
+                            : "opacity-0 max-h-0 transform -translate-y-2 overflow-hidden"
+                    }`}
+                >
                     <Button
                         size="sm"
                         variant="link"

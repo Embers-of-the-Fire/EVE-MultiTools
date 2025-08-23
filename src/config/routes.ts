@@ -1,10 +1,4 @@
 import { BundlePage } from "@/components/pages/BundlePage";
-import {
-    CharacterAssetsPage,
-    CharacterSkillsPage,
-    CharacterWalletPage,
-} from "@/components/pages/CharacterPages";
-import { DatabasePage } from "@/components/pages/DatabasePage";
 import { ExplorePage } from "@/components/pages/ExplorePage";
 import { FactionDetailPageWrapper } from "@/components/pages/explore/FactionDetailPageWrapper";
 import { FactionExplorePage } from "@/components/pages/explore/FactionExplorePage";
@@ -13,20 +7,8 @@ import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPage
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
 import { HomePage } from "@/components/pages/HomePage";
-import {
-    IndustryManufacturingPage,
-    IndustryMiningPage,
-    IndustryResearchPage,
-} from "@/components/pages/IndustryPages";
-import {
-    MarketCalculatorPage,
-    MarketHistoryPage,
-    MarketOrdersPage,
-    MarketPredictorPage,
-} from "@/components/pages/MarketPages";
 import { MarketListPage } from "@/components/pages/market/MarketListPage";
 import { MarketSearchPage } from "@/components/pages/market/MarketSearchPage";
-import { SettingsPage } from "@/components/pages/SettingsPage";
 import type { AppRoute } from "@/types/router";
 
 export const routes: AppRoute[] = [
@@ -55,85 +37,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.market.search",
                 component: MarketSearchPage,
             },
-            {
-                key: "market-history",
-                path: "/market/history",
-                labelKey: "nav.market.history",
-                component: MarketHistoryPage,
-            },
-            {
-                key: "market-calculator",
-                path: "/market/tools/calculator",
-                labelKey: "nav.market.tools.calculator",
-                component: MarketCalculatorPage,
-            },
-            {
-                key: "market-predictor",
-                path: "/market/tools/predictor",
-                labelKey: "nav.market.tools.predictor",
-                component: MarketPredictorPage,
-            },
         ],
-    },
-    {
-        key: "industry",
-        path: "/industry",
-        labelKey: "nav.industry",
-        icon: "factory",
-        children: [
-            {
-                key: "industry-manufacturing",
-                path: "/industry/manufacturing",
-                labelKey: "nav.industry.manufacturing",
-                component: IndustryManufacturingPage,
-            },
-            {
-                key: "industry-mining",
-                path: "/industry/mining",
-                labelKey: "nav.industry.mining",
-                component: IndustryMiningPage,
-            },
-            {
-                key: "industry-research",
-                path: "/industry/research",
-                labelKey: "nav.industry.research",
-                component: IndustryResearchPage,
-            },
-        ],
-    },
-    {
-        key: "character",
-        path: "/character",
-        labelKey: "nav.character",
-        component: CharacterSkillsPage,
-        icon: "users",
-        children: [
-            {
-                key: "character-skills",
-                path: "/character/skills",
-                labelKey: "nav.character.skills",
-                component: CharacterSkillsPage,
-            },
-            {
-                key: "character-assets",
-                path: "/character/assets",
-                labelKey: "nav.character.assets",
-                component: CharacterAssetsPage,
-            },
-            {
-                key: "character-wallet",
-                path: "/character/wallet",
-                labelKey: "nav.character.wallet",
-                component: CharacterWalletPage,
-            },
-        ],
-    },
-    {
-        key: "database",
-        path: "/database",
-        labelKey: "nav.database",
-        component: DatabasePage,
-        icon: "database",
     },
     {
         key: "explore",
@@ -153,6 +57,7 @@ export const routes: AppRoute[] = [
                 path: "/explore/type/detail",
                 labelKey: "nav.explore.type.detail",
                 component: TypeDetailPageWrapper,
+                hideFromNav: true,
             },
             {
                 key: "explore-faction",
@@ -165,6 +70,7 @@ export const routes: AppRoute[] = [
                 path: "/explore/faction/detail",
                 labelKey: "nav.explore.faction.detail",
                 component: FactionDetailPageWrapper,
+                hideFromNav: true,
             },
             {
                 key: "explore-localization",
@@ -187,18 +93,8 @@ export const routes: AppRoute[] = [
         component: BundlePage,
         icon: "archive",
     },
-    {
-        key: "settings",
-        path: "/settings",
-        labelKey: "nav.settings",
-        component: SettingsPage,
-        icon: "settings",
-    },
 ];
 
-/**
- * 获取所有路由的扁平化列表
- */
 export function getFlatRoutes(): AppRoute[] {
     const flatRoutes: AppRoute[] = [];
 
@@ -213,24 +109,16 @@ export function getFlatRoutes(): AppRoute[] {
     return flatRoutes;
 }
 
-/**
- * 根据路径查找路由
- */
 export function findRouteByPath(path: string): AppRoute | undefined {
     return getFlatRoutes().find((route) => route.path === path);
 }
 
-/**
- * 生成面包屑导航
- */
 export function generateBreadcrumbs(path: string): { labelKey: string; path: string }[] {
     const breadcrumbs: { labelKey: string; path: string }[] = [];
     const pathSegments = path.split("/").filter(Boolean);
 
-    // 添加首页
     breadcrumbs.push({ labelKey: "nav.home", path: "/" });
 
-    // 根据路径段生成面包屑
     let currentPath = "";
     pathSegments.forEach((segment) => {
         currentPath += `/${segment}`;

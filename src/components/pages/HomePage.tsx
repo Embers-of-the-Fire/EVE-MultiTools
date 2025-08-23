@@ -37,17 +37,6 @@ export function HomePage() {
                         </a>
                     </Button>
                 </div>
-
-                <div className="mt-8">
-                    <Badge variant="outline" className="px-4 py-2">
-                        <span>
-                            {t("main.get_started_hint")}
-                            <code className="font-mono text-sm font-medium">
-                                components/pages/HomePage.tsx
-                            </code>
-                        </span>
-                    </Badge>
-                </div>
             </section>
         </PageContainer>
     );

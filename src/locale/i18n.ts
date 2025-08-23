@@ -5,10 +5,8 @@ import { initReactI18next } from "react-i18next";
 import localeEN from "@/locale/en.json";
 import localeZH from "@/locale/zh.json";
 
-// 创建全局i18n实例
 export const i18n = createInstance();
 
-// 立即初始化i18n实例
 const initI18n = async () => {
     if (!i18n.isInitialized) {
         await i18n.use(initReactI18next).init({
@@ -33,7 +31,6 @@ const initI18n = async () => {
     }
 };
 
-// 立即初始化
 initI18n();
 
 export default i18n;

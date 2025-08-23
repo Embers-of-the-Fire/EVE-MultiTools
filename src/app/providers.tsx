@@ -24,13 +24,11 @@ import {
 } from "@/stores/globalLoadingStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 
-// 创建 QueryClient 实例
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            // 本地化数据不经常变化，可以设置较长的过期时间
-            staleTime: 1000 * 60 * 30, // 30分钟
-            gcTime: 1000 * 60 * 60 * 24, // 24小时后从内存中清除
+            staleTime: 1000 * 60 * 30,
+            gcTime: 1000 * 60 * 60 * 24,
             retry: 3,
             retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
         },
@@ -42,7 +40,6 @@ export interface ProvidersProps {
     themeProps?: ThemeProviderProps;
 }
 
-// 全局配置初始化组件
 function GlobalConfigInitializer({ children }: { children: React.ReactNode }) {
     const [isInitialized, setIsInitialized] = useState(false);
     const { showLoading, hideLoading } = useGlobalLoadingStore();
@@ -99,7 +96,6 @@ function I18nInitializer({ children }: { children: React.ReactNode }) {
         const initializeI18n = async () => {
             startI18nLoading();
             try {
-                // 等待i18n初始化完成
                 while (!i18n.isInitialized) {
                     await new Promise((resolve) => setTimeout(resolve, 50));
                 }
@@ -121,24 +117,20 @@ function I18nInitializer({ children }: { children: React.ReactNode }) {
     return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
 }
 
-// Store初始化组件
 function StoreInitializer({ children }: { children: React.ReactNode }) {
     const loadSettings = useSettingsStore((state) => state.loadSettings);
     const loadBundles = useBundleStore((state) => state.loadBundles);
 
     useEffect(() => {
-        // 初始化 Settings Store
         loadSettings();
 
-        // 初始化 Bundle Store 和事件监听器
         const initializeBundles = async () => {
             await initializeBundleListeners();
-            await loadBundles(true); // 允许自动启用
+            await loadBundles(true);
         };
 
         initializeBundles();
 
-        // 清理函数
         return () => {
             cleanupBundleListeners();
         };
@@ -180,7 +172,6 @@ function GlobalLoadingUI({ message, progress }: { message: string; progress?: nu
     );
 }
 
-// 全局加载组件管理器
 function GlobalLoadingManager({ children }: { children: React.ReactNode }) {
     const isLoading = useIsLoading();
     const loadingMessage = useLoadingMessage();
@@ -188,27 +179,22 @@ function GlobalLoadingManager({ children }: { children: React.ReactNode }) {
     const { showLoadingUI, setShowLoadingUI } = useGlobalLoadingStore();
     const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
-    // 防抖逻辑：500ms后才显示加载UI
     useEffect(() => {
-        if (isLoading && !showLoadingUI) {
-            // 开始加载，设置500ms延迟
+        if (isLoading && !showLoadingUI && debounceTimer === null) {
             const timer = setTimeout(() => {
                 setShowLoadingUI(true);
             }, 500);
             setDebounceTimer(timer);
         } else if (!isLoading && showLoadingUI) {
-            // 停止加载，清除定时器并隐藏UI
             if (debounceTimer) {
                 clearTimeout(debounceTimer);
                 setDebounceTimer(null);
             }
-            // 添加一个小延迟确保UI平滑过渡
             setTimeout(() => {
                 setShowLoadingUI(false);
             }, 100);
         }
 
-        // 清理定时器
         return () => {
             if (debounceTimer) {
                 clearTimeout(debounceTimer);
@@ -242,7 +228,6 @@ export function Providers({ children, themeProps }: ProvidersProps) {
                     </GlobalConfigInitializer>
                 </GlobalLoadingManager>
             </NextThemesProvider>
-            {/* 仅在开发环境显示 React Query DevTools */}
             {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
     );
