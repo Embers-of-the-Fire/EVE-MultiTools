@@ -43,5 +43,13 @@
                 "organizeImports": "on"
             }
         }
-    }
+    },
+    "overrides": [
+        {
+            "includes": ["src/components/ui/**/*.tsx", "src/components/ui/**/*.ts"],
+            "linter": {
+                "enabled": false
+            }
+        }
+    ]
 }
