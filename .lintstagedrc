@@ -6,7 +6,7 @@
     "*.rs": [
         "rustfmt --edition 2024 --style-edition 2024"
     ],
-    "*.json": [
+    "*.json|*.css": [
         "biome format --write"
     ]
 }
