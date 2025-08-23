@@ -1,6 +1,6 @@
 {
     "*.ts|*.tsx": [
-        "biome check --fix",
+        "biome check --write --unsafe",
         "biome format --write"
     ],
     "*.rs": [
