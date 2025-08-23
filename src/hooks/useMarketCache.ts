@@ -1,122 +1,141 @@
-import { useCallback, useEffect, useState } from "react";
-import { type MarketRecord as BMarketRecord, useMarketCacheStore } from "@/stores/marketCacheStore";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+import { useCallback, useEffect } from "react";
+import { getMarketPrice } from "@/native/data";
 
-const STALE_TIME = 5 * 60 * 1000; // 5 minutes
+export interface MarketRecord {
+    typeID: number;
+    sellMin: number | null;
+    buyMax: number | null;
+    lastUpdate: number;
+}
+
+// Query key factory for market data
+export const marketQueryKeys = {
+    all: ["market"] as const,
+    price: (typeID: number) => [...marketQueryKeys.all, "price", typeID] as const,
+    prices: (typeIDs: number[]) => [...marketQueryKeys.all, "prices", typeIDs] as const,
+};
+
+// Create query function for single market price
+const createMarketPriceQuery = (typeID: number) => ({
+    queryKey: marketQueryKeys.price(typeID),
+    queryFn: async (): Promise<MarketRecord> => {
+        // Trigger the native function to fetch market price
+        // The actual data will come through the event listener
+        await getMarketPrice(typeID);
+
+        // Return a placeholder that will be updated by the event
+        return {
+            typeID,
+            sellMin: null,
+            buyMax: null,
+            lastUpdate: Date.now() / 1000,
+        };
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 15 * 60 * 1000, // 15 minutes
+});
+
+// biome-ignore lint/correctness/noUnusedVariables: Used in the event listener setup
+let globalListener: UnlistenFn | null = null;
+let isListenerInitialized = false;
+
+// Initialize global event listener for market price updates
+const initGlobalMarketListener = async (queryClient: ReturnType<typeof useQueryClient>) => {
+    if (isListenerInitialized) return;
+
+    try {
+        globalListener = await listen<{
+            type_id: number;
+            sell_min: number | null;
+            buy_max: number | null;
+            updated_at: number;
+        }>("market_price_success", (event) => {
+            const price = event.payload;
+            const queryKey = marketQueryKeys.price(price.type_id);
+
+            // Update the query data with the received market price
+            queryClient.setQueryData<MarketRecord>(queryKey, {
+                typeID: price.type_id,
+                sellMin: price.sell_min,
+                buyMax: price.buy_max,
+                lastUpdate: price.updated_at,
+            });
+        });
+
+        isListenerInitialized = true;
+    } catch (error) {
+        console.error("Failed to initialize global market listener:", error);
+    }
+};
 
 export const useMarketCache = () => {
-    const {
-        clearCache,
-        clearTypeCache,
-        requestMarketPrices,
-        initGlobalListener,
-        cleanupGlobalListener,
-    } = useMarketCacheStore();
+    const queryClient = useQueryClient();
 
-    // 初始化全局监听器
+    // Initialize global listener
     useEffect(() => {
-        initGlobalListener();
-        return () => cleanupGlobalListener();
-    }, [initGlobalListener, cleanupGlobalListener]);
+        initGlobalMarketListener(queryClient);
+        return () => {
+            // Don't cleanup on unmount since other components might still need it
+            // Only cleanup when the app is shutting down
+        };
+    }, [queryClient]);
 
-    const preloadMarketPrices = useCallback(
-        async (typeIDs: number[], force = false) => {
-            if (!typeIDs || typeIDs.length === 0) return;
+    const clearCache = useCallback(() => {
+        queryClient.removeQueries({
+            queryKey: marketQueryKeys.all,
+        });
+    }, [queryClient]);
 
-            const uniqueIds = Array.from(new Set(typeIDs));
-
-            const { marketCache, requestedTypes } = useMarketCacheStore.getState();
-            let toLoad = uniqueIds;
-
-            if (!force) {
-                toLoad = uniqueIds.filter((id) => {
-                    const rec = marketCache.get(id);
-                    if (rec) {
-                        const timeDiff = Date.now() - rec.lastUpdate * 1000;
-                        if (timeDiff < STALE_TIME) return false;
-                    }
-                    return !requestedTypes.has(id);
-                });
-            }
-
-            if (toLoad.length === 0) return;
-
-            requestMarketPrices(toLoad);
+    const clearTypeCache = useCallback(
+        (typeID: number) => {
+            queryClient.removeQueries({
+                queryKey: marketQueryKeys.price(typeID),
+            });
         },
-        [requestMarketPrices]
+        [queryClient]
     );
 
     return {
         clearCache,
         clearTypeCache,
-        preloadMarketPrices,
     };
 };
 
-export type MarketRecordState = "missing" | "outdated" | "now";
+export const useMarketRecord = (
+    typeID: number,
+    shouldLoad: boolean = true
+): MarketRecord & {
+    isLoading: boolean;
+    error: Error | null;
+    refresh: () => void;
+} => {
+    const queryClient = useQueryClient();
 
-export type MarketRecord = BMarketRecord & {
-    state: MarketRecordState;
-    refresh: (force?: boolean) => void;
-};
+    const query = useQuery({
+        ...createMarketPriceQuery(typeID),
+        enabled: shouldLoad,
+    });
 
-export const useMarketRecord = (typeID: number, shouldLoad: boolean): MarketRecord => {
-    const { marketCache, requestMarketPrice } = useMarketCacheStore();
-    const [state, setState] = useState<MarketRecordState>("missing");
-    const [record, setRecord] = useState<BMarketRecord | null>(null);
+    const refresh = useCallback(() => {
+        queryClient.invalidateQueries({
+            queryKey: marketQueryKeys.price(typeID),
+        });
+    }, [queryClient, typeID]);
 
+    // Initialize global listener if not already done
     useEffect(() => {
-        const getInitialState = () => {
-            const cachedRecord = marketCache.get(typeID);
-            if (!cachedRecord) {
-                return "missing";
-            }
-            const timeDiff = Date.now() - cachedRecord.lastUpdate * 1000;
-            return timeDiff < STALE_TIME ? "now" : "outdated";
-        };
-
-        setRecord(marketCache.get(typeID) || null);
-        setState(getInitialState());
-    }, [typeID, marketCache]);
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: marketCache is too heavy to directly watch
-    useEffect(() => {
-        if (state === "now") {
-            const cachedRecord = marketCache.get(typeID);
-            if (cachedRecord) {
-                const timeDiff = Date.now() - cachedRecord.lastUpdate * 1000;
-                if (timeDiff >= STALE_TIME) {
-                    setState("outdated");
-                    return;
-                }
-                const timer = setTimeout(() => {
-                    setState("outdated");
-                }, STALE_TIME - timeDiff);
-                return () => clearTimeout(timer);
-            }
-        }
-    }, [state, typeID]);
-
-    const refresh = useCallback(
-        (force = false) => {
-            if (force || state === "missing" || state === "outdated") {
-                requestMarketPrice(typeID);
-            }
-        },
-        [state, typeID, requestMarketPrice]
-    );
-
-    useEffect(() => {
-        if (shouldLoad && state === "missing") {
-            refresh();
-        }
-    }, [shouldLoad, state, refresh]);
+        initGlobalMarketListener(queryClient);
+    }, [queryClient]);
 
     return {
-        state,
-        typeID: typeID,
-        sellMin: record?.sellMin ?? 0,
-        buyMax: record?.buyMax ?? 0,
-        lastUpdate: record?.lastUpdate ?? 0,
+        typeID,
+        sellMin: query.data?.sellMin ?? 0,
+        buyMax: query.data?.buyMax ?? 0,
+        lastUpdate: query.data?.lastUpdate ?? 0,
+        isLoading: query.isLoading,
+        error: query.error,
         refresh,
     };
 };

@@ -8,7 +8,6 @@ import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { getGroup, getLinkUrl, getMetaGroup, getType, LinkKey } from "@/native/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
-import { OutdatedNote } from "../common/OutdatedNote";
 import { ExternalLink } from "../ExternalLink";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -29,7 +28,7 @@ const useMarketTypeData = (typeId: number) => {
 
     const [staticDataLoaded, setStaticDataLoaded] = useState(false);
 
-    const marketRecord = useMarketRecord(typeId, false);
+    const marketRecord = useMarketRecord(typeId, true);
 
     const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
 
@@ -86,13 +85,6 @@ const useMarketTypeData = (typeId: number) => {
     }, [typeId, loc]);
 
     useEffect(() => {
-        if (staticDataLoaded) {
-            console.log(`Market data for type ${typeId} loaded successfully.`);
-            marketRecord.refresh(true);
-        }
-    }, [staticDataLoaded, marketRecord.refresh, typeId]);
-
-    useEffect(() => {
         (async () => {
             const newLinks = [];
             newLinks.push({
@@ -112,8 +104,7 @@ const useMarketTypeData = (typeId: number) => {
         })();
     }, [typeId, language, t]);
 
-    const isMarketDataLoading = marketRecord.state === "missing";
-    const isMarketDataOutdated = marketRecord.state === "outdated";
+    const isMarketDataLoading = marketRecord.isLoading;
 
     const { setCurrentTypeID } = useTypeExplore();
     const { navigate } = useSPARouter();
@@ -157,7 +148,6 @@ const useMarketTypeData = (typeId: number) => {
         description: (
             <div className="flex flex-col items-end">
                 <div className="flex space-x-4 mt-2">
-                    {isMarketDataOutdated && <OutdatedNote />}
                     <div>
                         <p className="text-xs text-muted-foreground">{t("market.sell_min")}</p>
                         {isMarketDataLoading ? (

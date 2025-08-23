@@ -13,13 +13,11 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
-import { useMarketCache } from "@/hooks/useMarketCache";
 import { useMarketGroupTree } from "@/hooks/useMarketGroupTree";
 import { useMarketList } from "@/hooks/useMarketList";
 import type { Language } from "@/native";
 import { getMarketGroup, searchTypeByName } from "@/native/data";
 import type { MarketGroupNode } from "@/stores/marketGroupTreeStore";
-import { asyncSleep } from "@/utils/async";
 import { getIconUrl } from "@/utils/image";
 
 interface MarketGroupTreeViewStore {
@@ -103,8 +101,6 @@ export const MarketListPage: React.FunctionComponent = () => {
         useMarketGroupTree();
     const { initTreeView, treeView, error: treeError } = useMarketGroupTreeViewStore();
 
-    const { preloadMarketPrices } = useMarketCache();
-
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [matchingTypeIds, setMatchingTypeIds] = useState<Set<number>>(new Set());
 
@@ -168,20 +164,6 @@ export const MarketListPage: React.FunctionComponent = () => {
             }
         })();
     }, [selectedGroupId, matchingTypeIds]);
-
-    useEffect(() => {
-        if (types.length > 0) {
-            requestIdleCallback(
-                () => {
-                    (async () => {
-                        await asyncSleep(0);
-                        await preloadMarketPrices(types);
-                    })();
-                },
-                { timeout: 500 }
-            );
-        }
-    }, [types, preloadMarketPrices]);
 
     return (
         <PageLayout
