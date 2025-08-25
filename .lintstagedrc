@@ -1,7 +1,7 @@
 {
     "*.ts|*.tsx": [
         "biome check --write --unsafe",
-        "biome format --write"
+        "biome format --write --no-errors-on-unmatched --error-on-warnings"
     ],
     "*.rs": [
         "rustfmt --edition 2024 --style-edition 2024"
