@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from collections import defaultdict
+from enum import IntEnum, unique
 import pickle
 import sqlite3
 import aiohttp
@@ -21,8 +22,17 @@ import zipfile
 
 from pydantic import BaseModel, BeforeValidator, Field, ValidationError
 from termcolor import cprint
+import yaml
 
 import schema_pb2
+
+# hack the python path to include the schema loader
+# so that we dont need to install it as a package
+import sys
+
+sys.path.append(str(Path(__file__).parent / "schema_loader"))
+
+import schema_loader
 
 
 class BundleProcessor:
@@ -315,7 +325,7 @@ class BundleProcessor:
                 self._success(f"Wrote ESI configuration: {esi_config_path}.")
             except Exception as e:
                 self._error(f"Unable to write ESI configuration: {e}")
-    
+
     def create_links_config(self) -> None:
         """Create links configuration file."""
         links_config_path = self.bundle_root / "links.json"
@@ -655,6 +665,7 @@ class BundleProcessor:
         self._collect_meta_groups(bundle_static)
         await self._collect_skin_infos(bundle_static)
         self._collect_factions(bundle_static)
+        await self._collect_regions(bundle_static)
         self._collect_market_groups(bundle_static)
 
     def _collect_type_definitions(self, bundle_static: Path) -> None:
@@ -1065,6 +1076,32 @@ class BundleProcessor:
             f.write(faction_collection.SerializeToString())
         self._success("Processed factions information.")
 
+    async def _collect_regions(self, bundle_static: Path) -> None:
+        """Collect regions."""
+        regions = await self.res_file_index.get_schema_resource(
+            "res:/staticdata/regions.schema", "res:/staticdata/regions.static"
+        )
+        region_collection = schema_pb2.RegionCollection()
+        for region_id, region_def in regions.items():
+            try:
+                validated = Region(**region_def)
+            except ValidationError:
+                self._error(f"Failed to validate region info for region {region_id}")
+                continue
+            region_entry = region_collection.regions.add()
+            region_entry.region_id = int(region_id)
+            region_entry.region_data.CopyFrom(pydantic_to_protobuf_region(validated))
+
+        bundle_static_regions = bundle_static / "regions.pb"
+        if bundle_static_regions.exists():
+            self._warning(
+                f"Regions protobuf file '{bundle_static_regions}' already exists. It will be overwritten."
+            )
+            bundle_static_regions.unlink()
+        with open(bundle_static_regions, "wb+") as f:
+            f.write(region_collection.SerializeToString())
+        self._success("Processed regions information.")
+
     def _collect_market_groups(self, bundle_static: Path) -> None:
         """Collect market groups."""
         market_groups = self.fsd.get_fsd("marketgroups")
@@ -1321,6 +1358,40 @@ class ResourceTree:
                 resources.extend(downloaded_resources)
 
             return resources
+
+    async def get_schema_resource(self, schema_res: str, data_res: str) -> dict | None:
+        """Get schema resource by schema ID and data ID asynchronously."""
+        schema, data = await self._download_schema_resource(schema_res, data_res)
+        if schema is None or data is None:
+            return None
+
+        with open(schema, "r") as f:
+            schema_def = yaml.load(f, Loader=yaml.CSafeLoader)
+        with open(data, "rb") as f:
+            data_def = f.read()
+
+        out_loader = schema_loader.binaryLoader.LoadFromString(data_def, schema_def)
+        result = schema_loader.convert.convert_to_serializable(out_loader)
+
+        return result
+
+    async def _download_schema_resource(self, schema_res: str, data_res: str):
+        """Get schema resource by schema ID and data ID asynchronously."""
+        schema_el = self._get_element(schema_res)
+        data_el = self._get_element(data_res)
+        if schema_el is None or data_el is None:
+            return None
+        if not isinstance(schema_el, ResourceTree._FileNode):
+            raise RuntimeError(f"Schema resource '{schema_res}' is not a file node.")
+        if not isinstance(data_el, ResourceTree._FileNode):
+            raise RuntimeError(f"Data resource '{data_res}' is not a file node.")
+
+        if not schema_el.file_path.exists():
+            await self._download_element(schema_res)
+        if not data_el.file_path.exists():
+            await self._download_element(data_res)
+
+        return schema_el.file_path, data_el.file_path
 
 
 class Fsd:
@@ -1633,3 +1704,99 @@ class MarketGroup(BaseModel):
     iconID: int | None = Field(default=None)
     parentGroupID: int | None = Field(default=None)
     hasTypes: BoolInt
+
+
+class UniversePoint(BaseModel):
+    x: float
+    y: float
+    z: float
+
+
+class WormholeClassID(IntEnum):
+    C1 = 1
+    C2 = 2
+    C3 = 3
+    C4 = 4
+    C5 = 5
+    C6 = 6
+    HIGH_SEC = 7
+    LOW_SEC = 8
+    NULL_SEC = 9
+    THERA = 12
+    SMALL_SHIP = 13
+    VOID = 19
+    ABYSSAL1 = 19
+    ABYSSAL2 = 20
+    ABYSSAL3 = 21
+    ABYSSAL4 = 22
+    ABYSSAL5 = 23
+    POCHVEN = 25
+
+    def get_region_type(self, region_id) -> RegionType:
+        if self == WormholeClassID.HIGH_SEC:
+            return RegionType.HIGH_SEC
+        elif self == WormholeClassID.LOW_SEC:
+            return RegionType.LOW_SEC
+        elif self == WormholeClassID.NULL_SEC:
+            return RegionType.NULL_SEC
+        elif (
+            self == RegionType.VOID and 14_000_000 <= region_id < 15_000_000
+        ):  # a little hack for abyssal regions
+            return RegionType.VOID
+        elif self in {
+            WormholeClassID.ABYSSAL1,
+            WormholeClassID.ABYSSAL2,
+            WormholeClassID.ABYSSAL3,
+            WormholeClassID.ABYSSAL4,
+            WormholeClassID.ABYSSAL5,
+        }:
+            return RegionType.ABYSSAL
+        elif self == WormholeClassID.POCHVEN:
+            return RegionType.POCHVEN
+        else:
+            return RegionType.WORMHOLE
+
+
+@unique
+class RegionType(IntEnum):
+    HIGH_SEC = 1
+    LOW_SEC = 2
+    NULL_SEC = 3
+    WORMHOLE = 4
+    VOID = 5
+    ABYSSAL = 6
+    POCHVEN = 7
+
+
+class Region(BaseModel):
+    regionID: int
+    nameID: int
+    center: UniversePoint
+    descriptionID: int | None = Field(default=None)
+    neighbours: list[int] = Field(default_factory=list)
+    constellationIDs: list[int] = Field(default_factory=list)
+    solarSystemIDs: list[int] = Field(default_factory=list)
+    factionID: int | None = Field(default=None)
+    wormholeClassID: WormholeClassID | None = Field(default=None)
+
+
+def pydantic_to_protobuf_region(pydantic_obj: Region) -> schema_pb2.Region:
+    pb_obj = schema_pb2.Region()
+    pb_obj.region_id = pydantic_obj.regionID
+    pb_obj.name_id = pydantic_obj.nameID
+    if pydantic_obj.descriptionID is not None:
+        pb_obj.description_id = pydantic_obj.descriptionID
+    pb_obj.center.x = pydantic_obj.center.x
+    pb_obj.center.y = pydantic_obj.center.y
+    pb_obj.center.z = pydantic_obj.center.z
+    pb_obj.neighbours.extend(pydantic_obj.neighbours)
+    pb_obj.constellation_ids.extend(pydantic_obj.constellationIDs)
+    pb_obj.solar_system_ids.extend(pydantic_obj.solarSystemIDs)
+    if pydantic_obj.factionID is not None:
+        pb_obj.faction_id = pydantic_obj.factionID
+    if pydantic_obj.wormholeClassID is not None:
+        pb_obj.wormhole_class_id = pydantic_obj.wormholeClassID.value
+        pb_obj.region_type = pydantic_obj.wormholeClassID.get_region_type(
+            pydantic_obj.regionID
+        ).value
+    return pb_obj

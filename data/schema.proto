@@ -215,3 +215,60 @@ message MarketGroupCollection {
 
     repeated MarketGroupEntry market_groups = 1;
 }
+
+message UniversePoint {
+    required double x = 1;
+    required double y = 2;
+    required double z = 3;
+}
+
+message Region {
+    enum WormholeClassID {
+        C1 = 1;
+        C2 = 2;
+        C3 = 3;
+        C4 = 4;
+        C5 = 5;
+        C6 = 6;
+        HIGH_SEC_WM = 7;
+        LOW_SEC_WM = 8;
+        NULL_SEC_WM = 9;
+        THERA = 12;
+        SMALL_SHIP = 13;
+        VOID_OR_ABYSSAL1 = 19;
+        ABYSSAL2 = 20;
+        ABYSSAL3 = 21;
+        ABYSSAL4 = 22;
+        ABYSSAL5 = 23;
+        POCHVEN_WM = 25;
+    }
+
+    enum RegionType {
+        HIGH_SEC = 1;
+        LOW_SEC = 2;
+        NULL_SEC = 3;
+        WORMHOLE = 4;
+        VOID = 5;
+        ABYSSAL = 6;
+        POCHVEN = 7;
+    }
+
+    required int32 region_id = 1;
+    required int32 name_id = 2;
+    required UniversePoint center = 3;
+    optional int32 description_id = 4;
+    repeated int32 neighbours = 5;
+    repeated int32 constellation_ids = 6;
+    repeated int32 solar_system_ids = 7;
+    optional int32 faction_id = 8;
+    optional WormholeClassID wormhole_class_id = 9;
+    optional RegionType region_type = 10;
+}
+
+message RegionCollection {
+    message RegionEntry {
+        required int32 region_id = 1;
+        required Region region_data = 2;
+    }
+    repeated RegionEntry regions = 1;
+}
