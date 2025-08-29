@@ -3,12 +3,13 @@ name = "eve-multitools"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "aiohttp>=3.12.14",
     "protobuf>=6.31.1",
     "pydantic>=2.11.7",
     "pyyaml>=6.0.2",
     "requests>=2.32.4",
+    "tenacity>=9.1.2",
     "termcolor>=3.1.0",
 ]
