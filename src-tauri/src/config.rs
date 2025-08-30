@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use log::info;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

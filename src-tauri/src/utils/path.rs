@@ -6,10 +6,6 @@ pub trait IfExists {
 
 impl IfExists for PathBuf {
     fn if_exists(self) -> Option<PathBuf> {
-        if self.exists() {
-            Some(self)
-        } else {
-            None
-        }
+        if self.exists() { Some(self) } else { None }
     }
 }

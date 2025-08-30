@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::io::BufReader;
 use std::{collections::HashMap, path::PathBuf};
-use tauri::{ipc::Channel, Emitter, Manager};
-use tokio::sync::{mpsc, Mutex};
+use tauri::{Emitter, Manager, ipc::Channel};
+use tokio::sync::{Mutex, mpsc};
 use zip::ZipArchive;
 
 #[derive(Clone, Serialize)]
