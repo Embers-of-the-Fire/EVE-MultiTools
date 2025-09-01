@@ -4,23 +4,23 @@ import { Button } from "../ui/button";
 import { HistoryButton } from "./HistoryButton";
 
 interface DetailPageActionsProps {
-    type: "faction" | "type";
     history: number[];
     onItemClick: (id: number) => void;
     backRoute: string;
     emptyMessageKey: string;
     detailRoute: string;
     detailTitleKey: string;
+    renderItem: (id: number, onClick: () => void) => React.ReactElement;
 }
 
 export function DetailPageActions({
-    type,
     history,
     onItemClick,
     backRoute,
     emptyMessageKey,
     detailRoute,
     detailTitleKey,
+    renderItem,
 }: DetailPageActionsProps) {
     const { navigate } = useSPARouter();
 
@@ -34,12 +34,12 @@ export function DetailPageActions({
                 <ArrowLeft size="64" />
             </Button>
             <HistoryButton
-                type={type}
                 history={history}
                 onItemClick={onItemClick}
                 emptyMessageKey={emptyMessageKey}
                 detailRoute={detailRoute}
                 detailTitleKey={detailTitleKey}
+                renderItem={renderItem}
             />
         </div>
     );

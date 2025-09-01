@@ -13,15 +13,31 @@ import { ScrollArea } from "../../ui/scroll-area";
 
 export function TypeHistoryButton() {
     const { history, setCurrentTypeID } = useTypeExplore();
+    const { navigate } = useSPARouter();
+    const { t } = useTranslation();
+
+    const renderItem = (id: number, onClick: () => void) => (
+        <EmbeddedTypeCard
+            compact={true}
+            showBadges={false}
+            typeId={id}
+            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
+            noBorder
+            onClick={onClick}
+        />
+    );
 
     return (
         <HistoryButton
-            type="type"
             history={history}
-            onItemClick={setCurrentTypeID}
+            onItemClick={(id) => {
+                setCurrentTypeID(id);
+                navigate("/explore/type/detail", t("explore.type.detail.title"));
+            }}
             emptyMessageKey="explore.type.history.empty"
             detailRoute="/explore/type/detail"
             detailTitleKey="explore.type.detail.title"
+            renderItem={renderItem}
         />
     );
 }

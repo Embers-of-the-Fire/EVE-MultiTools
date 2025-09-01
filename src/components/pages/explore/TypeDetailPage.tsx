@@ -11,8 +11,8 @@ import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import type { Language } from "@/native";
-import type { Category, Group, MetaGroup, Type } from "@/native/data";
 import { getCategory, getGroup, getMetaGroup, getType, searchTypeByName } from "@/native/data";
+import type { Category, Group, MetaGroup, Type } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import { PageLayout } from "../../layout";
 import { TypeImage } from "../../TypeImage";
@@ -26,16 +26,32 @@ interface TypeDetailPageProps {
 
 function TypeDetailPageActions() {
     const { history, setCurrentTypeID } = useTypeExplore();
+    const { navigate } = useSPARouter();
+    const { t } = useTranslation();
+
+    const renderItem = (id: number, onClick: () => void) => (
+        <EmbeddedTypeCard
+            compact={true}
+            showBadges={false}
+            typeId={id}
+            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
+            noBorder
+            onClick={onClick}
+        />
+    );
 
     return (
         <DetailPageActions
-            type="type"
             history={history}
-            onItemClick={setCurrentTypeID}
+            onItemClick={(id) => {
+                setCurrentTypeID(id);
+                navigate("/explore/type/detail", t("explore.type.detail.title"));
+            }}
             backRoute="/explore/type"
             emptyMessageKey="explore.type.history.empty"
             detailRoute="/explore/type/detail"
             detailTitleKey="explore.type.detail.title"
+            renderItem={renderItem}
         />
     );
 }

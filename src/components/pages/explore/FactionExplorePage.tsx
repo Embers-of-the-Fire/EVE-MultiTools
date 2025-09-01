@@ -13,15 +13,31 @@ type FactionData = { id: number; name: string; shortDescription?: string };
 
 export function FactionHistoryButton() {
     const { history, setCurrentFactionID } = useFactionExplore();
+    const { navigate } = useSPARouter();
+    const { t } = useTranslation();
+
+    const renderItem = (id: number, onClick: () => void) => (
+        <EmbeddedFactionCard
+            compact={true}
+            showBadges={false}
+            factionId={id}
+            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
+            noBorder
+            onClick={onClick}
+        />
+    );
 
     return (
         <HistoryButton
-            type="faction"
             history={history}
-            onItemClick={setCurrentFactionID}
+            onItemClick={(id) => {
+                setCurrentFactionID(id);
+                navigate("/explore/faction/detail", t("explore.faction.detail.title"));
+            }}
             emptyMessageKey="explore.faction.history.empty"
             detailRoute="/explore/faction/detail"
             detailTitleKey="explore.faction.detail.title"
+            renderItem={renderItem}
         />
     );
 }

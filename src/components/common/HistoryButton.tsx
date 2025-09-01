@@ -2,29 +2,27 @@ import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { History } from "lucide-react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { EmbeddedFactionCard } from "../card/FactionCard";
 import { Button } from "../ui/button";
 import { ScrollBar } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 
 interface HistoryButtonProps {
-    type: "faction" | "type";
     history: number[];
     onItemClick: (id: number) => void;
     emptyMessageKey: string;
     detailRoute: string;
     detailTitleKey: string;
+    renderItem: (id: number, onClick: () => void) => React.ReactElement;
 }
 
 export function HistoryButton({
-    type,
     history,
     onItemClick,
     emptyMessageKey,
     detailRoute,
     detailTitleKey,
+    renderItem,
 }: HistoryButtonProps) {
     const { t } = useTranslation();
     const { navigate } = useSPARouter();
@@ -78,25 +76,7 @@ export function HistoryButton({
                             ) : (
                                 history.map((id, idx) => (
                                     <Fragment key={id}>
-                                        {type === "faction" ? (
-                                            <EmbeddedFactionCard
-                                                compact={true}
-                                                showBadges={false}
-                                                factionId={id}
-                                                className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
-                                                noBorder
-                                                onClick={() => handleItemClick(id)}
-                                            />
-                                        ) : (
-                                            <EmbeddedTypeCard
-                                                compact={true}
-                                                showBadges={false}
-                                                typeId={id}
-                                                className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
-                                                noBorder
-                                                onClick={() => handleItemClick(id)}
-                                            />
-                                        )}
+                                        {renderItem(id, () => handleItemClick(id))}
                                         {idx !== history.length - 1 && (
                                             <Separator className="w-full mx-0" />
                                         )}

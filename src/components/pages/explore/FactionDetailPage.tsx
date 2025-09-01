@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { DetailPageActions } from "@/components/common/DetailPageActions";
 import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
-import { type Faction, getFaction } from "@/native/data";
+import { useSPARouter } from "@/hooks/useSPARouter";
+import { getFaction } from "@/native/data";
+import type { Faction } from "@/types/data";
 import { getFactionIconUrl, getFactionLogoUrl } from "@/utils/image";
 import { PageLayout } from "../../layout";
 import { Badge } from "../../ui/badge";
@@ -16,16 +19,32 @@ interface FactionDetailPageProps {
 
 function FactionDetailPageActions() {
     const { history, setCurrentFactionID } = useFactionExplore();
+    const { navigate } = useSPARouter();
+    const { t } = useTranslation();
+
+    const renderItem = (id: number, onClick: () => void) => (
+        <EmbeddedFactionCard
+            compact={true}
+            showBadges={false}
+            factionId={id}
+            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
+            noBorder
+            onClick={onClick}
+        />
+    );
 
     return (
         <DetailPageActions
-            type="faction"
             history={history}
-            onItemClick={setCurrentFactionID}
+            onItemClick={(id) => {
+                setCurrentFactionID(id);
+                navigate("/explore/faction/detail", t("explore.faction.detail.title"));
+            }}
             backRoute="/explore/faction"
             emptyMessageKey="explore.faction.history.empty"
             detailRoute="/explore/faction/detail"
             detailTitleKey="explore.faction.detail.title"
+            renderItem={renderItem}
         />
     );
 }
