@@ -78,7 +78,11 @@
         "available_bundles": "Available Bundles",
         "version": "Version: {{version}}",
         "errors": {
-            "unknown": "Unknown error"
+            "unknown": "Unknown error",
+            "invalidfilename": "Invalid file name: {{error}}",
+            "ioerror": "IO error: {{error}}",
+            "ziperror": "Zip compress error: {{error}}",
+            "registrationerror": "Registration error: {{error}}"
         },
         "enable_failed": "Failed to enable",
         "toast": {
@@ -92,6 +96,13 @@
             "import_failed_message": "Failed to import bundle: {{error}}",
             "import_success": "Imported successfully",
             "import_success_message": "The bundle \"{{name}}\" was imported successfully!"
+        },
+        "progress": {
+            "start": "Start importing",
+            "opening_file": "Opening file",
+            "creating_directory": "Creating directory",
+            "extracting_files": "Extracting files",
+            "complete": "Complete"
         }
     },
     "market": {

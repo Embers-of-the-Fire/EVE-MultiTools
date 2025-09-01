@@ -81,11 +81,23 @@
             "delete_failed_message": "删除数据包失败: {{error}}"
         },
         "errors": {
-            "unknown": "未知错误"
+            "unknown": "未知错误",
+            "directoryexists": "目录已存在：{{error}}",
+            "invalidfilename": "不合法的文件名：{{error}}",
+            "ioerror": "IO 错误：{{error}}",
+            "ziperror": "压缩包错误：{{error}}",
+            "registrationerror": "注册错误：{{error}}"
         },
         "please_select": "请选择数据包",
         "no_bundles_available": "没有可用的数据包",
-        "enable_failed": "启用失败"
+        "enable_failed": "启用失败",
+        "progress": {
+            "start": "开始导入",
+            "opening_file": "打开文件",
+            "creating_directory": "创建文件夹",
+            "extracting_files": "解压文件",
+            "complete": "完成"
+        }
     },
     "workspace": {
         "teams": "团队",
