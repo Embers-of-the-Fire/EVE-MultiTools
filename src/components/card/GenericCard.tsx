@@ -130,7 +130,7 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
 
     if (data.loading) {
         return (
-            <Card className={cn("w-80 shadow-lg", className)}>
+            <Card className={cn("w-80 shadow-lg py-0", className)}>
                 <CardContent className="p-4">
                     <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
@@ -308,7 +308,11 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
     if (data.loading) {
         return (
             <Card
-                className={cn("w-full", noBorder ? "border-0 shadow-none" : undefined, className)}
+                className={cn(
+                    "w-full p-0",
+                    noBorder ? "border-0 shadow-none" : undefined,
+                    className
+                )}
             >
                 {title && (
                     <CardHeader className={cn("pb-2", compact && "py-2")}>
@@ -341,7 +345,7 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
     return (
         <Card
             className={cn(
-                "w-full",
+                "w-full py-0",
                 onClick &&
                     "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors",
                 noBorder ? "border-0 shadow-none" : undefined,
@@ -542,7 +546,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
         return (
             <div
                 className={cn(
-                    "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full",
+                    "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full py-0",
                     onClick
                         ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
                         : "",
@@ -611,7 +615,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
     return (
         <div
             className={cn(
-                "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full",
+                "flex items-center gap-3 p-3 rounded shadow-sm bg-white dark:bg-black min-w-[220px] max-w-full py-0",
                 onClick
                     ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
                     : "",
