@@ -303,7 +303,6 @@ pub async fn import_bundle_file(
 
     let (progress_sender, mut progress_receiver) = mpsc::unbounded_channel::<ImportProgress>();
 
-    // 启动进度转发任务
     let on_event_clone = on_event.clone();
     tokio::spawn(async move {
         while let Some(progress) = progress_receiver.recv().await {
@@ -317,7 +316,6 @@ pub async fn import_bundle_file(
         }
     });
 
-    // 启动导入任务
     let app_clone = app.clone();
     let data_dir_clone = data_dir.clone();
     tokio::spawn(async move {

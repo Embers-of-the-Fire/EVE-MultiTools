@@ -7,6 +7,7 @@ import { LocalizationExplorePage } from "@/components/pages/explore/Localization
 import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPageWrapper";
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
+import { UniverseObjectDetailPageWrapper } from "@/components/pages/explore/UniverseObjectDetailPageWrapper";
 import { GetStartedPage } from "@/components/pages/GetStartedPage";
 import { HomePage } from "@/components/pages/HomePage";
 import { MarketListPage } from "@/components/pages/market/MarketListPage";
@@ -92,6 +93,13 @@ export const routes: AppRoute[] = [
                 path: "/explore/universe",
                 labelKey: "nav.explore.universe",
                 component: UniverseExplorePage,
+            },
+            {
+                key: "explore-universe-detail",
+                path: "/explore/universe/detail",
+                labelKey: "nav.explore.universe.detail",
+                component: UniverseObjectDetailPageWrapper,
+                hideFromNav: true,
             },
         ],
     },

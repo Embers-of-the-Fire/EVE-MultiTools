@@ -1,5 +1,23 @@
-import { MarketGroupCollection } from "@/data/schema";
-import { GraphicType } from "@/types/data";
+import { Constellation, MarketGroupCollection, Planet, Region, SolarSystem } from "@/data/schema";
+import {
+    type Category,
+    type ConstellationBrief,
+    type Faction,
+    GraphicType,
+    type Group,
+    type LinkKey,
+    type LocSearchResult,
+    type MarketGroup,
+    type MetaGroup,
+    type PlanetBrief,
+    type RegionBrief,
+    type Skin,
+    type SkinLicense,
+    type SkinMaterial,
+    type SystemBrief,
+    type Type,
+    type WormholeClass,
+} from "@/types/data";
 import { tauriInvoke } from "./base";
 
 export async function getGraphicPath(
@@ -57,71 +75,18 @@ export const localizationCommands = {
     getLocalizationByLang,
 } as const;
 
-export interface Group {
-    group_id: number;
-    group_name_id: number;
-    icon_id: number;
-    category_id: number;
-    anchorable: boolean;
-    fittable_non_singleton: boolean;
-    anchored: boolean;
-    published: boolean;
-    use_base_price: boolean;
-}
-
 export async function getGroup(groupId: number): Promise<Group | null> {
     return await tauriInvoke<Group | null>("get_group", { groupId });
-}
-
-export interface Category {
-    category_id: number;
-    category_name_id: number;
-    icon_id?: number;
-    published: boolean;
 }
 
 export async function getCategory(categoryId: number): Promise<Category | null> {
     return await tauriInvoke<Category | null>("get_category", { categoryId });
 }
 
-export interface MetaGroup {
-    name_id: number;
-    icon_id?: number;
-}
 export async function getMetaGroup(metaGroupId: number): Promise<MetaGroup | null> {
     return await tauriInvoke<MetaGroup | null>("get_meta_group", {
         metaGroupId,
     });
-}
-
-export interface Type {
-    base_price: number;
-    capacity: number;
-    certificate_template?: number;
-    description_id?: number;
-    designer_ids: number[];
-    faction_id?: number;
-    graphic_id?: number;
-    group_id: number;
-    icon_id?: number;
-    is_dynamic_type: boolean;
-    isis_group_id?: number;
-    market_group_id?: number;
-    meta_group_id?: number;
-    meta_level?: number;
-    portion_size: number;
-    published: boolean;
-    quote_author_id?: number;
-    quote_id?: number;
-    race_id?: number;
-    radius: number;
-    sound_id?: number;
-    tech_level?: number;
-    type_id: number;
-    type_name_id: number;
-    variation_parent_type_id?: number;
-    volume: number;
-    wreck_type_id?: number;
 }
 
 export async function getType(typeId: number): Promise<Type | null> {
@@ -152,26 +117,34 @@ export async function searchTypeByDescription(
     });
 }
 
-export interface Skin {
-    skin_id: number;
-    internal_name: string;
-    allow_ccp_devs: boolean;
-    skin_material_id: number;
-    visible_serenity: boolean;
-    visible_tranquility: boolean;
+export async function searchRegionByName(
+    name: string,
+    language: "en" | "zh"
+): Promise<LocSearchResult[]> {
+    return await tauriInvoke<LocSearchResult[]>("search_region_by_name", {
+        name,
+        language,
+    });
 }
 
-export interface SkinMaterial {
-    skin_material_id: number;
-    display_name_id: number;
-    material_set_id: number;
+export async function searchConstellationByName(
+    name: string,
+    language: "en" | "zh"
+): Promise<LocSearchResult[]> {
+    return await tauriInvoke<LocSearchResult[]>("search_constellation_by_name", {
+        name,
+        language,
+    });
 }
 
-export interface SkinLicense {
-    license_id: number;
-    skin_id: number;
-    duration: number;
-    license_type_id: number;
+export async function searchSystemByName(
+    name: string,
+    language: "en" | "zh"
+): Promise<LocSearchResult[]> {
+    return await tauriInvoke<LocSearchResult[]>("search_system_by_name", {
+        name,
+        language,
+    });
 }
 
 export async function getSkin(skinId: number): Promise<Skin | null> {
@@ -200,36 +173,12 @@ export async function getLicensesBySkin(skinId: number): Promise<SkinLicense[]> 
     return await tauriInvoke<SkinLicense[]>("get_licenses_by_skin", { skinId });
 }
 
-export interface Faction {
-    name_id: number;
-    description_id: number;
-    short_description_id?: number;
-    corporation_id?: number;
-    icon_id: number;
-    member_races: number[];
-    unique_name: boolean;
-    flat_logo?: string;
-    flat_logo_with_name?: string;
-    solar_system_id: number;
-    militia_corporation_id?: number;
-    size_factor: number;
-}
-
 export async function getFaction(factionId: number): Promise<Faction | null> {
     return await tauriInvoke<Faction | null>("get_faction", { factionId });
 }
 
 export async function getFactionIds(): Promise<number[]> {
     return await tauriInvoke<number[]>("get_faction_ids");
-}
-
-export interface MarketGroup {
-    name_id: number;
-    description_id?: number;
-    icon_id?: number;
-    parent_group_id?: number;
-    types: number[];
-    groups: number[];
 }
 
 export async function getMarketGroup(marketGroupId: number): Promise<MarketGroup | null> {
@@ -246,13 +195,6 @@ export async function getMarketGroupRaw(): Promise<MarketGroupCollection> {
     return MarketGroupCollection.fromBinary(new Uint8Array(bytes));
 }
 
-export interface Price {
-    type_id: number;
-    sell_min: number | null;
-    buy_max: number | null;
-    updated_at: number;
-}
-
 export async function getMarketPrice(typeId: number): Promise<void> {
     await tauriInvoke<void>("get_market_price", {
         typeId,
@@ -263,12 +205,6 @@ export async function getMarketPrices(typeIds: number[]): Promise<void> {
     await Promise.all(typeIds.map((typeId) => getMarketPrice(typeId)));
 }
 
-export enum LinkKey {
-    MarketEveC3qCc = 0,
-    MarketEveC3qCcEn = 1,
-    MarketEveTycoon = 2,
-}
-
 export async function getLinkUrl(
     key: LinkKey,
     params: Record<string, string>
@@ -277,4 +213,139 @@ export async function getLinkUrl(
         key,
         params,
     });
+}
+
+export async function getRegionById(regionId: number): Promise<RegionBrief | null> {
+    return await tauriInvoke<RegionBrief | null>("get_region_by_id", {
+        regionId,
+    });
+}
+
+export async function getRegionsByFactionId(factionId: number | null): Promise<RegionBrief[]> {
+    return await tauriInvoke<RegionBrief[]>("get_regions_by_faction_id", {
+        factionId,
+    });
+}
+
+export async function getRegionsByWormholeClassId(
+    classId: WormholeClass | null
+): Promise<RegionBrief[]> {
+    return await tauriInvoke<RegionBrief[]>("get_regions_by_wormhole_class_id", {
+        classId,
+    });
+}
+
+export async function getRegionDetailById(regionId: number): Promise<Region> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_region_detail_by_id", {
+        regionId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch region data");
+    }
+    return Region.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getConstellationById(
+    constellationId: number
+): Promise<ConstellationBrief | null> {
+    return await tauriInvoke<ConstellationBrief | null>("get_constellation_by_id", {
+        constellationId,
+    });
+}
+
+export async function getConstellationsByRegionId(regionId: number): Promise<ConstellationBrief[]> {
+    return await tauriInvoke<ConstellationBrief[]>("get_constellations_by_region_id", {
+        regionId,
+    });
+}
+
+export async function getConstellationsByFactionId(
+    factionId: number | null
+): Promise<ConstellationBrief[]> {
+    return await tauriInvoke<ConstellationBrief[]>("get_constellations_by_faction_id", {
+        factionId,
+    });
+}
+
+export async function getConstellationsByWormholeClassId(
+    classId: WormholeClass | null
+): Promise<ConstellationBrief[]> {
+    return await tauriInvoke<ConstellationBrief[]>("get_constellations_by_wormhole_class_id", {
+        classId,
+    });
+}
+
+export async function getConstellationDetailById(constellationId: number): Promise<Constellation> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_constellation_detail_by_id", {
+        constellationId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch constellation data");
+    }
+    return Constellation.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getSystemById(solarSystemId: number): Promise<SystemBrief | null> {
+    return await tauriInvoke<SystemBrief | null>("get_system_by_id", {
+        solarSystemId,
+    });
+}
+
+export async function getSystemsByRegionId(regionId: number): Promise<SystemBrief[]> {
+    return await tauriInvoke<SystemBrief[]>("get_systems_by_region_id", {
+        regionId,
+    });
+}
+
+export async function getSystemsByConstellationId(constellationId: number): Promise<SystemBrief[]> {
+    return await tauriInvoke<SystemBrief[]>("get_systems_by_constellation_id", {
+        constellationId,
+    });
+}
+
+export async function getSystemsByFactionId(factionId: number | null): Promise<SystemBrief[]> {
+    return await tauriInvoke<SystemBrief[]>("get_systems_by_faction_id", {
+        factionId,
+    });
+}
+
+export async function getSystemsByWormholeClassId(
+    classId: WormholeClass | null
+): Promise<SystemBrief[]> {
+    return await tauriInvoke<SystemBrief[]>("get_systems_by_wormhole_class_id", {
+        classId,
+    });
+}
+
+export async function getSystemsBySecurityRange(min: number, max: number): Promise<SystemBrief[]> {
+    return await tauriInvoke<SystemBrief[]>("get_systems_by_security_range", {
+        min,
+        max,
+    });
+}
+
+export async function getSystemDataById(solarSystemId: number): Promise<SolarSystem> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_system_data_by_id", {
+        solarSystemId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch system data");
+    }
+    return SolarSystem.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getPlanetById(planetId: number): Promise<PlanetBrief | null> {
+    return await tauriInvoke<PlanetBrief | null>("get_planet_by_id", {
+        planetId,
+    });
+}
+
+export async function getPlanetDataById(planetId: number): Promise<Planet> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_planet_data_by_id", {
+        planetId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch planet data");
+    }
+    return Planet.fromBinary(new Uint8Array(bytes));
 }

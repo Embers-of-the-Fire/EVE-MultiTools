@@ -171,6 +171,30 @@ message TypeLocalizationLookup {
     repeated TypeLocEntry type_entries = 1;
 }
 
+message RegionLocalizationLookup {
+    message RegionLocEntry {
+        required int32 region_id = 1;
+        required uint32 name_id = 2;
+        optional uint32 description_id = 3;
+    }
+    repeated RegionLocEntry region_entries = 1;
+}
+
+message ConstellationLocalizationLookup {
+    message ConstellationLocEntry {
+        required int32 constellation_id = 1;
+        required uint32 name_id = 2;
+    }
+    repeated ConstellationLocEntry constellation_entries = 1;
+}
+
+message SystemLocalizationLookup {
+    message SystemLocEntry {
+        required int32 system_id = 1;
+        required uint32 name_id = 2;
+    }
+    repeated SystemLocEntry system_entries = 1;
+}
 
 // Faction definition
 message Faction {
@@ -222,27 +246,50 @@ message UniversePoint {
     required double z = 3;
 }
 
-message Region {
-    enum WormholeClassID {
-        C1 = 1;
-        C2 = 2;
-        C3 = 3;
-        C4 = 4;
-        C5 = 5;
-        C6 = 6;
-        HIGH_SEC_WM = 7;
-        LOW_SEC_WM = 8;
-        NULL_SEC_WM = 9;
-        THERA = 12;
-        SMALL_SHIP = 13;
-        VOID_OR_ABYSSAL1 = 19;
-        ABYSSAL2 = 20;
-        ABYSSAL3 = 21;
-        ABYSSAL4 = 22;
-        ABYSSAL5 = 23;
-        POCHVEN_WM = 25;
-    }
+message Rotation {
+    required double yaw = 1;
+    required double pitch = 2;
+    required double roll = 3;
+}
 
+message PointRotation {
+    required double x = 1;
+    required double y = 2;
+    required double z = 3;
+}
+
+enum WormholeClassID {
+    C1 = 1;
+    C2 = 2;
+    C3 = 3;
+    C4 = 4;
+    C5 = 5;
+    C6 = 6;
+    HIGH_SEC_WM = 7;
+    LOW_SEC_WM = 8;
+    NULL_SEC_WM = 9;
+
+    GM1 = 10;
+    GM2 = 11;
+
+    THERA = 12;
+    SMALL_SHIP = 13;
+    
+    SENTINEL = 14;
+    BARBICAN = 15;
+    VIDETTE = 16;
+    CONFLUX = 17;
+    REDOUBT = 18;
+    
+    VOID_OR_ABYSSAL1 = 19;
+    ABYSSAL2 = 20;
+    ABYSSAL3 = 21;
+    ABYSSAL4 = 22;
+    ABYSSAL5 = 23;
+    POCHVEN_WM = 25;
+}
+
+message Region {
     enum RegionType {
         HIGH_SEC = 1;
         LOW_SEC = 2;
@@ -265,10 +312,195 @@ message Region {
     optional RegionType region_type = 10;
 }
 
-message RegionCollection {
-    message RegionEntry {
-        required int32 region_id = 1;
-        required Region region_data = 2;
+message Constellation {
+    required int32 constellation_id = 1;
+    required int32 name_id = 2;
+    required int32 region_id = 3;
+    required UniversePoint center = 4;
+    repeated int32 solar_system_ids = 5;
+    optional int32 faction_id = 6;
+    optional WormholeClassID wormhole_class_id = 7;
+    repeated int32 neighbours = 8; 
+}
+
+message SolarSystem {
+    required int32 solar_system_id = 1;
+    required int32 solar_system_name_id = 2;
+    required bool fringe = 3;
+    required bool hub = 4;
+    required bool international = 5;
+    required bool regional = 6;
+    required bool border = 7;
+    required bool corridor = 8;
+    required double luminosity = 9;
+    required UniversePoint position = 10;
+    required UniversePoint max = 11;
+    required UniversePoint min = 12;
+    required double radius = 13;
+    required double security = 14;
+    optional int32 description_id = 15;
+
+    repeated int32 planets = 16;
+
+    optional WormholeClassID wormhole_class_id = 17;
+
+    optional int32 secondary_sun = 18;
+
+    optional string security_class = 19;
+    optional int32 faction_id = 20;
+    optional int32 sun_type_id = 21;
+    optional int32 sun_flare_graphic_id = 22;
+
+    optional int32 star = 23;
+    repeated int32 stargates = 24;
+    repeated int32 disrupted_stargates = 25;
+
+    required int32 warp_tunnel_overwrite = 26;
+    required int32 system_wide_cloud = 27;
+    required string visual_effect = 28;
+    repeated int32 disallowed_anchor_groups = 29;
+    repeated int32 disallowed_anchor_categories = 30;
+    optional double dscan_range = 31;
+    optional bool disallow_scanning = 32;
+    optional bool disallow_cyno = 33;
+}
+
+message CelestialAttributes {
+    required int32 height_map1 = 1;
+    required int32 height_map2 = 2;
+    required bool population = 3;
+    required int32 shader_preset = 4;
+}
+
+message CelestialStatistics {
+    required double density = 1;
+    required double escape_velocity = 2;
+    required double eccentricity = 3;
+    required bool fragmented = 4;
+    required double life = 5;
+    required bool locked = 6;
+    required double mass_dust = 7;
+    required double mass_gas = 8;
+    required double orbit_period = 9;
+    required double orbit_radius = 10;
+    required double pressure = 11;
+    required double radius = 12;
+    required double rotation_rate = 13;
+    required double surface_gravity = 14;
+    required double temperature = 15;
+    required string spectral_class = 16;
+}
+
+message Planet {
+    required int32 planet_id = 1;
+    required int32 celestial_index = 2;
+
+    required CelestialAttributes attributes = 3;
+    required UniversePoint position = 4;
+    required double radius = 5;
+    required int32 type_id = 6;
+    required int32 solar_system_id = 7;
+    optional int32 planet_name_id = 8;
+    
+    required CelestialStatistics statistics = 9;
+
+    repeated int32 moons = 10;
+    repeated int32 npc_stations = 11;
+    repeated int32 asteroid_belts = 12;
+}
+
+message SecondarySun {
+    required int32 sun_id = 1;
+    required int32 type_id = 2;
+    required int32 effect_beacon_type_id = 3;
+    required UniversePoint position = 4;
+}
+
+message Star {
+    required int32 star_id = 1;
+    required double radius = 2;
+    required int32 type_id = 3;
+    
+    message StarStatistics {
+        required double age = 1;
+        required double life = 2;
+        required bool locked = 3;
+        required double luminosity = 4;
+        required double radius = 5;
+        required double temperature = 6;
+        required string spectral_class = 7;
     }
-    repeated RegionEntry regions = 1;
+
+    required StarStatistics statistics = 4;
+    repeated int32 npc_stations = 5;
+}
+
+message Stargate {
+    required int32 stargate_id = 1;
+    required int32 destination = 2;
+    required UniversePoint position = 3;
+    required int32 type_id = 4;
+    optional Rotation rotation = 5;
+    optional bool ignored_by_corporation_defense_djinn = 6;
+    optional int32 allowed_ships_type_list_id = 7;
+
+    required int32 solar_system_id = 8;
+    required int32 destination_solar_system_id = 9;
+}
+
+message DisruptedStargate {
+    required int32 stargate_id = 1;
+    required int32 type_id = 2;
+    required int32 target_solar_system_id = 3;
+    required UniversePoint position = 4;
+    required PointRotation rotation = 5;
+}
+
+message Moon {
+    required int32 moon_id = 1;
+    required int32 type_id = 2;
+    required CelestialAttributes attributes = 3;
+    required UniversePoint position = 4;
+    required double radius = 5;
+    required int32 orbit_id = 6;
+    optional int32 moon_name_id = 7;
+    repeated int32 npc_stations = 8;
+
+    optional CelestialStatistics statistics = 9;
+
+    repeated int32 asteroid_belts = 10;
+
+    message MiningBeacon {
+        required UniversePoint position = 1;
+    }
+
+    optional MiningBeacon mining_beacon = 11;
+    optional int32 environment_template_id = 12;
+}
+
+message NpcStation {
+    required int32 station_id = 1;
+    required bool is_conquerable = 2;
+    required int32 operation_id = 3;
+    required int32 owner_id = 4;
+    required UniversePoint position = 5;
+    required double reprocessing_efficiency = 6;
+    required int32 reprocessing_hangar_flag = 7;
+    required double reprocessing_stations_take = 8;
+    required int32 type_id = 9;
+    required bool use_operation_name = 10;
+    required int32 orbit_id = 11;
+    required int32 graphic_id = 12;
+    required int32 solar_system_id = 13;
+    optional Rotation rotation = 14;
+    required string station_name = 15;
+    optional bool ignored_by_corporation_defense_djinn = 16;
+}
+
+message AsteroidBelt {
+    required int32 asteroid_belt_id = 1;
+    required int32 type_id = 2;
+    optional int32 asteroid_belt_name_id = 3;
+    
+    optional CelestialStatistics statistics = 4;
 }

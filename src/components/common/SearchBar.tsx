@@ -5,11 +5,6 @@ import type { Language } from "@/native";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
-export interface SearchResult {
-    id: number;
-    name: string;
-}
-
 export interface SearchInputRef {
     focus: () => void;
     blur: () => void;
@@ -23,17 +18,16 @@ interface SearchInputProps {
     ref?: React.Ref<SearchInputRef>;
 }
 
-interface SearchBarProps extends SearchInputProps {
-    onItemSelect?: (id: number) => void;
-    searchFunction: (query: string, language: Language) => Promise<number[]>;
-    getItemName: (id: number, language: string) => Promise<string | null>;
+interface SearchBarProps<R> extends SearchInputProps {
+    onItemSelect?: (id: R) => void;
+    searchFunction: (query: string, language: Language) => Promise<R[]>;
     noResultsMessage?: string;
     language: Language;
     children?: (ctx: {
-        results: SearchResult[];
+        results: R[];
         loading: boolean;
         query: string;
-        onSelect: (id: number) => void;
+        onSelect: (id: R) => void;
         onClear: () => void;
         noResultsMessage?: string;
     }) => React.ReactNode;
@@ -79,7 +73,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                 ref={inputRef}
                 className={cn(
                     "px-2 h-14 w-full font-sans text-lg outline-hidden rounded-none",
-                    "bg-transparent text-default-700 placeholder-default-500",
+                    "dark:bg-black text-default-700 placeholder-default-500",
                     "dark:text-default-500 dark:placeholder:text-default-300",
                     "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                 )}
@@ -105,17 +99,16 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     );
 };
 
-export function SearchBar({
+export function SearchBar<R>({
     onItemSelect,
     searchFunction,
-    getItemName,
     placeholder,
     noResultsMessage,
     language,
     children,
-}: SearchBarProps) {
+}: SearchBarProps<R>) {
     const [search, setSearch] = useState("");
-    const [results, setResults] = useState<SearchResult[]>([]);
+    const [results, setResults] = useState<R[]>([]);
     const [loading, setLoading] = useState(false);
     const inputRef = useRef<SearchInputRef>(null);
 
@@ -128,14 +121,7 @@ export function SearchBar({
         setLoading(true);
         (async () => {
             try {
-                const ids = await searchFunction(search, language);
-                const items: SearchResult[] = [];
-                for (const id of ids) {
-                    const name = await getItemName(id, language);
-                    if (name) {
-                        items.push({ id, name });
-                    }
-                }
+                const items = await searchFunction(search, language);
                 if (!ignore) setResults(items);
             } finally {
                 if (!ignore) setLoading(false);
@@ -144,9 +130,9 @@ export function SearchBar({
         return () => {
             ignore = true;
         };
-    }, [search, language, searchFunction, getItemName]);
+    }, [search, language, searchFunction]);
 
-    const handleItemSelect = (id: number) => {
+    const handleItemSelect = (id: R) => {
         onItemSelect?.(id);
         setSearch("");
         setResults([]);

@@ -496,6 +496,76 @@ export interface TypeLocalizationLookup_TypeLocEntry {
     typeDescriptionId?: number;
 }
 /**
+ * @generated from protobuf message eve_multitools.data.RegionLocalizationLookup
+ */
+export interface RegionLocalizationLookup {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.RegionLocalizationLookup.RegionLocEntry region_entries = 1
+     */
+    regionEntries: RegionLocalizationLookup_RegionLocEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.RegionLocalizationLookup.RegionLocEntry
+ */
+export interface RegionLocalizationLookup_RegionLocEntry {
+    /**
+     * @generated from protobuf field: required int32 region_id = 1
+     */
+    regionId: number;
+    /**
+     * @generated from protobuf field: required uint32 name_id = 2
+     */
+    nameId: number;
+    /**
+     * @generated from protobuf field: optional uint32 description_id = 3
+     */
+    descriptionId?: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.ConstellationLocalizationLookup
+ */
+export interface ConstellationLocalizationLookup {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.ConstellationLocalizationLookup.ConstellationLocEntry constellation_entries = 1
+     */
+    constellationEntries: ConstellationLocalizationLookup_ConstellationLocEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.ConstellationLocalizationLookup.ConstellationLocEntry
+ */
+export interface ConstellationLocalizationLookup_ConstellationLocEntry {
+    /**
+     * @generated from protobuf field: required int32 constellation_id = 1
+     */
+    constellationId: number;
+    /**
+     * @generated from protobuf field: required uint32 name_id = 2
+     */
+    nameId: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.SystemLocalizationLookup
+ */
+export interface SystemLocalizationLookup {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.SystemLocalizationLookup.SystemLocEntry system_entries = 1
+     */
+    systemEntries: SystemLocalizationLookup_SystemLocEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.SystemLocalizationLookup.SystemLocEntry
+ */
+export interface SystemLocalizationLookup_SystemLocEntry {
+    /**
+     * @generated from protobuf field: required int32 system_id = 1
+     */
+    systemId: number;
+    /**
+     * @generated from protobuf field: required uint32 name_id = 2
+     */
+    nameId: number;
+}
+/**
  * Faction definition
  *
  * @generated from protobuf message eve_multitools.data.Faction
@@ -645,6 +715,40 @@ export interface UniversePoint {
     z: number;
 }
 /**
+ * @generated from protobuf message eve_multitools.data.Rotation
+ */
+export interface Rotation {
+    /**
+     * @generated from protobuf field: required double yaw = 1
+     */
+    yaw: number;
+    /**
+     * @generated from protobuf field: required double pitch = 2
+     */
+    pitch: number;
+    /**
+     * @generated from protobuf field: required double roll = 3
+     */
+    roll: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.PointRotation
+ */
+export interface PointRotation {
+    /**
+     * @generated from protobuf field: required double x = 1
+     */
+    x: number;
+    /**
+     * @generated from protobuf field: required double y = 2
+     */
+    y: number;
+    /**
+     * @generated from protobuf field: required double z = 3
+     */
+    z: number;
+}
+/**
  * @generated from protobuf message eve_multitools.data.Region
  */
 export interface Region {
@@ -681,18 +785,669 @@ export interface Region {
      */
     factionId?: number;
     /**
-     * @generated from protobuf field: optional eve_multitools.data.Region.WormholeClassID wormhole_class_id = 9
+     * @generated from protobuf field: optional eve_multitools.data.WormholeClassID wormhole_class_id = 9
      */
-    wormholeClassId?: Region_WormholeClassID;
+    wormholeClassId?: WormholeClassID;
     /**
      * @generated from protobuf field: optional eve_multitools.data.Region.RegionType region_type = 10
      */
     regionType?: Region_RegionType;
 }
 /**
- * @generated from protobuf enum eve_multitools.data.Region.WormholeClassID
+ * @generated from protobuf enum eve_multitools.data.Region.RegionType
  */
-export enum Region_WormholeClassID {
+export enum Region_RegionType {
+    /**
+     * @generated synthetic value - protobuf-ts requires all enums to have a 0 value
+     */
+    UNSPECIFIED$ = 0,
+    /**
+     * @generated from protobuf enum value: HIGH_SEC = 1;
+     */
+    HIGH_SEC = 1,
+    /**
+     * @generated from protobuf enum value: LOW_SEC = 2;
+     */
+    LOW_SEC = 2,
+    /**
+     * @generated from protobuf enum value: NULL_SEC = 3;
+     */
+    NULL_SEC = 3,
+    /**
+     * @generated from protobuf enum value: WORMHOLE = 4;
+     */
+    WORMHOLE = 4,
+    /**
+     * @generated from protobuf enum value: VOID = 5;
+     */
+    VOID = 5,
+    /**
+     * @generated from protobuf enum value: ABYSSAL = 6;
+     */
+    ABYSSAL = 6,
+    /**
+     * @generated from protobuf enum value: POCHVEN = 7;
+     */
+    POCHVEN = 7,
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Constellation
+ */
+export interface Constellation {
+    /**
+     * @generated from protobuf field: required int32 constellation_id = 1
+     */
+    constellationId: number;
+    /**
+     * @generated from protobuf field: required int32 name_id = 2
+     */
+    nameId: number;
+    /**
+     * @generated from protobuf field: required int32 region_id = 3
+     */
+    regionId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint center = 4
+     */
+    center?: UniversePoint;
+    /**
+     * @generated from protobuf field: repeated int32 solar_system_ids = 5
+     */
+    solarSystemIds: number[];
+    /**
+     * @generated from protobuf field: optional int32 faction_id = 6
+     */
+    factionId?: number;
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.WormholeClassID wormhole_class_id = 7
+     */
+    wormholeClassId?: WormholeClassID;
+    /**
+     * @generated from protobuf field: repeated int32 neighbours = 8
+     */
+    neighbours: number[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.SolarSystem
+ */
+export interface SolarSystem {
+    /**
+     * @generated from protobuf field: required int32 solar_system_id = 1
+     */
+    solarSystemId: number;
+    /**
+     * @generated from protobuf field: required int32 solar_system_name_id = 2
+     */
+    solarSystemNameId: number;
+    /**
+     * @generated from protobuf field: required bool fringe = 3
+     */
+    fringe: boolean;
+    /**
+     * @generated from protobuf field: required bool hub = 4
+     */
+    hub: boolean;
+    /**
+     * @generated from protobuf field: required bool international = 5
+     */
+    international: boolean;
+    /**
+     * @generated from protobuf field: required bool regional = 6
+     */
+    regional: boolean;
+    /**
+     * @generated from protobuf field: required bool border = 7
+     */
+    border: boolean;
+    /**
+     * @generated from protobuf field: required bool corridor = 8
+     */
+    corridor: boolean;
+    /**
+     * @generated from protobuf field: required double luminosity = 9
+     */
+    luminosity: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 10
+     */
+    position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint max = 11
+     */
+    max?: UniversePoint;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint min = 12
+     */
+    min?: UniversePoint;
+    /**
+     * @generated from protobuf field: required double radius = 13
+     */
+    radius: number;
+    /**
+     * @generated from protobuf field: required double security = 14
+     */
+    security: number;
+    /**
+     * @generated from protobuf field: optional int32 description_id = 15
+     */
+    descriptionId?: number;
+    /**
+     * @generated from protobuf field: repeated int32 planets = 16
+     */
+    planets: number[];
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.WormholeClassID wormhole_class_id = 17
+     */
+    wormholeClassId?: WormholeClassID;
+    /**
+     * @generated from protobuf field: optional int32 secondary_sun = 18
+     */
+    secondarySun?: number;
+    /**
+     * @generated from protobuf field: optional string security_class = 19
+     */
+    securityClass?: string;
+    /**
+     * @generated from protobuf field: optional int32 faction_id = 20
+     */
+    factionId?: number;
+    /**
+     * @generated from protobuf field: optional int32 sun_type_id = 21
+     */
+    sunTypeId?: number;
+    /**
+     * @generated from protobuf field: optional int32 sun_flare_graphic_id = 22
+     */
+    sunFlareGraphicId?: number;
+    /**
+     * @generated from protobuf field: optional int32 star = 23
+     */
+    star?: number;
+    /**
+     * @generated from protobuf field: repeated int32 stargates = 24
+     */
+    stargates: number[];
+    /**
+     * @generated from protobuf field: repeated int32 disrupted_stargates = 25
+     */
+    disruptedStargates: number[];
+    /**
+     * @generated from protobuf field: required int32 warp_tunnel_overwrite = 26
+     */
+    warpTunnelOverwrite: number;
+    /**
+     * @generated from protobuf field: required int32 system_wide_cloud = 27
+     */
+    systemWideCloud: number;
+    /**
+     * @generated from protobuf field: required string visual_effect = 28
+     */
+    visualEffect: string;
+    /**
+     * @generated from protobuf field: repeated int32 disallowed_anchor_groups = 29
+     */
+    disallowedAnchorGroups: number[];
+    /**
+     * @generated from protobuf field: repeated int32 disallowed_anchor_categories = 30
+     */
+    disallowedAnchorCategories: number[];
+    /**
+     * @generated from protobuf field: optional double dscan_range = 31
+     */
+    dscanRange?: number;
+    /**
+     * @generated from protobuf field: optional bool disallow_scanning = 32
+     */
+    disallowScanning?: boolean;
+    /**
+     * @generated from protobuf field: optional bool disallow_cyno = 33
+     */
+    disallowCyno?: boolean;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.CelestialAttributes
+ */
+export interface CelestialAttributes {
+    /**
+     * @generated from protobuf field: required int32 height_map1 = 1
+     */
+    heightMap1: number;
+    /**
+     * @generated from protobuf field: required int32 height_map2 = 2
+     */
+    heightMap2: number;
+    /**
+     * @generated from protobuf field: required bool population = 3
+     */
+    population: boolean;
+    /**
+     * @generated from protobuf field: required int32 shader_preset = 4
+     */
+    shaderPreset: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.CelestialStatistics
+ */
+export interface CelestialStatistics {
+    /**
+     * @generated from protobuf field: required double density = 1
+     */
+    density: number;
+    /**
+     * @generated from protobuf field: required double escape_velocity = 2
+     */
+    escapeVelocity: number;
+    /**
+     * @generated from protobuf field: required double eccentricity = 3
+     */
+    eccentricity: number;
+    /**
+     * @generated from protobuf field: required bool fragmented = 4
+     */
+    fragmented: boolean;
+    /**
+     * @generated from protobuf field: required double life = 5
+     */
+    life: number;
+    /**
+     * @generated from protobuf field: required bool locked = 6
+     */
+    locked: boolean;
+    /**
+     * @generated from protobuf field: required double mass_dust = 7
+     */
+    massDust: number;
+    /**
+     * @generated from protobuf field: required double mass_gas = 8
+     */
+    massGas: number;
+    /**
+     * @generated from protobuf field: required double orbit_period = 9
+     */
+    orbitPeriod: number;
+    /**
+     * @generated from protobuf field: required double orbit_radius = 10
+     */
+    orbitRadius: number;
+    /**
+     * @generated from protobuf field: required double pressure = 11
+     */
+    pressure: number;
+    /**
+     * @generated from protobuf field: required double radius = 12
+     */
+    radius: number;
+    /**
+     * @generated from protobuf field: required double rotation_rate = 13
+     */
+    rotationRate: number;
+    /**
+     * @generated from protobuf field: required double surface_gravity = 14
+     */
+    surfaceGravity: number;
+    /**
+     * @generated from protobuf field: required double temperature = 15
+     */
+    temperature: number;
+    /**
+     * @generated from protobuf field: required string spectral_class = 16
+     */
+    spectralClass: string;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Planet
+ */
+export interface Planet {
+    /**
+     * @generated from protobuf field: required int32 planet_id = 1
+     */
+    planetId: number;
+    /**
+     * @generated from protobuf field: required int32 celestial_index = 2
+     */
+    celestialIndex: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.CelestialAttributes attributes = 3
+     */
+    attributes?: CelestialAttributes;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 4
+     */
+    position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required double radius = 5
+     */
+    radius: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 6
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: required int32 solar_system_id = 7
+     */
+    solarSystemId: number;
+    /**
+     * @generated from protobuf field: optional int32 planet_name_id = 8
+     */
+    planetNameId?: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.CelestialStatistics statistics = 9
+     */
+    statistics?: CelestialStatistics;
+    /**
+     * @generated from protobuf field: repeated int32 moons = 10
+     */
+    moons: number[];
+    /**
+     * @generated from protobuf field: repeated int32 npc_stations = 11
+     */
+    npcStations: number[];
+    /**
+     * @generated from protobuf field: repeated int32 asteroid_belts = 12
+     */
+    asteroidBelts: number[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.SecondarySun
+ */
+export interface SecondarySun {
+    /**
+     * @generated from protobuf field: required int32 sun_id = 1
+     */
+    sunId: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 2
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: required int32 effect_beacon_type_id = 3
+     */
+    effectBeaconTypeId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 4
+     */
+    position?: UniversePoint;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Star
+ */
+export interface Star {
+    /**
+     * @generated from protobuf field: required int32 star_id = 1
+     */
+    starId: number;
+    /**
+     * @generated from protobuf field: required double radius = 2
+     */
+    radius: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 3
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.Star.StarStatistics statistics = 4
+     */
+    statistics?: Star_StarStatistics;
+    /**
+     * @generated from protobuf field: repeated int32 npc_stations = 5
+     */
+    npcStations: number[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Star.StarStatistics
+ */
+export interface Star_StarStatistics {
+    /**
+     * @generated from protobuf field: required double age = 1
+     */
+    age: number;
+    /**
+     * @generated from protobuf field: required double life = 2
+     */
+    life: number;
+    /**
+     * @generated from protobuf field: required bool locked = 3
+     */
+    locked: boolean;
+    /**
+     * @generated from protobuf field: required double luminosity = 4
+     */
+    luminosity: number;
+    /**
+     * @generated from protobuf field: required double radius = 5
+     */
+    radius: number;
+    /**
+     * @generated from protobuf field: required double temperature = 6
+     */
+    temperature: number;
+    /**
+     * @generated from protobuf field: required string spectral_class = 7
+     */
+    spectralClass: string;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Stargate
+ */
+export interface Stargate {
+    /**
+     * @generated from protobuf field: required int32 stargate_id = 1
+     */
+    stargateId: number;
+    /**
+     * @generated from protobuf field: required int32 destination = 2
+     */
+    destination: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 3
+     */
+    position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required int32 type_id = 4
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.Rotation rotation = 5
+     */
+    rotation?: Rotation;
+    /**
+     * @generated from protobuf field: optional bool ignored_by_corporation_defense_djinn = 6
+     */
+    ignoredByCorporationDefenseDjinn?: boolean;
+    /**
+     * @generated from protobuf field: optional int32 allowed_ships_type_list_id = 7
+     */
+    allowedShipsTypeListId?: number;
+    /**
+     * @generated from protobuf field: required int32 solar_system_id = 8
+     */
+    solarSystemId: number;
+    /**
+     * @generated from protobuf field: required int32 destination_solar_system_id = 9
+     */
+    destinationSolarSystemId: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.DisruptedStargate
+ */
+export interface DisruptedStargate {
+    /**
+     * @generated from protobuf field: required int32 stargate_id = 1
+     */
+    stargateId: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 2
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: required int32 target_solar_system_id = 3
+     */
+    targetSolarSystemId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 4
+     */
+    position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.PointRotation rotation = 5
+     */
+    rotation?: PointRotation;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Moon
+ */
+export interface Moon {
+    /**
+     * @generated from protobuf field: required int32 moon_id = 1
+     */
+    moonId: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 2
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.CelestialAttributes attributes = 3
+     */
+    attributes?: CelestialAttributes;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 4
+     */
+    position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required double radius = 5
+     */
+    radius: number;
+    /**
+     * @generated from protobuf field: required int32 orbit_id = 6
+     */
+    orbitId: number;
+    /**
+     * @generated from protobuf field: optional int32 moon_name_id = 7
+     */
+    moonNameId?: number;
+    /**
+     * @generated from protobuf field: repeated int32 npc_stations = 8
+     */
+    npcStations: number[];
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.CelestialStatistics statistics = 9
+     */
+    statistics?: CelestialStatistics;
+    /**
+     * @generated from protobuf field: repeated int32 asteroid_belts = 10
+     */
+    asteroidBelts: number[];
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.Moon.MiningBeacon mining_beacon = 11
+     */
+    miningBeacon?: Moon_MiningBeacon;
+    /**
+     * @generated from protobuf field: optional int32 environment_template_id = 12
+     */
+    environmentTemplateId?: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.Moon.MiningBeacon
+ */
+export interface Moon_MiningBeacon {
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 1
+     */
+    position?: UniversePoint;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.NpcStation
+ */
+export interface NpcStation {
+    /**
+     * @generated from protobuf field: required int32 station_id = 1
+     */
+    stationId: number;
+    /**
+     * @generated from protobuf field: required bool is_conquerable = 2
+     */
+    isConquerable: boolean;
+    /**
+     * @generated from protobuf field: required int32 operation_id = 3
+     */
+    operationId: number;
+    /**
+     * @generated from protobuf field: required int32 owner_id = 4
+     */
+    ownerId: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 5
+     */
+    position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required double reprocessing_efficiency = 6
+     */
+    reprocessingEfficiency: number;
+    /**
+     * @generated from protobuf field: required int32 reprocessing_hangar_flag = 7
+     */
+    reprocessingHangarFlag: number;
+    /**
+     * @generated from protobuf field: required double reprocessing_stations_take = 8
+     */
+    reprocessingStationsTake: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 9
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: required bool use_operation_name = 10
+     */
+    useOperationName: boolean;
+    /**
+     * @generated from protobuf field: required int32 orbit_id = 11
+     */
+    orbitId: number;
+    /**
+     * @generated from protobuf field: required int32 graphic_id = 12
+     */
+    graphicId: number;
+    /**
+     * @generated from protobuf field: required int32 solar_system_id = 13
+     */
+    solarSystemId: number;
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.Rotation rotation = 14
+     */
+    rotation?: Rotation;
+    /**
+     * @generated from protobuf field: required string station_name = 15
+     */
+    stationName: string;
+    /**
+     * @generated from protobuf field: optional bool ignored_by_corporation_defense_djinn = 16
+     */
+    ignoredByCorporationDefenseDjinn?: boolean;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.AsteroidBelt
+ */
+export interface AsteroidBelt {
+    /**
+     * @generated from protobuf field: required int32 asteroid_belt_id = 1
+     */
+    asteroidBeltId: number;
+    /**
+     * @generated from protobuf field: required int32 type_id = 2
+     */
+    typeId: number;
+    /**
+     * @generated from protobuf field: optional int32 asteroid_belt_name_id = 3
+     */
+    asteroidBeltNameId?: number;
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.CelestialStatistics statistics = 4
+     */
+    statistics?: CelestialStatistics;
+}
+/**
+ * @generated from protobuf enum eve_multitools.data.WormholeClassID
+ */
+export enum WormholeClassID {
     /**
      * @generated synthetic value - protobuf-ts requires all enums to have a 0 value
      */
@@ -734,6 +1489,14 @@ export enum Region_WormholeClassID {
      */
     NULL_SEC_WM = 9,
     /**
+     * @generated from protobuf enum value: GM1 = 10;
+     */
+    GM1 = 10,
+    /**
+     * @generated from protobuf enum value: GM2 = 11;
+     */
+    GM2 = 11,
+    /**
      * @generated from protobuf enum value: THERA = 12;
      */
     THERA = 12,
@@ -741,6 +1504,26 @@ export enum Region_WormholeClassID {
      * @generated from protobuf enum value: SMALL_SHIP = 13;
      */
     SMALL_SHIP = 13,
+    /**
+     * @generated from protobuf enum value: SENTINEL = 14;
+     */
+    SENTINEL = 14,
+    /**
+     * @generated from protobuf enum value: BARBICAN = 15;
+     */
+    BARBICAN = 15,
+    /**
+     * @generated from protobuf enum value: VIDETTE = 16;
+     */
+    VIDETTE = 16,
+    /**
+     * @generated from protobuf enum value: CONFLUX = 17;
+     */
+    CONFLUX = 17,
+    /**
+     * @generated from protobuf enum value: REDOUBT = 18;
+     */
+    REDOUBT = 18,
     /**
      * @generated from protobuf enum value: VOID_OR_ABYSSAL1 = 19;
      */
@@ -765,65 +1548,6 @@ export enum Region_WormholeClassID {
      * @generated from protobuf enum value: POCHVEN_WM = 25;
      */
     POCHVEN_WM = 25,
-}
-/**
- * @generated from protobuf enum eve_multitools.data.Region.RegionType
- */
-export enum Region_RegionType {
-    /**
-     * @generated synthetic value - protobuf-ts requires all enums to have a 0 value
-     */
-    UNSPECIFIED$ = 0,
-    /**
-     * @generated from protobuf enum value: HIGH_SEC = 1;
-     */
-    HIGH_SEC = 1,
-    /**
-     * @generated from protobuf enum value: LOW_SEC = 2;
-     */
-    LOW_SEC = 2,
-    /**
-     * @generated from protobuf enum value: NULL_SEC = 3;
-     */
-    NULL_SEC = 3,
-    /**
-     * @generated from protobuf enum value: WORMHOLE = 4;
-     */
-    WORMHOLE = 4,
-    /**
-     * @generated from protobuf enum value: VOID = 5;
-     */
-    VOID = 5,
-    /**
-     * @generated from protobuf enum value: ABYSSAL = 6;
-     */
-    ABYSSAL = 6,
-    /**
-     * @generated from protobuf enum value: POCHVEN = 7;
-     */
-    POCHVEN = 7,
-}
-/**
- * @generated from protobuf message eve_multitools.data.RegionCollection
- */
-export interface RegionCollection {
-    /**
-     * @generated from protobuf field: repeated eve_multitools.data.RegionCollection.RegionEntry regions = 1
-     */
-    regions: RegionCollection_RegionEntry[];
-}
-/**
- * @generated from protobuf message eve_multitools.data.RegionCollection.RegionEntry
- */
-export interface RegionCollection_RegionEntry {
-    /**
-     * @generated from protobuf field: required int32 region_id = 1
-     */
-    regionId: number;
-    /**
-     * @generated from protobuf field: required eve_multitools.data.Region region_data = 2
-     */
-    regionData?: Region;
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class TypeID$Type extends MessageType<TypeID> {
@@ -3162,6 +3886,497 @@ class TypeLocalizationLookup_TypeLocEntry$Type extends MessageType<TypeLocalizat
  */
 export const TypeLocalizationLookup_TypeLocEntry = new TypeLocalizationLookup_TypeLocEntry$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class RegionLocalizationLookup$Type extends MessageType<RegionLocalizationLookup> {
+    constructor() {
+        super("eve_multitools.data.RegionLocalizationLookup", [
+            {
+                no: 1,
+                name: "region_entries",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => RegionLocalizationLookup_RegionLocEntry,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<RegionLocalizationLookup>): RegionLocalizationLookup {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.regionEntries = [];
+        if (value !== undefined)
+            reflectionMergePartial<RegionLocalizationLookup>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: RegionLocalizationLookup
+    ): RegionLocalizationLookup {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.RegionLocalizationLookup.RegionLocEntry region_entries */ 1:
+                    message.regionEntries.push(
+                        RegionLocalizationLookup_RegionLocEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: RegionLocalizationLookup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.RegionLocalizationLookup.RegionLocEntry region_entries = 1; */
+        for (let i = 0; i < message.regionEntries.length; i++)
+            RegionLocalizationLookup_RegionLocEntry.internalBinaryWrite(
+                message.regionEntries[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.RegionLocalizationLookup
+ */
+export const RegionLocalizationLookup = new RegionLocalizationLookup$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class RegionLocalizationLookup_RegionLocEntry$Type extends MessageType<RegionLocalizationLookup_RegionLocEntry> {
+    constructor() {
+        super("eve_multitools.data.RegionLocalizationLookup.RegionLocEntry", [
+            { no: 1, name: "region_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "name_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+            {
+                no: 3,
+                name: "description_id",
+                kind: "scalar",
+                opt: true,
+                T: 13 /*ScalarType.UINT32*/,
+            },
+        ]);
+    }
+    create(
+        value?: PartialMessage<RegionLocalizationLookup_RegionLocEntry>
+    ): RegionLocalizationLookup_RegionLocEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.regionId = 0;
+        message.nameId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<RegionLocalizationLookup_RegionLocEntry>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: RegionLocalizationLookup_RegionLocEntry
+    ): RegionLocalizationLookup_RegionLocEntry {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 region_id */ 1:
+                    message.regionId = reader.int32();
+                    break;
+                case /* required uint32 name_id */ 2:
+                    message.nameId = reader.uint32();
+                    break;
+                case /* optional uint32 description_id */ 3:
+                    message.descriptionId = reader.uint32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: RegionLocalizationLookup_RegionLocEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 region_id = 1; */
+        if (message.regionId !== 0) writer.tag(1, WireType.Varint).int32(message.regionId);
+        /* required uint32 name_id = 2; */
+        if (message.nameId !== 0) writer.tag(2, WireType.Varint).uint32(message.nameId);
+        /* optional uint32 description_id = 3; */
+        if (message.descriptionId !== undefined)
+            writer.tag(3, WireType.Varint).uint32(message.descriptionId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.RegionLocalizationLookup.RegionLocEntry
+ */
+export const RegionLocalizationLookup_RegionLocEntry =
+    new RegionLocalizationLookup_RegionLocEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ConstellationLocalizationLookup$Type extends MessageType<ConstellationLocalizationLookup> {
+    constructor() {
+        super("eve_multitools.data.ConstellationLocalizationLookup", [
+            {
+                no: 1,
+                name: "constellation_entries",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => ConstellationLocalizationLookup_ConstellationLocEntry,
+            },
+        ]);
+    }
+    create(
+        value?: PartialMessage<ConstellationLocalizationLookup>
+    ): ConstellationLocalizationLookup {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.constellationEntries = [];
+        if (value !== undefined)
+            reflectionMergePartial<ConstellationLocalizationLookup>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: ConstellationLocalizationLookup
+    ): ConstellationLocalizationLookup {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.ConstellationLocalizationLookup.ConstellationLocEntry constellation_entries */ 1:
+                    message.constellationEntries.push(
+                        ConstellationLocalizationLookup_ConstellationLocEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: ConstellationLocalizationLookup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.ConstellationLocalizationLookup.ConstellationLocEntry constellation_entries = 1; */
+        for (let i = 0; i < message.constellationEntries.length; i++)
+            ConstellationLocalizationLookup_ConstellationLocEntry.internalBinaryWrite(
+                message.constellationEntries[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.ConstellationLocalizationLookup
+ */
+export const ConstellationLocalizationLookup = new ConstellationLocalizationLookup$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ConstellationLocalizationLookup_ConstellationLocEntry$Type extends MessageType<ConstellationLocalizationLookup_ConstellationLocEntry> {
+    constructor() {
+        super("eve_multitools.data.ConstellationLocalizationLookup.ConstellationLocEntry", [
+            { no: 1, name: "constellation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "name_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+        ]);
+    }
+    create(
+        value?: PartialMessage<ConstellationLocalizationLookup_ConstellationLocEntry>
+    ): ConstellationLocalizationLookup_ConstellationLocEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.constellationId = 0;
+        message.nameId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ConstellationLocalizationLookup_ConstellationLocEntry>(
+                this,
+                message,
+                value
+            );
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: ConstellationLocalizationLookup_ConstellationLocEntry
+    ): ConstellationLocalizationLookup_ConstellationLocEntry {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 constellation_id */ 1:
+                    message.constellationId = reader.int32();
+                    break;
+                case /* required uint32 name_id */ 2:
+                    message.nameId = reader.uint32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: ConstellationLocalizationLookup_ConstellationLocEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 constellation_id = 1; */
+        if (message.constellationId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.constellationId);
+        /* required uint32 name_id = 2; */
+        if (message.nameId !== 0) writer.tag(2, WireType.Varint).uint32(message.nameId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.ConstellationLocalizationLookup.ConstellationLocEntry
+ */
+export const ConstellationLocalizationLookup_ConstellationLocEntry =
+    new ConstellationLocalizationLookup_ConstellationLocEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SystemLocalizationLookup$Type extends MessageType<SystemLocalizationLookup> {
+    constructor() {
+        super("eve_multitools.data.SystemLocalizationLookup", [
+            {
+                no: 1,
+                name: "system_entries",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => SystemLocalizationLookup_SystemLocEntry,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<SystemLocalizationLookup>): SystemLocalizationLookup {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.systemEntries = [];
+        if (value !== undefined)
+            reflectionMergePartial<SystemLocalizationLookup>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: SystemLocalizationLookup
+    ): SystemLocalizationLookup {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.SystemLocalizationLookup.SystemLocEntry system_entries */ 1:
+                    message.systemEntries.push(
+                        SystemLocalizationLookup_SystemLocEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: SystemLocalizationLookup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.SystemLocalizationLookup.SystemLocEntry system_entries = 1; */
+        for (let i = 0; i < message.systemEntries.length; i++)
+            SystemLocalizationLookup_SystemLocEntry.internalBinaryWrite(
+                message.systemEntries[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.SystemLocalizationLookup
+ */
+export const SystemLocalizationLookup = new SystemLocalizationLookup$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SystemLocalizationLookup_SystemLocEntry$Type extends MessageType<SystemLocalizationLookup_SystemLocEntry> {
+    constructor() {
+        super("eve_multitools.data.SystemLocalizationLookup.SystemLocEntry", [
+            { no: 1, name: "system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "name_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+        ]);
+    }
+    create(
+        value?: PartialMessage<SystemLocalizationLookup_SystemLocEntry>
+    ): SystemLocalizationLookup_SystemLocEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.systemId = 0;
+        message.nameId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<SystemLocalizationLookup_SystemLocEntry>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: SystemLocalizationLookup_SystemLocEntry
+    ): SystemLocalizationLookup_SystemLocEntry {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 system_id */ 1:
+                    message.systemId = reader.int32();
+                    break;
+                case /* required uint32 name_id */ 2:
+                    message.nameId = reader.uint32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: SystemLocalizationLookup_SystemLocEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 system_id = 1; */
+        if (message.systemId !== 0) writer.tag(1, WireType.Varint).int32(message.systemId);
+        /* required uint32 name_id = 2; */
+        if (message.nameId !== 0) writer.tag(2, WireType.Varint).uint32(message.nameId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.SystemLocalizationLookup.SystemLocEntry
+ */
+export const SystemLocalizationLookup_SystemLocEntry =
+    new SystemLocalizationLookup_SystemLocEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Faction$Type extends MessageType<Faction> {
     constructor() {
         super("eve_multitools.data.Faction", [
@@ -3864,6 +5079,162 @@ class UniversePoint$Type extends MessageType<UniversePoint> {
  */
 export const UniversePoint = new UniversePoint$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class Rotation$Type extends MessageType<Rotation> {
+    constructor() {
+        super("eve_multitools.data.Rotation", [
+            { no: 1, name: "yaw", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 2, name: "pitch", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "roll", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+        ]);
+    }
+    create(value?: PartialMessage<Rotation>): Rotation {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.yaw = 0;
+        message.pitch = 0;
+        message.roll = 0;
+        if (value !== undefined) reflectionMergePartial<Rotation>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Rotation
+    ): Rotation {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required double yaw */ 1:
+                    message.yaw = reader.double();
+                    break;
+                case /* required double pitch */ 2:
+                    message.pitch = reader.double();
+                    break;
+                case /* required double roll */ 3:
+                    message.roll = reader.double();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Rotation,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required double yaw = 1; */
+        if (message.yaw !== 0) writer.tag(1, WireType.Bit64).double(message.yaw);
+        /* required double pitch = 2; */
+        if (message.pitch !== 0) writer.tag(2, WireType.Bit64).double(message.pitch);
+        /* required double roll = 3; */
+        if (message.roll !== 0) writer.tag(3, WireType.Bit64).double(message.roll);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Rotation
+ */
+export const Rotation = new Rotation$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class PointRotation$Type extends MessageType<PointRotation> {
+    constructor() {
+        super("eve_multitools.data.PointRotation", [
+            { no: 1, name: "x", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 2, name: "y", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "z", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+        ]);
+    }
+    create(value?: PartialMessage<PointRotation>): PointRotation {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.x = 0;
+        message.y = 0;
+        message.z = 0;
+        if (value !== undefined) reflectionMergePartial<PointRotation>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: PointRotation
+    ): PointRotation {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required double x */ 1:
+                    message.x = reader.double();
+                    break;
+                case /* required double y */ 2:
+                    message.y = reader.double();
+                    break;
+                case /* required double z */ 3:
+                    message.z = reader.double();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: PointRotation,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required double x = 1; */
+        if (message.x !== 0) writer.tag(1, WireType.Bit64).double(message.x);
+        /* required double y = 2; */
+        if (message.y !== 0) writer.tag(2, WireType.Bit64).double(message.y);
+        /* required double z = 3; */
+        if (message.z !== 0) writer.tag(3, WireType.Bit64).double(message.z);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.PointRotation
+ */
+export const PointRotation = new PointRotation$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Region$Type extends MessageType<Region> {
     constructor() {
         super("eve_multitools.data.Region", [
@@ -3898,7 +5269,7 @@ class Region$Type extends MessageType<Region> {
                 name: "wormhole_class_id",
                 kind: "enum",
                 opt: true,
-                T: () => ["eve_multitools.data.Region.WormholeClassID", Region_WormholeClassID],
+                T: () => ["eve_multitools.data.WormholeClassID", WormholeClassID],
             },
             {
                 no: 10,
@@ -3968,7 +5339,7 @@ class Region$Type extends MessageType<Region> {
                 case /* optional int32 faction_id */ 8:
                     message.factionId = reader.int32();
                     break;
-                case /* optional eve_multitools.data.Region.WormholeClassID wormhole_class_id */ 9:
+                case /* optional eve_multitools.data.WormholeClassID wormhole_class_id */ 9:
                     message.wormholeClassId = reader.int32();
                     break;
                 case /* optional eve_multitools.data.Region.RegionType region_type */ 10:
@@ -4025,7 +5396,7 @@ class Region$Type extends MessageType<Region> {
         /* optional int32 faction_id = 8; */
         if (message.factionId !== undefined)
             writer.tag(8, WireType.Varint).int32(message.factionId);
-        /* optional eve_multitools.data.Region.WormholeClassID wormhole_class_id = 9; */
+        /* optional eve_multitools.data.WormholeClassID wormhole_class_id = 9; */
         if (message.wormholeClassId !== undefined)
             writer.tag(9, WireType.Varint).int32(message.wormholeClassId);
         /* optional eve_multitools.data.Region.RegionType region_type = 10; */
@@ -4042,42 +5413,1055 @@ class Region$Type extends MessageType<Region> {
  */
 export const Region = new Region$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class RegionCollection$Type extends MessageType<RegionCollection> {
+class Constellation$Type extends MessageType<Constellation> {
     constructor() {
-        super("eve_multitools.data.RegionCollection", [
+        super("eve_multitools.data.Constellation", [
+            { no: 1, name: "constellation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "region_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "center", kind: "message", T: () => UniversePoint },
             {
-                no: 1,
-                name: "regions",
-                kind: "message",
+                no: 5,
+                name: "solar_system_ids",
+                kind: "scalar",
                 repeat: 2 /*RepeatType.UNPACKED*/,
-                T: () => RegionCollection_RegionEntry,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 6, name: "faction_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 7,
+                name: "wormhole_class_id",
+                kind: "enum",
+                opt: true,
+                T: () => ["eve_multitools.data.WormholeClassID", WormholeClassID],
+            },
+            {
+                no: 8,
+                name: "neighbours",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
             },
         ]);
     }
-    create(value?: PartialMessage<RegionCollection>): RegionCollection {
+    create(value?: PartialMessage<Constellation>): Constellation {
         const message = globalThis.Object.create(this.messagePrototype!);
-        message.regions = [];
-        if (value !== undefined) reflectionMergePartial<RegionCollection>(this, message, value);
+        message.constellationId = 0;
+        message.nameId = 0;
+        message.regionId = 0;
+        message.solarSystemIds = [];
+        message.neighbours = [];
+        if (value !== undefined) reflectionMergePartial<Constellation>(this, message, value);
         return message;
     }
     internalBinaryRead(
         reader: IBinaryReader,
         length: number,
         options: BinaryReadOptions,
-        target?: RegionCollection
-    ): RegionCollection {
+        target?: Constellation
+    ): Constellation {
         const message = target ?? this.create(),
             end = reader.pos + length;
         while (reader.pos < end) {
             const [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated eve_multitools.data.RegionCollection.RegionEntry regions */ 1:
-                    message.regions.push(
-                        RegionCollection_RegionEntry.internalBinaryRead(
-                            reader,
-                            reader.uint32(),
-                            options
-                        )
+                case /* required int32 constellation_id */ 1:
+                    message.constellationId = reader.int32();
+                    break;
+                case /* required int32 name_id */ 2:
+                    message.nameId = reader.int32();
+                    break;
+                case /* required int32 region_id */ 3:
+                    message.regionId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.UniversePoint center */ 4:
+                    message.center = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.center
+                    );
+                    break;
+                case /* repeated int32 solar_system_ids */ 5:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.solarSystemIds.push(reader.int32());
+                    else message.solarSystemIds.push(reader.int32());
+                    break;
+                case /* optional int32 faction_id */ 6:
+                    message.factionId = reader.int32();
+                    break;
+                case /* optional eve_multitools.data.WormholeClassID wormhole_class_id */ 7:
+                    message.wormholeClassId = reader.int32();
+                    break;
+                case /* repeated int32 neighbours */ 8:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.neighbours.push(reader.int32());
+                    else message.neighbours.push(reader.int32());
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Constellation,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 constellation_id = 1; */
+        if (message.constellationId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.constellationId);
+        /* required int32 name_id = 2; */
+        if (message.nameId !== 0) writer.tag(2, WireType.Varint).int32(message.nameId);
+        /* required int32 region_id = 3; */
+        if (message.regionId !== 0) writer.tag(3, WireType.Varint).int32(message.regionId);
+        /* required eve_multitools.data.UniversePoint center = 4; */
+        if (message.center)
+            UniversePoint.internalBinaryWrite(
+                message.center,
+                writer.tag(4, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* repeated int32 solar_system_ids = 5; */
+        for (let i = 0; i < message.solarSystemIds.length; i++)
+            writer.tag(5, WireType.Varint).int32(message.solarSystemIds[i]);
+        /* optional int32 faction_id = 6; */
+        if (message.factionId !== undefined)
+            writer.tag(6, WireType.Varint).int32(message.factionId);
+        /* optional eve_multitools.data.WormholeClassID wormhole_class_id = 7; */
+        if (message.wormholeClassId !== undefined)
+            writer.tag(7, WireType.Varint).int32(message.wormholeClassId);
+        /* repeated int32 neighbours = 8; */
+        for (let i = 0; i < message.neighbours.length; i++)
+            writer.tag(8, WireType.Varint).int32(message.neighbours[i]);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Constellation
+ */
+export const Constellation = new Constellation$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SolarSystem$Type extends MessageType<SolarSystem> {
+    constructor() {
+        super("eve_multitools.data.SolarSystem", [
+            { no: 1, name: "solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "solar_system_name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "fringe", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 4, name: "hub", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 5, name: "international", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 6, name: "regional", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 7, name: "border", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 8, name: "corridor", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 9, name: "luminosity", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 10, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 11, name: "max", kind: "message", T: () => UniversePoint },
+            { no: 12, name: "min", kind: "message", T: () => UniversePoint },
+            { no: 13, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 14, name: "security", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            {
+                no: 15,
+                name: "description_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 16,
+                name: "planets",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 17,
+                name: "wormhole_class_id",
+                kind: "enum",
+                opt: true,
+                T: () => ["eve_multitools.data.WormholeClassID", WormholeClassID],
+            },
+            { no: 18, name: "secondary_sun", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 19,
+                name: "security_class",
+                kind: "scalar",
+                opt: true,
+                T: 9 /*ScalarType.STRING*/,
+            },
+            { no: 20, name: "faction_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 21, name: "sun_type_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 22,
+                name: "sun_flare_graphic_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 23, name: "star", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 24,
+                name: "stargates",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 25,
+                name: "disrupted_stargates",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 26, name: "warp_tunnel_overwrite", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 27, name: "system_wide_cloud", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 28, name: "visual_effect", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            {
+                no: 29,
+                name: "disallowed_anchor_groups",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 30,
+                name: "disallowed_anchor_categories",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 31, name: "dscan_range", kind: "scalar", opt: true, T: 1 /*ScalarType.DOUBLE*/ },
+            {
+                no: 32,
+                name: "disallow_scanning",
+                kind: "scalar",
+                opt: true,
+                T: 8 /*ScalarType.BOOL*/,
+            },
+            { no: 33, name: "disallow_cyno", kind: "scalar", opt: true, T: 8 /*ScalarType.BOOL*/ },
+        ]);
+    }
+    create(value?: PartialMessage<SolarSystem>): SolarSystem {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.solarSystemId = 0;
+        message.solarSystemNameId = 0;
+        message.fringe = false;
+        message.hub = false;
+        message.international = false;
+        message.regional = false;
+        message.border = false;
+        message.corridor = false;
+        message.luminosity = 0;
+        message.radius = 0;
+        message.security = 0;
+        message.planets = [];
+        message.stargates = [];
+        message.disruptedStargates = [];
+        message.warpTunnelOverwrite = 0;
+        message.systemWideCloud = 0;
+        message.visualEffect = "";
+        message.disallowedAnchorGroups = [];
+        message.disallowedAnchorCategories = [];
+        if (value !== undefined) reflectionMergePartial<SolarSystem>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: SolarSystem
+    ): SolarSystem {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 solar_system_id */ 1:
+                    message.solarSystemId = reader.int32();
+                    break;
+                case /* required int32 solar_system_name_id */ 2:
+                    message.solarSystemNameId = reader.int32();
+                    break;
+                case /* required bool fringe */ 3:
+                    message.fringe = reader.bool();
+                    break;
+                case /* required bool hub */ 4:
+                    message.hub = reader.bool();
+                    break;
+                case /* required bool international */ 5:
+                    message.international = reader.bool();
+                    break;
+                case /* required bool regional */ 6:
+                    message.regional = reader.bool();
+                    break;
+                case /* required bool border */ 7:
+                    message.border = reader.bool();
+                    break;
+                case /* required bool corridor */ 8:
+                    message.corridor = reader.bool();
+                    break;
+                case /* required double luminosity */ 9:
+                    message.luminosity = reader.double();
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 10:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
+                    );
+                    break;
+                case /* required eve_multitools.data.UniversePoint max */ 11:
+                    message.max = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.max
+                    );
+                    break;
+                case /* required eve_multitools.data.UniversePoint min */ 12:
+                    message.min = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.min
+                    );
+                    break;
+                case /* required double radius */ 13:
+                    message.radius = reader.double();
+                    break;
+                case /* required double security */ 14:
+                    message.security = reader.double();
+                    break;
+                case /* optional int32 description_id */ 15:
+                    message.descriptionId = reader.int32();
+                    break;
+                case /* repeated int32 planets */ 16:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.planets.push(reader.int32());
+                    else message.planets.push(reader.int32());
+                    break;
+                case /* optional eve_multitools.data.WormholeClassID wormhole_class_id */ 17:
+                    message.wormholeClassId = reader.int32();
+                    break;
+                case /* optional int32 secondary_sun */ 18:
+                    message.secondarySun = reader.int32();
+                    break;
+                case /* optional string security_class */ 19:
+                    message.securityClass = reader.string();
+                    break;
+                case /* optional int32 faction_id */ 20:
+                    message.factionId = reader.int32();
+                    break;
+                case /* optional int32 sun_type_id */ 21:
+                    message.sunTypeId = reader.int32();
+                    break;
+                case /* optional int32 sun_flare_graphic_id */ 22:
+                    message.sunFlareGraphicId = reader.int32();
+                    break;
+                case /* optional int32 star */ 23:
+                    message.star = reader.int32();
+                    break;
+                case /* repeated int32 stargates */ 24:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.stargates.push(reader.int32());
+                    else message.stargates.push(reader.int32());
+                    break;
+                case /* repeated int32 disrupted_stargates */ 25:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.disruptedStargates.push(reader.int32());
+                    else message.disruptedStargates.push(reader.int32());
+                    break;
+                case /* required int32 warp_tunnel_overwrite */ 26:
+                    message.warpTunnelOverwrite = reader.int32();
+                    break;
+                case /* required int32 system_wide_cloud */ 27:
+                    message.systemWideCloud = reader.int32();
+                    break;
+                case /* required string visual_effect */ 28:
+                    message.visualEffect = reader.string();
+                    break;
+                case /* repeated int32 disallowed_anchor_groups */ 29:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.disallowedAnchorGroups.push(reader.int32());
+                    else message.disallowedAnchorGroups.push(reader.int32());
+                    break;
+                case /* repeated int32 disallowed_anchor_categories */ 30:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.disallowedAnchorCategories.push(reader.int32());
+                    else message.disallowedAnchorCategories.push(reader.int32());
+                    break;
+                case /* optional double dscan_range */ 31:
+                    message.dscanRange = reader.double();
+                    break;
+                case /* optional bool disallow_scanning */ 32:
+                    message.disallowScanning = reader.bool();
+                    break;
+                case /* optional bool disallow_cyno */ 33:
+                    message.disallowCyno = reader.bool();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: SolarSystem,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 solar_system_id = 1; */
+        if (message.solarSystemId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.solarSystemId);
+        /* required int32 solar_system_name_id = 2; */
+        if (message.solarSystemNameId !== 0)
+            writer.tag(2, WireType.Varint).int32(message.solarSystemNameId);
+        /* required bool fringe = 3; */
+        if (message.fringe !== false) writer.tag(3, WireType.Varint).bool(message.fringe);
+        /* required bool hub = 4; */
+        if (message.hub !== false) writer.tag(4, WireType.Varint).bool(message.hub);
+        /* required bool international = 5; */
+        if (message.international !== false)
+            writer.tag(5, WireType.Varint).bool(message.international);
+        /* required bool regional = 6; */
+        if (message.regional !== false) writer.tag(6, WireType.Varint).bool(message.regional);
+        /* required bool border = 7; */
+        if (message.border !== false) writer.tag(7, WireType.Varint).bool(message.border);
+        /* required bool corridor = 8; */
+        if (message.corridor !== false) writer.tag(8, WireType.Varint).bool(message.corridor);
+        /* required double luminosity = 9; */
+        if (message.luminosity !== 0) writer.tag(9, WireType.Bit64).double(message.luminosity);
+        /* required eve_multitools.data.UniversePoint position = 10; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(10, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required eve_multitools.data.UniversePoint max = 11; */
+        if (message.max)
+            UniversePoint.internalBinaryWrite(
+                message.max,
+                writer.tag(11, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required eve_multitools.data.UniversePoint min = 12; */
+        if (message.min)
+            UniversePoint.internalBinaryWrite(
+                message.min,
+                writer.tag(12, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required double radius = 13; */
+        if (message.radius !== 0) writer.tag(13, WireType.Bit64).double(message.radius);
+        /* required double security = 14; */
+        if (message.security !== 0) writer.tag(14, WireType.Bit64).double(message.security);
+        /* optional int32 description_id = 15; */
+        if (message.descriptionId !== undefined)
+            writer.tag(15, WireType.Varint).int32(message.descriptionId);
+        /* repeated int32 planets = 16; */
+        for (let i = 0; i < message.planets.length; i++)
+            writer.tag(16, WireType.Varint).int32(message.planets[i]);
+        /* optional eve_multitools.data.WormholeClassID wormhole_class_id = 17; */
+        if (message.wormholeClassId !== undefined)
+            writer.tag(17, WireType.Varint).int32(message.wormholeClassId);
+        /* optional int32 secondary_sun = 18; */
+        if (message.secondarySun !== undefined)
+            writer.tag(18, WireType.Varint).int32(message.secondarySun);
+        /* optional string security_class = 19; */
+        if (message.securityClass !== undefined)
+            writer.tag(19, WireType.LengthDelimited).string(message.securityClass);
+        /* optional int32 faction_id = 20; */
+        if (message.factionId !== undefined)
+            writer.tag(20, WireType.Varint).int32(message.factionId);
+        /* optional int32 sun_type_id = 21; */
+        if (message.sunTypeId !== undefined)
+            writer.tag(21, WireType.Varint).int32(message.sunTypeId);
+        /* optional int32 sun_flare_graphic_id = 22; */
+        if (message.sunFlareGraphicId !== undefined)
+            writer.tag(22, WireType.Varint).int32(message.sunFlareGraphicId);
+        /* optional int32 star = 23; */
+        if (message.star !== undefined) writer.tag(23, WireType.Varint).int32(message.star);
+        /* repeated int32 stargates = 24; */
+        for (let i = 0; i < message.stargates.length; i++)
+            writer.tag(24, WireType.Varint).int32(message.stargates[i]);
+        /* repeated int32 disrupted_stargates = 25; */
+        for (let i = 0; i < message.disruptedStargates.length; i++)
+            writer.tag(25, WireType.Varint).int32(message.disruptedStargates[i]);
+        /* required int32 warp_tunnel_overwrite = 26; */
+        if (message.warpTunnelOverwrite !== 0)
+            writer.tag(26, WireType.Varint).int32(message.warpTunnelOverwrite);
+        /* required int32 system_wide_cloud = 27; */
+        if (message.systemWideCloud !== 0)
+            writer.tag(27, WireType.Varint).int32(message.systemWideCloud);
+        /* required string visual_effect = 28; */
+        if (message.visualEffect !== "")
+            writer.tag(28, WireType.LengthDelimited).string(message.visualEffect);
+        /* repeated int32 disallowed_anchor_groups = 29; */
+        for (let i = 0; i < message.disallowedAnchorGroups.length; i++)
+            writer.tag(29, WireType.Varint).int32(message.disallowedAnchorGroups[i]);
+        /* repeated int32 disallowed_anchor_categories = 30; */
+        for (let i = 0; i < message.disallowedAnchorCategories.length; i++)
+            writer.tag(30, WireType.Varint).int32(message.disallowedAnchorCategories[i]);
+        /* optional double dscan_range = 31; */
+        if (message.dscanRange !== undefined)
+            writer.tag(31, WireType.Bit64).double(message.dscanRange);
+        /* optional bool disallow_scanning = 32; */
+        if (message.disallowScanning !== undefined)
+            writer.tag(32, WireType.Varint).bool(message.disallowScanning);
+        /* optional bool disallow_cyno = 33; */
+        if (message.disallowCyno !== undefined)
+            writer.tag(33, WireType.Varint).bool(message.disallowCyno);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.SolarSystem
+ */
+export const SolarSystem = new SolarSystem$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class CelestialAttributes$Type extends MessageType<CelestialAttributes> {
+    constructor() {
+        super("eve_multitools.data.CelestialAttributes", [
+            { no: 1, name: "height_map1", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "height_map2", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "population", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 4, name: "shader_preset", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+        ]);
+    }
+    create(value?: PartialMessage<CelestialAttributes>): CelestialAttributes {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.heightMap1 = 0;
+        message.heightMap2 = 0;
+        message.population = false;
+        message.shaderPreset = 0;
+        if (value !== undefined) reflectionMergePartial<CelestialAttributes>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: CelestialAttributes
+    ): CelestialAttributes {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 height_map1 */ 1:
+                    message.heightMap1 = reader.int32();
+                    break;
+                case /* required int32 height_map2 */ 2:
+                    message.heightMap2 = reader.int32();
+                    break;
+                case /* required bool population */ 3:
+                    message.population = reader.bool();
+                    break;
+                case /* required int32 shader_preset */ 4:
+                    message.shaderPreset = reader.int32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: CelestialAttributes,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 height_map1 = 1; */
+        if (message.heightMap1 !== 0) writer.tag(1, WireType.Varint).int32(message.heightMap1);
+        /* required int32 height_map2 = 2; */
+        if (message.heightMap2 !== 0) writer.tag(2, WireType.Varint).int32(message.heightMap2);
+        /* required bool population = 3; */
+        if (message.population !== false) writer.tag(3, WireType.Varint).bool(message.population);
+        /* required int32 shader_preset = 4; */
+        if (message.shaderPreset !== 0) writer.tag(4, WireType.Varint).int32(message.shaderPreset);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.CelestialAttributes
+ */
+export const CelestialAttributes = new CelestialAttributes$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class CelestialStatistics$Type extends MessageType<CelestialStatistics> {
+    constructor() {
+        super("eve_multitools.data.CelestialStatistics", [
+            { no: 1, name: "density", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 2, name: "escape_velocity", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "eccentricity", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 4, name: "fragmented", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 5, name: "life", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "locked", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 7, name: "mass_dust", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 8, name: "mass_gas", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 9, name: "orbit_period", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 10, name: "orbit_radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 11, name: "pressure", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 12, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 13, name: "rotation_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 14, name: "surface_gravity", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 15, name: "temperature", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 16, name: "spectral_class", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+        ]);
+    }
+    create(value?: PartialMessage<CelestialStatistics>): CelestialStatistics {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.density = 0;
+        message.escapeVelocity = 0;
+        message.eccentricity = 0;
+        message.fragmented = false;
+        message.life = 0;
+        message.locked = false;
+        message.massDust = 0;
+        message.massGas = 0;
+        message.orbitPeriod = 0;
+        message.orbitRadius = 0;
+        message.pressure = 0;
+        message.radius = 0;
+        message.rotationRate = 0;
+        message.surfaceGravity = 0;
+        message.temperature = 0;
+        message.spectralClass = "";
+        if (value !== undefined) reflectionMergePartial<CelestialStatistics>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: CelestialStatistics
+    ): CelestialStatistics {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required double density */ 1:
+                    message.density = reader.double();
+                    break;
+                case /* required double escape_velocity */ 2:
+                    message.escapeVelocity = reader.double();
+                    break;
+                case /* required double eccentricity */ 3:
+                    message.eccentricity = reader.double();
+                    break;
+                case /* required bool fragmented */ 4:
+                    message.fragmented = reader.bool();
+                    break;
+                case /* required double life */ 5:
+                    message.life = reader.double();
+                    break;
+                case /* required bool locked */ 6:
+                    message.locked = reader.bool();
+                    break;
+                case /* required double mass_dust */ 7:
+                    message.massDust = reader.double();
+                    break;
+                case /* required double mass_gas */ 8:
+                    message.massGas = reader.double();
+                    break;
+                case /* required double orbit_period */ 9:
+                    message.orbitPeriod = reader.double();
+                    break;
+                case /* required double orbit_radius */ 10:
+                    message.orbitRadius = reader.double();
+                    break;
+                case /* required double pressure */ 11:
+                    message.pressure = reader.double();
+                    break;
+                case /* required double radius */ 12:
+                    message.radius = reader.double();
+                    break;
+                case /* required double rotation_rate */ 13:
+                    message.rotationRate = reader.double();
+                    break;
+                case /* required double surface_gravity */ 14:
+                    message.surfaceGravity = reader.double();
+                    break;
+                case /* required double temperature */ 15:
+                    message.temperature = reader.double();
+                    break;
+                case /* required string spectral_class */ 16:
+                    message.spectralClass = reader.string();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: CelestialStatistics,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required double density = 1; */
+        if (message.density !== 0) writer.tag(1, WireType.Bit64).double(message.density);
+        /* required double escape_velocity = 2; */
+        if (message.escapeVelocity !== 0)
+            writer.tag(2, WireType.Bit64).double(message.escapeVelocity);
+        /* required double eccentricity = 3; */
+        if (message.eccentricity !== 0) writer.tag(3, WireType.Bit64).double(message.eccentricity);
+        /* required bool fragmented = 4; */
+        if (message.fragmented !== false) writer.tag(4, WireType.Varint).bool(message.fragmented);
+        /* required double life = 5; */
+        if (message.life !== 0) writer.tag(5, WireType.Bit64).double(message.life);
+        /* required bool locked = 6; */
+        if (message.locked !== false) writer.tag(6, WireType.Varint).bool(message.locked);
+        /* required double mass_dust = 7; */
+        if (message.massDust !== 0) writer.tag(7, WireType.Bit64).double(message.massDust);
+        /* required double mass_gas = 8; */
+        if (message.massGas !== 0) writer.tag(8, WireType.Bit64).double(message.massGas);
+        /* required double orbit_period = 9; */
+        if (message.orbitPeriod !== 0) writer.tag(9, WireType.Bit64).double(message.orbitPeriod);
+        /* required double orbit_radius = 10; */
+        if (message.orbitRadius !== 0) writer.tag(10, WireType.Bit64).double(message.orbitRadius);
+        /* required double pressure = 11; */
+        if (message.pressure !== 0) writer.tag(11, WireType.Bit64).double(message.pressure);
+        /* required double radius = 12; */
+        if (message.radius !== 0) writer.tag(12, WireType.Bit64).double(message.radius);
+        /* required double rotation_rate = 13; */
+        if (message.rotationRate !== 0) writer.tag(13, WireType.Bit64).double(message.rotationRate);
+        /* required double surface_gravity = 14; */
+        if (message.surfaceGravity !== 0)
+            writer.tag(14, WireType.Bit64).double(message.surfaceGravity);
+        /* required double temperature = 15; */
+        if (message.temperature !== 0) writer.tag(15, WireType.Bit64).double(message.temperature);
+        /* required string spectral_class = 16; */
+        if (message.spectralClass !== "")
+            writer.tag(16, WireType.LengthDelimited).string(message.spectralClass);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.CelestialStatistics
+ */
+export const CelestialStatistics = new CelestialStatistics$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Planet$Type extends MessageType<Planet> {
+    constructor() {
+        super("eve_multitools.data.Planet", [
+            { no: 1, name: "planet_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "celestial_index", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "attributes", kind: "message", T: () => CelestialAttributes },
+            { no: 4, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 5, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 7, name: "solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 8, name: "planet_name_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 9, name: "statistics", kind: "message", T: () => CelestialStatistics },
+            {
+                no: 10,
+                name: "moons",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 11,
+                name: "npc_stations",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 12,
+                name: "asteroid_belts",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<Planet>): Planet {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.planetId = 0;
+        message.celestialIndex = 0;
+        message.radius = 0;
+        message.typeId = 0;
+        message.solarSystemId = 0;
+        message.moons = [];
+        message.npcStations = [];
+        message.asteroidBelts = [];
+        if (value !== undefined) reflectionMergePartial<Planet>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Planet
+    ): Planet {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 planet_id */ 1:
+                    message.planetId = reader.int32();
+                    break;
+                case /* required int32 celestial_index */ 2:
+                    message.celestialIndex = reader.int32();
+                    break;
+                case /* required eve_multitools.data.CelestialAttributes attributes */ 3:
+                    message.attributes = CelestialAttributes.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.attributes
+                    );
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 4:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
+                    );
+                    break;
+                case /* required double radius */ 5:
+                    message.radius = reader.double();
+                    break;
+                case /* required int32 type_id */ 6:
+                    message.typeId = reader.int32();
+                    break;
+                case /* required int32 solar_system_id */ 7:
+                    message.solarSystemId = reader.int32();
+                    break;
+                case /* optional int32 planet_name_id */ 8:
+                    message.planetNameId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.CelestialStatistics statistics */ 9:
+                    message.statistics = CelestialStatistics.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.statistics
+                    );
+                    break;
+                case /* repeated int32 moons */ 10:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.moons.push(reader.int32());
+                    else message.moons.push(reader.int32());
+                    break;
+                case /* repeated int32 npc_stations */ 11:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.npcStations.push(reader.int32());
+                    else message.npcStations.push(reader.int32());
+                    break;
+                case /* repeated int32 asteroid_belts */ 12:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.asteroidBelts.push(reader.int32());
+                    else message.asteroidBelts.push(reader.int32());
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Planet,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 planet_id = 1; */
+        if (message.planetId !== 0) writer.tag(1, WireType.Varint).int32(message.planetId);
+        /* required int32 celestial_index = 2; */
+        if (message.celestialIndex !== 0)
+            writer.tag(2, WireType.Varint).int32(message.celestialIndex);
+        /* required eve_multitools.data.CelestialAttributes attributes = 3; */
+        if (message.attributes)
+            CelestialAttributes.internalBinaryWrite(
+                message.attributes,
+                writer.tag(3, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required eve_multitools.data.UniversePoint position = 4; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(4, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required double radius = 5; */
+        if (message.radius !== 0) writer.tag(5, WireType.Bit64).double(message.radius);
+        /* required int32 type_id = 6; */
+        if (message.typeId !== 0) writer.tag(6, WireType.Varint).int32(message.typeId);
+        /* required int32 solar_system_id = 7; */
+        if (message.solarSystemId !== 0)
+            writer.tag(7, WireType.Varint).int32(message.solarSystemId);
+        /* optional int32 planet_name_id = 8; */
+        if (message.planetNameId !== undefined)
+            writer.tag(8, WireType.Varint).int32(message.planetNameId);
+        /* required eve_multitools.data.CelestialStatistics statistics = 9; */
+        if (message.statistics)
+            CelestialStatistics.internalBinaryWrite(
+                message.statistics,
+                writer.tag(9, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* repeated int32 moons = 10; */
+        for (let i = 0; i < message.moons.length; i++)
+            writer.tag(10, WireType.Varint).int32(message.moons[i]);
+        /* repeated int32 npc_stations = 11; */
+        for (let i = 0; i < message.npcStations.length; i++)
+            writer.tag(11, WireType.Varint).int32(message.npcStations[i]);
+        /* repeated int32 asteroid_belts = 12; */
+        for (let i = 0; i < message.asteroidBelts.length; i++)
+            writer.tag(12, WireType.Varint).int32(message.asteroidBelts[i]);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Planet
+ */
+export const Planet = new Planet$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SecondarySun$Type extends MessageType<SecondarySun> {
+    constructor() {
+        super("eve_multitools.data.SecondarySun", [
+            { no: 1, name: "sun_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "effect_beacon_type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "position", kind: "message", T: () => UniversePoint },
+        ]);
+    }
+    create(value?: PartialMessage<SecondarySun>): SecondarySun {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.sunId = 0;
+        message.typeId = 0;
+        message.effectBeaconTypeId = 0;
+        if (value !== undefined) reflectionMergePartial<SecondarySun>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: SecondarySun
+    ): SecondarySun {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 sun_id */ 1:
+                    message.sunId = reader.int32();
+                    break;
+                case /* required int32 type_id */ 2:
+                    message.typeId = reader.int32();
+                    break;
+                case /* required int32 effect_beacon_type_id */ 3:
+                    message.effectBeaconTypeId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 4:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
                     );
                     break;
                 default: {
@@ -4101,14 +6485,783 @@ class RegionCollection$Type extends MessageType<RegionCollection> {
         return message;
     }
     internalBinaryWrite(
-        message: RegionCollection,
+        message: SecondarySun,
         writer: IBinaryWriter,
         options: BinaryWriteOptions
     ): IBinaryWriter {
-        /* repeated eve_multitools.data.RegionCollection.RegionEntry regions = 1; */
-        for (let i = 0; i < message.regions.length; i++)
-            RegionCollection_RegionEntry.internalBinaryWrite(
-                message.regions[i],
+        /* required int32 sun_id = 1; */
+        if (message.sunId !== 0) writer.tag(1, WireType.Varint).int32(message.sunId);
+        /* required int32 type_id = 2; */
+        if (message.typeId !== 0) writer.tag(2, WireType.Varint).int32(message.typeId);
+        /* required int32 effect_beacon_type_id = 3; */
+        if (message.effectBeaconTypeId !== 0)
+            writer.tag(3, WireType.Varint).int32(message.effectBeaconTypeId);
+        /* required eve_multitools.data.UniversePoint position = 4; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(4, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.SecondarySun
+ */
+export const SecondarySun = new SecondarySun$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Star$Type extends MessageType<Star> {
+    constructor() {
+        super("eve_multitools.data.Star", [
+            { no: 1, name: "star_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "statistics", kind: "message", T: () => Star_StarStatistics },
+            {
+                no: 5,
+                name: "npc_stations",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<Star>): Star {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.starId = 0;
+        message.radius = 0;
+        message.typeId = 0;
+        message.npcStations = [];
+        if (value !== undefined) reflectionMergePartial<Star>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Star
+    ): Star {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 star_id */ 1:
+                    message.starId = reader.int32();
+                    break;
+                case /* required double radius */ 2:
+                    message.radius = reader.double();
+                    break;
+                case /* required int32 type_id */ 3:
+                    message.typeId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.Star.StarStatistics statistics */ 4:
+                    message.statistics = Star_StarStatistics.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.statistics
+                    );
+                    break;
+                case /* repeated int32 npc_stations */ 5:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.npcStations.push(reader.int32());
+                    else message.npcStations.push(reader.int32());
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Star,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 star_id = 1; */
+        if (message.starId !== 0) writer.tag(1, WireType.Varint).int32(message.starId);
+        /* required double radius = 2; */
+        if (message.radius !== 0) writer.tag(2, WireType.Bit64).double(message.radius);
+        /* required int32 type_id = 3; */
+        if (message.typeId !== 0) writer.tag(3, WireType.Varint).int32(message.typeId);
+        /* required eve_multitools.data.Star.StarStatistics statistics = 4; */
+        if (message.statistics)
+            Star_StarStatistics.internalBinaryWrite(
+                message.statistics,
+                writer.tag(4, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* repeated int32 npc_stations = 5; */
+        for (let i = 0; i < message.npcStations.length; i++)
+            writer.tag(5, WireType.Varint).int32(message.npcStations[i]);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Star
+ */
+export const Star = new Star$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Star_StarStatistics$Type extends MessageType<Star_StarStatistics> {
+    constructor() {
+        super("eve_multitools.data.Star.StarStatistics", [
+            { no: 1, name: "age", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 2, name: "life", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "locked", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 4, name: "luminosity", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 5, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "temperature", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "spectral_class", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+        ]);
+    }
+    create(value?: PartialMessage<Star_StarStatistics>): Star_StarStatistics {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.age = 0;
+        message.life = 0;
+        message.locked = false;
+        message.luminosity = 0;
+        message.radius = 0;
+        message.temperature = 0;
+        message.spectralClass = "";
+        if (value !== undefined) reflectionMergePartial<Star_StarStatistics>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Star_StarStatistics
+    ): Star_StarStatistics {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required double age */ 1:
+                    message.age = reader.double();
+                    break;
+                case /* required double life */ 2:
+                    message.life = reader.double();
+                    break;
+                case /* required bool locked */ 3:
+                    message.locked = reader.bool();
+                    break;
+                case /* required double luminosity */ 4:
+                    message.luminosity = reader.double();
+                    break;
+                case /* required double radius */ 5:
+                    message.radius = reader.double();
+                    break;
+                case /* required double temperature */ 6:
+                    message.temperature = reader.double();
+                    break;
+                case /* required string spectral_class */ 7:
+                    message.spectralClass = reader.string();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Star_StarStatistics,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required double age = 1; */
+        if (message.age !== 0) writer.tag(1, WireType.Bit64).double(message.age);
+        /* required double life = 2; */
+        if (message.life !== 0) writer.tag(2, WireType.Bit64).double(message.life);
+        /* required bool locked = 3; */
+        if (message.locked !== false) writer.tag(3, WireType.Varint).bool(message.locked);
+        /* required double luminosity = 4; */
+        if (message.luminosity !== 0) writer.tag(4, WireType.Bit64).double(message.luminosity);
+        /* required double radius = 5; */
+        if (message.radius !== 0) writer.tag(5, WireType.Bit64).double(message.radius);
+        /* required double temperature = 6; */
+        if (message.temperature !== 0) writer.tag(6, WireType.Bit64).double(message.temperature);
+        /* required string spectral_class = 7; */
+        if (message.spectralClass !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.spectralClass);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Star.StarStatistics
+ */
+export const Star_StarStatistics = new Star_StarStatistics$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Stargate$Type extends MessageType<Stargate> {
+    constructor() {
+        super("eve_multitools.data.Stargate", [
+            { no: 1, name: "stargate_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "destination", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 4, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "rotation", kind: "message", T: () => Rotation },
+            {
+                no: 6,
+                name: "ignored_by_corporation_defense_djinn",
+                kind: "scalar",
+                opt: true,
+                T: 8 /*ScalarType.BOOL*/,
+            },
+            {
+                no: 7,
+                name: "allowed_ships_type_list_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 8, name: "solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 9,
+                name: "destination_solar_system_id",
+                kind: "scalar",
+                T: 5 /*ScalarType.INT32*/,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<Stargate>): Stargate {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.stargateId = 0;
+        message.destination = 0;
+        message.typeId = 0;
+        message.solarSystemId = 0;
+        message.destinationSolarSystemId = 0;
+        if (value !== undefined) reflectionMergePartial<Stargate>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Stargate
+    ): Stargate {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 stargate_id */ 1:
+                    message.stargateId = reader.int32();
+                    break;
+                case /* required int32 destination */ 2:
+                    message.destination = reader.int32();
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 3:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
+                    );
+                    break;
+                case /* required int32 type_id */ 4:
+                    message.typeId = reader.int32();
+                    break;
+                case /* optional eve_multitools.data.Rotation rotation */ 5:
+                    message.rotation = Rotation.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.rotation
+                    );
+                    break;
+                case /* optional bool ignored_by_corporation_defense_djinn */ 6:
+                    message.ignoredByCorporationDefenseDjinn = reader.bool();
+                    break;
+                case /* optional int32 allowed_ships_type_list_id */ 7:
+                    message.allowedShipsTypeListId = reader.int32();
+                    break;
+                case /* required int32 solar_system_id */ 8:
+                    message.solarSystemId = reader.int32();
+                    break;
+                case /* required int32 destination_solar_system_id */ 9:
+                    message.destinationSolarSystemId = reader.int32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Stargate,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 stargate_id = 1; */
+        if (message.stargateId !== 0) writer.tag(1, WireType.Varint).int32(message.stargateId);
+        /* required int32 destination = 2; */
+        if (message.destination !== 0) writer.tag(2, WireType.Varint).int32(message.destination);
+        /* required eve_multitools.data.UniversePoint position = 3; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(3, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required int32 type_id = 4; */
+        if (message.typeId !== 0) writer.tag(4, WireType.Varint).int32(message.typeId);
+        /* optional eve_multitools.data.Rotation rotation = 5; */
+        if (message.rotation)
+            Rotation.internalBinaryWrite(
+                message.rotation,
+                writer.tag(5, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* optional bool ignored_by_corporation_defense_djinn = 6; */
+        if (message.ignoredByCorporationDefenseDjinn !== undefined)
+            writer.tag(6, WireType.Varint).bool(message.ignoredByCorporationDefenseDjinn);
+        /* optional int32 allowed_ships_type_list_id = 7; */
+        if (message.allowedShipsTypeListId !== undefined)
+            writer.tag(7, WireType.Varint).int32(message.allowedShipsTypeListId);
+        /* required int32 solar_system_id = 8; */
+        if (message.solarSystemId !== 0)
+            writer.tag(8, WireType.Varint).int32(message.solarSystemId);
+        /* required int32 destination_solar_system_id = 9; */
+        if (message.destinationSolarSystemId !== 0)
+            writer.tag(9, WireType.Varint).int32(message.destinationSolarSystemId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Stargate
+ */
+export const Stargate = new Stargate$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class DisruptedStargate$Type extends MessageType<DisruptedStargate> {
+    constructor() {
+        super("eve_multitools.data.DisruptedStargate", [
+            { no: 1, name: "stargate_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "target_solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 5, name: "rotation", kind: "message", T: () => PointRotation },
+        ]);
+    }
+    create(value?: PartialMessage<DisruptedStargate>): DisruptedStargate {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.stargateId = 0;
+        message.typeId = 0;
+        message.targetSolarSystemId = 0;
+        if (value !== undefined) reflectionMergePartial<DisruptedStargate>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: DisruptedStargate
+    ): DisruptedStargate {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 stargate_id */ 1:
+                    message.stargateId = reader.int32();
+                    break;
+                case /* required int32 type_id */ 2:
+                    message.typeId = reader.int32();
+                    break;
+                case /* required int32 target_solar_system_id */ 3:
+                    message.targetSolarSystemId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 4:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
+                    );
+                    break;
+                case /* required eve_multitools.data.PointRotation rotation */ 5:
+                    message.rotation = PointRotation.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.rotation
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: DisruptedStargate,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 stargate_id = 1; */
+        if (message.stargateId !== 0) writer.tag(1, WireType.Varint).int32(message.stargateId);
+        /* required int32 type_id = 2; */
+        if (message.typeId !== 0) writer.tag(2, WireType.Varint).int32(message.typeId);
+        /* required int32 target_solar_system_id = 3; */
+        if (message.targetSolarSystemId !== 0)
+            writer.tag(3, WireType.Varint).int32(message.targetSolarSystemId);
+        /* required eve_multitools.data.UniversePoint position = 4; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(4, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required eve_multitools.data.PointRotation rotation = 5; */
+        if (message.rotation)
+            PointRotation.internalBinaryWrite(
+                message.rotation,
+                writer.tag(5, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.DisruptedStargate
+ */
+export const DisruptedStargate = new DisruptedStargate$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Moon$Type extends MessageType<Moon> {
+    constructor() {
+        super("eve_multitools.data.Moon", [
+            { no: 1, name: "moon_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "attributes", kind: "message", T: () => CelestialAttributes },
+            { no: 4, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 5, name: "radius", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "orbit_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 7, name: "moon_name_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 8,
+                name: "npc_stations",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 9, name: "statistics", kind: "message", T: () => CelestialStatistics },
+            {
+                no: 10,
+                name: "asteroid_belts",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 11, name: "mining_beacon", kind: "message", T: () => Moon_MiningBeacon },
+            {
+                no: 12,
+                name: "environment_template_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<Moon>): Moon {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.moonId = 0;
+        message.typeId = 0;
+        message.radius = 0;
+        message.orbitId = 0;
+        message.npcStations = [];
+        message.asteroidBelts = [];
+        if (value !== undefined) reflectionMergePartial<Moon>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Moon
+    ): Moon {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 moon_id */ 1:
+                    message.moonId = reader.int32();
+                    break;
+                case /* required int32 type_id */ 2:
+                    message.typeId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.CelestialAttributes attributes */ 3:
+                    message.attributes = CelestialAttributes.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.attributes
+                    );
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 4:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
+                    );
+                    break;
+                case /* required double radius */ 5:
+                    message.radius = reader.double();
+                    break;
+                case /* required int32 orbit_id */ 6:
+                    message.orbitId = reader.int32();
+                    break;
+                case /* optional int32 moon_name_id */ 7:
+                    message.moonNameId = reader.int32();
+                    break;
+                case /* repeated int32 npc_stations */ 8:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.npcStations.push(reader.int32());
+                    else message.npcStations.push(reader.int32());
+                    break;
+                case /* optional eve_multitools.data.CelestialStatistics statistics */ 9:
+                    message.statistics = CelestialStatistics.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.statistics
+                    );
+                    break;
+                case /* repeated int32 asteroid_belts */ 10:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.asteroidBelts.push(reader.int32());
+                    else message.asteroidBelts.push(reader.int32());
+                    break;
+                case /* optional eve_multitools.data.Moon.MiningBeacon mining_beacon */ 11:
+                    message.miningBeacon = Moon_MiningBeacon.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.miningBeacon
+                    );
+                    break;
+                case /* optional int32 environment_template_id */ 12:
+                    message.environmentTemplateId = reader.int32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Moon,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 moon_id = 1; */
+        if (message.moonId !== 0) writer.tag(1, WireType.Varint).int32(message.moonId);
+        /* required int32 type_id = 2; */
+        if (message.typeId !== 0) writer.tag(2, WireType.Varint).int32(message.typeId);
+        /* required eve_multitools.data.CelestialAttributes attributes = 3; */
+        if (message.attributes)
+            CelestialAttributes.internalBinaryWrite(
+                message.attributes,
+                writer.tag(3, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required eve_multitools.data.UniversePoint position = 4; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(4, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required double radius = 5; */
+        if (message.radius !== 0) writer.tag(5, WireType.Bit64).double(message.radius);
+        /* required int32 orbit_id = 6; */
+        if (message.orbitId !== 0) writer.tag(6, WireType.Varint).int32(message.orbitId);
+        /* optional int32 moon_name_id = 7; */
+        if (message.moonNameId !== undefined)
+            writer.tag(7, WireType.Varint).int32(message.moonNameId);
+        /* repeated int32 npc_stations = 8; */
+        for (let i = 0; i < message.npcStations.length; i++)
+            writer.tag(8, WireType.Varint).int32(message.npcStations[i]);
+        /* optional eve_multitools.data.CelestialStatistics statistics = 9; */
+        if (message.statistics)
+            CelestialStatistics.internalBinaryWrite(
+                message.statistics,
+                writer.tag(9, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* repeated int32 asteroid_belts = 10; */
+        for (let i = 0; i < message.asteroidBelts.length; i++)
+            writer.tag(10, WireType.Varint).int32(message.asteroidBelts[i]);
+        /* optional eve_multitools.data.Moon.MiningBeacon mining_beacon = 11; */
+        if (message.miningBeacon)
+            Moon_MiningBeacon.internalBinaryWrite(
+                message.miningBeacon,
+                writer.tag(11, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* optional int32 environment_template_id = 12; */
+        if (message.environmentTemplateId !== undefined)
+            writer.tag(12, WireType.Varint).int32(message.environmentTemplateId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.Moon
+ */
+export const Moon = new Moon$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Moon_MiningBeacon$Type extends MessageType<Moon_MiningBeacon> {
+    constructor() {
+        super("eve_multitools.data.Moon.MiningBeacon", [
+            { no: 1, name: "position", kind: "message", T: () => UniversePoint },
+        ]);
+    }
+    create(value?: PartialMessage<Moon_MiningBeacon>): Moon_MiningBeacon {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        if (value !== undefined) reflectionMergePartial<Moon_MiningBeacon>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: Moon_MiningBeacon
+    ): Moon_MiningBeacon {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required eve_multitools.data.UniversePoint position */ 1:
+                    message.position = UniversePoint.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.position
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: Moon_MiningBeacon,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required eve_multitools.data.UniversePoint position = 1; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
                 writer.tag(1, WireType.LengthDelimited).fork(),
                 options
             ).join();
@@ -4119,44 +7272,263 @@ class RegionCollection$Type extends MessageType<RegionCollection> {
     }
 }
 /**
- * @generated MessageType for protobuf message eve_multitools.data.RegionCollection
+ * @generated MessageType for protobuf message eve_multitools.data.Moon.MiningBeacon
  */
-export const RegionCollection = new RegionCollection$Type();
+export const Moon_MiningBeacon = new Moon_MiningBeacon$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class RegionCollection_RegionEntry$Type extends MessageType<RegionCollection_RegionEntry> {
+class NpcStation$Type extends MessageType<NpcStation> {
     constructor() {
-        super("eve_multitools.data.RegionCollection.RegionEntry", [
-            { no: 1, name: "region_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 2, name: "region_data", kind: "message", T: () => Region },
+        super("eve_multitools.data.NpcStation", [
+            { no: 1, name: "station_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "is_conquerable", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 3, name: "operation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "owner_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 6, name: "reprocessing_efficiency", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "reprocessing_hangar_flag", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 8,
+                name: "reprocessing_stations_take",
+                kind: "scalar",
+                T: 1 /*ScalarType.DOUBLE*/,
+            },
+            { no: 9, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 10, name: "use_operation_name", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 11, name: "orbit_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 12, name: "graphic_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 13, name: "solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 14, name: "rotation", kind: "message", T: () => Rotation },
+            { no: 15, name: "station_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            {
+                no: 16,
+                name: "ignored_by_corporation_defense_djinn",
+                kind: "scalar",
+                opt: true,
+                T: 8 /*ScalarType.BOOL*/,
+            },
         ]);
     }
-    create(value?: PartialMessage<RegionCollection_RegionEntry>): RegionCollection_RegionEntry {
+    create(value?: PartialMessage<NpcStation>): NpcStation {
         const message = globalThis.Object.create(this.messagePrototype!);
-        message.regionId = 0;
-        if (value !== undefined)
-            reflectionMergePartial<RegionCollection_RegionEntry>(this, message, value);
+        message.stationId = 0;
+        message.isConquerable = false;
+        message.operationId = 0;
+        message.ownerId = 0;
+        message.reprocessingEfficiency = 0;
+        message.reprocessingHangarFlag = 0;
+        message.reprocessingStationsTake = 0;
+        message.typeId = 0;
+        message.useOperationName = false;
+        message.orbitId = 0;
+        message.graphicId = 0;
+        message.solarSystemId = 0;
+        message.stationName = "";
+        if (value !== undefined) reflectionMergePartial<NpcStation>(this, message, value);
         return message;
     }
     internalBinaryRead(
         reader: IBinaryReader,
         length: number,
         options: BinaryReadOptions,
-        target?: RegionCollection_RegionEntry
-    ): RegionCollection_RegionEntry {
+        target?: NpcStation
+    ): NpcStation {
         const message = target ?? this.create(),
             end = reader.pos + length;
         while (reader.pos < end) {
             const [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* required int32 region_id */ 1:
-                    message.regionId = reader.int32();
+                case /* required int32 station_id */ 1:
+                    message.stationId = reader.int32();
                     break;
-                case /* required eve_multitools.data.Region region_data */ 2:
-                    message.regionData = Region.internalBinaryRead(
+                case /* required bool is_conquerable */ 2:
+                    message.isConquerable = reader.bool();
+                    break;
+                case /* required int32 operation_id */ 3:
+                    message.operationId = reader.int32();
+                    break;
+                case /* required int32 owner_id */ 4:
+                    message.ownerId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.UniversePoint position */ 5:
+                    message.position = UniversePoint.internalBinaryRead(
                         reader,
                         reader.uint32(),
                         options,
-                        message.regionData
+                        message.position
+                    );
+                    break;
+                case /* required double reprocessing_efficiency */ 6:
+                    message.reprocessingEfficiency = reader.double();
+                    break;
+                case /* required int32 reprocessing_hangar_flag */ 7:
+                    message.reprocessingHangarFlag = reader.int32();
+                    break;
+                case /* required double reprocessing_stations_take */ 8:
+                    message.reprocessingStationsTake = reader.double();
+                    break;
+                case /* required int32 type_id */ 9:
+                    message.typeId = reader.int32();
+                    break;
+                case /* required bool use_operation_name */ 10:
+                    message.useOperationName = reader.bool();
+                    break;
+                case /* required int32 orbit_id */ 11:
+                    message.orbitId = reader.int32();
+                    break;
+                case /* required int32 graphic_id */ 12:
+                    message.graphicId = reader.int32();
+                    break;
+                case /* required int32 solar_system_id */ 13:
+                    message.solarSystemId = reader.int32();
+                    break;
+                case /* optional eve_multitools.data.Rotation rotation */ 14:
+                    message.rotation = Rotation.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.rotation
+                    );
+                    break;
+                case /* required string station_name */ 15:
+                    message.stationName = reader.string();
+                    break;
+                case /* optional bool ignored_by_corporation_defense_djinn */ 16:
+                    message.ignoredByCorporationDefenseDjinn = reader.bool();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: NpcStation,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 station_id = 1; */
+        if (message.stationId !== 0) writer.tag(1, WireType.Varint).int32(message.stationId);
+        /* required bool is_conquerable = 2; */
+        if (message.isConquerable !== false)
+            writer.tag(2, WireType.Varint).bool(message.isConquerable);
+        /* required int32 operation_id = 3; */
+        if (message.operationId !== 0) writer.tag(3, WireType.Varint).int32(message.operationId);
+        /* required int32 owner_id = 4; */
+        if (message.ownerId !== 0) writer.tag(4, WireType.Varint).int32(message.ownerId);
+        /* required eve_multitools.data.UniversePoint position = 5; */
+        if (message.position)
+            UniversePoint.internalBinaryWrite(
+                message.position,
+                writer.tag(5, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required double reprocessing_efficiency = 6; */
+        if (message.reprocessingEfficiency !== 0)
+            writer.tag(6, WireType.Bit64).double(message.reprocessingEfficiency);
+        /* required int32 reprocessing_hangar_flag = 7; */
+        if (message.reprocessingHangarFlag !== 0)
+            writer.tag(7, WireType.Varint).int32(message.reprocessingHangarFlag);
+        /* required double reprocessing_stations_take = 8; */
+        if (message.reprocessingStationsTake !== 0)
+            writer.tag(8, WireType.Bit64).double(message.reprocessingStationsTake);
+        /* required int32 type_id = 9; */
+        if (message.typeId !== 0) writer.tag(9, WireType.Varint).int32(message.typeId);
+        /* required bool use_operation_name = 10; */
+        if (message.useOperationName !== false)
+            writer.tag(10, WireType.Varint).bool(message.useOperationName);
+        /* required int32 orbit_id = 11; */
+        if (message.orbitId !== 0) writer.tag(11, WireType.Varint).int32(message.orbitId);
+        /* required int32 graphic_id = 12; */
+        if (message.graphicId !== 0) writer.tag(12, WireType.Varint).int32(message.graphicId);
+        /* required int32 solar_system_id = 13; */
+        if (message.solarSystemId !== 0)
+            writer.tag(13, WireType.Varint).int32(message.solarSystemId);
+        /* optional eve_multitools.data.Rotation rotation = 14; */
+        if (message.rotation)
+            Rotation.internalBinaryWrite(
+                message.rotation,
+                writer.tag(14, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* required string station_name = 15; */
+        if (message.stationName !== "")
+            writer.tag(15, WireType.LengthDelimited).string(message.stationName);
+        /* optional bool ignored_by_corporation_defense_djinn = 16; */
+        if (message.ignoredByCorporationDefenseDjinn !== undefined)
+            writer.tag(16, WireType.Varint).bool(message.ignoredByCorporationDefenseDjinn);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.NpcStation
+ */
+export const NpcStation = new NpcStation$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AsteroidBelt$Type extends MessageType<AsteroidBelt> {
+    constructor() {
+        super("eve_multitools.data.AsteroidBelt", [
+            { no: 1, name: "asteroid_belt_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 3,
+                name: "asteroid_belt_name_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 4, name: "statistics", kind: "message", T: () => CelestialStatistics },
+        ]);
+    }
+    create(value?: PartialMessage<AsteroidBelt>): AsteroidBelt {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.asteroidBeltId = 0;
+        message.typeId = 0;
+        if (value !== undefined) reflectionMergePartial<AsteroidBelt>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: AsteroidBelt
+    ): AsteroidBelt {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 asteroid_belt_id */ 1:
+                    message.asteroidBeltId = reader.int32();
+                    break;
+                case /* required int32 type_id */ 2:
+                    message.typeId = reader.int32();
+                    break;
+                case /* optional int32 asteroid_belt_name_id */ 3:
+                    message.asteroidBeltNameId = reader.int32();
+                    break;
+                case /* optional eve_multitools.data.CelestialStatistics statistics */ 4:
+                    message.statistics = CelestialStatistics.internalBinaryRead(
+                        reader,
+                        reader.uint32(),
+                        options,
+                        message.statistics
                     );
                     break;
                 default: {
@@ -4180,17 +7552,23 @@ class RegionCollection_RegionEntry$Type extends MessageType<RegionCollection_Reg
         return message;
     }
     internalBinaryWrite(
-        message: RegionCollection_RegionEntry,
+        message: AsteroidBelt,
         writer: IBinaryWriter,
         options: BinaryWriteOptions
     ): IBinaryWriter {
-        /* required int32 region_id = 1; */
-        if (message.regionId !== 0) writer.tag(1, WireType.Varint).int32(message.regionId);
-        /* required eve_multitools.data.Region region_data = 2; */
-        if (message.regionData)
-            Region.internalBinaryWrite(
-                message.regionData,
-                writer.tag(2, WireType.LengthDelimited).fork(),
+        /* required int32 asteroid_belt_id = 1; */
+        if (message.asteroidBeltId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.asteroidBeltId);
+        /* required int32 type_id = 2; */
+        if (message.typeId !== 0) writer.tag(2, WireType.Varint).int32(message.typeId);
+        /* optional int32 asteroid_belt_name_id = 3; */
+        if (message.asteroidBeltNameId !== undefined)
+            writer.tag(3, WireType.Varint).int32(message.asteroidBeltNameId);
+        /* optional eve_multitools.data.CelestialStatistics statistics = 4; */
+        if (message.statistics)
+            CelestialStatistics.internalBinaryWrite(
+                message.statistics,
+                writer.tag(4, WireType.LengthDelimited).fork(),
                 options
             ).join();
         const u = options.writeUnknownFields;
@@ -4200,6 +7578,6 @@ class RegionCollection_RegionEntry$Type extends MessageType<RegionCollection_Reg
     }
 }
 /**
- * @generated MessageType for protobuf message eve_multitools.data.RegionCollection.RegionEntry
+ * @generated MessageType for protobuf message eve_multitools.data.AsteroidBelt
  */
-export const RegionCollection_RegionEntry = new RegionCollection_RegionEntry$Type();
+export const AsteroidBelt = new AsteroidBelt$Type();

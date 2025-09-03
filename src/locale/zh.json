@@ -13,6 +13,7 @@
         "explore.faction.detail": "势力详情",
         "explore.localization": "本地化",
         "explore.universe": "新伊甸",
+        "explore.universe.detail": "新伊甸详情",
         "home": "首页",
         "market": "市场",
         "market.list": "市场总览",
@@ -47,7 +48,9 @@
             "results": "搜索结果"
         },
         "data_outdated": "数据已过期",
-        "about": "关于"
+        "about": "关于",
+        "none": "无",
+        "all": "全部"
     },
     "bundle": {
         "title": "数据包管理",
@@ -97,7 +100,8 @@
             "creating_directory": "创建文件夹",
             "extracting_files": "解压文件",
             "complete": "完成"
-        }
+        },
+        "process": {}
     },
     "workspace": {
         "teams": "团队",
@@ -198,7 +202,63 @@
         },
         "universe": {
             "title": "探索：新伊甸",
-            "desc": "探索 EVE 宇宙"
+            "desc": "探索 EVE 宇宙",
+            "search": {
+                "placeholder": "搜索星域/星座/星系"
+            },
+            "filter": {
+                "wormhole_class": {
+                    "label": {
+                        "shortcut": "集合",
+                        "detail": "具体分类"
+                    }
+                }
+            },
+            "detail": {
+                "title": "新伊甸详情",
+                "basic_info": "基本信息",
+                "description_label": "描述",
+                "unknown_region": "未知星域",
+                "unknown_constellation": "未知星座",
+                "no_object_selected": "没有选择任何天体",
+                "unsupported_object_type": "不支持的天体类型：{{type}}"
+            },
+            "system": {
+                "unknown_attributes": "未知属性",
+                "system_attributes": {
+                    "title": "星系属性",
+                    "faction_id": "势力",
+                    "sun_type_id": "恒星类型",
+                    "sun_flare_graphic_id": "恒星火焰图像 ID"
+                },
+                "hidden_attributes": "隐藏属性",
+                "warp_tunnel_overwrite": "跃迁隧道重写",
+                "system_wide_cloud": "星系级星云",
+                "visual_effect": "视觉效果",
+                "position": "星系位置",
+                "boundary_max": "最大外周",
+                "boundary_min": "最小外周",
+                "show_json_data": " JSON 原始数据"
+            },
+            "constellation": {
+                "constellation_attributes": {
+                    "title": "星座属性",
+                    "faction_id": "所属势力"
+                },
+                "center": "中心坐标",
+                "hidden_attributes": "隐藏属性"
+            },
+            "history": {
+                "empty": "无历史记录"
+            },
+            "region": {
+                "region_attributes": {
+                    "title": "星域属性",
+                    "faction_id": "所属势力"
+                },
+                "hidden_attributes": "隐藏属性",
+                "center": "中心坐标"
+            }
         }
     },
     "faction": {
@@ -230,5 +290,59 @@
             "title": "市场搜索",
             "placeholder": "搜索物品"
         }
+    },
+    "terms": {
+        "region": "星域",
+        "region_types": {
+            "high-sec": "高安",
+            "low-sec": "低安",
+            "null-sec": "零安",
+            "wormhole": "虫洞",
+            "void": "虚空",
+            "abyssal": "深渊",
+            "pochven": "波赫文"
+        },
+        "constellation": "星座",
+        "system": "星系",
+        "wormhole_classes": {
+            "c1": "C1",
+            "c2": "C2",
+            "c3": "C3",
+            "c4": "C4",
+            "c5": "C5",
+            "c6": "C6",
+            "high-sec": "高安",
+            "low-sec": "低安",
+            "null-sec": "零安",
+            "gm1": "GM-1",
+            "gm2": "GM-2",
+            "thera": "席拉",
+            "small-ship": "小型舰船空间",
+            "vidette": "流浪者-游哨",
+            "redoubt": "流浪者-堡垒",
+            "sentinel": "流浪者-岗哨",
+            "barbican": "流浪者-碉堡",
+            "conflux": "流浪者-合流",
+            "void-or-abyssal-1": "虚空或深渊-1",
+            "abyssal-2": "深渊-2",
+            "abyssal-3": "深渊-3",
+            "abyssal-4": "深渊-4",
+            "abyssal-5": "深渊-5",
+            "pochven": "波赫文"
+        },
+        "out_space": "主星系",
+        "wormhole": "虫洞",
+        "void": "虚空",
+        "abyssal": "深渊",
+        "pochven": "波赫文",
+        "drifter": "流浪者虫洞",
+        "security_status": "安全等级",
+        "luminosity": "光度",
+        "radius": "半径",
+        "wormhole_class": "虫洞类型",
+        "region_type": "星域类型"
+    },
+    "separator": {
+        "comma": "，"
     }
 }

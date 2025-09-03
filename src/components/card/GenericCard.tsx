@@ -10,6 +10,7 @@ interface BadgeConfig {
     text: string;
     variant?: "default" | "secondary" | "destructive" | "outline";
     className?: string;
+    style?: React.CSSProperties;
     key?: string;
 }
 
@@ -184,6 +185,7 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
                                         key={badge.key || `badge-${index}`}
                                         variant={badge.variant || "secondary"}
                                         className={cn("text-xs", badge.className)}
+                                        style={badge.style}
                                     >
                                         {badge.text}
                                     </Badge>
@@ -252,6 +254,7 @@ const HoverCard: React.FC<HoverCardProps> = ({ data, className }) => {
                                 key={badge.key || `badge-${index}`}
                                 variant={badge.variant || "secondary"}
                                 className={cn("text-xs", badge.className)}
+                                style={badge.style}
                             >
                                 {badge.text}
                             </Badge>
@@ -307,13 +310,7 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
 
     if (data.loading) {
         return (
-            <Card
-                className={cn(
-                    "w-full p-0",
-                    noBorder ? "border-0 shadow-none" : undefined,
-                    className
-                )}
-            >
+            <Card className={cn("w-full p-0", noBorder && "border-0 shadow-none", className)}>
                 {title && (
                     <CardHeader className={cn("pb-2", compact && "py-2")}>
                         <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -345,10 +342,9 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
     return (
         <Card
             className={cn(
-                "w-full py-0",
-                onClick &&
-                    "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors",
-                noBorder ? "border-0 shadow-none" : undefined,
+                "w-full py-0 hover:bg-gray-50 dark:hover:bg-gray-900",
+                onClick && "cursor-pointer transition-colors",
+                noBorder && "border-0 shadow-none p-0 rounded-none",
                 className
             )}
             onClick={onClick ? handleClick : undefined}
@@ -408,6 +404,7 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                                             key={badge.key || `badge-${index}`}
                                             variant={badge.variant || "outline"}
                                             className={cn("text-xs", badge.className)}
+                                            style={badge.style}
                                         >
                                             {badge.text}
                                         </Badge>
@@ -478,6 +475,7 @@ const EmbedCard: React.FC<EmbedCardProps> = ({
                                         key={badge.key || `badge-${index}`}
                                         variant={badge.variant || "outline"}
                                         className={cn("text-xs", badge.className)}
+                                        style={badge.style}
                                     >
                                         {badge.text}
                                     </Badge>
@@ -542,7 +540,6 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
     ) : null;
 
     if (isHorizontal) {
-        // 横向布局：图标、名称+ID组合、描述、Badge 四者同行
         return (
             <div
                 className={cn(
@@ -554,7 +551,6 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                 )}
                 {...containerProps}
             >
-                {/* 图标 */}
                 <div className="w-12 h-12 shrink-0">
                     <GenericImage
                         iconUrl={data.iconUrl}
@@ -569,7 +565,6 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                     />
                 </div>
 
-                {/* 名称+ID组合 */}
                 <div className="shrink-0">
                     <div className="font-semibold text-base">
                         {data.loading ? t("common.loading") : data.name}
@@ -577,7 +572,6 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                     {data.id && <div className="text-sm text-gray-500">ID: {data.id}</div>}
                 </div>
 
-                {/* 描述 */}
                 <div className="flex-1 min-w-0">{description}</div>
 
                 {/* Badge */}
@@ -589,6 +583,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                                     key={badge.key || `badge-${index}`}
                                     variant={badge.variant || "secondary"}
                                     className={cn("text-xs", badge.className)}
+                                    style={badge.style}
                                 >
                                     {badge.text}
                                 </Badge>
@@ -611,7 +606,6 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
         );
     }
 
-    // 纵向布局（默认）：仅名称+ID组合与描述纵向排布，其他保持横向
     return (
         <div
             className={cn(
@@ -656,6 +650,7 @@ const BaseCard: React.FC<BaseCardProps> = ({ data, className, onClick }) => {
                                 key={badge.key || `badge-${index}`}
                                 variant={badge.variant || "secondary"}
                                 className={cn("text-xs", badge.className)}
+                                style={badge.style}
                             >
                                 {badge.text}
                             </Badge>

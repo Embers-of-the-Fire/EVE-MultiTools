@@ -33,7 +33,7 @@ async def collect_faction_icons(
     bundle_faction_icons = bundle_faction / "icons"
     bundle_faction_icons.mkdir(parents=True, exist_ok=True)
 
-    faction_ids = fsd.get_fsd("factionids")
+    faction_ids = fsd.get_fsd("factions")
     if not faction_ids:
         return
 
@@ -56,8 +56,8 @@ async def collect_faction_icons(
                 )
             else:
                 target_path = bundle_faction_logos / f"{flat_logo}.png"
-                task = download_and_copy_icon(index,
-                    icon.res_id, target_path, f"Faction {faction_id} flat logo {flat_logo}"
+                task = download_and_copy_icon(
+                    index, icon.res_id, target_path, f"Faction {faction_id} flat logo {flat_logo}"
                 )
                 download_tasks.append(task)
         else:
@@ -86,7 +86,7 @@ async def collect_faction_icons(
             LOGGER.warning(f"No flat logo with name for faction ID {faction_id}")
 
         image_url = metadata.get_image_service(Metadata.ImageServiceType.NPC_FACTION).format(
-            faction_id=faction_id
+            factionId=faction_id
         )
         target_path = bundle_faction_icons / f"{faction_id}.png"
         task = download_and_copy_image(image_url, target_path, f"Faction {faction_id} icon")

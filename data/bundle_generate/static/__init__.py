@@ -24,12 +24,14 @@ if TYPE_CHECKING:
 
 class StaticDataGenerator:
     __root: Path
+    __loc_root: Path
     __fsd: Fsd
     __index: ResourceTree
     __metadata: Metadata
 
     def __init__(self, bundle_root: Path, fsd: Fsd, index: ResourceTree, metadata: Metadata):
         self.__root = bundle_root / "static"
+        self.__loc_root = bundle_root / "localizations"
         self.__fsd = fsd
         self.__index = index
         self.__metadata = metadata
@@ -39,7 +41,7 @@ class StaticDataGenerator:
     async def load(self):
         LOGGER.info("Loading static data...")
 
-        type_definitions.collect_type_definitions(self.__fsd, self.__root)
+        type_definitions.collect_type_definitions(self.__fsd, self.__root, self.__loc_root)
         type_dogma.collect_type_dogma(self.__fsd, self.__root)
         type_materials.collect_type_materials(self.__fsd, self.__root)
         categories.collect_categories(self.__fsd, self.__root)

@@ -36,8 +36,8 @@ async def collect_skin_material_icons(bundle_image_path: Path, fsd: Fsd, index: 
             continue
         target_path = bundle_skin_materials / skin_material.file_name
         download_tasks.append(
-            download_and_copy_icon(index,
-                skin_material.res_id, target_path, f"Skin Material {skin_material.file_name}"
+            download_and_copy_icon(
+                index, skin_material.res_id, target_path, f"Skin Material {skin_material.file_name}"
             )
         )
 

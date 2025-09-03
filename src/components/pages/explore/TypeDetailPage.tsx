@@ -87,12 +87,6 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
         return await searchTypeByName(query, language);
     };
 
-    const getItemName = async (id: number) => {
-        const type = await getType(id);
-        if (!type) return null;
-        return await loc(type.type_name_id);
-    };
-
     const handleTypeSelect = (selectedTypeId: number) => {
         setCurrentTypeID(selectedTypeId);
     };
@@ -232,7 +226,6 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                 <SearchBar
                     onItemSelect={handleTypeSelect}
                     searchFunction={searchFunction}
-                    getItemName={getItemName}
                     placeholder={t("explore.type.search.placeholder")}
                     noResultsMessage={t("common.no_results")}
                     language={language}
@@ -244,9 +237,9 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                 <ScrollArea className="max-h-72 border rounded-md bg-white dark:bg-black/30 shadow-sm p-0 my-2 flex-1 min-h-0 flex flex-col">
                                     <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
                                         {results.map((item, idx) => (
-                                            <div key={item.id}>
+                                            <div key={item}>
                                                 <EmbeddedTypeCard
-                                                    typeId={item.id}
+                                                    typeId={item}
                                                     compact={true}
                                                     noBorder
                                                     onClick={onSelect}

@@ -3,11 +3,10 @@ import { EmbeddedTypeCard } from "@/components/card/TypeCard";
 import { HistoryButton } from "@/components/common/HistoryButton";
 import { SearchBar } from "@/components/common/SearchBar";
 import { useLanguage } from "@/hooks/useAppSettings";
-import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useTypeExplore } from "@/hooks/useTypeExplore";
 import type { Language } from "@/native";
-import { getType, searchTypeByName } from "@/native/data";
+import { searchTypeByName } from "@/native/data";
 import { PageLayout } from "../../layout";
 import { ScrollArea } from "../../ui/scroll-area";
 
@@ -44,7 +43,6 @@ export function TypeHistoryButton() {
 
 export function TypeExplorePage() {
     const { t } = useTranslation();
-    const { loc } = useLocalization();
     const { language } = useLanguage();
 
     const { setCurrentTypeID } = useTypeExplore();
@@ -61,12 +59,6 @@ export function TypeExplorePage() {
         return await searchTypeByName(query, language);
     };
 
-    const getItemName = async (id: number) => {
-        const type = await getType(id);
-        if (!type) return null;
-        return await loc(type.type_name_id);
-    };
-
     return (
         <PageLayout
             title={t("explore.type.title")}
@@ -76,7 +68,6 @@ export function TypeExplorePage() {
             <SearchBar
                 onItemSelect={handleTypeClick}
                 searchFunction={searchFunction}
-                getItemName={getItemName}
                 placeholder={t("explore.type.search.placeholder")}
                 noResultsMessage={t("common.no_results")}
                 language={language}
@@ -91,9 +82,9 @@ export function TypeExplorePage() {
                                 </div>
                                 <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
                                     {results.map((item, idx) => (
-                                        <div key={item.id}>
+                                        <div key={item}>
                                             <EmbeddedTypeCard
-                                                typeId={item.id}
+                                                typeId={item}
                                                 compact={false}
                                                 noBorder
                                                 onClick={onSelect}

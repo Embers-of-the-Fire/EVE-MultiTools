@@ -2,10 +2,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
+import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import { DetailPageActions } from "@/components/common/DetailPageActions";
 import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import { getFaction } from "@/native/data";
 import type { Faction } from "@/types/data";
 import { getFactionIconUrl, getFactionLogoUrl } from "@/utils/image";
@@ -52,6 +54,9 @@ function FactionDetailPageActions() {
 export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId }) => {
     const { t } = useTranslation();
     const { loc } = useLocalization();
+
+    const { setCurrentUniverseObject } = useUniverseExplore();
+    const { navigate } = useSPARouter();
 
     const [faction, setFaction] = useState<Faction | null>(null);
     const [name, setName] = useState<string>("");
@@ -252,7 +257,22 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                                 <div className="text-sm font-medium text-muted-foreground">
                                     {t("explore.faction.detail.solar_system_id")}
                                 </div>
-                                <div>{faction.solar_system_id}</div>
+                                <EmbeddedUniverseObjectCard
+                                    obj={{
+                                        type: "system",
+                                        id: faction.solar_system_id,
+                                    }}
+                                    onClick={() => {
+                                        setCurrentUniverseObject({
+                                            type: "system",
+                                            id: faction.solar_system_id,
+                                        });
+                                        navigate(
+                                            "/explore/universe/detail",
+                                            t("explore.universe.detail.title")
+                                        );
+                                    }}
+                                />
                             </div>
 
                             <div className="space-y-2">

@@ -4,30 +4,21 @@ import { SearchBar } from "@/components/common/SearchBar";
 import { PageLayout } from "@/components/layout";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLanguage } from "@/hooks/useAppSettings";
-import { useLocalization } from "@/hooks/useLocalization";
 import type { Language } from "@/native";
-import { getType, searchTypeByName } from "@/native/data";
+import { searchTypeByName } from "@/native/data";
 
 export function MarketSearchPage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
-    const { loc } = useLocalization();
 
     const searchFunction = async (query: string, language: Language) => {
         return await searchTypeByName(query, language, 100);
-    };
-
-    const getItemName = async (id: number) => {
-        const type = await getType(id);
-        if (!type || !type.market_group_id) return null;
-        return await loc(type.type_name_id);
     };
 
     return (
         <PageLayout title={t("market.search.title")}>
             <SearchBar
                 searchFunction={searchFunction}
-                getItemName={getItemName}
                 placeholder={t("market.search.placeholder")}
                 noResultsMessage={t("common.no_results")}
                 language={language}
@@ -45,9 +36,9 @@ export function MarketSearchPage() {
                                 </div>
                                 <div className="flex flex-col min-h-0 w-full max-w-none flex-1">
                                     {results.map((item) => (
-                                        <div key={item.id}>
+                                        <div key={item}>
                                             <EmbeddedMarketTypeCard
-                                                typeId={item.id}
+                                                typeId={item}
                                                 compact={false}
                                                 noBorder
                                                 className="hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none px-4 py-2 w-full"

@@ -272,7 +272,7 @@ class BundleGenerator:
                         "created": datetime.datetime.now(datetime.UTC).isoformat(),
                         "game": {
                             "version": self.__start_config.config.version,
-                            "build": self.__start_config.config.build,
+                            "build": str(self.__start_config.config.build),
                         },
                     },
                     f,

@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import sqlite3
 
-from enum import IntEnum
-from enum import unique
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
@@ -16,68 +14,13 @@ from data.bundle_generate.consts import REGIONS_SCHEMA_RES
 from data.bundle_generate.log import LOGGER
 from data.bundle_generate.schema_resource import get_schema_resource
 from data.bundle_generate.universe._type import UniversePoint  # noqa: TC001
+from data.bundle_generate.universe._type import WormholeClassID  # noqa: TC001
 
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from data.bundle_generate.resources import ResourceTree
-
-
-class _WormholeClassID(IntEnum):
-    C1 = 1
-    C2 = 2
-    C3 = 3
-    C4 = 4
-    C5 = 5
-    C6 = 6
-    HIGH_SEC = 7
-    LOW_SEC = 8
-    NULL_SEC = 9
-    THERA = 12
-    SMALL_SHIP = 13
-    VOID = 19
-    ABYSSAL1 = 19
-    ABYSSAL2 = 20
-    ABYSSAL3 = 21
-    ABYSSAL4 = 22
-    ABYSSAL5 = 23
-    POCHVEN = 25
-
-    def get_region_type(self, region_id) -> _RegionType:
-        if self == _WormholeClassID.HIGH_SEC:
-            return _RegionType.HIGH_SEC
-        elif self == _WormholeClassID.LOW_SEC:
-            return _RegionType.LOW_SEC
-        elif self == _WormholeClassID.NULL_SEC:
-            return _RegionType.NULL_SEC
-        elif (
-            self == _RegionType.VOID and 14_000_000 <= region_id < 15_000_000
-        ):  # a little hack for abyssal regions
-            return _RegionType.VOID
-        elif self in {
-            _WormholeClassID.ABYSSAL1,
-            _WormholeClassID.ABYSSAL2,
-            _WormholeClassID.ABYSSAL3,
-            _WormholeClassID.ABYSSAL4,
-            _WormholeClassID.ABYSSAL5,
-        }:
-            return _RegionType.ABYSSAL
-        elif self == _WormholeClassID.POCHVEN:
-            return _RegionType.POCHVEN
-        else:
-            return _RegionType.WORMHOLE
-
-
-@unique
-class _RegionType(IntEnum):
-    HIGH_SEC = 1
-    LOW_SEC = 2
-    NULL_SEC = 3
-    WORMHOLE = 4
-    VOID = 5
-    ABYSSAL = 6
-    POCHVEN = 7
 
 
 class _Region(BaseModel):
@@ -89,7 +32,7 @@ class _Region(BaseModel):
     constellationIDs: list[int] = Field(default_factory=list)
     solarSystemIDs: list[int] = Field(default_factory=list)
     factionID: int | None = Field(default=None)
-    wormholeClassID: _WormholeClassID | None = Field(default=None)
+    wormholeClassID: WormholeClassID | None = Field(default=None)
 
 
 def _pydantic_to_protobuf_region(pydantic_obj: _Region) -> schema_pb2.Region:
@@ -114,21 +57,32 @@ def _pydantic_to_protobuf_region(pydantic_obj: _Region) -> schema_pb2.Region:
     return pb_obj
 
 
-async def collect_regions(index: ResourceTree, root: Path):
+async def collect_regions(index: ResourceTree, root: Path, loc_root: Path):
     regions = await get_schema_resource(index, REGIONS_SCHEMA_RES, REGIONS_BIN_DATA_RES)
 
     bundle_universe_db = root / "universe.db"
-    if bundle_universe_db.exists():
-        LOGGER.warning(f"Overwriting existing file: {bundle_universe_db}")
-        bundle_universe_db.unlink()
+    region_lookup = schema_pb2.RegionLocalizationLookup()
 
     with sqlite3.connect(bundle_universe_db) as conn:
         cursor = conn.cursor()
-        cursor.execute("""
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='regions'")
+        if cursor.fetchone():
+            LOGGER.warning(f"Table 'regions' already exists in {bundle_universe_db}. Overwriting.")
+            cursor.execute("DROP TABLE regions")
+
+        cursor.executescript("""
             CREATE TABLE IF NOT EXISTS regions (
                 region_id INTEGER PRIMARY KEY,
+                name_id INTEGER NOT NULL,
+                region_type INTEGER,
+                wormhole_class_id INTEGER,
+                faction_id INTEGER,
                 region_data BLOB NOT NULL
             );
+            CREATE INDEX IF NOT EXISTS idx_regions_region_type ON regions (region_type);
+            CREATE INDEX IF NOT EXISTS idx_regions_wormhole_class_id ON regions (wormhole_class_id);
+            CREATE INDEX IF NOT EXISTS idx_regions_faction_id ON regions (faction_id);
         """)
 
         for region_id, region_def in regions.items():
@@ -138,11 +92,42 @@ async def collect_regions(index: ResourceTree, root: Path):
                 LOGGER.error(f"Failed to validate region {region_id}: {e}")
 
             region_data = _pydantic_to_protobuf_region(validated).SerializeToString()
+            if validated.wormholeClassID is not None:
+                wmid = validated.wormholeClassID.value
+                reg_ty = validated.wormholeClassID.get_region_type(region_id).value
+            else:
+                wmid = None
+                reg_ty = None
             cursor.execute(
-                "INSERT INTO regions (region_id, region_data) VALUES (?, ?);",
-                (region_id, region_data),
+                "INSERT INTO regions (region_id, name_id, region_type, wormhole_class_id, faction_id, region_data) VALUES (?, ?, ?, ?, ?, ?);",
+                (
+                    region_id,
+                    validated.nameID,
+                    reg_ty,
+                    wmid,
+                    validated.factionID,
+                    region_data,
+                ),
             )
+
+            loc_entry = region_lookup.region_entries.add()
+            loc_entry.region_id = region_id
+            loc_entry.name_id = validated.nameID
+            if validated.descriptionID is not None:
+                loc_entry.description_id = validated.descriptionID
 
         conn.commit()
 
     LOGGER.info(f"Regions data written to {bundle_universe_db}")
+
+    bundle_region_loc_lookup = loc_root / "region_localization_lookup.pb"
+    if bundle_region_loc_lookup.exists():
+        LOGGER.warning(
+            f"Region localization lookup file '{bundle_region_loc_lookup}' already exists. Overwriting."
+        )
+        bundle_region_loc_lookup.unlink()
+    with open(bundle_region_loc_lookup, "wb+") as f:
+        f.write(region_lookup.SerializeToString())
+    LOGGER.info(
+        f"Wrote {len(region_lookup.region_entries)} region localization entries to '{bundle_region_loc_lookup}'"
+    )

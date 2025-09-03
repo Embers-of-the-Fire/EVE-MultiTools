@@ -22,3 +22,9 @@ SKIN_LICENSES_STATIC_RES: ResourcePath = "res:/staticdata/skinlicenses.static"
 
 REGIONS_SCHEMA_RES: ResourcePath = "res:/staticdata/regions.schema"
 REGIONS_BIN_DATA_RES: ResourcePath = "res:/staticdata/regions.static"
+CONSTELLATIONS_SCHEMA_RES: ResourcePath = "res:/staticdata/constellations.schema"
+CONSTELLATIONS_BIN_DATA_RES: ResourcePath = "res:/staticdata/constellations.static"
+SYSTEMS_SCHEMA_RES: ResourcePath = "res:/staticdata/systems.schema"
+SYSTEMS_BIN_DATA_RES: ResourcePath = "res:/staticdata/systems.static"
+
+SOLAR_SYSTEM_CONTENT_RES: ResourcePath = "res:/staticdata/solarsystemcontent.static"

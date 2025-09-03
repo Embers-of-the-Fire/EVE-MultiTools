@@ -5,6 +5,7 @@ pub mod links;
 pub mod localization;
 pub mod market;
 pub mod statics;
+pub mod universe;
 
 pub mod proto {
     pub mod schema;

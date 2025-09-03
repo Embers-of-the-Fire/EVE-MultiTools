@@ -43,7 +43,9 @@ async def collect_icons(bundle_image_path: Path, fsd: Fsd, index: ResourceTree):
             LOGGER.warning(f"Icon file '{icon_file}' not found for icon ID {icon_id}")
             continue
         target_path = bundle_icons / f"{icon_id}.png"
-        download_tasks.append(download_and_copy_icon(index, icon.res_id, target_path, f"Icon {icon_id}"))
+        download_tasks.append(
+            download_and_copy_icon(index, icon.res_id, target_path, f"Icon {icon_id}")
+        )
 
     if download_tasks:
         await asyncio.gather(*download_tasks)

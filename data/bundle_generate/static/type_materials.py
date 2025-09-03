@@ -82,5 +82,5 @@ def collect_type_materials(fsd: Fsd, bundle_static: Path) -> None:
             )
 
         conn.commit()
-    
+
     LOGGER.info("Type materials data collected successfully.")

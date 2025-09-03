@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from data.bundle_generate.resources import Fsd
 
 
-class _TypeID(BaseModel):
+class TypeID(BaseModel):
     """Type ID definition.
 
     This mirrors the structure of typeIDs.json in the FSD."""
@@ -51,7 +51,7 @@ class _TypeID(BaseModel):
     wreckTypeID: int | None = Field(default=None)
 
 
-def _pydantic_to_protobuf_type_id(pydantic_obj: _TypeID, type_id: int) -> schema_pb2.TypeID:
+def _pydantic_to_protobuf_type_id(pydantic_obj: TypeID, type_id: int) -> schema_pb2.TypeID:
     """Convert Pydantic TypeID to protobuf TypeID."""
     pb_obj = schema_pb2.TypeID()
 
@@ -106,21 +106,28 @@ def _pydantic_to_protobuf_type_id(pydantic_obj: _TypeID, type_id: int) -> schema
     return pb_obj
 
 
-def collect_type_definitions(fsd: Fsd, bundle_static: Path):
+def collect_type_definitions(fsd: Fsd, bundle_static: Path, loc_root: Path):
     types = fsd.get_fsd("types")
     if types is None:
         return
     type_collection = schema_pb2.TypeCollection()
+    type_loc_lookup = schema_pb2.TypeLocalizationLookup()
 
     for type_id, type_def in types.items():
         try:
-            validated = _TypeID(**type_def)
+            validated = TypeID(**type_def)
         except ValidationError as e:
             LOGGER.error(f"Validation error for typeID {type_id}: {e}")
 
         type_entry = type_collection.types.add()
         type_entry.type_id = int(type_id)
         type_entry.type_data.CopyFrom(_pydantic_to_protobuf_type_id(validated, int(type_id)))
+
+        loc_entry = type_loc_lookup.type_entries.add()
+        loc_entry.type_id = int(type_id)
+        loc_entry.type_name_id = validated.typeNameID
+        if validated.descriptionID is not None:
+            loc_entry.type_description_id = validated.descriptionID
 
     bundle_static_types = bundle_static / "types.pb"
     if bundle_static_types.exists():
@@ -132,3 +139,12 @@ def collect_type_definitions(fsd: Fsd, bundle_static: Path):
     with open(bundle_static_types, "wb+") as f:
         f.write(type_collection.SerializeToString())
     LOGGER.info(f"Wrote {len(type_collection.types)} type definitions to '{bundle_static_types}'.")
+
+    bundle_type_loc_lookup = loc_root / "type_localization_lookup.pb"
+    if bundle_type_loc_lookup.exists():
+        LOGGER.warning(
+            f"Type localization lookup file '{bundle_type_loc_lookup}' already exists. Overwriting."
+        )
+        bundle_type_loc_lookup.unlink()
+    with open(bundle_type_loc_lookup, "wb+") as f:
+        f.write(type_loc_lookup.SerializeToString())

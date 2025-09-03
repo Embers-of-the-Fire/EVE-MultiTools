@@ -29,7 +29,9 @@
             "results": "Search Results"
         },
         "data_outdated": "Outdated Data",
-        "about": "About"
+        "about": "About",
+        "none": "None",
+        "all": "All"
     },
     "nav": {
         "platform": "Platform",
@@ -41,6 +43,7 @@
         "explore.faction.detail": "Faction Detail",
         "explore.localization": "Localization",
         "explore.universe": "The New Eden",
+        "explore.universe.detail": "New Eden Detail",
         "home": "Home",
         "market": "Market",
         "market.list": "Market List",
@@ -208,10 +211,120 @@
         },
         "universe": {
             "title": "Explore: The New Eden",
-            "desc": "Explore the EVE universe"
+            "desc": "Explore the EVE universe",
+            "search": {
+                "placeholder": "Search for regions, constellations and systems"
+            },
+            "filter": {
+                "wormhole_class": {
+                    "label": {
+                        "shortcut": "Collections",
+                        "detail": "Details"
+                    }
+                }
+            },
+            "detail": {
+                "title": "New Eden Detail",
+                "basic_info": "BasicInformation",
+                "description_label": "Description",
+                "unknown_region": "Unknown Region",
+                "unknown_constellation": "Unknown Constellation",
+                "no_object_selected": "No celestial object selected",
+                "unsupported_object_type": "Unsupported celestial type: {{type}}"
+            },
+            "system": {
+                "unknown_attributes": "Unknown Attributes",
+                "system_attributes": {
+                    "title": "System Attributes",
+                    "faction_id": "Faction",
+                    "sun_type_id": "Sun Type",
+                    "sun_flare_graphic_id": "Sun Flare Graphic ID"
+                },
+                "hidden_attributes": "Hidden Attributes",
+                "warp_tunnel_overwrite": "Warp Tunnel Overwrite",
+                "system_wide_cloud": "System-wide Cloud",
+                "visual_effect": "Visual Effect",
+                "position": "System Position",
+                "boundary_max": "Max Boundary",
+                "boundary_min": "Min Boundary",
+                "show_json_data": "Raw JSON Data"
+            },
+            "constellation": {
+                "constellation_attributes": {
+                    "title": "Constellation Attributes",
+                    "faction_id": "Faction"
+                },
+                "center": "Center Position",
+                "hidden_attributes": "Hidden Attributes"
+            },
+            "history": {
+                "empty": "No History Record"
+            },
+            "region": {
+                "region_attributes": {
+                    "title": "Region Attributes",
+                    "faction_id": "Faction"
+                },
+                "hidden_attributes": "Hidden Attributes",
+                "center": "Center Position"
+            }
         }
     },
     "faction": {
         "unique_name": "Unique Faction"
+    },
+    "terms": {
+        "region": "Region",
+        "constellation": "Constellation",
+        "system": "System",
+        "wormhole_classes": {
+            "c1": "C1",
+            "c2": "C2",
+            "c3": "C3",
+            "c4": "C4",
+            "c5": "C5",
+            "c6": "C6",
+            "high-sec": "High-Sec",
+            "low-sec": "Low-Sec",
+            "null-sec": "Null-Sec",
+            "gm1": "GM-1",
+            "gm2": "GM-2",
+            "thera": "Thera",
+            "small-ship": "Small Ship Space",
+            "vidette": "Drifter-Vidette",
+            "redoubt": "Drifter-Redoubt",
+            "sentinel": "Drifter-Sentinel",
+            "barbican": "Drifter-Barbican",
+            "conflux": "Drifter-Conflux",
+            "void-or-abyssal-1": "Void or Abyssal-1",
+            "abyssal-2": "Abyssal-2",
+            "abyssal-3": "Abyssal-3",
+            "abyssal-4": "Abyssal-4",
+            "abyssal-5": "Abyssal-5",
+            "pochven": "Pochven"
+        },
+        "out_space": "Main Galaxy",
+        "wormhole": "Wormhole",
+        "void": "The Void",
+        "abyssal": "Abyssal",
+        "pochven": "Pochven",
+        "drifter": "Drifter Wormhole",
+        "region_types": {
+            "abyssal": "Abyssal",
+            "high-sec": "High-Sec",
+            "low-sec": "Low-Sec",
+            "null-sec": "Null-Sec",
+            "wormhole": "Wormhole",
+            "void": "The Void",
+            "pochven": "Pochven"
+        },
+        "security_status": "SecurityStatus",
+        "luminosity": "Luminosity",
+        "radius": "Radius",
+        "wormhole_class": "Wormhole Class",
+        "region_type": "Region Type"
+    },
+    "separator": {
+        "comma": ", "
     }
 }

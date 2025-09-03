@@ -3,17 +3,18 @@ import { useSPARouter } from "@/hooks/useSPARouter";
 import { Button } from "../ui/button";
 import { HistoryButton } from "./HistoryButton";
 
-interface DetailPageActionsProps {
-    history: number[];
-    onItemClick: (id: number) => void;
+interface DetailPageActionsProps<T> {
+    history: T[];
+    onItemClick: (id: T) => void;
     backRoute: string;
     emptyMessageKey: string;
     detailRoute: string;
     detailTitleKey: string;
-    renderItem: (id: number, onClick: () => void) => React.ReactElement;
+    renderItem: (id: T, onClick: () => void) => React.ReactElement;
+    getKey?: (id: T) => React.Key;
 }
 
-export function DetailPageActions({
+export function DetailPageActions<T>({
     history,
     onItemClick,
     backRoute,
@@ -21,7 +22,8 @@ export function DetailPageActions({
     detailRoute,
     detailTitleKey,
     renderItem,
-}: DetailPageActionsProps) {
+    getKey,
+}: DetailPageActionsProps<T>) {
     const { navigate } = useSPARouter();
 
     const handleBackClick = () => {
@@ -40,6 +42,7 @@ export function DetailPageActions({
                 detailRoute={detailRoute}
                 detailTitleKey={detailTitleKey}
                 renderItem={renderItem}
+                getKey={getKey}
             />
         </div>
     );

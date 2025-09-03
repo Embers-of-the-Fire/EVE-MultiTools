@@ -116,6 +116,7 @@ dependencies = [
  "futures",
  "levenshtein",
  "log",
+ "memchr",
  "nohash-hasher",
  "num_enum",
  "once_cell",

@@ -5,6 +5,7 @@ use crate::{
     data::{
         esi::EsiService, image::ImageService, links::LinkService,
         localization::LocalizationService, market::MarketService, statics::StaticsService,
+        universe::UniverseService,
     },
 };
 
@@ -16,6 +17,7 @@ pub struct Bundle {
     pub market: MarketService,
     pub esi: EsiService,
     pub links: LinkService,
+    pub universe: UniverseService,
 }
 
 impl Bundle {
@@ -28,6 +30,7 @@ impl Bundle {
             market: MarketService::init(&descriptor).await?,
             esi: EsiService::init(&descriptor.root).await?,
             links: LinkService::init(&descriptor.root).await?,
+            universe: UniverseService::init(&descriptor.root).await?,
             descriptor,
         })
     }
