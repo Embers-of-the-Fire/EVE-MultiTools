@@ -1,4 +1,3 @@
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { History } from "lucide-react";
 import type React from "react";
 import { Fragment } from "react";
@@ -6,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { ScrollBar } from "../ui/scroll-area";
+import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 
 interface HistoryButtonProps<T> {
@@ -43,29 +42,25 @@ export function HistoryButton<T>({
                     <History size="64" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <ScrollAreaPrimitive.Root className="relative overflow-hidden rounded-sm max-h-72 min-w-[240px] border-1 shadow-none">
-                    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-none max-h-72">
-                        <div className="my-1">
-                            {history.length === 0 ? (
-                                <div className="p-3 text-muted-foreground text-sm">
-                                    {t(emptyMessageKey)}
-                                </div>
-                            ) : (
-                                history.map((id, idx) => (
-                                    <Fragment key={getKey(id)}>
-                                        {renderItem(id, () => handleItemClick(id))}
-                                        {idx !== history.length - 1 && (
-                                            <Separator className="w-full mx-0" />
-                                        )}
-                                    </Fragment>
-                                ))
-                            )}
-                        </div>
-                    </ScrollAreaPrimitive.Viewport>
-                    <ScrollBar />
-                    <ScrollAreaPrimitive.Corner />
-                </ScrollAreaPrimitive.Root>
+            <DropdownMenuContent align="end" className="overflow-visible">
+                <ScrollArea className="min-w-[240px]">
+                    <div className="my-1 max-h-72">
+                        {history.length === 0 ? (
+                            <div className="p-3 text-muted-foreground text-sm">
+                                {t(emptyMessageKey)}
+                            </div>
+                        ) : (
+                            history.map((id, idx) => (
+                                <Fragment key={getKey(id)}>
+                                    {renderItem(id, () => handleItemClick(id))}
+                                    {idx !== history.length - 1 && (
+                                        <Separator className="w-full mx-0" />
+                                    )}
+                                </Fragment>
+                            ))
+                        )}
+                    </div>
+                </ScrollArea>
             </DropdownMenuContent>
         </DropdownMenu>
     );
