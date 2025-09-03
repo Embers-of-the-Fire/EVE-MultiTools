@@ -1,0 +1,5 @@
+src/data/schema
+*_pb2.py
+pnpm-lock.yaml
+uv.lock
+Cargo.lock

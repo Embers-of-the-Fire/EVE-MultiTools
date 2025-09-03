@@ -50,3 +50,7 @@ npm run dev
 
 This project is licensed under the [MIT License](LICENSE-MIT)
 and the [Apache-v2.0 License](LICENSE-APACHE).
+
+## Code Graph
+
+![code-graph](tokei-chart.png)
