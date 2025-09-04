@@ -256,7 +256,8 @@
                     "faction_id": "所属势力"
                 },
                 "hidden_attributes": "隐藏属性",
-                "center": "中心坐标"
+                "center": "中心坐标",
+                "constellations": "星座"
             }
         }
     },

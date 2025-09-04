@@ -5,10 +5,12 @@ import { useTranslation } from "react-i18next";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
+import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import { PageLayout } from "@/components/layout";
 import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Region } from "@/data/schema";
 import {
     getRegionTypeFromNative,
@@ -20,6 +22,7 @@ import { useTheme } from "@/hooks/useAppSettings";
 import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import { getRegionById, getRegionDetailById } from "@/native/data";
 import type { RegionBrief } from "@/types/data";
 import { UniverseHistoryActions } from "./_Actions";
@@ -41,6 +44,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const { setCurrentFactionID } = useFactionExplore();
+    const { setCurrentUniverseObject } = useUniverseExplore();
     const { navigate } = useSPARouter();
 
     useEffect(() => {
@@ -144,6 +148,44 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                             )}
                         </div>
                     </CardContent>
+                </Card>
+                <Card>
+                    <Accordion type="single" collapsible className="w-full" defaultValue="systems">
+                        <AccordionItem value="systems">
+                            <CardHeader className="w-full">
+                                <AccordionTrigger className="text-base">
+                                    <CardTitle>
+                                        {t("explore.universe.region.constellations")}
+                                    </CardTitle>
+                                </AccordionTrigger>
+                            </CardHeader>
+                            <AccordionContent asChild>
+                                <ScrollArea>
+                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                        {regionDetail.constellationIds.map((consId) => (
+                                            <EmbeddedUniverseObjectCard
+                                                key={consId}
+                                                obj={{
+                                                    type: "constellation",
+                                                    id: consId,
+                                                }}
+                                                onClick={() => {
+                                                    setCurrentUniverseObject({
+                                                        type: "constellation",
+                                                        id: consId,
+                                                    });
+                                                    navigate(
+                                                        "/explore/universe/detail",
+                                                        t("explore.universe.detail.title")
+                                                    );
+                                                }}
+                                            />
+                                        ))}
+                                    </CardContent>
+                                </ScrollArea>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </Card>
                 <Card>
                     <CardHeader>
