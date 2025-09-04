@@ -190,9 +190,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                             <CardHeader className="w-full">
                                 <AccordionTrigger className="text-base">
                                     <CardTitle>
-                                        {t(
-                                            "explore.universe.constellation.constellation_attributes.systems"
-                                        )}
+                                        {t("explore.universe.constellation.systems")}
                                     </CardTitle>
                                 </AccordionTrigger>
                             </CardHeader>
