@@ -21,9 +21,12 @@ EVE MultiTools is a comprehensive toolset for EVE Online players, providing mark
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
 
-## How to Use
+## Development
 
-## Installation
+Before starting development, make sure you have the following items installed:
+- pnpm: The frontend part uses pnpm as package manager
+- rust toolchain, including cargo: The rust package manager and build tools
+- tauri environment: see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/) for more information.
 
 ### Clone the repository
 
@@ -34,21 +37,25 @@ cd eve-multitools
 
 ### Install dependencies
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
 ```bash
-npm install
+pnpm install
 ```
 
-### Run the development server
+### Run the development application
 
 ```bash
-npm run dev
+pnpm tauri dev
 ```
 
-## Development Guide
+### Build release version
 
-[Guide](./docs/README.md)
+```bash
+pnpm tauri build
+```
+
+### More guides
+
+[Guides](./docs/README.md)
 
 ## License
 
