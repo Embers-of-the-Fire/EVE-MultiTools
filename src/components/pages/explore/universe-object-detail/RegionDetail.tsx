@@ -110,14 +110,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                                     <p className="text-sm text-muted-foreground">ID: {regionId}</p>
                                 </div>
 
-                                {desc && (
-                                    <div>
-                                        <h3 className="font-semibold mb-2">
-                                            {t("explore.universe.detail.description_label")}
-                                        </h3>
-                                        <p className="text-sm leading-relaxed">{desc}</p>
-                                    </div>
-                                )}
+                                {desc && <p className="text-sm leading-relaxed">{desc}</p>}
                             </div>
                         </div>
                     </CardContent>

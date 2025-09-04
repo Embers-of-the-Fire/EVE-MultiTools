@@ -149,7 +149,6 @@
                 "no_type_selected": "No type selected",
                 "load_error": "Failed to load type details",
                 "basic_info": "Basic Information",
-                "description_label": "Description",
                 "published": "Published",
                 "dynamic_type": "Dynamic Type",
                 "tech_level": "Tech {{techLevel}}",
@@ -226,7 +225,6 @@
             "detail": {
                 "title": "New Eden Detail",
                 "basic_info": "BasicInformation",
-                "description_label": "Description",
                 "unknown_region": "Unknown Region",
                 "unknown_constellation": "Unknown Constellation",
                 "no_object_selected": "No celestial object selected",

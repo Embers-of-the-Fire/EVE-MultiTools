@@ -141,7 +141,6 @@
                 "load_error": "加载物品详情失败",
                 "type": "物品详情 - {{typeId}}",
                 "basic_info": "基本信息",
-                "description_label": "描述",
                 "published": "已公开",
                 "dynamic_type": "动态物品",
                 "tech_level": "科技等级 {{techLevel}}",
@@ -217,7 +216,6 @@
             "detail": {
                 "title": "新伊甸详情",
                 "basic_info": "基本信息",
-                "description_label": "描述",
                 "unknown_region": "未知星域",
                 "unknown_constellation": "未知星座",
                 "no_object_selected": "没有选择任何天体",

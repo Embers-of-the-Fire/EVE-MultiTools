@@ -289,12 +289,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                 </div>
 
                                 {description && (
-                                    <div>
-                                        <h3 className="font-semibold mb-2">
-                                            {t("explore.type.detail.description_label")}
-                                        </h3>
-                                        <p className="text-sm leading-relaxed">{description}</p>
-                                    </div>
+                                    <p className="text-sm leading-relaxed">{description}</p>
                                 )}
 
                                 <div className="flex flex-wrap gap-2">
