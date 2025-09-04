@@ -1,5 +1,7 @@
-src/data/schema
+src/data/schema.ts
 *_pb2.py
 pnpm-lock.yaml
 uv.lock
 Cargo.lock
+src/components/ui
+src/components/tree-view.tsx
