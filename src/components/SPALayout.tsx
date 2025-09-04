@@ -1,10 +1,11 @@
 "use client";
 
-import { AppSidebar, ThemeSwitch, LangSwitch } from "@/components/sidebar";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { NavigationControls } from "@/components/NavigationControls";
+import { SPARouter } from "@/components/SPARouter";
+import { AppSidebar, LangSwitch, ThemeSwitch } from "@/components/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { SPARouter } from "@/components/SPARouter";
 
 export function SPALayout() {
     return (
@@ -18,6 +19,7 @@ export function SPALayout() {
                             orientation="vertical"
                             className="mr-2 data-[orientation=vertical]:h-4"
                         />
+                        <NavigationControls />
                         <Breadcrumb />
                     </div>
                     <div className="flex items-center gap-2 px-4">

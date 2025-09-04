@@ -2,24 +2,26 @@ import type React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { PageLayout } from "../../layout";
 import { Card, CardContent } from "../../ui/card";
 import { TypeDetailPage } from "./TypeDetailPage";
 
 export const TypeDetailPageWrapper: React.FC = () => {
     const { t } = useTranslation();
-    const { currentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    // Get parameters from the new router system
+    const routeParams = useRouteParams("/explore/type/detail");
+    const typeId = routeParams?.typeId;
 
     useEffect(() => {
         // If no type is selected, redirect to explore page
-        if (!currentTypeID) {
-            navigate("/explore/type", t("nav.explore.type"));
+        if (!typeId) {
+            navigate("/explore/type");
         }
-    }, [currentTypeID, navigate, t]);
+    }, [typeId, navigate]);
 
-    if (!currentTypeID) {
+    if (!typeId) {
         return (
             <PageLayout title={t("explore.type.detail.title")} description={t("common.error")}>
                 <Card>
@@ -33,5 +35,5 @@ export const TypeDetailPageWrapper: React.FC = () => {
         );
     }
 
-    return <TypeDetailPage typeId={currentTypeID} />;
+    return <TypeDetailPage typeId={typeId} />;
 };

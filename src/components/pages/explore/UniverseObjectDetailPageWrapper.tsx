@@ -2,7 +2,6 @@ import type React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import { PageLayout } from "../../layout";
 import { Card, CardContent } from "../../ui/card";
 import { ConstellationDetailPage } from "./universe-object-detail/ConstellationDetail";
@@ -11,17 +10,20 @@ import { SystemDetailPage } from "./universe-object-detail/SystemDetail";
 
 export const UniverseObjectDetailPageWrapper: React.FC = () => {
     const { t } = useTranslation();
-    const { currentUniverseObject } = useUniverseExplore();
-    const { navigate } = useSPARouter();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    // Get parameters from the new router system
+    const routeParams = useRouteParams("/explore/universe/detail");
+    const universeObject = routeParams;
 
     useEffect(() => {
         // If no universe object is selected, redirect to explore page
-        if (!currentUniverseObject) {
-            navigate("/explore/universe", t("nav.explore.universe"));
+        if (!universeObject) {
+            navigate("/explore/universe");
         }
-    }, [currentUniverseObject, navigate, t]);
+    }, [universeObject, navigate]);
 
-    if (!currentUniverseObject) {
+    if (!universeObject) {
         return (
             <PageLayout title={t("explore.universe.detail.title")} description={t("common.error")}>
                 <Card>
@@ -35,13 +37,13 @@ export const UniverseObjectDetailPageWrapper: React.FC = () => {
         );
     }
 
-    switch (currentUniverseObject.type) {
+    switch (universeObject.type) {
         case "system":
-            return <SystemDetailPage systemId={currentUniverseObject.id} />;
+            return <SystemDetailPage systemId={universeObject.id} />;
         case "constellation":
-            return <ConstellationDetailPage constellationId={currentUniverseObject.id} />;
+            return <ConstellationDetailPage constellationId={universeObject.id} />;
         case "region":
-            return <RegionDetailPage regionId={currentUniverseObject.id} />;
+            return <RegionDetailPage regionId={universeObject.id} />;
         default:
             return (
                 <PageLayout
@@ -52,7 +54,7 @@ export const UniverseObjectDetailPageWrapper: React.FC = () => {
                         <CardContent className="p-6">
                             <div className="text-muted-foreground">
                                 {t("explore.universe.detail.unsupported_object_type", {
-                                    type: currentUniverseObject.type,
+                                    type: universeObject.type,
                                 })}
                             </div>
                         </CardContent>

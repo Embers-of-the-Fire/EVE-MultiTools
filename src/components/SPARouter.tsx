@@ -23,7 +23,7 @@ function NotFoundPage() {
             <p className="text-muted-foreground">{t("common.page_not_found")}</p>
             <button
                 type="button"
-                onClick={() => navigate("/", "Home")}
+                onClick={() => navigate("/")}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
             >
                 {t("common.go_home")}

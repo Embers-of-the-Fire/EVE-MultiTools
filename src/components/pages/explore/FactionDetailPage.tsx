@@ -1,13 +1,9 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
-import { DetailPageActions } from "@/components/common/DetailPageActions";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import { getFaction } from "@/native/data";
 import type { Faction } from "@/types/data";
 import { getFactionIconUrl, getFactionLogoUrl } from "@/utils/image";
@@ -19,44 +15,11 @@ interface FactionDetailPageProps {
     factionId: number;
 }
 
-function FactionDetailPageActions() {
-    const { history, setCurrentFactionID } = useFactionExplore();
-    const { navigate } = useSPARouter();
-    const { t } = useTranslation();
-
-    const renderItem = (id: number, onClick: () => void) => (
-        <EmbeddedFactionCard
-            compact={true}
-            showBadges={false}
-            factionId={id}
-            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
-            noBorder
-            onClick={onClick}
-        />
-    );
-
-    return (
-        <DetailPageActions
-            history={history}
-            onItemClick={(id) => {
-                setCurrentFactionID(id);
-                navigate("/explore/faction/detail", t("explore.faction.detail.title"));
-            }}
-            backRoute="/explore/faction"
-            emptyMessageKey="explore.faction.history.empty"
-            detailRoute="/explore/faction/detail"
-            detailTitleKey="explore.faction.detail.title"
-            renderItem={renderItem}
-        />
-    );
-}
-
 export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId }) => {
     const { t } = useTranslation();
     const { loc } = useLocalization();
 
-    const { setCurrentUniverseObject } = useUniverseExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToUniverseDetail } = useSPARouter();
 
     const [faction, setFaction] = useState<Faction | null>(null);
     const [name, setName] = useState<string>("");
@@ -168,7 +131,6 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
         <PageLayout
             title={name || t("explore.faction.detail.faction", { factionId })}
             description={shortDescription}
-            actions={<FactionDetailPageActions />}
         >
             <div className="space-y-6">
                 {/* 基本信息 */}
@@ -263,14 +225,10 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                                         id: faction.solar_system_id,
                                     }}
                                     onClick={() => {
-                                        setCurrentUniverseObject({
+                                        navigateToUniverseDetail({
                                             type: "system",
                                             id: faction.solar_system_id,
                                         });
-                                        navigate(
-                                            "/explore/universe/detail",
-                                            t("explore.universe.detail.title")
-                                        );
                                     }}
                                 />
                             </div>

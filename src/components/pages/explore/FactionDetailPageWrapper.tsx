@@ -1,7 +1,6 @@
 import type React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { PageLayout } from "../../layout";
 import { Card, CardContent } from "../../ui/card";
@@ -9,17 +8,20 @@ import { FactionDetailPage } from "./FactionDetailPage";
 
 export const FactionDetailPageWrapper: React.FC = () => {
     const { t } = useTranslation();
-    const { currentFactionID } = useFactionExplore();
-    const { navigate } = useSPARouter();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    // Get parameters from the new router system
+    const routeParams = useRouteParams("/explore/faction/detail");
+    const factionId = routeParams?.factionId;
 
     useEffect(() => {
-        // If no type is selected, redirect to explore page
-        if (!currentFactionID) {
-            navigate("/explore/faction", t("nav.explore.faction"));
+        // If no faction is selected, redirect to explore page
+        if (!factionId) {
+            navigate("/explore/faction");
         }
-    }, [currentFactionID, navigate, t]);
+    }, [factionId, navigate]);
 
-    if (!currentFactionID) {
+    if (!factionId) {
         return (
             <PageLayout title={t("explore.faction.detail.title")} description={t("common.error")}>
                 <Card>
@@ -33,5 +35,5 @@ export const FactionDetailPageWrapper: React.FC = () => {
         );
     }
 
-    return <FactionDetailPage factionId={currentFactionID} />;
+    return <FactionDetailPage factionId={factionId} />;
 };

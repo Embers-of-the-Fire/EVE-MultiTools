@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
-import { HistoryButton } from "@/components/common/HistoryButton";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { getFaction, getFactionIds } from "@/native/data";
@@ -11,51 +9,18 @@ import { ScrollArea } from "../../ui/scroll-area";
 
 type FactionData = { id: number; name: string; shortDescription?: string };
 
-export function FactionHistoryButton() {
-    const { history, setCurrentFactionID } = useFactionExplore();
-    const { navigate } = useSPARouter();
-    const { t } = useTranslation();
-
-    const renderItem = (id: number, onClick: () => void) => (
-        <EmbeddedFactionCard
-            compact={true}
-            showBadges={false}
-            factionId={id}
-            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
-            noBorder
-            onClick={onClick}
-        />
-    );
-
-    return (
-        <HistoryButton
-            history={history}
-            onItemClick={(id) => {
-                setCurrentFactionID(id);
-                navigate("/explore/faction/detail", t("explore.faction.detail.title"));
-            }}
-            emptyMessageKey="explore.faction.history.empty"
-            detailRoute="/explore/faction/detail"
-            detailTitleKey="explore.faction.detail.title"
-            renderItem={renderItem}
-        />
-    );
-}
-
 export function FactionExplorePage() {
     const { t } = useTranslation();
     const { loc } = useLocalization();
 
-    const { setCurrentFactionID } = useFactionExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToFactionDetail } = useSPARouter();
 
     const [factions, setFactions] = useState<FactionData[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Handle faction card click event
     const handleFactionClick = (factionId: number) => {
-        setCurrentFactionID(factionId);
-        navigate("/explore/faction/detail", t("explore.faction.detail.title"));
+        navigateToFactionDetail(factionId, t("explore.faction.detail.title"));
     };
 
     useEffect(() => {
@@ -114,11 +79,7 @@ export function FactionExplorePage() {
     }, [loc]);
 
     return (
-        <PageLayout
-            title={t("explore.faction.title")}
-            description={t("explore.faction.desc")}
-            actions={<FactionHistoryButton />}
-        >
+        <PageLayout title={t("explore.faction.title")} description={t("explore.faction.desc")}>
             <div className="pr-0 flex flex-col flex-1 min-h-0 w-full max-w-none">
                 {loading && (
                     <div className="flex items-center justify-center h-64">

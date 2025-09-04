@@ -50,7 +50,10 @@
         "market.search": "Market Search",
         "bundle": "Data Bundle",
         "about": "About",
-        "get_started": "Get Started"
+        "get_started": "Get Started",
+        "back": "Back",
+        "detail_history": "Detail History",
+        "recent_details": "Recent Details"
     },
     "settings": {
         "theme": {

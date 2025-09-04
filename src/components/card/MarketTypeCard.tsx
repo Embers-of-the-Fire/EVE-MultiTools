@@ -5,7 +5,6 @@ import { useLanguage } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useMarketRecord } from "@/hooks/useMarketCache";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useTypeExplore } from "@/hooks/useTypeExplore";
 import { getGroup, getLinkUrl, getMetaGroup, getType } from "@/native/data";
 import { LinkKey } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
@@ -107,8 +106,7 @@ const useMarketTypeData = (typeId: number) => {
 
     const isMarketDataLoading = marketRecord.isLoading;
 
-    const { setCurrentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToTypeDetail } = useSPARouter();
 
     const data: GenericData = {
         ...staticData,
@@ -122,8 +120,7 @@ const useMarketTypeData = (typeId: number) => {
                 className="size-8"
                 key="info-button"
                 onClick={() => {
-                    setCurrentTypeID(typeId);
-                    navigate("/explore/type/detail", t("explore.type.detail.title"));
+                    navigateToTypeDetail(typeId);
                 }}
             >
                 <Info size="32" />

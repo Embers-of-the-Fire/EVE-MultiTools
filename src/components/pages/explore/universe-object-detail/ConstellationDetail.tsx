@@ -16,13 +16,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Constellation } from "@/data/schema";
 import { getWormholeClassFromNative, getWormholeClassNameKey } from "@/data/universe";
 import { useTheme } from "@/hooks/useAppSettings";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import { getConstellationById, getConstellationDetailById, getRegionById } from "@/native/data";
 import type { ConstellationBrief } from "@/types/data";
-import { UniverseHistoryActions } from "./_Actions";
 
 export interface ConstellationDetailPageProps {
     constellationId: number;
@@ -42,9 +39,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { setCurrentFactionID } = useFactionExplore();
-    const { navigate } = useSPARouter();
-    const { setCurrentUniverseObject } = useUniverseExplore();
+    const { navigateToUniverseDetail, navigateToFactionDetail } = useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -92,7 +87,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
     }
 
     return (
-        <PageLayout title={name} actions={<UniverseHistoryActions />}>
+        <PageLayout title={name}>
             <div className="space-y-6">
                 <Card>
                     <CardHeader>
@@ -118,7 +113,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!constellationBrief) return;
-                                                setCurrentUniverseObject({
+                                                navigateToUniverseDetail({
                                                     type: "region",
                                                     id: constellationBrief.region_id,
                                                 });
@@ -155,11 +150,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                                     factionId={constellationDetail.factionId}
                                     onClick={() => {
                                         if (!constellationDetail.factionId) return;
-                                        setCurrentFactionID(constellationDetail.factionId);
-                                        navigate(
-                                            "/explore/faction/detail",
-                                            t("explore.faction.detail.title")
-                                        );
+                                        navigateToFactionDetail(constellationDetail.factionId);
                                     }}
                                 />
                             ) : (
@@ -205,14 +196,10 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                                                     id: systemId,
                                                 }}
                                                 onClick={() => {
-                                                    setCurrentUniverseObject({
+                                                    navigateToUniverseDetail({
                                                         type: "system",
                                                         id: systemId,
                                                     });
-                                                    navigate(
-                                                        "/explore/universe/detail",
-                                                        t("explore.universe.detail.title")
-                                                    );
                                                 }}
                                             />
                                         ))}

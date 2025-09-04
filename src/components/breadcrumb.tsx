@@ -2,11 +2,11 @@
 
 import { useTranslation } from "react-i18next";
 import {
-    Breadcrumb as BreadcrumbRoot,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
+    Breadcrumb as BreadcrumbRoot,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
@@ -40,7 +40,7 @@ export const Breadcrumb = ({ className }: BreadcrumbProps) => {
                                     <BreadcrumbLink asChild>
                                         <button
                                             type="button"
-                                            onClick={() => navigate(item.path, t(item.labelKey))}
+                                            onClick={() => navigate(item.path)}
                                             className="hover:text-foreground"
                                         >
                                             {t(item.labelKey)}

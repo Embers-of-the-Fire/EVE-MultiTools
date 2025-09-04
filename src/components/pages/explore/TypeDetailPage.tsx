@@ -3,13 +3,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
-import { DetailPageActions } from "@/components/common/DetailPageActions";
 import { SearchBar } from "@/components/common/SearchBar";
 import { useLanguage } from "@/hooks/useAppSettings";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useTypeExplore } from "@/hooks/useTypeExplore";
 import type { Language } from "@/native";
 import { getCategory, getGroup, getMetaGroup, getType, searchTypeByName } from "@/native/data";
 import type { Category, Group, MetaGroup, Type } from "@/types/data";
@@ -24,45 +21,12 @@ interface TypeDetailPageProps {
     typeId: number;
 }
 
-function TypeDetailPageActions() {
-    const { history, setCurrentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
-    const { t } = useTranslation();
-
-    const renderItem = (id: number, onClick: () => void) => (
-        <EmbeddedTypeCard
-            compact={true}
-            showBadges={false}
-            typeId={id}
-            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
-            noBorder
-            onClick={onClick}
-        />
-    );
-
-    return (
-        <DetailPageActions
-            history={history}
-            onItemClick={(id) => {
-                setCurrentTypeID(id);
-                navigate("/explore/type/detail", t("explore.type.detail.title"));
-            }}
-            backRoute="/explore/type"
-            emptyMessageKey="explore.type.history.empty"
-            detailRoute="/explore/type/detail"
-            detailTitleKey="explore.type.detail.title"
-            renderItem={renderItem}
-        />
-    );
-}
-
 export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const { t } = useTranslation();
     const { loc } = useLocalization();
     const { language } = useLanguage();
 
-    const { setCurrentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToTypeDetail, navigateToFactionDetail } = useSPARouter();
 
     const [type, setType] = useState<Type | null>(null);
     const [group, setGroup] = useState<Group | null>(null);
@@ -80,22 +44,19 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const { setCurrentFactionID } = useFactionExplore();
-
     // Search helper functions
     const searchFunction = async (query: string, language: Language) => {
         return await searchTypeByName(query, language);
     };
 
     const handleTypeSelect = (selectedTypeId: number) => {
-        setCurrentTypeID(selectedTypeId);
+        navigateToTypeDetail(selectedTypeId, t("explore.type.detail.title"));
     };
 
     const handleFactionSelect = () => {
         if (!type || !type.faction_id) return;
 
-        setCurrentFactionID(type.faction_id);
-        navigate("/explore/faction/detail", t("explore.faction.detail.title"));
+        navigateToFactionDetail(type.faction_id, t("explore.faction.detail.title"));
     };
 
     useEffect(() => {
@@ -216,11 +177,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     }
 
     return (
-        <PageLayout
-            title={name || t("explore.type.detail.type", { typeId })}
-            description=""
-            actions={<TypeDetailPageActions />}
-        >
+        <PageLayout title={name || t("explore.type.detail.type", { typeId })} description="">
             {/* Search Bar */}
             <div className="mb-6">
                 <SearchBar
@@ -497,7 +454,10 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                         <EmbeddedTypeCard
                                             className="mt-2"
                                             typeId={type.variation_parent_type_id}
-                                            onClick={setCurrentTypeID}
+                                            onClick={() =>
+                                                type.variation_parent_type_id &&
+                                                handleTypeSelect(type.variation_parent_type_id)
+                                            }
                                         />
                                     </div>
                                 )}
@@ -510,7 +470,10 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                         <EmbeddedTypeCard
                                             className="mt-2"
                                             typeId={type.wreck_type_id}
-                                            onClick={setCurrentTypeID}
+                                            onClick={() =>
+                                                type.wreck_type_id &&
+                                                handleTypeSelect(type.wreck_type_id)
+                                            }
                                         />
                                     </div>
                                 )}

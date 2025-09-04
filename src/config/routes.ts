@@ -137,6 +137,11 @@ export function findRouteByPath(path: string): AppRoute | undefined {
     return getFlatRoutes().find((route) => route.path === path);
 }
 
+export function getRouteTitleKey(path: string): string {
+    const route = findRouteByPath(path);
+    return route?.labelKey || "nav.unknown";
+}
+
 export function generateBreadcrumbs(path: string): { labelKey: string; path: string }[] {
     const breadcrumbs: { labelKey: string; path: string }[] = [];
     const pathSegments = path.split("/").filter(Boolean);

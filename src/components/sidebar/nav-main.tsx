@@ -1,8 +1,8 @@
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
     SidebarGroup,
@@ -16,7 +16,6 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 type NavItemType = {
@@ -70,7 +69,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                             onClick={() => {
                                 setOpen(true);
                                 if (item.containsPage) {
-                                    navigate(item.url, t(item.title));
+                                    navigate(item.url);
                                 }
                             }}
                         >
@@ -95,7 +94,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                                     <SidebarMenuSubButton asChild>
                                         <button
                                             type="button"
-                                            onClick={() => navigate(subItem.url, t(subItem.title))}
+                                            onClick={() => navigate(subItem.url)}
                                             className="w-full text-left"
                                         >
                                             <span>{t(subItem.title)}</span>
@@ -116,7 +115,7 @@ function CollapsibleMenu({ item }: { item: FlattenedNavItem }) {
                     onClick={() => {
                         setOpen(true);
                         if (item.containsPage) {
-                            navigate(item.url, t(item.title));
+                            navigate(item.url);
                         }
                     }}
                     asChild

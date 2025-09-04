@@ -17,11 +17,8 @@ import { SECONDARY_COLOR } from "@/constant/color";
 import { AU_IN_M } from "@/constant/unit";
 import type { SolarSystem } from "@/data/schema";
 import { useLanguage, useTheme } from "@/hooks/useAppSettings";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useTypeExplore } from "@/hooks/useTypeExplore";
-import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import {
     getConstellationById,
     getRegionById,
@@ -30,7 +27,6 @@ import {
 } from "@/native/data";
 import type { SystemBrief } from "@/types/data";
 import { getSecurityStatusColor } from "@/utils/color";
-import { UniverseHistoryActions } from "./_Actions";
 
 export interface SystemDetailPageProps {
     systemId: number;
@@ -51,10 +47,8 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { setCurrentFactionID } = useFactionExplore();
-    const { setCurrentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
-    const { setCurrentUniverseObject } = useUniverseExplore();
+    const { navigateToTypeDetail, navigateToFactionDetail, navigateToUniverseDetail } =
+        useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -113,7 +107,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
     }
 
     return (
-        <PageLayout title={name} actions={<UniverseHistoryActions />}>
+        <PageLayout title={name}>
             <div className="space-y-6">
                 <Card>
                     <CardHeader>
@@ -139,7 +133,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                setCurrentUniverseObject({
+                                                navigateToUniverseDetail({
                                                     type: "constellation",
                                                     id: systemBrief.constellation_id,
                                                 });
@@ -154,7 +148,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                setCurrentUniverseObject({
+                                                navigateToUniverseDetail({
                                                     type: "region",
                                                     id: systemBrief.region_id,
                                                 });
@@ -234,11 +228,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                     factionId={systemData.factionId}
                                     onClick={() => {
                                         if (!systemData.factionId) return;
-                                        setCurrentFactionID(systemData.factionId);
-                                        navigate(
-                                            "/explore/faction/detail",
-                                            t("explore.faction.detail.title")
-                                        );
+                                        navigateToFactionDetail(systemData.factionId);
                                     }}
                                 />
                             </div>
@@ -253,11 +243,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                     typeId={systemData.sunTypeId}
                                     onClick={() => {
                                         if (!systemData.sunTypeId) return;
-                                        setCurrentTypeID(systemData.sunTypeId);
-                                        navigate(
-                                            `/explore/type/detail`,
-                                            t("explore.type.detail.title")
-                                        );
+                                        navigateToTypeDetail(systemData.sunTypeId);
                                     }}
                                 />
                             </div>

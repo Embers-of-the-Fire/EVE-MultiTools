@@ -26,11 +26,7 @@ export function HomePage() {
                 </div>
 
                 <div className="flex gap-3">
-                    <Button
-                        size="lg"
-                        className="rounded-full"
-                        onClick={() => navigate("/about", "about")}
-                    >
+                    <Button size="lg" className="rounded-full" onClick={() => navigate("/about")}>
                         {t("common.about")}
                     </Button>
                     <Button asChild variant="outline" size="lg" className="rounded-full">

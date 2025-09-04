@@ -15,25 +15,25 @@ export function ExplorePage() {
                     title={t("explore.type.title")}
                     description={t("explore.type.desc")}
                     icon={<Box />}
-                    onClick={() => navigate("/explore/type", "Type Explorer")}
+                    onClick={() => navigate("/explore/type")}
                 />
                 <ShortcutCard
                     title={t("explore.faction.title")}
                     description={t("explore.faction.desc")}
                     icon={<Shield />}
-                    onClick={() => navigate("/explore/faction", "Faction Explorer")}
+                    onClick={() => navigate("/explore/faction")}
                 />
                 <ShortcutCard
                     title={t("explore.localization.title")}
                     description={t("explore.localization.desc")}
                     icon={<Languages />}
-                    onClick={() => navigate("/explore/localization", "Localization Explorer")}
+                    onClick={() => navigate("/explore/localization")}
                 />
                 <ShortcutCard
                     title={t("explore.universe.title")}
                     description={t("explore.universe.desc")}
                     icon={<Earth />}
-                    onClick={() => navigate("/explore/universe", "Universe Explorer")}
+                    onClick={() => navigate("/explore/universe")}
                 />
             </div>
         </PageLayout>

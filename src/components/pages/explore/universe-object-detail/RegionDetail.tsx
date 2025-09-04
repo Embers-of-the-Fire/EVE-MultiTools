@@ -19,13 +19,10 @@ import {
     getWormholeClassNameKey,
 } from "@/data/universe";
 import { useTheme } from "@/hooks/useAppSettings";
-import { useFactionExplore } from "@/hooks/useFactionExplore";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import { getRegionById, getRegionDetailById } from "@/native/data";
 import type { RegionBrief } from "@/types/data";
-import { UniverseHistoryActions } from "./_Actions";
 
 export interface RegionDetailPageProps {
     regionId: number;
@@ -43,9 +40,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { setCurrentFactionID } = useFactionExplore();
-    const { setCurrentUniverseObject } = useUniverseExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToFactionDetail, navigateToUniverseDetail } = useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -90,7 +85,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
     }
 
     return (
-        <PageLayout title={name} actions={<UniverseHistoryActions />}>
+        <PageLayout title={name}>
             <div className="space-y-6">
                 <Card>
                     <CardHeader>
@@ -136,9 +131,8 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                                     factionId={regionDetail.factionId}
                                     onClick={() => {
                                         if (!regionDetail.factionId) return;
-                                        setCurrentFactionID(regionDetail.factionId);
-                                        navigate(
-                                            "/explore/faction/detail",
+                                        navigateToFactionDetail(
+                                            regionDetail.factionId,
                                             t("explore.faction.detail.title")
                                         );
                                     }}
@@ -170,14 +164,10 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                                                     id: consId,
                                                 }}
                                                 onClick={() => {
-                                                    setCurrentUniverseObject({
+                                                    navigateToUniverseDetail({
                                                         type: "constellation",
                                                         id: consId,
                                                     });
-                                                    navigate(
-                                                        "/explore/universe/detail",
-                                                        t("explore.universe.detail.title")
-                                                    );
                                                 }}
                                             />
                                         ))}

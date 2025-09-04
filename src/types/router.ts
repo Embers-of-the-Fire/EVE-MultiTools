@@ -1,3 +1,5 @@
+import type { UniverseObject } from "@/stores/universeExploreStore";
+
 export type AppRoute = {
     key: string;
     path: string;
@@ -14,11 +16,31 @@ export type RouteHistory = {
     path: string;
     timestamp: number;
     title: string;
+    params?: any;
 };
+
+export interface DetailHistoryItem {
+    id: string;
+    title: string;
+    path: keyof RouteParamMap;
+    params: any;
+    timestamp: number;
+}
+
+// Route parameter type mapping
+export interface RouteParamMap {
+    "/explore/type/detail": { typeId: number };
+    "/explore/faction/detail": { factionId: number };
+    "/explore/universe/detail": UniverseObject;
+}
+
+export type RouteParam<T extends keyof RouteParamMap> = RouteParamMap[T];
 
 export type RouterState = {
     currentPath: string;
     history: RouteHistory[];
     canGoBack: boolean;
     canGoForward: boolean;
+    routeParams: Partial<Record<keyof RouteParamMap, any>>;
+    detailHistory: DetailHistoryItem[];
 };

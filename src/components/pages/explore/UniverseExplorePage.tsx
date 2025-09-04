@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
-import { HistoryButton } from "@/components/common/HistoryButton";
 import { SearchBar } from "@/components/common/SearchBar";
 import {
     Select,
@@ -23,7 +22,6 @@ import {
 } from "@/data/universe";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useUniverseExplore } from "@/hooks/useUniverseExplore";
 import type { Language } from "@/native";
 import {
     getConstellationById,
@@ -37,38 +35,6 @@ import type { UniverseObject, UniverseObjectType } from "@/stores/universeExplor
 import type { WormholeClass } from "@/types/data";
 import { RegionType } from "@/types/data";
 import { PageLayout } from "../../layout";
-
-export function UniverseHistoryButton() {
-    const { history, setCurrentUniverseObject } = useUniverseExplore();
-    const { navigate } = useSPARouter();
-    const { t } = useTranslation();
-
-    const renderItem = (id: UniverseObject, onClick: () => void) => (
-        <EmbeddedUniverseObjectCard
-            compact={true}
-            obj={id}
-            noBorder
-            showBadges={false}
-            onClick={onClick}
-        />
-    );
-
-    return (
-        <HistoryButton
-            history={history}
-            getKey={(id) => id.id}
-            onItemClick={(id) => {
-                console.log(id);
-                setCurrentUniverseObject(id);
-                navigate("/explore/universe/detail", t("explore.universe.detail.title"));
-            }}
-            emptyMessageKey="explore.universe.history.empty"
-            detailRoute="/explore/universe/detail"
-            detailTitleKey="explore.universe.detail.title"
-            renderItem={renderItem}
-        />
-    );
-}
 
 type WormholeClassFilterString =
     | WormholeClassString
@@ -199,8 +165,7 @@ export function UniverseExplorePage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
 
-    const { setCurrentUniverseObject } = useUniverseExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToUniverseDetail } = useSPARouter();
 
     const [sourceType, setSourceType] = useState<UniverseObjectType>("system");
     const [wormholeClassFilter, setWormholeClassFilter] =
@@ -212,8 +177,7 @@ export function UniverseExplorePage() {
     };
 
     const handleUniverseObjectClick = (obj: UniverseObject) => {
-        setCurrentUniverseObject(obj);
-        navigate("/explore/universe/detail", t("explore.universe.detail.title"));
+        navigateToUniverseDetail(obj, t("explore.universe.detail.title"));
     };
 
     const searchFunction = async (query: string, language: Language) => {
@@ -259,7 +223,6 @@ export function UniverseExplorePage() {
         <PageLayout
             title={t("explore.universe.title", "宇宙/Universe")}
             description={t("explore.universe.desc", "探索宇宙相关内容")}
-            actions={<UniverseHistoryButton />}
         >
             <div className="flex gap-4 mb-4">
                 <Select value={sourceType} onValueChange={handleSourceTypeChange}>

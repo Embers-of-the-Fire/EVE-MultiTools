@@ -1,57 +1,22 @@
 import { useTranslation } from "react-i18next";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
-import { HistoryButton } from "@/components/common/HistoryButton";
 import { SearchBar } from "@/components/common/SearchBar";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { useTypeExplore } from "@/hooks/useTypeExplore";
 import type { Language } from "@/native";
 import { searchTypeByName } from "@/native/data";
 import { PageLayout } from "../../layout";
 import { ScrollArea } from "../../ui/scroll-area";
 
-export function TypeHistoryButton() {
-    const { history, setCurrentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
-    const { t } = useTranslation();
-
-    const renderItem = (id: number, onClick: () => void) => (
-        <EmbeddedTypeCard
-            compact={true}
-            showBadges={false}
-            typeId={id}
-            className="w-full px-2 py-1 bg-transparent hover:bg-gray-100 dark:hover:bg-black/30 transition-colors rounded-none"
-            noBorder
-            onClick={onClick}
-        />
-    );
-
-    return (
-        <HistoryButton
-            history={history}
-            onItemClick={(id) => {
-                setCurrentTypeID(id);
-                navigate("/explore/type/detail", t("explore.type.detail.title"));
-            }}
-            emptyMessageKey="explore.type.history.empty"
-            detailRoute="/explore/type/detail"
-            detailTitleKey="explore.type.detail.title"
-            renderItem={renderItem}
-        />
-    );
-}
-
 export function TypeExplorePage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
 
-    const { setCurrentTypeID } = useTypeExplore();
-    const { navigate } = useSPARouter();
+    const { navigateToTypeDetail } = useSPARouter();
 
     // Handle type card click event
     const handleTypeClick = (typeId: number) => {
-        setCurrentTypeID(typeId);
-        navigate("/explore/type/detail", t("explore.type.detail.title"));
+        navigateToTypeDetail(typeId, t("explore.type.detail.title"));
     };
 
     // Search helper functions
@@ -60,11 +25,7 @@ export function TypeExplorePage() {
     };
 
     return (
-        <PageLayout
-            title={t("explore.type.title")}
-            description={t("explore.type.desc")}
-            actions={<TypeHistoryButton />}
-        >
+        <PageLayout title={t("explore.type.title")} description={t("explore.type.desc")}>
             <SearchBar
                 onItemSelect={handleTypeClick}
                 searchFunction={searchFunction}
