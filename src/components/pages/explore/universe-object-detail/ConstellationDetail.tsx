@@ -6,11 +6,13 @@ import { useTranslation } from "react-i18next";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
+import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import { PageLayout } from "@/components/layout";
 import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Constellation } from "@/data/schema";
 import { getWormholeClassFromNative, getWormholeClassNameKey } from "@/data/universe";
 import { useTheme } from "@/hooks/useAppSettings";
@@ -181,6 +183,46 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                             </p>
                         </div>
                     </CardContent>
+                </Card>
+                <Card>
+                    <Accordion type="single" collapsible className="w-full" defaultValue="systems">
+                        <AccordionItem value="systems">
+                            <CardHeader className="w-full">
+                                <AccordionTrigger className="text-base">
+                                    <CardTitle>
+                                        {t(
+                                            "explore.universe.constellation.constellation_attributes.systems"
+                                        )}
+                                    </CardTitle>
+                                </AccordionTrigger>
+                            </CardHeader>
+                            <AccordionContent asChild>
+                                <ScrollArea>
+                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                        {constellationDetail.solarSystemIds.map((systemId) => (
+                                            <EmbeddedUniverseObjectCard
+                                                key={systemId}
+                                                obj={{
+                                                    type: "system",
+                                                    id: systemId,
+                                                }}
+                                                onClick={() => {
+                                                    setCurrentUniverseObject({
+                                                        type: "system",
+                                                        id: systemId,
+                                                    });
+                                                    navigate(
+                                                        "/explore/universe/detail",
+                                                        t("explore.universe.detail.title")
+                                                    );
+                                                }}
+                                            />
+                                        ))}
+                                    </CardContent>
+                                </ScrollArea>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </Card>
                 <Card>
                     <CardHeader>

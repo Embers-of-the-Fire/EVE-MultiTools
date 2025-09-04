@@ -243,7 +243,8 @@
             "constellation": {
                 "constellation_attributes": {
                     "title": "星座属性",
-                    "faction_id": "所属势力"
+                    "faction_id": "所属势力",
+                    "systems": "星系"
                 },
                 "center": "中心坐标",
                 "hidden_attributes": "隐藏属性"

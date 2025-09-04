@@ -252,7 +252,8 @@
             "constellation": {
                 "constellation_attributes": {
                     "title": "Constellation Attributes",
-                    "faction_id": "Faction"
+                    "faction_id": "Faction",
+                    "systems": "Systems"
                 },
                 "center": "Center Position",
                 "hidden_attributes": "Hidden Attributes"
