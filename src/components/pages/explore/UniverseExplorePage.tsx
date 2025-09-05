@@ -208,10 +208,8 @@ export function UniverseExplorePage() {
             const out = await searchSystemByName(query, language);
             for (const r of out) {
                 const system = await getSystemById(r[0]);
-                if (system) {
-                    if (filter(system.wormhole_class_id) === false) continue;
-                    results.push({ type: "system", id: r[0], score: r[1] });
-                }
+                if (filter(system.wormhole_class_id) === false) continue;
+                results.push({ type: "system", id: r[0], score: r[1] });
             }
         }
 

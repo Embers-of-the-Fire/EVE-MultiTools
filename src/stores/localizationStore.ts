@@ -2,14 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import type { Language } from "@/native";
 import { getLocalizationByLang } from "@/native/data";
 
-// 本地化查询键工厂
 export const localizationKeys = {
     all: ["localization"] as const,
     byLang: (id: number, language: Language) =>
         [...localizationKeys.all, "by-lang", id, language] as const,
 };
 
-// 本地化查询选项
 export const createLocalizationQuery = (id: number, language: Language) => ({
     queryKey: localizationKeys.byLang(id, language),
     queryFn: async (): Promise<string> => {
@@ -25,7 +23,6 @@ export const createLocalizationQuery = (id: number, language: Language) => ({
     gcTime: 1000 * 60 * 60 * 24, // 24小时后从内存中清除未使用的缓存
 });
 
-// Hook for getting localization
 export const useLocalizationQuery = (id: number, language: Language) => {
     return useQuery(createLocalizationQuery(id, language));
 };

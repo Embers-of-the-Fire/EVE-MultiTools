@@ -186,5 +186,6 @@ export interface PlanetBrief {
     planet_id: number;
     celestial_index: number;
     planet_name_id?: number;
+    system_id: number;
     type_id: number;
 }

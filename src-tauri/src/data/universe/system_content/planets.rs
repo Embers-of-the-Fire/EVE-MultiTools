@@ -7,6 +7,7 @@ pub struct PlanetBrief {
     pub celestial_index: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub planet_name_id: Option<i64>,
+    pub system_id: i64,
     pub type_id: i64,
 }
 
@@ -22,7 +23,7 @@ impl PlanetService {
     pub async fn get_planet_by_id(&self, planet_id: i32) -> anyhow::Result<Option<PlanetBrief>> {
         Ok(sqlx::query_as!(
             PlanetBrief,
-            "SELECT planet_id, celestial_index, planet_name_id, type_id
+            "SELECT planet_id, celestial_index, planet_name_id, type_id, system_id
             FROM planets
             WHERE planet_id = ?",
             planet_id

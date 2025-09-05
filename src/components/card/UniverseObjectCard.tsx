@@ -3,9 +3,17 @@ import { useTranslation } from "react-i18next";
 import { SECONDARY_COLOR } from "@/constant/color";
 import { getRegionTypeNameKey, getWormholeClassNameKey } from "@/data/universe";
 import { useLocalization } from "@/hooks/useLocalization";
-import { getConstellationById, getFaction, getRegionById, getSystemById } from "@/native/data";
+import {
+    getConstellationById,
+    getFaction,
+    getPlanetById,
+    getRegionById,
+    getSystemById,
+    getType,
+} from "@/native/data";
 import type { UniverseObject, UniverseObjectType } from "@/stores/universeExploreStore";
 import { getSecurityStatusColor } from "@/utils/color";
+import { getPlanetName } from "@/utils/name";
 import type { BadgeConfig, GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
@@ -17,6 +25,8 @@ const getIconFromUniverseObjectType = (type: UniverseObjectType): string => {
             return "C";
         case "system":
             return "S";
+        case "planet":
+            return "P";
     }
 };
 
@@ -78,7 +88,7 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                 if (!constellation) return;
 
                 name = (await loc(constellation.name_id)) || "";
-                description = ""; // Constellations may not have descriptions
+                description = "";
 
                 if (constellation.faction_id) {
                     const faction = await getFaction(constellation.faction_id);
@@ -100,7 +110,6 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                 }
             } else if (obj.type === "system") {
                 const system = await getSystemById(obj.id);
-                if (!system) return;
 
                 name = (await loc(system.name_id)) || "";
                 description = ""; // Systems may not have descriptions
@@ -134,6 +143,27 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                     },
                     key: `security-${security}`,
                 });
+            } else if (obj.type === "planet") {
+                const planet = await getPlanetById(obj.id);
+
+                const system = await getSystemById(planet.system_id);
+                const systemName = (await loc(system.name_id)) || "";
+
+                name = getPlanetName(
+                    planet.celestial_index,
+                    systemName,
+                    planet.planet_name_id ? await loc(planet.planet_name_id) : undefined
+                );
+
+                const typeNameId = (await getType(planet.type_id))?.type_name_id;
+                if (typeNameId) {
+                    badges.push({
+                        className: "pr-0 pt-0.5",
+                        text: (await loc(typeNameId)) || "",
+                        variant: "default",
+                        key: `type-${planet.type_id}`,
+                    });
+                }
             }
 
             if (mounted) {

@@ -7,6 +7,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
+import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import {
     Attribute,
     AttributeContent,
@@ -21,6 +22,7 @@ import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/a
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { SECONDARY_COLOR } from "@/constant/color";
 import { AU_IN_M } from "@/constant/unit";
 import type { SolarSystem } from "@/data/schema";
@@ -74,15 +76,13 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
             const systemBrief = await getSystemById(systemId);
             let regionName = "";
             let constellationName = "";
-            if (systemBrief) {
-                const region = await getRegionById(systemBrief.region_id);
-                if (region) {
-                    regionName = await loc(region.name_id);
-                }
-                const constellation = await getConstellationById(systemBrief.constellation_id);
-                if (constellation) {
-                    constellationName = await loc(constellation.name_id);
-                }
+            const region = await getRegionById(systemBrief.region_id);
+            if (region) {
+                regionName = await loc(region.name_id);
+            }
+            const constellation = await getConstellationById(systemBrief.constellation_id);
+            if (constellation) {
+                constellationName = await loc(constellation.name_id);
             }
 
             if (mounted) {
@@ -261,6 +261,35 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                         )}
                     </AttributeContent>
                 </AttributePanel>
+                <Card>
+                    <Accordion type="single" collapsible className="w-full" defaultValue="planets">
+                        <AccordionItem value="planets">
+                            <CardHeader className="w-full">
+                                <AccordionTrigger className="text-base">
+                                    <CardTitle>{t("explore.universe.system.planets")}</CardTitle>
+                                </AccordionTrigger>
+                            </CardHeader>
+                            <AccordionContent asChild>
+                                <ScrollArea>
+                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                        {systemData.planets.map((planetId) => (
+                                            <EmbeddedUniverseObjectCard
+                                                key={planetId}
+                                                obj={{ type: "planet", id: planetId }}
+                                                onClick={() =>
+                                                    navigateToUniverseDetail({
+                                                        type: "planet",
+                                                        id: planetId,
+                                                    })
+                                                }
+                                            />
+                                        ))}
+                                    </CardContent>
+                                </ScrollArea>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </Card>
                 <AttributePanel>
                     <AttributeTitle>
                         {t("explore.universe.system.hidden_attributes")}

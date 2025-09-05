@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-export type UniverseObjectType = "region" | "constellation" | "system";
+export type UniverseObjectType = "region" | "constellation" | "system" | "planet";
 export interface UniverseObject {
     id: number;
     type: UniverseObjectType;

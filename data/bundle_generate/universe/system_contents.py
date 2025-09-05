@@ -309,6 +309,7 @@ def _collect_planets(db_path: Path, conn: sqlite3.Connection, planets: dict[int,
             celestial_index INTEGER NOT NULL,
             planet_name_id INTEGER,
             type_id INTEGER NOT NULL,
+            system_id INTEGER NOT NULL,
             data BLOB NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_planet_type_id ON planets (type_id);
@@ -339,14 +340,16 @@ def _collect_planets(db_path: Path, conn: sqlite3.Connection, planets: dict[int,
                 celestial_index,
                 planet_name_id,
                 type_id,
+                system_id,
                 data
-            ) VALUES (?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
                 planet_id,
                 planet_def.celestialIndex,
                 planet_def.planetNameID,
                 planet_def.typeID,
+                planet_def.solarSystemID,
                 blob,
             ),
         )

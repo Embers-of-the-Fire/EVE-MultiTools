@@ -222,7 +222,34 @@
                 "unknown_region": "未知星域",
                 "unknown_constellation": "未知星座",
                 "no_object_selected": "没有选择任何天体",
-                "unsupported_object_type": "不支持的天体类型：{{type}}"
+                "unsupported_object_type": "不支持的天体类型：{{type}}",
+                "unknown_system": "未知星系",
+                "celestial_attributes": {
+                    "title": "天体特殊属性",
+                    "height_map_1": "高程布局 1 ID",
+                    "height_map_2": "高程布局 2 ID",
+                    "population": "已殖民",
+                    "shader_preset": "预设着色器"
+                },
+                "celestial_statistics": {
+                    "title": "天体属性",
+                    "density": "密度",
+                    "escape_velocity": "逃逸速度",
+                    "eccentricity": "偏心率",
+                    "fragmented": "破碎的",
+                    "life": "寿命",
+                    "locked": "已锁定",
+                    "mass_dust": "固核质量",
+                    "mass_gas": "大气质量",
+                    "orbit_period": "公转周期",
+                    "orbit_radius": "公转轨道半径",
+                    "pressure": "大气压强",
+                    "radius": "半径",
+                    "rotation_rate": "自转周期",
+                    "surface_gravity": "表面重力",
+                    "temperature": "表面温度",
+                    "spectral_class": "光谱分级"
+                }
             },
             "system": {
                 "unknown_attributes": "未知属性",
@@ -241,7 +268,8 @@
                 "boundary_min": "最小外周",
                 "show_json_data": " JSON 原始数据",
                 "disallow_scanning": "禁用扫描",
-                "disallow_cyno": "禁用诱导"
+                "disallow_cyno": "禁用诱导",
+                "planets": "行星"
             },
             "constellation": {
                 "constellation_attributes": {
@@ -263,6 +291,13 @@
                 "hidden_attributes": "隐藏属性",
                 "center": "中心坐标",
                 "constellations": "星座"
+            },
+            "planet": {
+                "planet_attributes": {
+                    "title": "行星属性",
+                    "type_id": "行星类型"
+                },
+                "position": "行星位置"
             }
         }
     },
@@ -349,5 +384,8 @@
     },
     "separator": {
         "comma": "，"
+    },
+    "units": {
+        "day": "天"
     }
 }

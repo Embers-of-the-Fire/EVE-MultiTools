@@ -231,7 +231,34 @@
                 "unknown_region": "Unknown Region",
                 "unknown_constellation": "Unknown Constellation",
                 "no_object_selected": "No celestial object selected",
-                "unsupported_object_type": "Unsupported celestial type: {{type}}"
+                "unsupported_object_type": "Unsupported celestial type: {{type}}",
+                "unknown_system": "Unknown System",
+                "celestial_attributes": {
+                    "title": "Special Celestial Attributes",
+                    "height_map_1": "Height Map 1 ID",
+                    "height_map_2": "Height Map 2 ID",
+                    "population": "Has Population",
+                    "shader_preset": "Preset Shader"
+                },
+                "celestial_statistics": {
+                    "title": "Celestial Statistics",
+                    "density": "Density",
+                    "escape_velocity": "Escape Velocity",
+                    "eccentricity": "Eccentricity",
+                    "fragmented": "Fragmented",
+                    "life": "Life",
+                    "locked": "Locked",
+                    "mass_dust": "Dust Mass",
+                    "mass_gas": "Gas Mass",
+                    "orbit_period": "Orbit Peroid",
+                    "orbit_radius": "Orbit Radius",
+                    "pressure": "Pressure",
+                    "radius": "Radius",
+                    "rotation_rate": "Rotation Peroid",
+                    "surface_gravity": "Surface Gravity",
+                    "temperature": "Temperature",
+                    "spectral_class": "Spectral Class"
+                }
             },
             "system": {
                 "unknown_attributes": "Unknown Attributes",
@@ -250,7 +277,8 @@
                 "boundary_min": "Min Boundary",
                 "show_json_data": "Raw JSON Data",
                 "disallow_scanning": "Disallow Scanning",
-                "disallow_cyno": "Disallow Cyno"
+                "disallow_cyno": "Disallow Cyno",
+                "planets": "Planets"
             },
             "constellation": {
                 "constellation_attributes": {
@@ -272,6 +300,13 @@
                 "hidden_attributes": "Hidden Attributes",
                 "center": "Center Position",
                 "constellations": "Constellations"
+            },
+            "planet": {
+                "planet_attributes": {
+                    "title": "Planet Attributes",
+                    "type_id": "Planet Type"
+                },
+                "position": "Planet Position"
             }
         }
     },
@@ -331,5 +366,8 @@
     },
     "separator": {
         "comma": ", "
+    },
+    "units": {
+        "day": "Day"
     }
 }

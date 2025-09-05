@@ -5,6 +5,7 @@ import { useSPARouter } from "@/hooks/useSPARouter";
 import { PageLayout } from "../../layout";
 import { Card, CardContent } from "../../ui/card";
 import { ConstellationDetailPage } from "./universe-object-detail/ConstellationDetail";
+import { PlanetDetailPage } from "./universe-object-detail/PlanetDetail";
 import { RegionDetailPage } from "./universe-object-detail/RegionDetail";
 import { SystemDetailPage } from "./universe-object-detail/SystemDetail";
 
@@ -44,6 +45,8 @@ export const UniverseObjectDetailPageWrapper: React.FC = () => {
             return <ConstellationDetailPage constellationId={universeObject.id} />;
         case "region":
             return <RegionDetailPage regionId={universeObject.id} />;
+        case "planet":
+            return <PlanetDetailPage planetId={universeObject.id} />;
         default:
             return (
                 <PageLayout

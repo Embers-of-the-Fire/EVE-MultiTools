@@ -285,10 +285,14 @@ export async function getConstellationDetailById(constellationId: number): Promi
     return Constellation.fromBinary(new Uint8Array(bytes));
 }
 
-export async function getSystemById(solarSystemId: number): Promise<SystemBrief | null> {
-    return await tauriInvoke<SystemBrief | null>("get_system_by_id", {
+export async function getSystemById(solarSystemId: number): Promise<SystemBrief> {
+    const result = await tauriInvoke<SystemBrief | null>("get_system_by_id", {
         solarSystemId,
     });
+    if (!result) {
+        throw new Error("System not found");
+    }
+    return result;
 }
 
 export async function getSystemsByRegionId(regionId: number): Promise<SystemBrief[]> {
@@ -334,10 +338,14 @@ export async function getSystemDataById(solarSystemId: number): Promise<SolarSys
     return SolarSystem.fromBinary(new Uint8Array(bytes));
 }
 
-export async function getPlanetById(planetId: number): Promise<PlanetBrief | null> {
-    return await tauriInvoke<PlanetBrief | null>("get_planet_by_id", {
+export async function getPlanetById(planetId: number): Promise<PlanetBrief> {
+    const result = await tauriInvoke<PlanetBrief | null>("get_planet_by_id", {
         planetId,
     });
+    if (!result) {
+        throw new Error("Planet not found");
+    }
+    return result;
 }
 
 export async function getPlanetDataById(planetId: number): Promise<Planet> {
