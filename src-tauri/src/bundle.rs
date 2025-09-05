@@ -195,7 +195,7 @@ impl BundleState {
                     stage: ImportStage::Extracting,
                     current: progress as u64,
                     total: 100,
-                    message_key: Some("bundle.progress.extracting_file".to_string()),
+                    message_key: Some("bundle.progress.extracting_files".to_string()),
                     message_params: Some(serde_json::json!({
                         "current": i + 1,
                         "total": total_files
