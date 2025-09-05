@@ -7,6 +7,14 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
+import {
+    Attribute,
+    AttributeContent,
+    AttributeName,
+    AttributePanel,
+    AttributeText,
+    AttributeTitle,
+} from "@/components/common/AttributePanel";
 import { PageLayout } from "@/components/layout";
 import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
@@ -16,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SECONDARY_COLOR } from "@/constant/color";
 import { AU_IN_M } from "@/constant/unit";
 import type { SolarSystem } from "@/data/schema";
+import { getWormholeClassFromNative, getWormholeClassNameKey } from "@/data/universe";
 import { useLanguage, useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
@@ -183,46 +192,38 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            {t("explore.universe.system.system_attributes.title")}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                {t("terms.security_status")}
-                            </h4>
-                            <p
-                                className="font-medium inline px-2 py-0.5 rounded dark:bg-transparent"
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.system.system_attributes.title")}
+                    </AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>{t("terms.security_status")}</AttributeName>
+                            <AttributeText
+                                className="inline px-2 py-0.5 rounded"
                                 style={{
                                     backgroundColor: SECONDARY_COLOR,
                                     color: getSecurityStatusColor(systemData.security),
                                 }}
                             >
                                 {systemData.security.toFixed(2)}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                {t("terms.luminosity")}
-                            </h4>
-                            <p className="font-medium">{systemData.luminosity.toFixed(6)}</p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                {t("terms.radius")}
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>{t("terms.luminosity")}</AttributeName>
+                            <AttributeText>{systemData.luminosity.toFixed(6)}</AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>{t("terms.radius")}</AttributeName>
+                            <AttributeText>
                                 {(systemData.radius / AU_IN_M).toLocaleString(language)} AU
-                            </p>
-                        </div>
+                            </AttributeText>
+                        </Attribute>
                         {systemData.factionId && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t("explore.universe.system.system_attributes.faction_id")}
-                                </h4>
+                                </AttributeName>
                                 <EmbeddedFactionCard
                                     className="mt-2"
                                     factionId={systemData.factionId}
@@ -231,13 +232,13 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                         navigateToFactionDetail(systemData.factionId);
                                     }}
                                 />
-                            </div>
+                            </Attribute>
                         )}
                         {systemData.sunTypeId && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t("explore.universe.system.system_attributes.sun_type_id")}
-                                </h4>
+                                </AttributeName>
                                 <EmbeddedTypeCard
                                     className="mt-2"
                                     typeId={systemData.sunTypeId}
@@ -246,130 +247,140 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                         navigateToTypeDetail(systemData.sunTypeId);
                                     }}
                                 />
-                            </div>
+                            </Attribute>
                         )}
                         {systemData.sunFlareGraphicId && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t(
                                         "explore.universe.system.system_attributes.sun_flare_graphic_id"
                                     )}
-                                </h4>
-                                <p className="font-medium">{systemData.sunFlareGraphicId}</p>
-                            </div>
+                                </AttributeName>
+                                <AttributeText>{systemData.sunFlareGraphicId}</AttributeText>
+                            </Attribute>
                         )}
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.universe.system.hidden_attributes")}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
+                    </AttributeContent>
+                </AttributePanel>
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.system.hidden_attributes")}
+                    </AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>{t("terms.wormhole_class")}</AttributeName>
+                            <AttributeText>
+                                {systemData.wormholeClassId
+                                    ? t(
+                                          getWormholeClassNameKey(
+                                              getWormholeClassFromNative(systemData.wormholeClassId)
+                                          )
+                                      )
+                                    : t("common.none")}
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>
                                 {t("explore.universe.system.warp_tunnel_overwrite")}
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeName>
+                            <AttributeText>
                                 {systemData.warpTunnelOverwrite
                                     ? systemData.warpTunnelOverwrite.toFixed(0)
                                     : t("common.none")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>
                                 {t("explore.universe.system.system_wide_cloud")}
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeName>
+                            <AttributeText>
                                 {systemData.systemWideCloud
                                     ? systemData.systemWideCloud.toFixed(0)
                                     : t("common.none")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>
                                 {t("explore.universe.system.visual_effect")}
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeName>
+                            <AttributeText>
                                 {systemData.visualEffect || t("common.none")}
-                            </p>
-                        </div>
+                            </AttributeText>
+                        </Attribute>
                         {systemData.position && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t("explore.universe.system.position")}
-                                </h4>
-                                <p className="font-medium">
+                                </AttributeName>
+                                <AttributeText>
                                     <UniversePointDisplay point={systemData.position} />
-                                </p>
-                            </div>
+                                </AttributeText>
+                            </Attribute>
                         )}
                         {systemData.max && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t("explore.universe.system.boundary_max")}
-                                </h4>
-                                <p className="font-medium">
+                                </AttributeName>
+                                <AttributeText>
                                     <UniversePointDisplay point={systemData.max} />
-                                </p>
-                            </div>
+                                </AttributeText>
+                            </Attribute>
                         )}
                         {systemData.min && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t("explore.universe.system.boundary_min")}
-                                </h4>
-                                <p className="font-medium">
+                                </AttributeName>
+                                <AttributeText>
                                     <UniversePointDisplay point={systemData.min} />
-                                </p>
-                            </div>
+                                </AttributeText>
+                            </Attribute>
                         )}
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.universe.system.unknown_attributes")}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">Fringe</h4>
-                            <p className="font-medium">
+                    </AttributeContent>
+                </AttributePanel>
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.system.unknown_attributes")}
+                    </AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>Fringe</AttributeName>
+                            <AttributeText>
                                 {systemData.fringe ? t("common.yes") : t("common.no")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">Hub</h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>Hub</AttributeName>
+                            <AttributeText>
                                 {systemData.hub ? t("common.yes") : t("common.no")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                International
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>International</AttributeName>
+                            <AttributeText>
                                 {systemData.international ? t("common.yes") : t("common.no")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">Regional</h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>Regional</AttributeName>
+                            <AttributeText>
                                 {systemData.regional ? t("common.yes") : t("common.no")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">border</h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>border</AttributeName>
+                            <AttributeText>
                                 {systemData.border ? t("common.yes") : t("common.no")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">corridor</h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>corridor</AttributeName>
+                            <AttributeText>
                                 {systemData.corridor ? t("common.yes") : t("common.no")}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                            </AttributeText>
+                        </Attribute>
+                    </AttributeContent>
+                </AttributePanel>
                 <Card>
                     <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="show-json">

@@ -11,6 +11,14 @@ import type { Language } from "@/native";
 import { getCategory, getGroup, getMetaGroup, getType, searchTypeByName } from "@/native/data";
 import type { Category, Group, MetaGroup, Type } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
+import {
+    Attribute,
+    AttributeContent,
+    AttributeName,
+    AttributePanel,
+    AttributeText,
+    AttributeTitle,
+} from "../../common/AttributePanel";
 import { PageLayout } from "../../layout";
 import { TypeImage } from "../../TypeImage";
 import { Badge } from "../../ui/badge";
@@ -284,44 +292,35 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.type.detail.category_info")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {category && (
-                                <div>
-                                    <h4 className="font-medium text-sm text-muted-foreground">
-                                        {t("explore.type.detail.category")}
-                                    </h4>
-                                    <p>
-                                        <span className="font-medium">
-                                            {categoryName ||
-                                                `${t("explore.type.detail.category")} ${category.category_id}`}
-                                        </span>
-                                        <span className="ml-2 text-sm text-muted-foreground">
-                                            ID: {category.category_id}
-                                        </span>
-                                    </p>
-                                </div>
-                            )}
+                <AttributePanel>
+                    <AttributeTitle>{t("explore.type.detail.category_info")}</AttributeTitle>
+                    <AttributeContent>
+                        {category && (
+                            <Attribute>
+                                <AttributeName>{t("explore.type.detail.category")}</AttributeName>
+                                <AttributeText>
+                                    <span className="font-medium">
+                                        {categoryName ||
+                                            `${t("explore.type.detail.category")} ${category.category_id}`}
+                                    </span>
+                                    <span className="ml-2 text-sm text-muted-foreground">
+                                        ID: {category.category_id}
+                                    </span>
+                                </AttributeText>
+                            </Attribute>
+                        )}
 
-                            {group && (
-                                <div>
-                                    <h4 className="font-medium text-sm text-muted-foreground">
-                                        {t("explore.type.detail.group")}
-                                    </h4>
-                                    <p>
-                                        <span className="font-medium">
-                                            {groupName ||
-                                                `${t("explore.type.detail.group")} ${group.group_id}`}
-                                        </span>
-                                        <span className="ml-2 text-sm text-muted-foreground">
-                                            ID: {group.group_id}
-                                        </span>
-                                    </p>
-                                    {/* {JSON.stringify(group)} */}
+                        {group && (
+                            <Attribute>
+                                <AttributeName>{t("explore.type.detail.group")}</AttributeName>
+                                <AttributeText>
+                                    <span className="font-medium">
+                                        {groupName ||
+                                            `${t("explore.type.detail.group")} ${group.group_id}`}
+                                    </span>
+                                    <span className="ml-2 text-sm text-muted-foreground">
+                                        ID: {group.group_id}
+                                    </span>
                                     <div className="flex flex-wrap gap-1 mt-2">
                                         {group.anchorable && (
                                             <Badge variant="secondary" className="text-xs">
@@ -344,113 +343,109 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                             </Badge>
                                         )}
                                     </div>
-                                </div>
-                            )}
+                                </AttributeText>
+                            </Attribute>
+                        )}
 
-                            {metaGroup && (
-                                <div>
-                                    <h4 className="font-medium text-sm text-muted-foreground">
-                                        {t("explore.type.detail.meta_group")}
-                                    </h4>
-                                    <p className="font-medium">
-                                        {metaGroupName || t("explore.type.detail.meta_group")}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
+                        {metaGroup && (
+                            <Attribute>
+                                <AttributeName>{t("explore.type.detail.meta_group")}</AttributeName>
+                                <AttributeText>
+                                    {metaGroupName || t("explore.type.detail.meta_group")}
+                                </AttributeText>
+                            </Attribute>
+                        )}
+                    </AttributeContent>
+                </AttributePanel>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.type.detail.attributes")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
-                                    {t("explore.type.detail.base_price")}
-                                </h4>
-                                <p className="font-mono">{type.base_price?.toLocaleString()} ISK</p>
-                            </div>
+                <AttributePanel>
+                    <AttributeTitle>{t("explore.type.detail.attributes")}</AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>{t("explore.type.detail.base_price")}</AttributeName>
+                            <AttributeText className="font-mono">
+                                {type.base_price?.toLocaleString()} ISK
+                            </AttributeText>
+                        </Attribute>
 
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
-                                    {t("explore.type.detail.volume")}
-                                </h4>
-                                <p className="font-mono">{type.volume?.toLocaleString()} m³</p>
-                            </div>
+                        <Attribute>
+                            <AttributeName>{t("explore.type.detail.volume")}</AttributeName>
+                            <AttributeText className="font-mono">
+                                {type.volume?.toLocaleString()} m³
+                            </AttributeText>
+                        </Attribute>
 
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
-                                    {t("explore.type.detail.capacity")}
-                                </h4>
-                                <p className="font-mono">{type.capacity?.toLocaleString()} m³</p>
-                            </div>
+                        <Attribute>
+                            <AttributeName>{t("explore.type.detail.capacity")}</AttributeName>
+                            <AttributeText className="font-mono">
+                                {type.capacity?.toLocaleString()} m³
+                            </AttributeText>
+                        </Attribute>
 
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
-                                    {t("explore.type.detail.radius")}
-                                </h4>
-                                <p className="font-mono">{type.radius?.toLocaleString()} m</p>
-                            </div>
+                        <Attribute>
+                            <AttributeName>{t("explore.type.detail.radius")}</AttributeName>
+                            <AttributeText className="font-mono">
+                                {type.radius?.toLocaleString()} m
+                            </AttributeText>
+                        </Attribute>
 
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
-                                    {t("explore.type.detail.portion_size")}
-                                </h4>
-                                <p className="font-mono">{type.portion_size}</p>
-                            </div>
+                        <Attribute>
+                            <AttributeName>{t("explore.type.detail.portion_size")}</AttributeName>
+                            <AttributeText className="font-mono">{type.portion_size}</AttributeText>
+                        </Attribute>
 
-                            {type.market_group_id && (
-                                <div>
-                                    <h4 className="font-medium text-sm text-muted-foreground">
-                                        {t("explore.type.detail.market_group_id")}
-                                    </h4>
-                                    <p className="font-mono">{type.market_group_id}</p>
-                                </div>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
+                        {type.market_group_id && (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.type.detail.market_group_id")}
+                                </AttributeName>
+                                <AttributeText className="font-mono">
+                                    {type.market_group_id}
+                                </AttributeText>
+                            </Attribute>
+                        )}
+                    </AttributeContent>
+                </AttributePanel>
 
                 {(type.faction_id ||
                     type.race_id ||
                     type.variation_parent_type_id ||
                     type.wreck_type_id) && (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{t("explore.type.detail.other_info")}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {type.faction_id && (
-                                    <div>
-                                        <h4 className="font-medium text-sm text-muted-foreground">
-                                            {t("explore.type.detail.faction_id")}
-                                        </h4>
+                    <AttributePanel>
+                        <AttributeTitle>{t("explore.type.detail.other_info")}</AttributeTitle>
+                        <AttributeContent>
+                            {type.faction_id && (
+                                <Attribute>
+                                    <AttributeName>
+                                        {t("explore.type.detail.faction_id")}
+                                    </AttributeName>
+                                    <AttributeText>
                                         <EmbeddedFactionCard
                                             className="mt-2"
                                             factionId={type.faction_id}
                                             onClick={handleFactionSelect}
                                         />
-                                    </div>
-                                )}
+                                    </AttributeText>
+                                </Attribute>
+                            )}
 
-                                {type.race_id && (
-                                    <div>
-                                        <h4 className="font-medium text-sm text-muted-foreground">
-                                            {t("explore.type.detail.race_id")}
-                                        </h4>
-                                        <p className="font-mono">{type.race_id}</p>
-                                    </div>
-                                )}
+                            {type.race_id && (
+                                <Attribute>
+                                    <AttributeName>
+                                        {t("explore.type.detail.race_id")}
+                                    </AttributeName>
+                                    <AttributeText className="font-mono">
+                                        {type.race_id}
+                                    </AttributeText>
+                                </Attribute>
+                            )}
 
-                                {type.variation_parent_type_id && (
-                                    <div>
-                                        <h4 className="font-medium text-sm text-muted-foreground">
-                                            {t("explore.type.detail.variation_parent_type_id")}
-                                        </h4>
+                            {type.variation_parent_type_id && (
+                                <Attribute>
+                                    <AttributeName>
+                                        {t("explore.type.detail.variation_parent_type_id")}
+                                    </AttributeName>
+                                    <AttributeText>
                                         <EmbeddedTypeCard
                                             className="mt-2"
                                             typeId={type.variation_parent_type_id}
@@ -459,14 +454,16 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                                 handleTypeSelect(type.variation_parent_type_id)
                                             }
                                         />
-                                    </div>
-                                )}
+                                    </AttributeText>
+                                </Attribute>
+                            )}
 
-                                {type.wreck_type_id && (
-                                    <div>
-                                        <h4 className="font-medium text-sm text-muted-foreground">
-                                            {t("explore.type.detail.wreck_type_id")}
-                                        </h4>
+                            {type.wreck_type_id && (
+                                <Attribute>
+                                    <AttributeName>
+                                        {t("explore.type.detail.wreck_type_id")}
+                                    </AttributeName>
+                                    <AttributeText>
                                         <EmbeddedTypeCard
                                             className="mt-2"
                                             typeId={type.wreck_type_id}
@@ -475,11 +472,11 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                                                 handleTypeSelect(type.wreck_type_id)
                                             }
                                         />
-                                    </div>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
+                                    </AttributeText>
+                                </Attribute>
+                            )}
+                        </AttributeContent>
+                    </AttributePanel>
                 )}
             </div>
         </PageLayout>

@@ -7,6 +7,14 @@ import { useSPARouter } from "@/hooks/useSPARouter";
 import { getFaction } from "@/native/data";
 import type { Faction } from "@/types/data";
 import { getFactionIconUrl, getFactionLogoUrl } from "@/utils/image";
+import {
+    Attribute,
+    AttributeContent,
+    AttributeName,
+    AttributePanel,
+    AttributeText,
+    AttributeTitle,
+} from "../../common/AttributePanel";
 import { PageLayout } from "../../layout";
 import { Badge } from "../../ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
@@ -175,50 +183,46 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                 </Card>
 
                 {/* 属性信息 */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.faction.detail.properties")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <div className="text-sm font-medium text-muted-foreground">
-                                    {t("explore.faction.detail.size_factor")}
-                                </div>
-                                <div>{faction.size_factor.toFixed(2)}</div>
-                            </div>
+                <AttributePanel>
+                    <AttributeTitle>{t("explore.faction.detail.properties")}</AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>{t("explore.faction.detail.size_factor")}</AttributeName>
+                            <AttributeText>{faction.size_factor.toFixed(2)}</AttributeText>
+                        </Attribute>
 
-                            <div className="space-y-2">
-                                <div className="text-sm font-medium text-muted-foreground">
-                                    {t("explore.faction.detail.unique_name")}
-                                </div>
+                        <Attribute>
+                            <AttributeName>{t("explore.faction.detail.unique_name")}</AttributeName>
+                            <AttributeText>
                                 <Badge variant={faction.unique_name ? "default" : "secondary"}>
                                     {faction.unique_name ? t("common.yes") : t("common.no")}
                                 </Badge>
-                            </div>
+                            </AttributeText>
+                        </Attribute>
 
-                            {faction.corporation_id && (
-                                <div className="space-y-2">
-                                    <div className="text-sm font-medium text-muted-foreground">
-                                        {t("explore.faction.detail.corporation_id")}
-                                    </div>
-                                    <div>{faction.corporation_id}</div>
-                                </div>
-                            )}
+                        {faction.corporation_id && (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.faction.detail.corporation_id")}
+                                </AttributeName>
+                                <AttributeText>{faction.corporation_id}</AttributeText>
+                            </Attribute>
+                        )}
 
-                            {faction.militia_corporation_id && (
-                                <div className="space-y-2">
-                                    <div className="text-sm font-medium text-muted-foreground">
-                                        {t("explore.faction.detail.militia_corporation_id")}
-                                    </div>
-                                    <div>{faction.militia_corporation_id}</div>
-                                </div>
-                            )}
+                        {faction.militia_corporation_id && (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.faction.detail.militia_corporation_id")}
+                                </AttributeName>
+                                <AttributeText>{faction.militia_corporation_id}</AttributeText>
+                            </Attribute>
+                        )}
 
-                            <div className="space-y-2">
-                                <div className="text-sm font-medium text-muted-foreground">
-                                    {t("explore.faction.detail.solar_system_id")}
-                                </div>
+                        <Attribute>
+                            <AttributeName>
+                                {t("explore.faction.detail.solar_system_id")}
+                            </AttributeName>
+                            <AttributeText>
                                 <EmbeddedUniverseObjectCard
                                     obj={{
                                         type: "system",
@@ -231,17 +235,15 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                                         });
                                     }}
                                 />
-                            </div>
+                            </AttributeText>
+                        </Attribute>
 
-                            <div className="space-y-2">
-                                <div className="text-sm font-medium text-muted-foreground">
-                                    {t("explore.faction.detail.icon_id")}
-                                </div>
-                                <div>{faction.icon_id}</div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        <Attribute>
+                            <AttributeName>{t("explore.faction.detail.icon_id")}</AttributeName>
+                            <AttributeText>{faction.icon_id}</AttributeText>
+                        </Attribute>
+                    </AttributeContent>
+                </AttributePanel>
 
                 {/* 成员种族 */}
                 {faction.member_races.length > 0 && (

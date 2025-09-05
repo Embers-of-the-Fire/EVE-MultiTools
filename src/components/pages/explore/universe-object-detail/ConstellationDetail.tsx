@@ -7,6 +7,14 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
+import {
+    Attribute,
+    AttributeContent,
+    AttributeName,
+    AttributePanel,
+    AttributeText,
+    AttributeTitle,
+} from "@/components/common/AttributePanel";
 import { PageLayout } from "@/components/layout";
 import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
@@ -131,37 +139,35 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            {t("explore.universe.constellation.constellation_attributes.title")}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.constellation.constellation_attributes.title")}
+                    </AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>
                                 {t(
                                     "explore.universe.constellation.constellation_attributes.faction_id"
                                 )}
-                            </h4>
-                            {constellationDetail.factionId ? (
-                                <EmbeddedFactionCard
-                                    className="mt-2"
-                                    factionId={constellationDetail.factionId}
-                                    onClick={() => {
-                                        if (!constellationDetail.factionId) return;
-                                        navigateToFactionDetail(constellationDetail.factionId);
-                                    }}
-                                />
-                            ) : (
-                                t("common.none")
-                            )}
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                {t("terms.wormhole_class")}
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeName>
+                            <AttributeText>
+                                {constellationDetail.factionId ? (
+                                    <EmbeddedFactionCard
+                                        className="mt-2"
+                                        factionId={constellationDetail.factionId}
+                                        onClick={() => {
+                                            if (!constellationDetail.factionId) return;
+                                            navigateToFactionDetail(constellationDetail.factionId);
+                                        }}
+                                    />
+                                ) : (
+                                    t("common.none")
+                                )}
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>{t("terms.wormhole_class")}</AttributeName>
+                            <AttributeText>
                                 {constellationDetail.wormholeClassId
                                     ? t(
                                           getWormholeClassNameKey(
@@ -171,10 +177,10 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                                           )
                                       )
                                     : t("common.none")}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                            </AttributeText>
+                        </Attribute>
+                    </AttributeContent>
+                </AttributePanel>
                 <Card>
                     <Accordion type="single" collapsible className="w-full" defaultValue="systems">
                         <AccordionItem value="systems">
@@ -209,25 +215,23 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                         </AccordionItem>
                     </Accordion>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            {t("explore.universe.constellation.hidden_attributes")}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.constellation.hidden_attributes")}
+                    </AttributeTitle>
+                    <AttributeContent>
                         {constellationDetail.center && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
+                            <Attribute>
+                                <AttributeName>
                                     {t("explore.universe.constellation.center")}
-                                </h4>
-                                <p className="font-medium">
+                                </AttributeName>
+                                <AttributeText>
                                     <UniversePointDisplay point={constellationDetail.center} />
-                                </p>
-                            </div>
+                                </AttributeText>
+                            </Attribute>
                         )}
-                    </CardContent>
-                </Card>
+                    </AttributeContent>
+                </AttributePanel>
                 <Card>
                     <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="show-json">

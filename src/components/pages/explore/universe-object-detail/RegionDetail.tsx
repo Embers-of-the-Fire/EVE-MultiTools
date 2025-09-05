@@ -6,6 +6,14 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
+import {
+    Attribute,
+    AttributeContent,
+    AttributeName,
+    AttributePanel,
+    AttributeText,
+    AttributeTitle,
+} from "@/components/common/AttributePanel";
 import { PageLayout } from "@/components/layout";
 import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
@@ -114,35 +122,35 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            {t("explore.universe.region.region_attributes.title")}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.region.region_attributes.title")}
+                    </AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>
                                 {t("explore.universe.region.region_attributes.faction_id")}
-                            </h4>
-                            {regionDetail.factionId ? (
-                                <EmbeddedFactionCard
-                                    className="mt-2"
-                                    factionId={regionDetail.factionId}
-                                    onClick={() => {
-                                        if (!regionDetail.factionId) return;
-                                        navigateToFactionDetail(
-                                            regionDetail.factionId,
-                                            t("explore.faction.detail.title")
-                                        );
-                                    }}
-                                />
-                            ) : (
-                                t("common.none")
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
+                            </AttributeName>
+                            <AttributeText>
+                                {regionDetail.factionId ? (
+                                    <EmbeddedFactionCard
+                                        className="mt-2"
+                                        factionId={regionDetail.factionId}
+                                        onClick={() => {
+                                            if (!regionDetail.factionId) return;
+                                            navigateToFactionDetail(
+                                                regionDetail.factionId,
+                                                t("explore.faction.detail.title")
+                                            );
+                                        }}
+                                    />
+                                ) : (
+                                    t("common.none")
+                                )}
+                            </AttributeText>
+                        </Attribute>
+                    </AttributeContent>
+                </AttributePanel>
                 <Card>
                     <Accordion type="single" collapsible className="w-full" defaultValue="systems">
                         <AccordionItem value="systems">
@@ -177,16 +185,14 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                         </AccordionItem>
                     </Accordion>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.universe.region.hidden_attributes")}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                {t("terms.wormhole_class")}
-                            </h4>
-                            <p className="font-medium">
+                <AttributePanel>
+                    <AttributeTitle>
+                        {t("explore.universe.region.hidden_attributes")}
+                    </AttributeTitle>
+                    <AttributeContent>
+                        <Attribute>
+                            <AttributeName>{t("terms.wormhole_class")}</AttributeName>
+                            <AttributeText>
                                 {regionDetail.wormholeClassId
                                     ? t(
                                           getWormholeClassNameKey(
@@ -196,13 +202,11 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                                           )
                                       )
                                     : t("common.none")}
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-sm text-muted-foreground">
-                                {t("terms.region_type")}
-                            </h4>
-                            <p className="font-medium">
+                            </AttributeText>
+                        </Attribute>
+                        <Attribute>
+                            <AttributeName>{t("terms.region_type")}</AttributeName>
+                            <AttributeText>
                                 {regionDetail.regionType
                                     ? t(
                                           getRegionTypeNameKey(
@@ -210,20 +214,18 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                                           )
                                       )
                                     : t("common.none")}
-                            </p>
-                        </div>
+                            </AttributeText>
+                        </Attribute>
                         {regionDetail.center && (
-                            <div>
-                                <h4 className="font-medium text-sm text-muted-foreground">
-                                    {t("explore.universe.region.center")}
-                                </h4>
-                                <p className="font-medium">
+                            <Attribute>
+                                <AttributeName>{t("explore.universe.region.center")}</AttributeName>
+                                <AttributeText>
                                     <UniversePointDisplay point={regionDetail.center} />
-                                </p>
-                            </div>
+                                </AttributeText>
+                            </Attribute>
                         )}
-                    </CardContent>
-                </Card>
+                    </AttributeContent>
+                </AttributePanel>
                 <Card>
                     <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="show-json">
