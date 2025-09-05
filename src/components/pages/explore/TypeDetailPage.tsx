@@ -383,7 +383,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                         </Attribute>
 
                         <Attribute>
-                            <AttributeName>{t("explore.type.detail.radius")}</AttributeName>
+                            <AttributeName>{t("terms.radius")}</AttributeName>
                             <AttributeText className="font-mono">
                                 {type.radius?.toLocaleString()} m
                             </AttributeText>

@@ -65,21 +65,15 @@ export const CelestialStatisticsPanel: React.FC<{
             </AttributeTitle>
             <AttributeContent>
                 <Attribute>
-                    <AttributeName>
-                        {t("explore.universe.detail.celestial_statistics.density")}
-                    </AttributeName>
+                    <AttributeName>{t("terms.density")}</AttributeName>
                     <AttributeText>{celestial.density.toFixed(2)} kg/m³</AttributeText>
                 </Attribute>
                 <Attribute>
-                    <AttributeName>
-                        {t("explore.universe.detail.celestial_statistics.escape_velocity")}
-                    </AttributeName>
+                    <AttributeName>{t("terms.escape_velocity")}</AttributeName>
                     <AttributeText>{celestial.escapeVelocity.toFixed(2)} m/s</AttributeText>
                 </Attribute>
                 <Attribute>
-                    <AttributeName>
-                        {t("explore.universe.detail.celestial_statistics.eccentricity")}
-                    </AttributeName>
+                    <AttributeName>{t("terms.eccentricity")}</AttributeName>
                     <AttributeText>{celestial.eccentricity.toFixed(4)}</AttributeText>
                 </Attribute>
                 {celestial.fragmented && celestial.fragmented === true ? (
@@ -92,9 +86,7 @@ export const CelestialStatisticsPanel: React.FC<{
                 ) : null}
                 {celestial.life && celestial.life > 0 ? (
                     <Attribute>
-                        <AttributeName>
-                            {t("explore.universe.detail.celestial_statistics.life")}
-                        </AttributeName>
+                        <AttributeName>{t("terms.life")}</AttributeName>
                         <AttributeText>{celestial.life.toFixed(0)}</AttributeText>
                     </Attribute>
                 ) : null}
@@ -139,9 +131,7 @@ export const CelestialStatisticsPanel: React.FC<{
                     <AttributeText>{displayPressure(celestial.pressure)}</AttributeText>
                 </Attribute>
                 <Attribute>
-                    <AttributeName>
-                        {t("explore.universe.detail.celestial_statistics.radius")}
-                    </AttributeName>
+                    <AttributeName>{t("terms.radius")}</AttributeName>
                     <AttributeText>{(celestial.radius / KM_IN_M).toFixed(0)} km</AttributeText>
                 </Attribute>
                 <Attribute>

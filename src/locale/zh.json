@@ -161,7 +161,6 @@
                 "base_price": "基准价格",
                 "volume": "体积",
                 "capacity": "容量",
-                "radius": "半径",
                 "portion_size": "单体规模",
                 "market_group_id": "市场组 ID",
                 "other_info": "其他信息",
@@ -233,18 +232,13 @@
                 },
                 "celestial_statistics": {
                     "title": "天体属性",
-                    "density": "密度",
-                    "escape_velocity": "逃逸速度",
-                    "eccentricity": "偏心率",
                     "fragmented": "破碎的",
-                    "life": "寿命",
                     "locked": "已锁定",
                     "mass_dust": "固核质量",
                     "mass_gas": "大气质量",
                     "orbit_period": "公转周期",
                     "orbit_radius": "公转轨道半径",
                     "pressure": "大气压强",
-                    "radius": "半径",
                     "rotation_rate": "自转周期",
                     "surface_gravity": "表面重力",
                     "temperature": "表面温度",
@@ -380,7 +374,11 @@
         "luminosity": "光度",
         "radius": "半径",
         "wormhole_class": "虫洞类型",
-        "region_type": "星域类型"
+        "region_type": "星域类型",
+        "density": "密度",
+        "eccentricity": "偏心率",
+        "escape_velocity": "逃逸速度",
+        "life": "寿命"
     },
     "separator": {
         "comma": "，"

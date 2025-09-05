@@ -19,9 +19,8 @@ import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { KM_IN_M } from "@/constant/unit";
 import type { Planet } from "@/data/schema";
-import { useLanguage, useTheme } from "@/hooks/useAppSettings";
+import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import {
@@ -42,7 +41,6 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
     const { loc } = useLocalization();
     const { t } = useTranslation();
     const { theme } = useTheme();
-    const { language } = useLanguage();
 
     const [name, setName] = useState<string>("");
     const [regionName, setRegionName] = useState<string>("");
@@ -191,12 +189,6 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                         {t("explore.universe.planet.planet_attributes.title")}
                     </AttributeTitle>
                     <AttributeContent>
-                        <Attribute>
-                            <AttributeName>{t("terms.radius")}</AttributeName>
-                            <AttributeText>
-                                {(planetData.radius / KM_IN_M).toLocaleString(language)} km
-                            </AttributeText>
-                        </Attribute>
                         <Attribute>
                             <AttributeName>
                                 {t("explore.universe.planet.planet_attributes.type_id")}
