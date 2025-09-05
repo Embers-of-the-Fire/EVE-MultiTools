@@ -278,34 +278,54 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                     : t("common.none")}
                             </AttributeText>
                         </Attribute>
-                        <Attribute>
-                            <AttributeName>
-                                {t("explore.universe.system.warp_tunnel_overwrite")}
-                            </AttributeName>
-                            <AttributeText>
-                                {systemData.warpTunnelOverwrite
-                                    ? systemData.warpTunnelOverwrite.toFixed(0)
-                                    : t("common.none")}
-                            </AttributeText>
-                        </Attribute>
-                        <Attribute>
-                            <AttributeName>
-                                {t("explore.universe.system.system_wide_cloud")}
-                            </AttributeName>
-                            <AttributeText>
-                                {systemData.systemWideCloud
-                                    ? systemData.systemWideCloud.toFixed(0)
-                                    : t("common.none")}
-                            </AttributeText>
-                        </Attribute>
-                        <Attribute>
-                            <AttributeName>
-                                {t("explore.universe.system.visual_effect")}
-                            </AttributeName>
-                            <AttributeText>
-                                {systemData.visualEffect || t("common.none")}
-                            </AttributeText>
-                        </Attribute>
+                        {systemData.warpTunnelOverwrite ? (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.universe.system.warp_tunnel_overwrite")}
+                                </AttributeName>
+                                <AttributeText>
+                                    {systemData.warpTunnelOverwrite.toFixed(0)}
+                                </AttributeText>
+                            </Attribute>
+                        ) : null}
+                        {systemData.systemWideCloud ? (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.universe.system.system_wide_cloud")}
+                                </AttributeName>
+                                <AttributeText>
+                                    {systemData.systemWideCloud.toFixed(0)}
+                                </AttributeText>
+                            </Attribute>
+                        ) : null}
+                        {systemData.visualEffect && systemData.visualEffect.length > 0 ? (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.universe.system.visual_effect")}
+                                </AttributeName>
+                                <AttributeText>{systemData.visualEffect}</AttributeText>
+                            </Attribute>
+                        ) : null}
+                        {systemData.disallowScanning && (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.universe.system.disallow_scanning")}
+                                </AttributeName>
+                                <AttributeText>
+                                    {systemData.disallowScanning ? t("common.yes") : t("common.no")}
+                                </AttributeText>
+                            </Attribute>
+                        )}
+                        {systemData.disallowCyno && (
+                            <Attribute>
+                                <AttributeName>
+                                    {t("explore.universe.system.disallow_cyno")}
+                                </AttributeName>
+                                <AttributeText>
+                                    {systemData.disallowCyno ? t("common.yes") : t("common.no")}
+                                </AttributeText>
+                            </Attribute>
+                        )}
                         {systemData.position && (
                             <Attribute>
                                 <AttributeName>

@@ -56,7 +56,6 @@ class SolarSystem(BaseModel):
     visualEffect: str = Field(default="")
     disallowedAnchorGroups: list[int] = Field(default_factory=list)
     disallowedAnchorCategories: list[int] = Field(default_factory=list)
-    dscanRange: float | None = Field(default=None)
     disallowScanning: bool | None = Field(default=None)
     disallowCyno: bool | None = Field(default=None)
 
@@ -277,8 +276,6 @@ def _collect_solar_systems(
         pb_obj.visual_effect = solar_system_def.visualEffect
         pb_obj.disallowed_anchor_groups.extend(solar_system_def.disallowedAnchorGroups)
         pb_obj.disallowed_anchor_categories.extend(solar_system_def.disallowedAnchorCategories)
-        if solar_system_def.dscanRange is not None:
-            pb_obj.dscan_range = solar_system_def.dscanRange
         if solar_system_def.disallowScanning is not None:
             pb_obj.disallow_scanning = solar_system_def.disallowScanning
         if solar_system_def.disallowCyno is not None:

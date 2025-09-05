@@ -248,7 +248,9 @@
                 "position": "System Position",
                 "boundary_max": "Max Boundary",
                 "boundary_min": "Min Boundary",
-                "show_json_data": "Raw JSON Data"
+                "show_json_data": "Raw JSON Data",
+                "disallow_scanning": "Disallow Scanning",
+                "disallow_cyno": "Disallow Cyno"
             },
             "constellation": {
                 "constellation_attributes": {

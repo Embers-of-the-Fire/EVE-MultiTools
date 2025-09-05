@@ -992,15 +992,11 @@ export interface SolarSystem {
      */
     disallowedAnchorCategories: number[];
     /**
-     * @generated from protobuf field: optional double dscan_range = 31
-     */
-    dscanRange?: number;
-    /**
-     * @generated from protobuf field: optional bool disallow_scanning = 32
+     * @generated from protobuf field: optional bool disallow_scanning = 31
      */
     disallowScanning?: boolean;
     /**
-     * @generated from protobuf field: optional bool disallow_cyno = 33
+     * @generated from protobuf field: optional bool disallow_cyno = 32
      */
     disallowCyno?: boolean;
 }
@@ -5649,15 +5645,14 @@ class SolarSystem$Type extends MessageType<SolarSystem> {
                 repeat: 2 /*RepeatType.UNPACKED*/,
                 T: 5 /*ScalarType.INT32*/,
             },
-            { no: 31, name: "dscan_range", kind: "scalar", opt: true, T: 1 /*ScalarType.DOUBLE*/ },
             {
-                no: 32,
+                no: 31,
                 name: "disallow_scanning",
                 kind: "scalar",
                 opt: true,
                 T: 8 /*ScalarType.BOOL*/,
             },
-            { no: 33, name: "disallow_cyno", kind: "scalar", opt: true, T: 8 /*ScalarType.BOOL*/ },
+            { no: 32, name: "disallow_cyno", kind: "scalar", opt: true, T: 8 /*ScalarType.BOOL*/ },
         ]);
     }
     create(value?: PartialMessage<SolarSystem>): SolarSystem {
@@ -5815,13 +5810,10 @@ class SolarSystem$Type extends MessageType<SolarSystem> {
                             message.disallowedAnchorCategories.push(reader.int32());
                     else message.disallowedAnchorCategories.push(reader.int32());
                     break;
-                case /* optional double dscan_range */ 31:
-                    message.dscanRange = reader.double();
-                    break;
-                case /* optional bool disallow_scanning */ 32:
+                case /* optional bool disallow_scanning */ 31:
                     message.disallowScanning = reader.bool();
                     break;
-                case /* optional bool disallow_cyno */ 33:
+                case /* optional bool disallow_cyno */ 32:
                     message.disallowCyno = reader.bool();
                     break;
                 default: {
@@ -5942,15 +5934,12 @@ class SolarSystem$Type extends MessageType<SolarSystem> {
         /* repeated int32 disallowed_anchor_categories = 30; */
         for (let i = 0; i < message.disallowedAnchorCategories.length; i++)
             writer.tag(30, WireType.Varint).int32(message.disallowedAnchorCategories[i]);
-        /* optional double dscan_range = 31; */
-        if (message.dscanRange !== undefined)
-            writer.tag(31, WireType.Bit64).double(message.dscanRange);
-        /* optional bool disallow_scanning = 32; */
+        /* optional bool disallow_scanning = 31; */
         if (message.disallowScanning !== undefined)
-            writer.tag(32, WireType.Varint).bool(message.disallowScanning);
-        /* optional bool disallow_cyno = 33; */
+            writer.tag(31, WireType.Varint).bool(message.disallowScanning);
+        /* optional bool disallow_cyno = 32; */
         if (message.disallowCyno !== undefined)
-            writer.tag(33, WireType.Varint).bool(message.disallowCyno);
+            writer.tag(32, WireType.Varint).bool(message.disallowCyno);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

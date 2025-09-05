@@ -239,7 +239,9 @@
                 "position": "星系位置",
                 "boundary_max": "最大外周",
                 "boundary_min": "最小外周",
-                "show_json_data": " JSON 原始数据"
+                "show_json_data": " JSON 原始数据",
+                "disallow_scanning": "禁用扫描",
+                "disallow_cyno": "禁用诱导"
             },
             "constellation": {
                 "constellation_attributes": {

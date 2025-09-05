@@ -360,9 +360,8 @@ message SolarSystem {
     required string visual_effect = 28;
     repeated int32 disallowed_anchor_groups = 29;
     repeated int32 disallowed_anchor_categories = 30;
-    optional double dscan_range = 31;
-    optional bool disallow_scanning = 32;
-    optional bool disallow_cyno = 33;
+    optional bool disallow_scanning = 31;
+    optional bool disallow_cyno = 32;
 }
 
 message CelestialAttributes {
