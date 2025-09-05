@@ -10,8 +10,8 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { generateBreadcrumbs } from "@/config/routes";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { generateBreadcrumbs } from "@/lib/router";
 
 interface BreadcrumbProps {
     className?: string;

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { getRouteTitleKey } from "@/config/routes";
+import { getRouteTitleKey } from "@/lib/router";
 import type {
     DetailHistoryItem,
     RouteHistory,

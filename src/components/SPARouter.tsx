@@ -2,8 +2,8 @@
 
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { findRouteByPath } from "@/config/routes";
 import { useSPARouter } from "@/hooks/useSPARouter";
+import { findRouteByPath } from "@/lib/router";
 
 function LoadingSpinner() {
     return (
