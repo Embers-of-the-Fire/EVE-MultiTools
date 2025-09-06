@@ -126,7 +126,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                     <AttributeTitle>
                         {t("explore.universe.region.region_attributes.title")}
                     </AttributeTitle>
-                    <AttributeContent>
+                    <AttributeContent className="grid grid-cols-1 md:grid-cols-1">
                         <Attribute>
                             <AttributeName>
                                 {t("explore.universe.region.region_attributes.faction_id")}
