@@ -197,7 +197,7 @@
                 "unique_name": "Unique Name",
                 "corporation_id": "Corporation ID",
                 "militia_corporation_id": "Militia Corporation ID",
-                "solar_system_id": "Solar System ID",
+                "solar_system_id": "Solar System",
                 "icon_id": "Icon ID",
                 "member_races": "Member Races",
                 "race_id": "Race {{raceId}}",

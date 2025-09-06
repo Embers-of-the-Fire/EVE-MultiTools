@@ -188,7 +188,7 @@
                 "unique_name": "独特名称",
                 "corporation_id": "执行军团 ID",
                 "militia_corporation_id": "卫队军团 ID",
-                "solar_system_id": "首都星系 ID",
+                "solar_system_id": "首都星系",
                 "icon_id": "图标 ID",
                 "member_races": "成员种族",
                 "race_id": "种族 {{raceId}}",

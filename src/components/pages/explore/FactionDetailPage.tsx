@@ -224,6 +224,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                             </AttributeName>
                             <AttributeText>
                                 <EmbeddedUniverseObjectCard
+                                    className="mt-2"
                                     obj={{
                                         type: "system",
                                         id: faction.solar_system_id,
