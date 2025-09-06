@@ -6,18 +6,39 @@
     "nav": {
         "platform": "平台",
         "bookmarks": "书签",
-        "explore": "探索",
-        "explore.type": "物品",
-        "explore.type.detail": "物品详情",
-        "explore.faction": "势力",
-        "explore.faction.detail": "势力详情",
-        "explore.localization": "本地化",
-        "explore.universe": "新伊甸",
-        "explore.universe.detail": "新伊甸详情",
+        "explore": {
+            "title": "探索",
+            "type": {
+                "title": "物品",
+                "detail": "物品详情"
+            },
+            "faction": {
+                "title": "势力",
+                "detail": "势力详情"
+            },
+            "localization": "本地化",
+            "universe": {
+                "title": "新伊甸",
+                "region": {
+                    "detail": "星域详情"
+                },
+                "constellation": {
+                    "detail": "星座详情"
+                },
+                "planet": {
+                    "detail": "行星详情"
+                },
+                "system": {
+                    "detail": "星系详情"
+                }
+            }
+        },
         "home": "首页",
-        "market": "市场",
-        "market.list": "市场总览",
-        "market.search": "市场搜索",
+        "market": {
+            "title": "市场",
+            "list": "市场总览",
+            "search": "市场搜索"
+        },
         "bundle": "数据包",
         "about": "关于",
         "get_started": "快速上手",
@@ -295,7 +316,7 @@
                     "type_id": "行星类型"
                 },
                 "position": "行星位置",
-                "detail": "Planet Detail"
+                "detail": "行星详情"
             }
         }
     },

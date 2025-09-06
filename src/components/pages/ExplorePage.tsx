@@ -9,7 +9,7 @@ export function ExplorePage() {
     const { navigate } = useSPARouter();
 
     return (
-        <PageLayout title={t("nav.explore")} description={t("explore.description")}>
+        <PageLayout title={t("nav.explore.title")} description={t("explore.description")}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                 <ShortcutCard
                     title={t("explore.type.title")}

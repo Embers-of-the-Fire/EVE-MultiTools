@@ -31,7 +31,6 @@ import {
     searchRegionByName,
     searchSystemByName,
 } from "@/native/data";
-import type { UniverseObject, UniverseObjectType } from "@/stores/universeExploreStore";
 import type { WormholeClass } from "@/types/data";
 import { RegionType } from "@/types/data";
 import { PageLayout } from "../../layout";
@@ -161,16 +160,18 @@ const rtFilter = (filterID: RegionTypeFilterString): ((rt: RegionType | undefine
     };
 };
 
+type UniverseObjectType = "region" | "constellation" | "system";
+interface UniverseObject {
+    type: UniverseObjectType;
+    id: number;
+}
+
 export function UniverseExplorePage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
 
-    const {
-        navigateToUniverseRegion,
-        navigateToUniverseConstellation,
-        navigateToUniverseSystem,
-        navigateToUniversePlanet,
-    } = useSPARouter();
+    const { navigateToUniverseRegion, navigateToUniverseConstellation, navigateToUniverseSystem } =
+        useSPARouter();
 
     const [sourceType, setSourceType] = useState<UniverseObjectType>("system");
     const [wormholeClassFilter, setWormholeClassFilter] =
@@ -191,9 +192,6 @@ export function UniverseExplorePage() {
                 break;
             case "system":
                 navigateToUniverseSystem(obj.id);
-                break;
-            case "planet":
-                navigateToUniversePlanet(obj.id);
                 break;
         }
     };

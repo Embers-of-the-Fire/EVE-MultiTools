@@ -7,7 +7,6 @@ import { LocalizationExplorePage } from "@/components/pages/explore/Localization
 import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPageWrapper";
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
-import { UniverseObjectDetailPageWrapper } from "@/components/pages/explore/UniverseObjectDetailPageWrapper";
 import { ConstellationDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/ConstellationDetail";
 import { PlanetDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/PlanetDetail";
 import { RegionDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/RegionDetail";
@@ -36,7 +35,7 @@ export const routes: AppRoute[] = [
     {
         key: "market",
         path: "/market",
-        labelKey: "nav.market",
+        labelKey: "nav.market.title",
         icon: "trending",
         children: [
             {
@@ -56,14 +55,14 @@ export const routes: AppRoute[] = [
     {
         key: "explore",
         path: "/explore",
-        labelKey: "nav.explore",
+        labelKey: "nav.explore.title",
         component: ExplorePage,
         icon: "compass",
         children: [
             {
                 key: "explore-type",
                 path: "/explore/type",
-                labelKey: "nav.explore.type",
+                labelKey: "nav.explore.type.title",
                 component: TypeExplorePage,
             },
             {
@@ -76,7 +75,7 @@ export const routes: AppRoute[] = [
             {
                 key: "explore-faction",
                 path: "/explore/faction",
-                labelKey: "nav.explore.faction",
+                labelKey: "nav.explore.faction.title",
                 component: FactionExplorePage,
             },
             {
@@ -95,7 +94,7 @@ export const routes: AppRoute[] = [
             {
                 key: "explore-universe",
                 path: "/explore/universe",
-                labelKey: "nav.explore.universe",
+                labelKey: "nav.explore.universe.title",
                 component: UniverseExplorePage,
             },
             {
@@ -124,13 +123,6 @@ export const routes: AppRoute[] = [
                 path: "/explore/universe/planet",
                 labelKey: "nav.explore.universe.planet.detail",
                 component: PlanetDetailPageWrapper,
-                hideFromNav: true,
-            },
-            {
-                key: "explore-universe-detail",
-                path: "/explore/universe/detail",
-                labelKey: "nav.explore.universe.detail",
-                component: UniverseObjectDetailPageWrapper,
                 hideFromNav: true,
             },
         ],
