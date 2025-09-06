@@ -8,6 +8,10 @@ import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPage
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
 import { UniverseObjectDetailPageWrapper } from "@/components/pages/explore/UniverseObjectDetailPageWrapper";
+import { ConstellationDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/ConstellationDetail";
+import { PlanetDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/PlanetDetail";
+import { RegionDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/RegionDetail";
+import { SystemDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/SystemDetail";
 import { GetStartedPage } from "@/components/pages/GetStartedPage";
 import { HomePage } from "@/components/pages/HomePage";
 import { MarketListPage } from "@/components/pages/market/MarketListPage";
@@ -93,6 +97,34 @@ export const routes: AppRoute[] = [
                 path: "/explore/universe",
                 labelKey: "nav.explore.universe",
                 component: UniverseExplorePage,
+            },
+            {
+                key: "explore-universe-region",
+                path: "/explore/universe/region",
+                labelKey: "nav.explore.universe.region.detail",
+                component: RegionDetailPageWrapper,
+                hideFromNav: true,
+            },
+            {
+                key: "explore-universe-constellation",
+                path: "/explore/universe/constellation",
+                labelKey: "nav.explore.universe.constellation.detail",
+                component: ConstellationDetailPageWrapper,
+                hideFromNav: true,
+            },
+            {
+                key: "explore-universe-system",
+                path: "/explore/universe/system",
+                labelKey: "nav.explore.universe.system.detail",
+                component: SystemDetailPageWrapper,
+                hideFromNav: true,
+            },
+            {
+                key: "explore-universe-planet",
+                path: "/explore/universe/planet",
+                labelKey: "nav.explore.universe.planet.detail",
+                component: PlanetDetailPageWrapper,
+                hideFromNav: true,
             },
             {
                 key: "explore-universe-detail",

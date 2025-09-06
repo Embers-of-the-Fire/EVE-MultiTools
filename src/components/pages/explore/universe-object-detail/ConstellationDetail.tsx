@@ -47,7 +47,8 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { navigateToUniverseDetail, navigateToFactionDetail } = useSPARouter();
+    const { navigateToFactionDetail, navigateToUniverseRegion, navigateToUniverseSystem } =
+        useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -121,10 +122,9 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!constellationBrief) return;
-                                                navigateToUniverseDetail({
-                                                    type: "region",
-                                                    id: constellationBrief.region_id,
-                                                });
+                                                navigateToUniverseRegion(
+                                                    constellationBrief.region_id
+                                                );
                                             }}
                                         >
                                             {regionName ||
@@ -202,10 +202,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                                                     id: systemId,
                                                 }}
                                                 onClick={() => {
-                                                    navigateToUniverseDetail({
-                                                        type: "system",
-                                                        id: systemId,
-                                                    });
+                                                    navigateToUniverseSystem(systemId);
                                                 }}
                                             />
                                         ))}
@@ -259,4 +256,34 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
             </div>
         </PageLayout>
     );
+};
+
+export const ConstellationDetailPageWrapper: React.FC = () => {
+    const { t } = useTranslation();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    const routeParams = useRouteParams("/explore/universe/constellation");
+    const id = routeParams?.id;
+
+    useEffect(() => {
+        if (!id) {
+            navigate("/explore/universe");
+        }
+    }, [id, navigate]);
+
+    if (!id) {
+        return (
+            <PageLayout title={t("explore.universe.detail.title")} description={t("common.error")}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-muted-foreground">
+                            {t("explore.universe.detail.no_object_selected")}
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageLayout>
+        );
+    }
+
+    return <ConstellationDetailPage constellationId={id} />;
 };

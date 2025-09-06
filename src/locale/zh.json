@@ -263,7 +263,8 @@
                 "show_json_data": " JSON 原始数据",
                 "disallow_scanning": "禁用扫描",
                 "disallow_cyno": "禁用诱导",
-                "planets": "行星"
+                "planets": "行星",
+                "detail": "星系详情"
             },
             "constellation": {
                 "constellation_attributes": {
@@ -272,7 +273,8 @@
                 },
                 "center": "中心坐标",
                 "systems": "星系",
-                "hidden_attributes": "隐藏属性"
+                "hidden_attributes": "隐藏属性",
+                "detail": "星座详情"
             },
             "history": {
                 "empty": "无历史记录"
@@ -284,14 +286,16 @@
                 },
                 "hidden_attributes": "隐藏属性",
                 "center": "中心坐标",
-                "constellations": "星座"
+                "constellations": "星座",
+                "detail": "星域详情"
             },
             "planet": {
                 "planet_attributes": {
                     "title": "行星属性",
                     "type_id": "行星类型"
                 },
-                "position": "行星位置"
+                "position": "行星位置",
+                "detail": "Planet Detail"
             }
         }
     },

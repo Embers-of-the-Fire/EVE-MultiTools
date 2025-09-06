@@ -272,7 +272,8 @@
                 "show_json_data": "Raw JSON Data",
                 "disallow_scanning": "Disallow Scanning",
                 "disallow_cyno": "Disallow Cyno",
-                "planets": "Planets"
+                "planets": "Planets",
+                "detail": "System Detail"
             },
             "constellation": {
                 "constellation_attributes": {
@@ -281,7 +282,8 @@
                 },
                 "systems": "Systems",
                 "center": "Center Position",
-                "hidden_attributes": "Hidden Attributes"
+                "hidden_attributes": "Hidden Attributes",
+                "detail": "Constellation Detail"
             },
             "history": {
                 "empty": "No History Record"
@@ -293,14 +295,16 @@
                 },
                 "hidden_attributes": "Hidden Attributes",
                 "center": "Center Position",
-                "constellations": "Constellations"
+                "constellations": "Constellations",
+                "detail": "Region Detail"
             },
             "planet": {
                 "planet_attributes": {
                     "title": "Planet Attributes",
                     "type_id": "Planet Type"
                 },
-                "position": "Planet Position"
+                "position": "Planet Position",
+                "detail": "行星详情"
             }
         }
     },

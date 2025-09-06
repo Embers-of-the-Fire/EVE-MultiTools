@@ -165,7 +165,12 @@ export function UniverseExplorePage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
 
-    const { navigateToUniverseDetail } = useSPARouter();
+    const {
+        navigateToUniverseRegion,
+        navigateToUniverseConstellation,
+        navigateToUniverseSystem,
+        navigateToUniversePlanet,
+    } = useSPARouter();
 
     const [sourceType, setSourceType] = useState<UniverseObjectType>("system");
     const [wormholeClassFilter, setWormholeClassFilter] =
@@ -177,7 +182,20 @@ export function UniverseExplorePage() {
     };
 
     const handleUniverseObjectClick = (obj: UniverseObject) => {
-        navigateToUniverseDetail(obj, t("explore.universe.detail.title"));
+        switch (obj.type) {
+            case "region":
+                navigateToUniverseRegion(obj.id);
+                break;
+            case "constellation":
+                navigateToUniverseConstellation(obj.id);
+                break;
+            case "system":
+                navigateToUniverseSystem(obj.id);
+                break;
+            case "planet":
+                navigateToUniversePlanet(obj.id);
+                break;
+        }
     };
 
     const searchFunction = async (query: string, language: Language) => {

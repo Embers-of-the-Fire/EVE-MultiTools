@@ -52,7 +52,12 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { navigateToTypeDetail, navigateToUniverseDetail } = useSPARouter();
+    const {
+        navigateToTypeDetail,
+        navigateToUniverseSystem,
+        navigateToUniverseConstellation,
+        navigateToUniverseRegion,
+    } = useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -138,10 +143,9 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                navigateToUniverseDetail({
-                                                    type: "system",
-                                                    id: systemBrief.solar_system_id,
-                                                });
+                                                navigateToUniverseSystem(
+                                                    systemBrief.solar_system_id
+                                                );
                                             }}
                                         >
                                             {systemName ||
@@ -153,10 +157,9 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                navigateToUniverseDetail({
-                                                    type: "constellation",
-                                                    id: systemBrief.constellation_id,
-                                                });
+                                                navigateToUniverseConstellation(
+                                                    systemBrief.constellation_id
+                                                );
                                             }}
                                         >
                                             {constellationName ||
@@ -168,10 +171,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                navigateToUniverseDetail({
-                                                    type: "region",
-                                                    id: systemBrief.region_id,
-                                                });
+                                                navigateToUniverseRegion(systemBrief.region_id);
                                             }}
                                         >
                                             {regionName ||
@@ -251,4 +251,34 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
             </div>
         </PageLayout>
     );
+};
+
+export const PlanetDetailPageWrapper: React.FC = () => {
+    const { t } = useTranslation();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    const routeParams = useRouteParams("/explore/universe/planet");
+    const id = routeParams?.id;
+
+    useEffect(() => {
+        if (!id) {
+            navigate("/explore/universe");
+        }
+    }, [id, navigate]);
+
+    if (!id) {
+        return (
+            <PageLayout title={t("explore.universe.detail.title")} description={t("common.error")}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-muted-foreground">
+                            {t("explore.universe.detail.no_object_selected")}
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageLayout>
+        );
+    }
+
+    return <PlanetDetailPage planetId={id} />;
 };

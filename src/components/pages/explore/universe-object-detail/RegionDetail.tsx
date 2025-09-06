@@ -48,7 +48,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { navigateToFactionDetail, navigateToUniverseDetail } = useSPARouter();
+    const { navigateToFactionDetail, navigateToUniverseConstellation } = useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -172,10 +172,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                                                     id: consId,
                                                 }}
                                                 onClick={() => {
-                                                    navigateToUniverseDetail({
-                                                        type: "constellation",
-                                                        id: consId,
-                                                    });
+                                                    navigateToUniverseConstellation(consId);
                                                 }}
                                             />
                                         ))}
@@ -253,4 +250,34 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
             </div>
         </PageLayout>
     );
+};
+
+export const RegionDetailPageWrapper: React.FC = () => {
+    const { t } = useTranslation();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    const routeParams = useRouteParams("/explore/universe/region");
+    const id = routeParams?.id;
+
+    useEffect(() => {
+        if (!id) {
+            navigate("/explore/universe");
+        }
+    }, [id, navigate]);
+
+    if (!id) {
+        return (
+            <PageLayout title={t("explore.universe.detail.title")} description={t("common.error")}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-muted-foreground">
+                            {t("explore.universe.detail.no_object_selected")}
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageLayout>
+        );
+    }
+
+    return <RegionDetailPage regionId={id} />;
 };

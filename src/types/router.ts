@@ -32,6 +32,10 @@ export interface RouteParamMap {
     "/explore/type/detail": { typeId: number };
     "/explore/faction/detail": { factionId: number };
     "/explore/universe/detail": UniverseObject;
+    "/explore/universe/region": { id: number };
+    "/explore/universe/constellation": { id: number };
+    "/explore/universe/system": { id: number };
+    "/explore/universe/planet": { id: number };
 }
 
 export type RouteParam<T extends keyof RouteParamMap> = RouteParamMap[T];

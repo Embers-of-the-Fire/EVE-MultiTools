@@ -27,7 +27,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
     const { t } = useTranslation();
     const { loc } = useLocalization();
 
-    const { navigateToUniverseDetail } = useSPARouter();
+    const { navigateToUniverseSystem } = useSPARouter();
 
     const [faction, setFaction] = useState<Faction | null>(null);
     const [name, setName] = useState<string>("");
@@ -230,10 +230,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                                         id: faction.solar_system_id,
                                     }}
                                     onClick={() => {
-                                        navigateToUniverseDetail({
-                                            type: "system",
-                                            id: faction.solar_system_id,
-                                        });
+                                        navigateToUniverseSystem(faction.solar_system_id);
                                     }}
                                 />
                             </AttributeText>

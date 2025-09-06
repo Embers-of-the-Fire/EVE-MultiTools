@@ -58,8 +58,13 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { navigateToTypeDetail, navigateToFactionDetail, navigateToUniverseDetail } =
-        useSPARouter();
+    const {
+        navigateToTypeDetail,
+        navigateToFactionDetail,
+        navigateToUniversePlanet,
+        navigateToUniverseConstellation,
+        navigateToUniverseRegion,
+    } = useSPARouter();
 
     useEffect(() => {
         let mounted = true;
@@ -142,10 +147,9 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                navigateToUniverseDetail({
-                                                    type: "constellation",
-                                                    id: systemBrief.constellation_id,
-                                                });
+                                                navigateToUniverseConstellation(
+                                                    systemBrief.constellation_id
+                                                );
                                             }}
                                         >
                                             {constellationName ||
@@ -157,10 +161,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                             className="text-sm p-0"
                                             onClick={() => {
                                                 if (!systemBrief) return;
-                                                navigateToUniverseDetail({
-                                                    type: "region",
-                                                    id: systemBrief.region_id,
-                                                });
+                                                navigateToUniverseRegion(systemBrief.region_id);
                                             }}
                                         >
                                             {regionName ||
@@ -276,12 +277,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                                             <EmbeddedUniverseObjectCard
                                                 key={planetId}
                                                 obj={{ type: "planet", id: planetId }}
-                                                onClick={() =>
-                                                    navigateToUniverseDetail({
-                                                        type: "planet",
-                                                        id: planetId,
-                                                    })
-                                                }
+                                                onClick={() => navigateToUniversePlanet(planetId)}
                                             />
                                         ))}
                                     </CardContent>
@@ -457,4 +453,34 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
             </div>
         </PageLayout>
     );
+};
+
+export const SystemDetailPageWrapper: React.FC = () => {
+    const { t } = useTranslation();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    const routeParams = useRouteParams("/explore/universe/system");
+    const id = routeParams?.id;
+
+    useEffect(() => {
+        if (!id) {
+            navigate("/explore/universe");
+        }
+    }, [id, navigate]);
+
+    if (!id) {
+        return (
+            <PageLayout title={t("explore.universe.detail.title")} description={t("common.error")}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-muted-foreground">
+                            {t("explore.universe.detail.no_object_selected")}
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageLayout>
+        );
+    }
+
+    return <SystemDetailPage systemId={id} />;
 };
