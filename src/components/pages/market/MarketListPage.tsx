@@ -30,7 +30,7 @@ interface MarketGroupTreeViewStore {
         tree: MarketGroupNode[],
         loc: (id: number) => Promise<string>,
         language: Language,
-        onClick: (groupId: number) => void
+        onClick: (groupId: number, hasChild: boolean) => void
     ) => Promise<void>;
 }
 
@@ -59,19 +59,17 @@ const useMarketGroupTreeViewStore = create<MarketGroupTreeViewStore>()(
                             name:
                                 (await loc(node.marketGroupData?.nameId)) ||
                                 `ID: ${node.marketGroupID}`,
-                            icon: iconUrl
-                                ? () => (
-                                      <Image
-                                          className="mr-1"
-                                          src={iconUrl}
-                                          alt={iconUrl}
-                                          width={16}
-                                          height={16}
-                                      />
-                                  )
-                                : undefined,
+                            icon: iconUrl ? (
+                                <Image
+                                    className="mr-1"
+                                    src={iconUrl}
+                                    alt={iconUrl}
+                                    width={16}
+                                    height={16}
+                                />
+                            ) : undefined,
                             children: children.length > 0 ? children : undefined,
-                            onClick: () => onClick(node.marketGroupID),
+                            onClick: () => onClick(node.marketGroupID, children.length > 0),
                         };
                     };
                     const treeView = await Promise.all(tree.map((node) => renderTree(node)));

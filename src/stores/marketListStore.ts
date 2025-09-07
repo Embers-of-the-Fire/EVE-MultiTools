@@ -7,7 +7,7 @@ interface MarketListState {
 }
 
 interface MarketListActions {
-    setSelectedGroupId: (groupId: number | null) => void;
+    setSelectedGroupId: (groupId: number | null, hasChild: boolean) => void;
     setTypes: (types: number[]) => void;
 }
 
@@ -19,8 +19,8 @@ export const useMarketListStore = create<MarketListStore>()(
             selectedGroupId: null,
             types: [],
 
-            setSelectedGroupId: (groupId: number | null) =>
-                set(() => ({ selectedGroupId: groupId })),
+            setSelectedGroupId: (groupId, hasChild) =>
+                !hasChild && set(() => ({ selectedGroupId: groupId })),
 
             setTypes: (types: number[]) => set(() => ({ types })),
         }),
