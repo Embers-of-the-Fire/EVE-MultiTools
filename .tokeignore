@@ -4,4 +4,3 @@ pnpm-lock.yaml
 uv.lock
 Cargo.lock
 src/components/ui
-src/components/tree-view.tsx

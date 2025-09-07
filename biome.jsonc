@@ -17,6 +17,11 @@
             "suspicious": {
                 "noExplicitAny": "off"
             },
+            "a11y": {
+                "noStaticElementInteractions": "off",
+                "useKeyWithClickEvents": "off",
+                "useKeyWithMouseEvents": "off"
+            },
             "style": {
                 "noNonNullAssertion": "off"
             }
