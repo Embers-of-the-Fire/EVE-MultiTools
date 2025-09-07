@@ -14,6 +14,8 @@ const selectedTreeVariants = cva("before:opacity-100 before:bg-accent/70 text-ac
 
 const dragOverVariants = cva("before:opacity-100 before:bg-primary/20 text-primary-foreground");
 
+const clickableVariants = cva("cursor-pointer");
+
 interface TreeDataItem {
     id: string;
     name: React.ReactNode;
@@ -123,12 +125,6 @@ const TreeView: React.FC<TreeProps> = ({
                 draggedItem={draggedItem}
                 {...props}
             />
-            <div
-                className="w-full h-[48px]"
-                onDrop={(_) => {
-                    handleDrop({ id: "", name: "parent_div" });
-                }}
-            ></div>
         </div>
     );
 };
@@ -358,11 +354,12 @@ const TreeLeaf: React.FC<TreeLeafProps> = ({
         <div
             ref={ref}
             className={cn(
-                "ml-5 flex text-left items-center py-2 cursor-pointer before:right-1",
+                "ml-5 flex text-left items-center py-2 before:right-1",
                 treeVariants(),
                 className,
                 selectedItemId === item.id && selectedTreeVariants(),
                 isDragOver && dragOverVariants(),
+                item.onClick && clickableVariants(),
                 item.disabled && "opacity-50 cursor-not-allowed pointer-events-none"
             )}
             onClick={() => {

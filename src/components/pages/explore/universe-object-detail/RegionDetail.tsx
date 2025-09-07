@@ -1,6 +1,7 @@
 import { AccordionItem } from "@radix-ui/react-accordion";
+import { Info } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -15,9 +16,11 @@ import {
     AttributeTitle,
 } from "@/components/common/AttributePanel";
 import { PageLayout } from "@/components/layout";
+import { type TreeDataItem, TreeView } from "@/components/tree-view";
 import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Region } from "@/data/schema";
 import {
@@ -29,12 +32,136 @@ import {
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { getRegionById, getRegionDetailById } from "@/native/data";
+import {
+    getConstellationById,
+    getConstellationDetailById,
+    getRegionById,
+    getRegionDetailById,
+    getSystemById,
+} from "@/native/data";
 import type { RegionBrief } from "@/types/data";
+import { getSecurityStatusColor } from "@/utils/color";
 
 export interface RegionDetailPageProps {
     regionId: number;
 }
+
+const RegionTree: React.FC<{ regionId: number }> = ({ regionId }) => {
+    const [tree, setTree] = useState<TreeDataItem[]>([]);
+    const { navigateToUniverseConstellation, navigateToUniverseSystem } = useSPARouter();
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: const router func
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const reg = await getRegionDetailById(regionId);
+            if (!mounted) return;
+            console.log("region detail", reg);
+
+            const newTree: TreeDataItem[] = await Promise.all(
+                reg.constellationIds.map(async (consId) => {
+                    const cons = await getConstellationDetailById(consId);
+
+                    const children = cons.solarSystemIds.map((sysId) => ({
+                        id: sysId.toString(),
+                        icon: (
+                            <Info
+                                size={14}
+                                onClick={() => navigateToUniverseSystem(sysId)}
+                                className="mr-1 cursor-pointer"
+                            />
+                        ),
+                        name: <SystemNode systemId={sysId} />,
+                    }));
+
+                    return {
+                        id: consId.toString(),
+                        icon: (
+                            <Info
+                                size={14}
+                                onClick={() => navigateToUniverseConstellation(consId)}
+                                className="mr-1 cursor-pointer"
+                            />
+                        ),
+                        name: <ConstellationNode constellationId={consId} />,
+                        children: children,
+                    };
+                })
+            );
+            setTree(newTree);
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, [regionId]);
+
+    return <TreeView data={tree} className="p-0 m-0" />;
+};
+
+const ConstellationNode: React.FC<{ constellationId: number }> = ({ constellationId }) => {
+    const { loc } = useLocalization();
+    const [name, setName] = useState<string | null>(null);
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const cons = await getConstellationById(constellationId);
+            const name = await loc(cons.name_id);
+            if (mounted) {
+                setName(name);
+            }
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, [constellationId, loc]);
+
+    if (!name) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <div>
+            {name} ({constellationId})
+        </div>
+    );
+};
+
+const SystemNode: React.FC<{ systemId: number }> = ({ systemId }) => {
+    const { loc } = useLocalization();
+    const [name, setName] = useState<string | null>(null);
+    const [security, setSecurity] = useState<number>(-1.0);
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const sys = await getSystemById(systemId);
+            const name = await loc(sys.name_id);
+            const sec = sys.security_status;
+            if (mounted) {
+                setName(name);
+                setSecurity(sec);
+            }
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, [systemId, loc]);
+
+    if (!name) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <div>
+            {name}
+            <span className="mx-1" style={{ color: getSecurityStatusColor(security) }}>
+                {security.toFixed(2)}
+            </span>
+            ({systemId})
+        </div>
+    );
+};
 
 export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) => {
     const { loc } = useLocalization();
@@ -49,6 +176,9 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const { navigateToFactionDetail, navigateToUniverseConstellation } = useSPARouter();
+
+    const leftDescRef = useRef<HTMLDivElement>(null);
+    const rightTreeRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let mounted = true;
@@ -79,6 +209,30 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
         };
     }, [regionId, loc]);
 
+    useLayoutEffect(() => {
+        const leftEl = leftDescRef.current;
+        const rightEl = rightTreeRef.current;
+        if (!leftEl || !rightEl) return;
+
+        const applyHeight = (h: number) => {
+            rightEl.style.height = `${Math.round(h)}px`;
+        };
+
+        const ro = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const { height } = entry.contentRect;
+                requestAnimationFrame(() => applyHeight(height));
+            }
+        });
+
+        ro.observe(leftEl);
+        applyHeight(leftEl.getBoundingClientRect().height);
+
+        return () => {
+            ro.disconnect();
+        };
+    });
+
     if (isLoading || !regionBrief || !regionDetail) {
         return (
             <PageLayout
@@ -95,64 +249,91 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
     return (
         <PageLayout title={name}>
             <div className="space-y-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t("explore.universe.detail.basic_info")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex items-start gap-6">
-                            <div className="flex-shrink-0">
-                                <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
-                                    <span className="text-2xl font-bold text-muted-foreground">
-                                        S
-                                    </span>
-                                </div>
-                            </div>
+                <ResizablePanelGroup direction="horizontal" className="flex flex-row h-fit w-full">
+                    <ResizablePanel defaultSize={70}>
+                        <div ref={leftDescRef} className="space-y-6 block">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>{t("explore.universe.detail.basic_info")}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-start gap-6">
+                                        <div className="flex-shrink-0">
+                                            <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
+                                                <span className="text-2xl font-bold text-muted-foreground">
+                                                    S
+                                                </span>
+                                            </div>
+                                        </div>
 
-                            <div className="flex-1 space-y-4">
-                                <div>
-                                    <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
-                                        {name}
-                                    </h2>
-                                    <p className="text-sm text-muted-foreground">ID: {regionId}</p>
-                                </div>
+                                        <div className="flex-1 space-y-4">
+                                            <div>
+                                                <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
+                                                    {name}
+                                                </h2>
+                                                <p className="text-sm text-muted-foreground">
+                                                    ID: {regionId}
+                                                </p>
+                                            </div>
 
-                                {desc && <p className="text-sm leading-relaxed">{desc}</p>}
-                            </div>
+                                            {desc && (
+                                                <p className="text-sm leading-relaxed">{desc}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            <AttributePanel>
+                                <AttributeTitle>
+                                    {t("explore.universe.region.region_attributes.title")}
+                                </AttributeTitle>
+                                <AttributeContent className="grid grid-cols-1 md:grid-cols-1">
+                                    <Attribute>
+                                        <AttributeName>
+                                            {t(
+                                                "explore.universe.region.region_attributes.faction_id"
+                                            )}
+                                        </AttributeName>
+                                        <AttributeText>
+                                            {regionDetail.factionId ? (
+                                                <EmbeddedFactionCard
+                                                    className="mt-2"
+                                                    factionId={regionDetail.factionId}
+                                                    onClick={() => {
+                                                        if (!regionDetail.factionId) return;
+                                                        navigateToFactionDetail(
+                                                            regionDetail.factionId,
+                                                            t("explore.faction.detail.title")
+                                                        );
+                                                    }}
+                                                />
+                                            ) : (
+                                                t("common.none")
+                                            )}
+                                        </AttributeText>
+                                    </Attribute>
+                                </AttributeContent>
+                            </AttributePanel>
                         </div>
-                    </CardContent>
-                </Card>
-                <AttributePanel>
-                    <AttributeTitle>
-                        {t("explore.universe.region.region_attributes.title")}
-                    </AttributeTitle>
-                    <AttributeContent className="grid grid-cols-1 md:grid-cols-1">
-                        <Attribute>
-                            <AttributeName>
-                                {t("explore.universe.region.region_attributes.faction_id")}
-                            </AttributeName>
-                            <AttributeText>
-                                {regionDetail.factionId ? (
-                                    <EmbeddedFactionCard
-                                        className="mt-2"
-                                        factionId={regionDetail.factionId}
-                                        onClick={() => {
-                                            if (!regionDetail.factionId) return;
-                                            navigateToFactionDetail(
-                                                regionDetail.factionId,
-                                                t("explore.faction.detail.title")
-                                            );
-                                        }}
-                                    />
-                                ) : (
-                                    t("common.none")
-                                )}
-                            </AttributeText>
-                        </Attribute>
-                    </AttributeContent>
-                </AttributePanel>
+                    </ResizablePanel>
+                    <ResizableHandle className="block mx-6" />
+                    <ResizablePanel maxSize={40} minSize={20} defaultSize={30}>
+                        <div ref={rightTreeRef}>
+                            <Card className="h-full min-h-0 gap-2">
+                                <CardHeader>
+                                    <CardTitle>
+                                        {t("explore.universe.region.region_tree")}
+                                    </CardTitle>
+                                </CardHeader>
+                                <ScrollArea className="overflow-auto px-3 mt-0">
+                                    <RegionTree regionId={regionId} />
+                                </ScrollArea>
+                            </Card>
+                        </div>
+                    </ResizablePanel>
+                </ResizablePanelGroup>
                 <Card>
-                    <Accordion type="single" collapsible className="w-full" defaultValue="systems">
+                    <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="systems">
                             <CardHeader className="w-full">
                                 <AccordionTrigger className="text-base">

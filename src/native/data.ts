@@ -245,12 +245,14 @@ export async function getRegionDetailById(regionId: number): Promise<Region> {
     return Region.fromBinary(new Uint8Array(bytes));
 }
 
-export async function getConstellationById(
-    constellationId: number
-): Promise<ConstellationBrief | null> {
-    return await tauriInvoke<ConstellationBrief | null>("get_constellation_by_id", {
+export async function getConstellationById(constellationId: number): Promise<ConstellationBrief> {
+    const result = await tauriInvoke<ConstellationBrief>("get_constellation_by_id", {
         constellationId,
     });
+    if (!result) {
+        throw new Error("Constellation not found");
+    }
+    return result;
 }
 
 export async function getConstellationsByRegionId(regionId: number): Promise<ConstellationBrief[]> {

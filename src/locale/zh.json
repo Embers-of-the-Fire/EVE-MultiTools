@@ -308,7 +308,8 @@
                 "hidden_attributes": "隐藏属性",
                 "center": "中心坐标",
                 "constellations": "星座",
-                "detail": "星域详情"
+                "detail": "星域详情",
+                "region_tree": "星域树"
             },
             "planet": {
                 "planet_attributes": {
