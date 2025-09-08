@@ -189,3 +189,11 @@ export interface PlanetBrief {
     system_id: number;
     type_id: number;
 }
+
+export interface MoonBrief {
+    moon_id: number;
+    moon_name_id?: number;
+    type_id: number;
+    planet_id: number;
+    celestial_index: number;
+}

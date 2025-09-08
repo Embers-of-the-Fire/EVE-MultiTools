@@ -273,7 +273,8 @@
                     "surface_gravity": "Surface Gravity",
                     "temperature": "Temperature",
                     "spectral_class": "Spectral Class"
-                }
+                },
+                "unknown_planet": "Unknown Planet"
             },
             "system": {
                 "unknown_attributes": "Unknown Attributes",
@@ -290,7 +291,6 @@
                 "position": "System Position",
                 "boundary_max": "Max Boundary",
                 "boundary_min": "Min Boundary",
-                "show_json_data": "Raw JSON Data",
                 "disallow_scanning": "Disallow Scanning",
                 "disallow_cyno": "Disallow Cyno",
                 "planets": "Planets",
@@ -326,6 +326,17 @@
                 },
                 "position": "Planet Position",
                 "detail": "Planet Detail"
+            },
+            "moon": {
+                "detail": "Moon Detail",
+                "moon_attributes": {
+                    "title": "Moon Attributes",
+                    "type_id": "Moon Type"
+                },
+                "hidden_attributes": {
+                    "title": "Hidden Attributes",
+                    "position": "Moon Position"
+                }
             }
         }
     },
@@ -381,7 +392,8 @@
         "luminosity": "Luminosity",
         "radius": "Radius",
         "wormhole_class": "Wormhole Class",
-        "region_type": "Region Type"
+        "region_type": "Region Type",
+        "moon": "Moon"
     },
     "separator": {
         "comma": ", "

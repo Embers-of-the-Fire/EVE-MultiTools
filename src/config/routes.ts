@@ -8,6 +8,7 @@ import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPage
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
 import { ConstellationDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/ConstellationDetail";
+import { MoonDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/MoonDetail";
 import { PlanetDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/PlanetDetail";
 import { RegionDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/RegionDetail";
 import { SystemDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/SystemDetail";
@@ -123,6 +124,13 @@ export const routes: AppRoute[] = [
                 path: "/explore/universe/planet",
                 labelKey: "nav.explore.universe.planet.detail",
                 component: PlanetDetailPageWrapper,
+                hideFromNav: true,
+            },
+            {
+                key: "explore-universe-moon",
+                path: "/explore/universe/moon",
+                labelKey: "nav.explore.universe.moon.detail",
+                component: MoonDetailPageWrapper,
                 hideFromNav: true,
             },
         ],

@@ -431,9 +431,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                         <AccordionItem value="show-json">
                             <CardHeader>
                                 <AccordionTrigger className="text-base">
-                                    <CardTitle>
-                                        {t("explore.universe.system.show_json_data")}
-                                    </CardTitle>
+                                    <CardTitle>{t("common.data.raw_json_data")}</CardTitle>
                                 </AccordionTrigger>
                             </CardHeader>
                             <AccordionContent>

@@ -30,6 +30,9 @@
                 },
                 "system": {
                     "detail": "星系详情"
+                },
+                "moon": {
+                    "detail": "卫星详情"
                 }
             }
         },
@@ -74,7 +77,10 @@
         "data_outdated": "数据已过期",
         "about": "关于",
         "none": "无",
-        "all": "全部"
+        "all": "全部",
+        "data": {
+            "raw_json_data": "JSON 原始数据"
+        }
     },
     "bundle": {
         "title": "数据包管理",
@@ -264,7 +270,8 @@
                     "surface_gravity": "表面重力",
                     "temperature": "表面温度",
                     "spectral_class": "光谱分级"
-                }
+                },
+                "unknown_planet": "未知行星"
             },
             "system": {
                 "unknown_attributes": "未知属性",
@@ -281,7 +288,6 @@
                 "position": "星系位置",
                 "boundary_max": "最大外周",
                 "boundary_min": "最小外周",
-                "show_json_data": " JSON 原始数据",
                 "disallow_scanning": "禁用扫描",
                 "disallow_cyno": "禁用诱导",
                 "planets": "行星",
@@ -317,7 +323,19 @@
                     "type_id": "行星类型"
                 },
                 "position": "行星位置",
-                "detail": "行星详情"
+                "detail": "行星详情",
+                "moons": "卫星"
+            },
+            "moon": {
+                "detail": "卫星详情",
+                "moon_attributes": {
+                    "title": "卫星属性",
+                    "type_id": "卫星类型"
+                },
+                "hidden_attributes": {
+                    "title": "隐藏属性",
+                    "position": "卫星位置"
+                }
             }
         }
     },
@@ -404,7 +422,8 @@
         "density": "密度",
         "eccentricity": "偏心率",
         "escape_velocity": "逃逸速度",
-        "life": "寿命"
+        "life": "寿命",
+        "moon": "卫星"
     },
     "separator": {
         "comma": "，"

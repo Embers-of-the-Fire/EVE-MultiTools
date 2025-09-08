@@ -234,9 +234,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                         <AccordionItem value="show-json">
                             <CardHeader className="w-full">
                                 <AccordionTrigger className="text-base">
-                                    <CardTitle>
-                                        {t("explore.universe.system.show_json_data")}
-                                    </CardTitle>
+                                    <CardTitle>{t("common.data.raw_json_data")}</CardTitle>
                                 </AccordionTrigger>
                             </CardHeader>
                             <AccordionContent asChild>

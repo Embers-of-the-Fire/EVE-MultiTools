@@ -1,5 +1,4 @@
 import { AccordionItem } from "@radix-ui/react-accordion";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { ChevronLeft } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -7,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
-import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import {
     Attribute,
     AttributeContent,
@@ -21,25 +19,26 @@ import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Planet } from "@/data/schema";
+import type { Moon } from "@/data/schema";
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import {
     getConstellationById,
-    getPlanetDataById,
+    getMoonDataById,
+    getPlanetById,
     getRegionById,
     getSystemById,
 } from "@/native/data";
-import type { SystemBrief } from "@/types/data";
-import { getPlanetName } from "@/utils/name";
+import type { PlanetBrief, SystemBrief } from "@/types/data";
+import { getMoonName, getPlanetName } from "@/utils/name";
 import { CelestialAttributesPanel, CelestialStatisticsPanel } from "./_CelestialAttributes";
 
-export interface PlanetDetailPageProps {
-    planetId: number;
+export interface MoonDetailPageProps {
+    moonId: number;
 }
 
-export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) => {
+export const MoonDetailPage: React.FC<MoonDetailPageProps> = ({ moonId }) => {
     const { loc } = useLocalization();
     const { t } = useTranslation();
     const { theme } = useTheme();
@@ -48,9 +47,11 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
     const [regionName, setRegionName] = useState<string>("");
     const [constellationName, setConstellationName] = useState<string>("");
     const [systemName, setSystemName] = useState<string>("");
+    const [planetName, setPlanetName] = useState<string>("");
 
-    const [planetData, setPlanetData] = useState<Planet | null>(null);
+    const [planetBrief, setPlanetBrief] = useState<PlanetBrief | null>(null);
     const [systemBrief, setSystemBrief] = useState<SystemBrief | null>(null);
+    const [moonData, setMoonData] = useState<Moon | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -59,7 +60,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
         navigateToUniverseSystem,
         navigateToUniverseConstellation,
         navigateToUniverseRegion,
-        navigateToUniverseMoon,
+        navigateToUniversePlanet,
     } = useSPARouter();
 
     useEffect(() => {
@@ -67,16 +68,20 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
         setIsLoading(true);
 
         (async () => {
-            const planet = await getPlanetDataById(planetId);
-            const systemId = planet.solarSystemId;
+            const moon = await getMoonDataById(moonId);
+            const planetBrief = await getPlanetById(moon.planetId);
+            const systemId = planetBrief.system_id;
             const systemBrief = await getSystemById(systemId);
 
             const systemName = await loc(systemBrief.name_id);
             const planetName = getPlanetName(
-                planet.celestialIndex,
+                planetBrief.celestial_index,
                 systemName,
-                planet.planetNameId ? await loc(planet.planetNameId) : undefined
+                planetBrief.planet_name_id ? await loc(planetBrief.planet_name_id) : undefined
             );
+            const moonName = moon.moonNameId
+                ? await loc(moon.moonNameId)
+                : getMoonName(systemName, planetBrief.celestial_index, moon.celestialIndex, t);
 
             let regionName = "";
             let constellationName = "";
@@ -90,7 +95,10 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
             }
 
             if (mounted) {
-                setPlanetData(planet);
+                setName(moonName);
+                setMoonData(moon);
+                setPlanetName(planetName);
+                setPlanetBrief(planetBrief);
                 setSystemName(systemName);
                 setSystemBrief(systemBrief);
                 setName(planetName);
@@ -104,9 +112,9 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
         return () => {
             mounted = false;
         };
-    }, [planetId, loc]);
+    }, [moonId, loc, t]);
 
-    if (isLoading || !planetData || !systemBrief) {
+    if (isLoading || !moonData || !systemBrief) {
         return (
             <PageLayout
                 title={t("explore.universe.detail.title")}
@@ -131,7 +139,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                             <div className="flex-shrink-0">
                                 <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
                                     <span className="text-2xl font-bold text-muted-foreground">
-                                        S
+                                        M
                                     </span>
                                 </div>
                             </div>
@@ -140,6 +148,18 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                 <div>
                                     <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
                                         {name}
+                                        <ChevronLeft className="text-sm h-[1em] w-[1em]" />
+                                        <Button
+                                            variant="link"
+                                            className="text-sm p-0"
+                                            onClick={() => {
+                                                if (!planetBrief) return;
+                                                navigateToUniversePlanet(planetBrief.planet_id);
+                                            }}
+                                        >
+                                            {planetName ||
+                                                t("explore.universe.detail.unknown_planet")}
+                                        </Button>
                                         <ChevronLeft className="text-sm h-[1em] w-[1em]" />
                                         <Button
                                             variant="link"
@@ -181,7 +201,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                                 t("explore.universe.detail.unknown_region")}
                                         </Button>
                                     </h2>
-                                    <p className="text-sm text-muted-foreground">ID: {planetId}</p>
+                                    <p className="text-sm text-muted-foreground">ID: {moonId}</p>
                                 </div>
                             </div>
                         </div>
@@ -189,25 +209,25 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                 </Card>
                 <AttributePanel>
                     <AttributeTitle>
-                        {t("explore.universe.planet.planet_attributes.title")}
+                        {t("explore.universe.moon.moon_attributes.title")}
                     </AttributeTitle>
                     <AttributeContent>
                         <Attribute>
                             <AttributeName>
-                                {t("explore.universe.planet.planet_attributes.type_id")}
+                                {t("explore.universe.moon.moon_attributes.type_id")}
                             </AttributeName>
                             <EmbeddedTypeCard
                                 className="mt-2"
-                                typeId={planetData.typeId}
-                                onClick={() => navigateToTypeDetail(planetData.typeId)}
+                                typeId={moonData.typeId}
+                                onClick={() => navigateToTypeDetail(moonData.typeId)}
                             />
                         </Attribute>
                     </AttributeContent>
                 </AttributePanel>
-                {planetData.statistics && (
-                    <CelestialStatisticsPanel celestial={planetData.statistics} />
+                {moonData.statistics && (
+                    <CelestialStatisticsPanel celestial={moonData.statistics} />
                 )}
-                <Card>
+                {/* <Card>
                     <Accordion type="single" collapsible className="w-full" defaultValue="moons">
                         <AccordionItem value="moons">
                             <CardHeader className="w-full">
@@ -226,7 +246,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                                     id: moonId,
                                                 }}
                                                 onClick={() => {
-                                                    navigateToUniverseMoon(moonId);
+                                                    // navigateToUniverseConstellation(consId);
                                                 }}
                                             />
                                         ))}
@@ -235,26 +255,26 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
-                </Card>
+                </Card> */}
                 <AttributePanel>
                     <AttributeTitle>
-                        {t("explore.universe.system.hidden_attributes")}
+                        {t("explore.universe.moon.hidden_attributes.title")}
                     </AttributeTitle>
                     <AttributeContent>
-                        {planetData.position && (
+                        {moonData.position && (
                             <Attribute>
                                 <AttributeName>
-                                    {t("explore.universe.planet.position")}
+                                    {t("explore.universe.moon.hidden_attributes.position")}
                                 </AttributeName>
                                 <AttributeText>
-                                    <UniversePointDisplay point={planetData.position} />
+                                    <UniversePointDisplay point={moonData.position} />
                                 </AttributeText>
                             </Attribute>
                         )}
                     </AttributeContent>
                 </AttributePanel>
-                {planetData.attributes && (
-                    <CelestialAttributesPanel celestial={planetData.attributes} />
+                {moonData.attributes && (
+                    <CelestialAttributesPanel celestial={moonData.attributes} />
                 )}
                 <Card>
                     <Accordion type="single" collapsible className="w-full">
@@ -271,7 +291,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                         style={theme === "Light" ? a11yLight : a11yDark}
                                         showLineNumbers={true}
                                     >
-                                        {JSON.stringify(planetData, null, 4)}
+                                        {JSON.stringify(moonData, null, 4)}
                                     </SyntaxHighlighter>
                                 </CardContent>
                             </AccordionContent>
@@ -283,11 +303,11 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
     );
 };
 
-export const PlanetDetailPageWrapper: React.FC = () => {
+export const MoonDetailPageWrapper: React.FC = () => {
     const { t } = useTranslation();
     const { navigate, useRouteParams } = useSPARouter();
 
-    const routeParams = useRouteParams("/explore/universe/planet");
+    const routeParams = useRouteParams("/explore/universe/moon");
     const id = routeParams?.id;
 
     useEffect(() => {
@@ -310,5 +330,5 @@ export const PlanetDetailPageWrapper: React.FC = () => {
         );
     }
 
-    return <PlanetDetailPage planetId={id} />;
+    return <MoonDetailPage moonId={id} />;
 };

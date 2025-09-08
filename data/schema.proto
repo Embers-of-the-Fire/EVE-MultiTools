@@ -413,6 +413,8 @@ message SecondarySun {
     required int32 type_id = 2;
     required int32 effect_beacon_type_id = 3;
     required UniversePoint position = 4;
+
+    required int32 system_id = 5;
 }
 
 message Star {
@@ -432,6 +434,8 @@ message Star {
 
     required StarStatistics statistics = 4;
     repeated int32 npc_stations = 5;
+
+    required int32 system_id = 6;
 }
 
 message Stargate {
@@ -443,8 +447,8 @@ message Stargate {
     optional bool ignored_by_corporation_defense_djinn = 6;
     optional int32 allowed_ships_type_list_id = 7;
 
-    required int32 solar_system_id = 8;
-    required int32 destination_solar_system_id = 9;
+    required int32 system_id = 8;
+    required int32 destination_system_id = 9;
 }
 
 message DisruptedStargate {
@@ -453,6 +457,8 @@ message DisruptedStargate {
     required int32 target_solar_system_id = 3;
     required UniversePoint position = 4;
     required PointRotation rotation = 5;
+
+    required int32 system_id = 6;
 }
 
 message Moon {
@@ -475,6 +481,9 @@ message Moon {
 
     optional MiningBeacon mining_beacon = 11;
     optional int32 environment_template_id = 12;
+
+    required int32 planet_id = 13;
+    required int32 celestial_index = 14;
 }
 
 message NpcStation {
@@ -494,6 +503,10 @@ message NpcStation {
     optional Rotation rotation = 14;
     required string station_name = 15;
     optional bool ignored_by_corporation_defense_djinn = 16;
+
+    optional int32 moon_id = 17;
+    optional int32 planet_id = 18;
+    optional int32 star_id = 19;
 }
 
 message AsteroidBelt {
@@ -502,4 +515,7 @@ message AsteroidBelt {
     optional int32 asteroid_belt_name_id = 3;
     
     optional CelestialStatistics statistics = 4;
+
+    optional int32 planet_id = 5;
+    optional int32 moon_id = 6;
 }

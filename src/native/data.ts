@@ -1,4 +1,11 @@
-import { Constellation, MarketGroupCollection, Planet, Region, SolarSystem } from "@/data/schema";
+import {
+    Constellation,
+    MarketGroupCollection,
+    Moon,
+    Planet,
+    Region,
+    SolarSystem,
+} from "@/data/schema";
 import {
     type Category,
     type ConstellationBrief,
@@ -9,6 +16,7 @@ import {
     type LocSearchResult,
     type MarketGroup,
     type MetaGroup,
+    type MoonBrief,
     type PlanetBrief,
     type RegionBrief,
     type Skin,
@@ -358,4 +366,24 @@ export async function getPlanetDataById(planetId: number): Promise<Planet> {
         throw new Error("Failed to fetch planet data");
     }
     return Planet.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getMoonById(moonId: number): Promise<MoonBrief> {
+    const result = await tauriInvoke<MoonBrief | null>("get_moon_by_id", {
+        moonId,
+    });
+    if (!result) {
+        throw new Error("Moon not found");
+    }
+    return result;
+}
+
+export async function getMoonDataById(moonId: number): Promise<Moon> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_moon_data_by_id", {
+        moonId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch moon data");
+    }
+    return Moon.fromBinary(new Uint8Array(bytes));
 }

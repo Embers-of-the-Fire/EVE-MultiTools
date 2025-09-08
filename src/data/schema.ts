@@ -1163,6 +1163,10 @@ export interface SecondarySun {
      * @generated from protobuf field: required eve_multitools.data.UniversePoint position = 4
      */
     position?: UniversePoint;
+    /**
+     * @generated from protobuf field: required int32 system_id = 5
+     */
+    systemId: number;
 }
 /**
  * @generated from protobuf message eve_multitools.data.Star
@@ -1188,6 +1192,10 @@ export interface Star {
      * @generated from protobuf field: repeated int32 npc_stations = 5
      */
     npcStations: number[];
+    /**
+     * @generated from protobuf field: required int32 system_id = 6
+     */
+    systemId: number;
 }
 /**
  * @generated from protobuf message eve_multitools.data.Star.StarStatistics
@@ -1255,13 +1263,13 @@ export interface Stargate {
      */
     allowedShipsTypeListId?: number;
     /**
-     * @generated from protobuf field: required int32 solar_system_id = 8
+     * @generated from protobuf field: required int32 system_id = 8
      */
-    solarSystemId: number;
+    systemId: number;
     /**
-     * @generated from protobuf field: required int32 destination_solar_system_id = 9
+     * @generated from protobuf field: required int32 destination_system_id = 9
      */
-    destinationSolarSystemId: number;
+    destinationSystemId: number;
 }
 /**
  * @generated from protobuf message eve_multitools.data.DisruptedStargate
@@ -1287,6 +1295,10 @@ export interface DisruptedStargate {
      * @generated from protobuf field: required eve_multitools.data.PointRotation rotation = 5
      */
     rotation?: PointRotation;
+    /**
+     * @generated from protobuf field: required int32 system_id = 6
+     */
+    systemId: number;
 }
 /**
  * @generated from protobuf message eve_multitools.data.Moon
@@ -1340,6 +1352,14 @@ export interface Moon {
      * @generated from protobuf field: optional int32 environment_template_id = 12
      */
     environmentTemplateId?: number;
+    /**
+     * @generated from protobuf field: required int32 planet_id = 13
+     */
+    planetId: number;
+    /**
+     * @generated from protobuf field: required int32 celestial_index = 14
+     */
+    celestialIndex: number;
 }
 /**
  * @generated from protobuf message eve_multitools.data.Moon.MiningBeacon
@@ -1418,6 +1438,18 @@ export interface NpcStation {
      * @generated from protobuf field: optional bool ignored_by_corporation_defense_djinn = 16
      */
     ignoredByCorporationDefenseDjinn?: boolean;
+    /**
+     * @generated from protobuf field: optional int32 moon_id = 17
+     */
+    moonId?: number;
+    /**
+     * @generated from protobuf field: optional int32 planet_id = 18
+     */
+    planetId?: number;
+    /**
+     * @generated from protobuf field: optional int32 star_id = 19
+     */
+    starId?: number;
 }
 /**
  * @generated from protobuf message eve_multitools.data.AsteroidBelt
@@ -1439,6 +1471,14 @@ export interface AsteroidBelt {
      * @generated from protobuf field: optional eve_multitools.data.CelestialStatistics statistics = 4
      */
     statistics?: CelestialStatistics;
+    /**
+     * @generated from protobuf field: optional int32 planet_id = 5
+     */
+    planetId?: number;
+    /**
+     * @generated from protobuf field: optional int32 moon_id = 6
+     */
+    moonId?: number;
 }
 /**
  * @generated from protobuf enum eve_multitools.data.WormholeClassID
@@ -6415,6 +6455,7 @@ class SecondarySun$Type extends MessageType<SecondarySun> {
             { no: 2, name: "type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "effect_beacon_type_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "position", kind: "message", T: () => UniversePoint },
+            { no: 5, name: "system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<SecondarySun>): SecondarySun {
@@ -6422,6 +6463,7 @@ class SecondarySun$Type extends MessageType<SecondarySun> {
         message.sunId = 0;
         message.typeId = 0;
         message.effectBeaconTypeId = 0;
+        message.systemId = 0;
         if (value !== undefined) reflectionMergePartial<SecondarySun>(this, message, value);
         return message;
     }
@@ -6452,6 +6494,9 @@ class SecondarySun$Type extends MessageType<SecondarySun> {
                         options,
                         message.position
                     );
+                    break;
+                case /* required int32 system_id */ 5:
+                    message.systemId = reader.int32();
                     break;
                 default: {
                     const u = options.readUnknownField;
@@ -6492,6 +6537,8 @@ class SecondarySun$Type extends MessageType<SecondarySun> {
                 writer.tag(4, WireType.LengthDelimited).fork(),
                 options
             ).join();
+        /* required int32 system_id = 5; */
+        if (message.systemId !== 0) writer.tag(5, WireType.Varint).int32(message.systemId);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -6517,6 +6564,7 @@ class Star$Type extends MessageType<Star> {
                 repeat: 2 /*RepeatType.UNPACKED*/,
                 T: 5 /*ScalarType.INT32*/,
             },
+            { no: 6, name: "system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<Star>): Star {
@@ -6525,6 +6573,7 @@ class Star$Type extends MessageType<Star> {
         message.radius = 0;
         message.typeId = 0;
         message.npcStations = [];
+        message.systemId = 0;
         if (value !== undefined) reflectionMergePartial<Star>(this, message, value);
         return message;
     }
@@ -6561,6 +6610,9 @@ class Star$Type extends MessageType<Star> {
                         for (let e = reader.int32() + reader.pos; reader.pos < e; )
                             message.npcStations.push(reader.int32());
                     else message.npcStations.push(reader.int32());
+                    break;
+                case /* required int32 system_id */ 6:
+                    message.systemId = reader.int32();
                     break;
                 default: {
                     const u = options.readUnknownField;
@@ -6603,6 +6655,8 @@ class Star$Type extends MessageType<Star> {
         /* repeated int32 npc_stations = 5; */
         for (let i = 0; i < message.npcStations.length; i++)
             writer.tag(5, WireType.Varint).int32(message.npcStations[i]);
+        /* required int32 system_id = 6; */
+        if (message.systemId !== 0) writer.tag(6, WireType.Varint).int32(message.systemId);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -6743,13 +6797,8 @@ class Stargate$Type extends MessageType<Stargate> {
                 opt: true,
                 T: 5 /*ScalarType.INT32*/,
             },
-            { no: 8, name: "solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            {
-                no: 9,
-                name: "destination_solar_system_id",
-                kind: "scalar",
-                T: 5 /*ScalarType.INT32*/,
-            },
+            { no: 8, name: "system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 9, name: "destination_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<Stargate>): Stargate {
@@ -6757,8 +6806,8 @@ class Stargate$Type extends MessageType<Stargate> {
         message.stargateId = 0;
         message.destination = 0;
         message.typeId = 0;
-        message.solarSystemId = 0;
-        message.destinationSolarSystemId = 0;
+        message.systemId = 0;
+        message.destinationSystemId = 0;
         if (value !== undefined) reflectionMergePartial<Stargate>(this, message, value);
         return message;
     }
@@ -6804,11 +6853,11 @@ class Stargate$Type extends MessageType<Stargate> {
                 case /* optional int32 allowed_ships_type_list_id */ 7:
                     message.allowedShipsTypeListId = reader.int32();
                     break;
-                case /* required int32 solar_system_id */ 8:
-                    message.solarSystemId = reader.int32();
+                case /* required int32 system_id */ 8:
+                    message.systemId = reader.int32();
                     break;
-                case /* required int32 destination_solar_system_id */ 9:
-                    message.destinationSolarSystemId = reader.int32();
+                case /* required int32 destination_system_id */ 9:
+                    message.destinationSystemId = reader.int32();
                     break;
                 default: {
                     const u = options.readUnknownField;
@@ -6861,12 +6910,11 @@ class Stargate$Type extends MessageType<Stargate> {
         /* optional int32 allowed_ships_type_list_id = 7; */
         if (message.allowedShipsTypeListId !== undefined)
             writer.tag(7, WireType.Varint).int32(message.allowedShipsTypeListId);
-        /* required int32 solar_system_id = 8; */
-        if (message.solarSystemId !== 0)
-            writer.tag(8, WireType.Varint).int32(message.solarSystemId);
-        /* required int32 destination_solar_system_id = 9; */
-        if (message.destinationSolarSystemId !== 0)
-            writer.tag(9, WireType.Varint).int32(message.destinationSolarSystemId);
+        /* required int32 system_id = 8; */
+        if (message.systemId !== 0) writer.tag(8, WireType.Varint).int32(message.systemId);
+        /* required int32 destination_system_id = 9; */
+        if (message.destinationSystemId !== 0)
+            writer.tag(9, WireType.Varint).int32(message.destinationSystemId);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -6886,6 +6934,7 @@ class DisruptedStargate$Type extends MessageType<DisruptedStargate> {
             { no: 3, name: "target_solar_system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "position", kind: "message", T: () => UniversePoint },
             { no: 5, name: "rotation", kind: "message", T: () => PointRotation },
+            { no: 6, name: "system_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<DisruptedStargate>): DisruptedStargate {
@@ -6893,6 +6942,7 @@ class DisruptedStargate$Type extends MessageType<DisruptedStargate> {
         message.stargateId = 0;
         message.typeId = 0;
         message.targetSolarSystemId = 0;
+        message.systemId = 0;
         if (value !== undefined) reflectionMergePartial<DisruptedStargate>(this, message, value);
         return message;
     }
@@ -6931,6 +6981,9 @@ class DisruptedStargate$Type extends MessageType<DisruptedStargate> {
                         options,
                         message.rotation
                     );
+                    break;
+                case /* required int32 system_id */ 6:
+                    message.systemId = reader.int32();
                     break;
                 default: {
                     const u = options.readUnknownField;
@@ -6978,6 +7031,8 @@ class DisruptedStargate$Type extends MessageType<DisruptedStargate> {
                 writer.tag(5, WireType.LengthDelimited).fork(),
                 options
             ).join();
+        /* required int32 system_id = 6; */
+        if (message.systemId !== 0) writer.tag(6, WireType.Varint).int32(message.systemId);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -7022,6 +7077,8 @@ class Moon$Type extends MessageType<Moon> {
                 opt: true,
                 T: 5 /*ScalarType.INT32*/,
             },
+            { no: 13, name: "planet_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 14, name: "celestial_index", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<Moon>): Moon {
@@ -7032,6 +7089,8 @@ class Moon$Type extends MessageType<Moon> {
         message.orbitId = 0;
         message.npcStations = [];
         message.asteroidBelts = [];
+        message.planetId = 0;
+        message.celestialIndex = 0;
         if (value !== undefined) reflectionMergePartial<Moon>(this, message, value);
         return message;
     }
@@ -7108,6 +7167,12 @@ class Moon$Type extends MessageType<Moon> {
                 case /* optional int32 environment_template_id */ 12:
                     message.environmentTemplateId = reader.int32();
                     break;
+                case /* required int32 planet_id */ 13:
+                    message.planetId = reader.int32();
+                    break;
+                case /* required int32 celestial_index */ 14:
+                    message.celestialIndex = reader.int32();
+                    break;
                 default: {
                     const u = options.readUnknownField;
                     if (u === "throw")
@@ -7181,6 +7246,11 @@ class Moon$Type extends MessageType<Moon> {
         /* optional int32 environment_template_id = 12; */
         if (message.environmentTemplateId !== undefined)
             writer.tag(12, WireType.Varint).int32(message.environmentTemplateId);
+        /* required int32 planet_id = 13; */
+        if (message.planetId !== 0) writer.tag(13, WireType.Varint).int32(message.planetId);
+        /* required int32 celestial_index = 14; */
+        if (message.celestialIndex !== 0)
+            writer.tag(14, WireType.Varint).int32(message.celestialIndex);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -7295,6 +7365,9 @@ class NpcStation$Type extends MessageType<NpcStation> {
                 opt: true,
                 T: 8 /*ScalarType.BOOL*/,
             },
+            { no: 17, name: "moon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 18, name: "planet_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 19, name: "star_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<NpcStation>): NpcStation {
@@ -7384,6 +7457,15 @@ class NpcStation$Type extends MessageType<NpcStation> {
                 case /* optional bool ignored_by_corporation_defense_djinn */ 16:
                     message.ignoredByCorporationDefenseDjinn = reader.bool();
                     break;
+                case /* optional int32 moon_id */ 17:
+                    message.moonId = reader.int32();
+                    break;
+                case /* optional int32 planet_id */ 18:
+                    message.planetId = reader.int32();
+                    break;
+                case /* optional int32 star_id */ 19:
+                    message.starId = reader.int32();
+                    break;
                 default: {
                     const u = options.readUnknownField;
                     if (u === "throw")
@@ -7459,6 +7541,12 @@ class NpcStation$Type extends MessageType<NpcStation> {
         /* optional bool ignored_by_corporation_defense_djinn = 16; */
         if (message.ignoredByCorporationDefenseDjinn !== undefined)
             writer.tag(16, WireType.Varint).bool(message.ignoredByCorporationDefenseDjinn);
+        /* optional int32 moon_id = 17; */
+        if (message.moonId !== undefined) writer.tag(17, WireType.Varint).int32(message.moonId);
+        /* optional int32 planet_id = 18; */
+        if (message.planetId !== undefined) writer.tag(18, WireType.Varint).int32(message.planetId);
+        /* optional int32 star_id = 19; */
+        if (message.starId !== undefined) writer.tag(19, WireType.Varint).int32(message.starId);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -7483,6 +7571,8 @@ class AsteroidBelt$Type extends MessageType<AsteroidBelt> {
                 T: 5 /*ScalarType.INT32*/,
             },
             { no: 4, name: "statistics", kind: "message", T: () => CelestialStatistics },
+            { no: 5, name: "planet_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 6, name: "moon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
         ]);
     }
     create(value?: PartialMessage<AsteroidBelt>): AsteroidBelt {
@@ -7519,6 +7609,12 @@ class AsteroidBelt$Type extends MessageType<AsteroidBelt> {
                         options,
                         message.statistics
                     );
+                    break;
+                case /* optional int32 planet_id */ 5:
+                    message.planetId = reader.int32();
+                    break;
+                case /* optional int32 moon_id */ 6:
+                    message.moonId = reader.int32();
                     break;
                 default: {
                     const u = options.readUnknownField;
@@ -7560,6 +7656,10 @@ class AsteroidBelt$Type extends MessageType<AsteroidBelt> {
                 writer.tag(4, WireType.LengthDelimited).fork(),
                 options
             ).join();
+        /* optional int32 planet_id = 5; */
+        if (message.planetId !== undefined) writer.tag(5, WireType.Varint).int32(message.planetId);
+        /* optional int32 moon_id = 6; */
+        if (message.moonId !== undefined) writer.tag(6, WireType.Varint).int32(message.moonId);
         const u = options.writeUnknownFields;
         if (u !== false)
             (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

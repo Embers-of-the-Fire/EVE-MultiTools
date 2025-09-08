@@ -92,6 +92,20 @@ export function useSPARouter() {
         router.navigateWithParams("/explore/universe/planet", { id });
     };
 
+    const navigateToUniverseMoon = (id: number, title?: string) => {
+        const finalTitle = title || t("explore.universe.moon.detail");
+
+        router.addDetailHistory({
+            id: `moon-${id}`,
+            title: finalTitle,
+            path: "/explore/universe/moon",
+            params: { id },
+            timestamp: Date.now(),
+        });
+
+        router.navigateWithParams("/explore/universe/moon", { id });
+    };
+
     // Generic typed parameter getter
     const useRouteParams = <T extends keyof RouteParamMap>(path: T): RouteParam<T> | undefined => {
         return router.getRouteParams(path);
@@ -105,6 +119,7 @@ export function useSPARouter() {
         navigateToUniverseConstellation,
         navigateToUniverseSystem,
         navigateToUniversePlanet,
+        navigateToUniverseMoon,
         useRouteParams,
     };
 }

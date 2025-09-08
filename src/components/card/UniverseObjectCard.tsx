@@ -6,6 +6,7 @@ import { useLocalization } from "@/hooks/useLocalization";
 import {
     getConstellationById,
     getFaction,
+    getMoonById,
     getPlanetById,
     getRegionById,
     getSystemById,
@@ -13,7 +14,7 @@ import {
 } from "@/native/data";
 import type { UniverseObject, UniverseObjectType } from "@/types/universe";
 import { getSecurityStatusColor } from "@/utils/color";
-import { getPlanetName } from "@/utils/name";
+import { getMoonName, getPlanetName } from "@/utils/name";
 import type { BadgeConfig, GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
@@ -27,6 +28,8 @@ const getIconFromUniverseObjectType = (type: UniverseObjectType): string => {
             return "S";
         case "planet":
             return "P";
+        case "moon":
+            return "M";
     }
 };
 
@@ -164,6 +167,14 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                         key: `type-${planet.type_id}`,
                     });
                 }
+            } else if (obj.type === "moon") {
+                const moon = await getMoonById(obj.id);
+
+                const planet = await getPlanetById(moon.planet_id);
+                const system = await getSystemById(planet.system_id);
+                const systemName = (await loc(system.name_id)) || "";
+
+                name = getMoonName(systemName, planet.celestial_index, moon.celestial_index, t);
             }
 
             if (mounted) {

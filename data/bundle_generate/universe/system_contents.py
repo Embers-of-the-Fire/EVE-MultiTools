@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
@@ -170,39 +171,102 @@ class DisruptedStargate(BaseModel):
     rotation: PointRotation
 
 
+@dataclass
+class NpcStationPosition:
+    starID: int | None = None
+    planetID: int | None = None
+    moonID: int | None = None
+
+
+@dataclass
+class AsteroidBeltPosition:
+    planetID: int | None = None
+    moonID: int | None = None
+
+
+@dataclass
+class MoonExtraInfo:
+    planetID: int
+    celestialIndex: int
+
+
+type SystemRegistry = dict[int, SolarSystem]
+type PlanetRegistry = dict[int, Planet]
+type MoonRegistry = dict[int, tuple[Moon, MoonExtraInfo]]
+type NpcStationRegistry = dict[int, tuple[NpcStation, NpcStationPosition]]
+type AsteroidBeltRegistry = dict[int, tuple[AsteroidBelt, AsteroidBeltPosition]]
+# stargate, system id
+type StargateRegistry = dict[int, tuple[Stargate, int]]
+# disrupted stargate, system id
+type DisruptedStargateRegistry = dict[int, tuple[DisruptedStargate, int]]
+# secondary sun, system id
+type SecondarySunRegistry = dict[int, tuple[SecondarySun, int]]
+# star, system id
+type StarRegistry = dict[int, tuple[Star, int]]
+
+
 async def collect_system_contents(index: ResourceTree, root: Path, loc_root: Path):
     system_content_file = await index.download_resource(SOLAR_SYSTEM_CONTENT_RES)
     system_contents = schema_loader.binaryLoader.LoadFSDDataInPython(system_content_file.file_path)
 
-    systems: dict[int, SolarSystem] = {}
-    planets: dict[int, Planet] = {}
-    moons: dict[int, Moon] = {}
-    npc_stations: dict[int, NpcStation] = {}
-    asteroid_belts: dict[int, AsteroidBelt] = {}
-    stargates: dict[int, tuple[Stargate, int]] = {}
-    disrupted_stargates: dict[int, DisruptedStargate] = {}
-    secondary_suns: dict[int, SecondarySun] = {}
-    stars: dict[int, Star] = {}
+    systems: SystemRegistry = {}
+    planets: PlanetRegistry = {}
+    moons: MoonRegistry = {}
+    npc_stations: NpcStationRegistry = {}
+    asteroid_belts: AsteroidBeltRegistry = {}
+    stargates: StargateRegistry = {}
+    disrupted_stargates: DisruptedStargateRegistry = {}
+    secondary_suns: SecondarySunRegistry = {}
+    stars: StarRegistry = {}
 
     for system_id, system_content in system_contents.items():
         system_def = SolarSystem(**schema_loader.convert.convert_to_serializable(system_content))
         planets.update(system_def.planets)
         if system_def.secondarySun is not None:
-            secondary_suns[system_def.secondarySun.itemID] = system_def.secondarySun
+            secondary_suns[system_def.secondarySun.itemID] = [system_def.secondarySun, system_id]
         if system_def.star is not None:
-            stars[system_def.star.id] = system_def.star
+            stars[system_def.star.id] = [system_def.star, system_id]
         stargates.update({k: [v, system_id] for k, v in system_def.stargates.items()})
-        disrupted_stargates.update(system_def.disruptedStargates)
+        disrupted_stargates.update(
+            {k: [v, system_id] for k, v in system_def.disruptedStargates.items()}
+        )
         systems[system_def.solarSystemID] = system_def
 
-    for planet in planets.values():
-        moons.update(planet.moons)
-        npc_stations.update(planet.npcStations)
-        asteroid_belts.update(planet.asteroidBelts)
+    for planet_id, planet in planets.items():
+        celestial_counter = 0
+        previous_orbit_id = -1
+        for moon_id, moon in sorted(planet.moons.items(), key=lambda item: item[0]):
+            if moon.orbitID != previous_orbit_id:
+                celestial_counter = 0
+                previous_orbit_id = moon.orbitID
+            moons[moon_id] = (
+                moon,
+                MoonExtraInfo(planetID=planet_id, celestialIndex=celestial_counter),
+            )
+            celestial_counter += 1
 
-    for moon in moons.values():
-        npc_stations.update(moon.npcStations)
-        asteroid_belts.update(moon.asteroidBelts)
+        npc_stations.update(
+            {k: [v, NpcStationPosition(planetID=planet_id)] for k, v in planet.npcStations.items()}
+        )
+        asteroid_belts.update(
+            {
+                k: [v, AsteroidBeltPosition(planetID=planet_id)]
+                for k, v in planet.asteroidBelts.items()
+            }
+        )
+
+    for moon_id, (moon, _) in moons.items():
+        npc_stations.update(
+            {k: [v, NpcStationPosition(moonID=moon_id)] for k, v in moon.npcStations.items()}
+        )
+        asteroid_belts.update(
+            {k: [v, AsteroidBeltPosition(moonID=moon_id)] for k, v in moon.asteroidBelts.items()}
+        )
+
+    for star_id, (star, _) in stars.items():
+        npc_stations.update(
+            {k: [v, NpcStationPosition(starID=star_id)] for k, v in star.npcStations.items()}
+        )
 
     solar_system_db = root / "solar_system.db"
     with sqlite3.connect(solar_system_db) as conn:
@@ -220,9 +284,7 @@ async def collect_system_contents(index: ResourceTree, root: Path, loc_root: Pat
     LOGGER.info(f"Collected {len(systems)} solar systems into {solar_system_db}")
 
 
-def _collect_solar_systems(
-    db_path: Path, conn: sqlite3.Connection, solar_systems: dict[int, SolarSystem]
-):
+def _collect_solar_systems(db_path: Path, conn: sqlite3.Connection, solar_systems: SystemRegistry):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='solar_systems'")
     if cursor.fetchone() is not None:
@@ -295,7 +357,7 @@ def _collect_solar_systems(
     conn.commit()
 
 
-def _collect_planets(db_path: Path, conn: sqlite3.Connection, planets: dict[int, Planet]):
+def _collect_planets(db_path: Path, conn: sqlite3.Connection, planets: SystemRegistry):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='planets'")
     if cursor.fetchone() is not None:
@@ -358,7 +420,7 @@ def _collect_planets(db_path: Path, conn: sqlite3.Connection, planets: dict[int,
 
 
 def _collect_secondary_suns(
-    db_path: Path, conn: sqlite3.Connection, secondary_suns: dict[int, SecondarySun]
+    db_path: Path, conn: sqlite3.Connection, secondary_suns: SecondarySunRegistry
 ):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='secondary_suns'")
@@ -371,18 +433,20 @@ def _collect_secondary_suns(
         CREATE TABLE IF NOT EXISTS secondary_suns (
             sun_id INTEGER PRIMARY KEY NOT NULL,
             type_id INTEGER NOT NULL,
+            system_id INTEGER NOT NULL,
             data BLOB NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_secondary_sun_type_id ON secondary_suns (type_id);
         """
     )
 
-    for _, secondary_sun_def in secondary_suns.items():
+    for _, (secondary_sun_def, system_id) in secondary_suns.items():
         pb_obj = schema_pb2.SecondarySun()
         pb_obj.sun_id = secondary_sun_def.itemID
         pb_obj.type_id = secondary_sun_def.typeID
         pb_obj.effect_beacon_type_id = secondary_sun_def.effectBeaconTypeID
         pb_obj.position.CopyFrom(secondary_sun_def.position.to_pb())
+        pb_obj.system_id = system_id
 
         blob = pb_obj.SerializeToString()
         cursor.execute(
@@ -390,12 +454,14 @@ def _collect_secondary_suns(
             INSERT INTO secondary_suns (
                 sun_id,
                 type_id,
+                system_id,
                 data
-            ) VALUES (?, ?, ?)
+            ) VALUES (?, ?, ?, ?)
             """,
             (
                 secondary_sun_def.itemID,
                 secondary_sun_def.typeID,
+                system_id,
                 blob,
             ),
         )
@@ -403,7 +469,7 @@ def _collect_secondary_suns(
     conn.commit()
 
 
-def _collect_stars(db_path: Path, conn: sqlite3.Connection, stars: dict[int, Star]):
+def _collect_stars(db_path: Path, conn: sqlite3.Connection, stars: StarRegistry):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='stars'")
     if cursor.fetchone() is not None:
@@ -415,13 +481,14 @@ def _collect_stars(db_path: Path, conn: sqlite3.Connection, stars: dict[int, Sta
         CREATE TABLE IF NOT EXISTS stars (
             star_id INTEGER PRIMARY KEY NOT NULL,
             type_id INTEGER NOT NULL,
+            system_id INTEGER NOT NULL,
             data BLOB NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_star_type_id ON stars (type_id);
         """
     )
 
-    for _, star_def in stars.items():
+    for _, (star_def, system_id) in stars.items():
         pb_obj = schema_pb2.Star()
         pb_obj.star_id = star_def.id
         pb_obj.radius = star_def.radius
@@ -429,6 +496,7 @@ def _collect_stars(db_path: Path, conn: sqlite3.Connection, stars: dict[int, Sta
         if star_def.statistics is not None:
             pb_obj.statistics.CopyFrom(star_def.statistics.to_pb())
         pb_obj.npc_stations.extend(star_def.npcStations.keys())
+        pb_obj.system_id = star_def.id
 
         blob = pb_obj.SerializeToString()
         cursor.execute(
@@ -436,20 +504,20 @@ def _collect_stars(db_path: Path, conn: sqlite3.Connection, stars: dict[int, Sta
             INSERT INTO stars (
                 star_id,
                 type_id,
+                system_id,
                 data
-            ) VALUES (?, ?, ?)
+            ) VALUES (?, ?, ?, ?)
             """,
             (
                 star_def.id,
                 star_def.typeID,
+                system_id,
                 blob,
             ),
         )
 
 
-def _collect_stargates(
-    db_path: Path, conn: sqlite3.Connection, stargates: dict[int, tuple[Stargate, int]]
-):
+def _collect_stargates(db_path: Path, conn: sqlite3.Connection, stargates: StargateRegistry):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='stargates'")
     if cursor.fetchone() is not None:
@@ -461,8 +529,8 @@ def _collect_stargates(
         CREATE TABLE IF NOT EXISTS stargates (
             stargate_id INTEGER PRIMARY KEY NOT NULL,
             destination INTEGER NOT NULL,
-            solar_system_id INTEGER NOT NULL,
-            destination_solar_system_id INTEGER NOT NULL,
+            system_id INTEGER NOT NULL,
+            destination_system_id INTEGER NOT NULL,
             type_id INTEGER NOT NULL,
             data BLOB NOT NULL
         );
@@ -471,7 +539,7 @@ def _collect_stargates(
         """
     )
 
-    for stargate_id, (stargate_def, solar_system_id) in stargates.items():
+    for stargate_id, (stargate_def, system_id) in stargates.items():
         pb_obj = schema_pb2.Stargate()
         pb_obj.stargate_id = stargate_id
         pb_obj.destination = stargate_def.destination
@@ -484,9 +552,9 @@ def _collect_stargates(
         pb_obj.ignored_by_corporation_defense_djinn = stargate_def.ignoredByCorporationDefenseDjinn
         if stargate_def.allowedShipsTypeListID is not None:
             pb_obj.allowed_ships_type_list_id = stargate_def.allowedShipsTypeListID
-        pb_obj.solar_system_id = solar_system_id
-        destination_solar_system_id = stargates[stargate_def.destination][1]
-        pb_obj.destination_solar_system_id = destination_solar_system_id
+        pb_obj.system_id = system_id
+        destination_system_id = stargates[stargate_def.destination][1]
+        pb_obj.destination_system_id = destination_system_id
 
         blob = pb_obj.SerializeToString()
         cursor.execute(
@@ -494,8 +562,8 @@ def _collect_stargates(
             INSERT INTO stargates (
                 stargate_id,
                 destination,
-                solar_system_id,
-                destination_solar_system_id,
+                system_id,
+                destination_system_id,
                 type_id,
                 data
             ) VALUES (?, ?, ?, ?, ?, ?)
@@ -503,8 +571,8 @@ def _collect_stargates(
             (
                 stargate_id,
                 stargate_def.destination,
-                solar_system_id,
-                destination_solar_system_id,
+                system_id,
+                destination_system_id,
                 stargate_def.typeID,
                 blob,
             ),
@@ -514,7 +582,7 @@ def _collect_stargates(
 
 
 def _collect_disrupted_stargates(
-    db_path: Path, conn: sqlite3.Connection, disrupted_stargates: dict[int, DisruptedStargate]
+    db_path: Path, conn: sqlite3.Connection, disrupted_stargates: DisruptedStargateRegistry
 ):
     cursor = conn.cursor()
     cursor.execute(
@@ -530,6 +598,7 @@ def _collect_disrupted_stargates(
             stargate_id INTEGER PRIMARY KEY NOT NULL,
             target_solar_system_id INTEGER NOT NULL,
             type_id INTEGER NOT NULL,
+            system_id INTEGER NOT NULL,
             data BLOB NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_disrupted_stargate_type_id ON disrupted_stargates (type_id);
@@ -537,10 +606,11 @@ def _collect_disrupted_stargates(
         """
     )
 
-    for disrupted_stargate_id, disrupted_stargate_def in disrupted_stargates.items():
+    for disrupted_stargate_id, (disrupted_stargate_def, system_id) in disrupted_stargates.items():
         pb_obj = schema_pb2.DisruptedStargate()
         pb_obj.stargate_id = disrupted_stargate_id
         pb_obj.type_id = disrupted_stargate_def.typeID
+        pb_obj.system_id = system_id
         pb_obj.target_solar_system_id = disrupted_stargate_def.targetSolarSystemID
         pb_obj.position.CopyFrom(disrupted_stargate_def.position.to_pb())
         pb_obj.rotation.CopyFrom(disrupted_stargate_def.rotation.to_pb())
@@ -552,13 +622,15 @@ def _collect_disrupted_stargates(
                 stargate_id,
                 target_solar_system_id,
                 type_id,
+                system_id,
                 data
-            ) VALUES (?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?)
             """,
             (
                 disrupted_stargate_id,
                 disrupted_stargate_def.targetSolarSystemID,
                 disrupted_stargate_def.typeID,
+                system_id,
                 blob,
             ),
         )
@@ -566,7 +638,7 @@ def _collect_disrupted_stargates(
     conn.commit()
 
 
-def _collect_moons(db_path: Path, conn: sqlite3.Connection, moons: dict[int, Moon]):
+def _collect_moons(db_path: Path, conn: sqlite3.Connection, moons: MoonRegistry):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='moons'")
     if cursor.fetchone() is not None:
@@ -577,16 +649,16 @@ def _collect_moons(db_path: Path, conn: sqlite3.Connection, moons: dict[int, Moo
         """
         CREATE TABLE IF NOT EXISTS moons (
             moon_id INTEGER PRIMARY KEY NOT NULL,
-            orbit_id INTEGER NOT NULL,
             moon_name_id INTEGER,
             type_id INTEGER NOT NULL,
+            planet_id INTEGER NOT NULL,
+            celestial_index INTEGER NOT NULL,
             data BLOB NOT NULL
         );
-        CREATE INDEX IF NOT EXISTS idx_moon_type_id ON moons (type_id);
         """
     )
 
-    for moon_id, moon_def in moons.items():
+    for moon_id, (moon_def, info) in moons.items():
         pb_obj = schema_pb2.Moon()
         pb_obj.moon_id = moon_id
         pb_obj.type_id = moon_def.typeID
@@ -604,23 +676,27 @@ def _collect_moons(db_path: Path, conn: sqlite3.Connection, moons: dict[int, Moo
             pb_obj.mining_beacon.position.CopyFrom(moon_def.miningBeacon.position.to_pb())
         if moon_def.environmentTemplateID is not None:
             pb_obj.environment_template_id = moon_def.environmentTemplateID
+        pb_obj.planet_id = info.planetID
+        pb_obj.celestial_index = info.celestialIndex
 
         blob = pb_obj.SerializeToString()
         cursor.execute(
             """
             INSERT INTO moons (
                 moon_id,
-                orbit_id,
                 moon_name_id,
                 type_id,
+                planet_id,
+                celestial_index,
                 data
-            ) VALUES (?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
                 moon_id,
-                moon_def.orbitID,
                 moon_def.moonNameID,
                 moon_def.typeID,
+                info.planetID,
+                info.celestialIndex,
                 blob,
             ),
         )
@@ -629,7 +705,7 @@ def _collect_moons(db_path: Path, conn: sqlite3.Connection, moons: dict[int, Moo
 
 
 def _collect_npc_stations(
-    db_path: Path, conn: sqlite3.Connection, npc_stations: dict[int, NpcStation]
+    db_path: Path, conn: sqlite3.Connection, npc_stations: NpcStationRegistry
 ):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='npc_stations'")
@@ -644,6 +720,10 @@ def _collect_npc_stations(
             operation_id INTEGER NOT NULL,
             owner_id INTEGER NOT NULL,
             type_id INTEGER NOT NULL,
+            system_id INTEGER NOT NULL,
+            moon_id INTEGER,
+            planet_id INTEGER,
+            star_id INTEGER,
             data BLOB NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_npc_station_type_id ON npc_stations (type_id);
@@ -652,7 +732,7 @@ def _collect_npc_stations(
         """
     )
 
-    for station_id, npc_station_def in npc_stations.items():
+    for station_id, (npc_station_def, station_pos) in npc_stations.items():
         pb_obj = schema_pb2.NpcStation()
         pb_obj.station_id = station_id
         pb_obj.is_conquerable = npc_station_def.isConquerable
@@ -674,6 +754,13 @@ def _collect_npc_stations(
             npc_station_def.ignoredByCorporationDefenseDjinn
         )
 
+        if station_pos.starID is not None:
+            pb_obj.star_id = station_pos.starID
+        elif station_pos.planetID is not None:
+            pb_obj.planet_id = station_pos.planetID
+        elif station_pos.moonID is not None:
+            pb_obj.moon_id = station_pos.moonID
+
         blob = pb_obj.SerializeToString()
         cursor.execute(
             """
@@ -682,14 +769,22 @@ def _collect_npc_stations(
                 operation_id,
                 owner_id,
                 type_id,
+                system_id,
+                moon_id,
+                planet_id,
+                star_id,
                 data
-            ) VALUES (?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 station_id,
                 npc_station_def.operationID,
                 npc_station_def.ownerID,
                 npc_station_def.typeID,
+                npc_station_def.solarSystemID,
+                station_pos.moonID,
+                station_pos.planetID,
+                station_pos.starID,
                 blob,
             ),
         )
@@ -698,7 +793,7 @@ def _collect_npc_stations(
 
 
 def _collect_asteroid_belts(
-    db_path: Path, conn: sqlite3.Connection, asteroid_belts: dict[int, AsteroidBelt]
+    db_path: Path, conn: sqlite3.Connection, asteroid_belts: AsteroidBeltRegistry
 ):
     cursor = conn.cursor()
     cursor.execute("SELECT name from sqlite_master WHERE type='table' AND name='asteroid_belts'")
@@ -712,13 +807,15 @@ def _collect_asteroid_belts(
             belt_id INTEGER PRIMARY KEY NOT NULL,
             type_id INTEGER NOT NULL,
             asteroid_belt_name_id INTEGER,
+            planet_id INTEGER,
+            moon_id INTEGER,
             data BLOB NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_asteroid_belt_type_id ON asteroid_belts (type_id);
         """
     )
 
-    for belt_id, asteroid_belt_def in asteroid_belts.items():
+    for belt_id, (asteroid_belt_def, belt_pos) in asteroid_belts.items():
         pb_obj = schema_pb2.AsteroidBelt()
         pb_obj.asteroid_belt_id = belt_id
         pb_obj.type_id = asteroid_belt_def.typeID
@@ -734,13 +831,17 @@ def _collect_asteroid_belts(
                 belt_id,
                 type_id,
                 asteroid_belt_name_id,
+                planet_id,
+                moon_id,
                 data
-            ) VALUES (?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
                 belt_id,
                 asteroid_belt_def.typeID,
                 asteroid_belt_def.asteroidBeltNameID,
+                belt_pos.planetID,
+                belt_pos.moonID,
                 blob,
             ),
         )

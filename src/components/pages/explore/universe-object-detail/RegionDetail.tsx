@@ -7,6 +7,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
+import { Alongside, AlongsideMain, AlongsideSlave } from "@/components/common/Alongside";
 import {
     Attribute,
     AttributeContent,
@@ -249,88 +250,103 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
     return (
         <PageLayout title={name}>
             <div className="space-y-6">
-                <ResizablePanelGroup direction="horizontal" className="flex flex-row h-fit w-full">
-                    <ResizablePanel defaultSize={70}>
-                        <div ref={leftDescRef} className="space-y-6 block">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>{t("explore.universe.detail.basic_info")}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex items-start gap-6">
-                                        <div className="flex-shrink-0">
-                                            <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
-                                                <span className="text-2xl font-bold text-muted-foreground">
-                                                    S
-                                                </span>
-                                            </div>
-                                        </div>
+                <ResizablePanelGroup direction="horizontal">
+                    <Alongside className="flex flex-row h-fit w-full">
+                        {(main, slave) => (
+                            <>
+                                <ResizablePanel defaultSize={70}>
+                                    <AlongsideMain ref={main} className="space-y-6 block">
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>
+                                                    {t("explore.universe.detail.basic_info")}
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <div className="flex items-start gap-6">
+                                                    <div className="flex-shrink-0">
+                                                        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
+                                                            <span className="text-2xl font-bold text-muted-foreground">
+                                                                S
+                                                            </span>
+                                                        </div>
+                                                    </div>
 
-                                        <div className="flex-1 space-y-4">
-                                            <div>
-                                                <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
-                                                    {name}
-                                                </h2>
-                                                <p className="text-sm text-muted-foreground">
-                                                    ID: {regionId}
-                                                </p>
-                                            </div>
+                                                    <div className="flex-1 space-y-4">
+                                                        <div>
+                                                            <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
+                                                                {name}
+                                                            </h2>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                ID: {regionId}
+                                                            </p>
+                                                        </div>
 
-                                            {desc && (
-                                                <p className="text-sm leading-relaxed">{desc}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                            <AttributePanel>
-                                <AttributeTitle>
-                                    {t("explore.universe.region.region_attributes.title")}
-                                </AttributeTitle>
-                                <AttributeContent className="grid grid-cols-1 md:grid-cols-1">
-                                    <Attribute>
-                                        <AttributeName>
-                                            {t(
-                                                "explore.universe.region.region_attributes.faction_id"
-                                            )}
-                                        </AttributeName>
-                                        <AttributeText>
-                                            {regionDetail.factionId ? (
-                                                <EmbeddedFactionCard
-                                                    className="mt-2"
-                                                    factionId={regionDetail.factionId}
-                                                    onClick={() => {
-                                                        if (!regionDetail.factionId) return;
-                                                        navigateToFactionDetail(
-                                                            regionDetail.factionId,
-                                                            t("explore.faction.detail.title")
-                                                        );
-                                                    }}
-                                                />
-                                            ) : (
-                                                t("common.none")
-                                            )}
-                                        </AttributeText>
-                                    </Attribute>
-                                </AttributeContent>
-                            </AttributePanel>
-                        </div>
-                    </ResizablePanel>
-                    <ResizableHandle className="block mx-6" />
-                    <ResizablePanel maxSize={40} minSize={20} defaultSize={30}>
-                        <div ref={rightTreeRef}>
-                            <Card className="h-full min-h-0 gap-2">
-                                <CardHeader>
-                                    <CardTitle>
-                                        {t("explore.universe.region.region_tree")}
-                                    </CardTitle>
-                                </CardHeader>
-                                <ScrollArea className="overflow-auto px-3 mt-0">
-                                    <RegionTree regionId={regionId} />
-                                </ScrollArea>
-                            </Card>
-                        </div>
-                    </ResizablePanel>
+                                                        {desc && (
+                                                            <p className="text-sm leading-relaxed">
+                                                                {desc}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                        <AttributePanel>
+                                            <AttributeTitle>
+                                                {t(
+                                                    "explore.universe.region.region_attributes.title"
+                                                )}
+                                            </AttributeTitle>
+                                            <AttributeContent className="grid grid-cols-1 md:grid-cols-1">
+                                                <Attribute>
+                                                    <AttributeName>
+                                                        {t(
+                                                            "explore.universe.region.region_attributes.faction_id"
+                                                        )}
+                                                    </AttributeName>
+                                                    <AttributeText>
+                                                        {regionDetail.factionId ? (
+                                                            <EmbeddedFactionCard
+                                                                className="mt-2"
+                                                                factionId={regionDetail.factionId}
+                                                                onClick={() => {
+                                                                    if (!regionDetail.factionId)
+                                                                        return;
+                                                                    navigateToFactionDetail(
+                                                                        regionDetail.factionId,
+                                                                        t(
+                                                                            "explore.faction.detail.title"
+                                                                        )
+                                                                    );
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            t("common.none")
+                                                        )}
+                                                    </AttributeText>
+                                                </Attribute>
+                                            </AttributeContent>
+                                        </AttributePanel>
+                                    </AlongsideMain>
+                                </ResizablePanel>
+                                <ResizableHandle className="block mx-6" />
+                                <ResizablePanel maxSize={40} minSize={20} defaultSize={30}>
+                                    <AlongsideSlave ref={slave}>
+                                        <Card className="h-full min-h-0 gap-2">
+                                            <CardHeader>
+                                                <CardTitle>
+                                                    {t("explore.universe.region.region_tree")}
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <ScrollArea className="overflow-auto px-3 mt-0">
+                                                <RegionTree regionId={regionId} />
+                                            </ScrollArea>
+                                        </Card>
+                                    </AlongsideSlave>
+                                </ResizablePanel>
+                            </>
+                        )}
+                    </Alongside>
                 </ResizablePanelGroup>
                 <Card>
                     <Accordion type="single" collapsible className="w-full">
@@ -409,9 +425,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
                         <AccordionItem value="show-json">
                             <CardHeader className="w-full">
                                 <AccordionTrigger className="text-base">
-                                    <CardTitle>
-                                        {t("explore.universe.system.show_json_data")}
-                                    </CardTitle>
+                                    <CardTitle>{t("common.data.raw_json_data")}</CardTitle>
                                 </AccordionTrigger>
                             </CardHeader>
                             <AccordionContent asChild>
