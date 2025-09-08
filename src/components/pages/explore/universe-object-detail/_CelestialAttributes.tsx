@@ -115,7 +115,7 @@ export const CelestialStatisticsPanel: React.FC<{
                         {t("explore.universe.detail.celestial_statistics.orbit_period")}
                     </AttributeName>
                     <AttributeText>
-                        {celestial.orbitPeriod / DAY_IN_S} {t("units.day")}
+                        {(celestial.orbitPeriod / DAY_IN_S).toFixed(2)} {t("units.day")}
                     </AttributeText>
                 </Attribute>
                 <Attribute>
@@ -152,7 +152,7 @@ export const CelestialStatisticsPanel: React.FC<{
                     <AttributeName>
                         {t("explore.universe.detail.celestial_statistics.temperature")}
                     </AttributeName>
-                    <AttributeText>{celestial.temperature} K</AttributeText>
+                    <AttributeText>{celestial.temperature.toFixed(2)} K</AttributeText>
                 </Attribute>
                 <Attribute>
                     <AttributeName>
