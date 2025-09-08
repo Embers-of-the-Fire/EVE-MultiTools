@@ -50,7 +50,7 @@ export const InternalLink = forwardRef<
     const { navigate } = useSPARouter();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        navigate(link, title ?? "");
+        navigate(link);
         onClick?.(e);
     };
 

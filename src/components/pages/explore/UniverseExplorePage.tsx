@@ -33,6 +33,7 @@ import {
 } from "@/native/data";
 import type { WormholeClass } from "@/types/data";
 import { RegionType } from "@/types/data";
+import type { UniverseObject, UniverseObjectType } from "@/types/universe";
 import { PageLayout } from "../../layout";
 
 type WormholeClassFilterString =
@@ -160,12 +161,6 @@ const rtFilter = (filterID: RegionTypeFilterString): ((rt: RegionType | undefine
     };
 };
 
-type UniverseObjectType = "region" | "constellation" | "system";
-interface UniverseObject {
-    type: UniverseObjectType;
-    id: number;
-}
-
 export function UniverseExplorePage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
@@ -192,6 +187,9 @@ export function UniverseExplorePage() {
                 break;
             case "system":
                 navigateToUniverseSystem(obj.id);
+                break;
+            case "planet":
+                // No planet in search source
                 break;
         }
     };

@@ -11,7 +11,7 @@ import {
     getSystemById,
     getType,
 } from "@/native/data";
-import type { UniverseObject, UniverseObjectType } from "@/stores/universeExploreStore";
+import type { UniverseObject, UniverseObjectType } from "@/types/universe";
 import { getSecurityStatusColor } from "@/utils/color";
 import { getPlanetName } from "@/utils/name";
 import type { BadgeConfig, GenericData } from "./GenericCard";

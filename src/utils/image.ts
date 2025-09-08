@@ -7,9 +7,8 @@ import {
     getIconPath,
     getSkinMaterialIdByLicense,
     getSkinMaterialPath,
-    type Type,
 } from "@/native/data";
-import { GraphicType } from "@/types/data";
+import { GraphicType, type Type } from "@/types/data";
 
 export async function getGraphicUrl(
     graphicId: number,
