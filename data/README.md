@@ -284,9 +284,35 @@ Examples:
   }
   ```
 
+### Finish configuration and generate the bundle
+
+The [`data/bundle.py`](bundle.py) offers the utility to generate the bundle files.
+
+```text
+usage: bundle.py [-h] [--workspace WORKSPACE | --all | --list | --clean-bundles | --clean-cache | --clean]
+
+EVE MultiTools Data Bundle Generator
+
+options:
+  -h, --help            show this help message and exit
+  --workspace, -w WORKSPACE
+                        Specify workspace name to process
+  --all, -a             Process all available workspaces
+  --list, -l            List available workspaces and exit
+  --clean-bundles       Clean up existing bundles before processing
+  --clean-cache         Clean up existing cache before processing
+  --clean               Clean up existing bundles and cache before processing
+
+Examples:
+  python bundle.py --list                    List available workspaces
+  python bundle.py --workspace tq            Process specific workspace
+  python bundle.py --all                     Process all workspaces
+  python bundle.py                           Interactive workspace selection
+```
+
 ## Mock DB
 
 Our Rust backend uses SQLx to read databases,
 so we have to create a mock db to please its checker.
 
-Run `python data/mock.py` will generate the mock db.
+Run `uv run data/mock.py` to generate the mock db.

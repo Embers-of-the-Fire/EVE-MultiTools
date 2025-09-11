@@ -2,31 +2,22 @@
 
 EVE MultiTools is a comprehensive toolset for EVE Online players, providing market analysis, character management, industry tools, and more.
 
-## Features
-
-- **Market Analysis**: Advanced market data analysis and trading tools
-- **Character Management**: Skills, assets, and wallet tracking
-- **Industry Tools**: Manufacturing, mining, and research assistance
-- **Data Package Management**: Import and manage EVE Online data bundles
-- **Multi-language Support**: Chinese and English interface
-- **Theme Support**: Light and dark mode themes
-
-## Technologies Used
-
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [HeroUI v2](https://heroui.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
-
 ## Development
 
 Before starting development, make sure you have the following items installed:
 - pnpm: The frontend part uses pnpm as package manager
 - rust toolchain, including cargo: The rust package manager and build tools
 - tauri environment: see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/) for more information.
+- python: uv and an extra Python 2.7 environment if you want to generate FSD from scratch.
+- protobuf compiler: Required if you want to edit the [schema](data/schema.proto).
+
+And it's recommended to use these utilities:
+- biome: This project uses biome to format frontend code.
+         For more information, see its [configuration](biome.jsonc).
+- ruff: To format python code. See [the configuration](ruff.toml).
+- python-matplotlib: The code graph requires matplotlib to generate the graph.
+- tokei: A code counter integrated in the code-graph generator.
+- shadcn cli(you can use `pnpx shadcn@latest` instead): To manage shadcn components
 
 ### Clone the repository
 
