@@ -101,7 +101,7 @@ export const MoonDetailPage: React.FC<MoonDetailPageProps> = ({ moonId }) => {
                 setPlanetBrief(planetBrief);
                 setSystemName(systemName);
                 setSystemBrief(systemBrief);
-                setName(planetName);
+                setPlanetName(planetName);
                 setRegionName(regionName);
                 setConstellationName(constellationName);
             }
