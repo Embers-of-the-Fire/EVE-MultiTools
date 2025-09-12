@@ -73,7 +73,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                 ref={inputRef}
                 className={cn(
                     "px-2 h-14 w-full font-sans text-lg outline-hidden rounded-none",
-                    "dark:bg-black text-default-700 placeholder-default-500",
+                    "dark:bg-transparent text-default-700 placeholder-default-500",
                     "dark:text-default-500 dark:placeholder:text-default-300",
                     "border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                 )}
