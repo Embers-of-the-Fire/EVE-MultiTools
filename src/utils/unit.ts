@@ -6,3 +6,7 @@ export const displayPressure = (atm: number): string => {
     }
     return `${atm.toFixed(2)} atm`;
 };
+
+export const displayPercent = (value: number): string => {
+    return `${(value * 100).toFixed(2)}%`;
+};

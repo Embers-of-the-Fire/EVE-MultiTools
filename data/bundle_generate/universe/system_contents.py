@@ -173,6 +173,7 @@ class DisruptedStargate(BaseModel):
 
 @dataclass
 class NpcStationPosition:
+    solarSystemID: int
     starID: int | None = None
     planetID: int | None = None
     moonID: int | None = None
@@ -186,6 +187,7 @@ class AsteroidBeltPosition:
 
 @dataclass
 class MoonExtraInfo:
+    solarSystemID: int
     planetID: int
     celestialIndex: int
 
@@ -236,17 +238,24 @@ async def collect_system_contents(index: ResourceTree, root: Path, loc_root: Pat
         celestial_counter = 0
         previous_orbit_id = -1
         for moon_id, moon in sorted(planet.moons.items(), key=lambda item: item[0]):
+            celestial_counter += 1
             if moon.orbitID != previous_orbit_id:
                 celestial_counter = 0
                 previous_orbit_id = moon.orbitID
             moons[moon_id] = (
                 moon,
-                MoonExtraInfo(planetID=planet_id, celestialIndex=celestial_counter),
+                MoonExtraInfo(
+                    planetID=planet_id,
+                    celestialIndex=celestial_counter,
+                    solarSystemID=planet.solarSystemID,
+                ),
             )
-            celestial_counter += 1
 
         npc_stations.update(
-            {k: [v, NpcStationPosition(planetID=planet_id)] for k, v in planet.npcStations.items()}
+            {
+                k: [v, NpcStationPosition(solarSystemID=planet.solarSystemID, planetID=planet_id)]
+                for k, v in planet.npcStations.items()
+            }
         )
         asteroid_belts.update(
             {
@@ -255,17 +264,23 @@ async def collect_system_contents(index: ResourceTree, root: Path, loc_root: Pat
             }
         )
 
-    for moon_id, (moon, _) in moons.items():
+    for moon_id, (moon, moon_extra) in moons.items():
         npc_stations.update(
-            {k: [v, NpcStationPosition(moonID=moon_id)] for k, v in moon.npcStations.items()}
+            {
+                k: [v, NpcStationPosition(solarSystemID=moon_extra.solarSystemID, moonID=moon_id)]
+                for k, v in moon.npcStations.items()
+            }
         )
         asteroid_belts.update(
             {k: [v, AsteroidBeltPosition(moonID=moon_id)] for k, v in moon.asteroidBelts.items()}
         )
 
-    for star_id, (star, _) in stars.items():
+    for star_id, (star, system_id) in stars.items():
         npc_stations.update(
-            {k: [v, NpcStationPosition(starID=star_id)] for k, v in star.npcStations.items()}
+            {
+                k: [v, NpcStationPosition(solarSystemID=system_id, starID=star_id)]
+                for k, v in star.npcStations.items()
+            }
         )
 
     solar_system_db = root / "solar_system.db"
@@ -746,7 +761,7 @@ def _collect_npc_stations(
         pb_obj.use_operation_name = npc_station_def.useOperationName
         pb_obj.orbit_id = npc_station_def.orbitID
         pb_obj.graphic_id = npc_station_def.graphicID
-        pb_obj.solar_system_id = npc_station_def.solarSystemID
+        pb_obj.solar_system_id = station_pos.solarSystemID
         if npc_station_def.rotation is not None:
             pb_obj.rotation.CopyFrom(npc_station_def.rotation.to_pb())
         pb_obj.station_name = npc_station_def.stationName
@@ -781,7 +796,7 @@ def _collect_npc_stations(
                 npc_station_def.operationID,
                 npc_station_def.ownerID,
                 npc_station_def.typeID,
-                npc_station_def.solarSystemID,
+                station_pos.solarSystemID,
                 station_pos.moonID,
                 station_pos.planetID,
                 station_pos.starID,

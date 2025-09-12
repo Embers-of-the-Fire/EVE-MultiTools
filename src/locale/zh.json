@@ -33,6 +33,9 @@
                 },
                 "moon": {
                     "detail": "卫星详情"
+                },
+                "npc_station": {
+                    "detail": "NPC 空间站详情"
                 }
             }
         },
@@ -324,7 +327,8 @@
                 },
                 "position": "行星位置",
                 "detail": "行星详情",
-                "moons": "卫星"
+                "moons": "卫星",
+                "npc_stations": "NPC 空间站"
             },
             "moon": {
                 "detail": "卫星详情",
@@ -335,6 +339,28 @@
                 "hidden_attributes": {
                     "title": "隐藏属性",
                     "position": "卫星位置"
+                },
+                "npc_stations": "NPC 空间站"
+            },
+            "npc_station": {
+                "detail": "NPC 空间站详情",
+                "npc_station_attributes": {
+                    "title": "空间站属性",
+                    "operation_id": "空间站分类",
+                    "owner_id": "所有者",
+                    "is_conquerable": "可争夺",
+                    "graphic_id": "图像 ID",
+                    "reprocessing_efficiency": "提炼效率",
+                    "reprocessing_stations_take": "NPC 提炼税",
+                    "use_operation_name": "使用分类名",
+                    "reprocessing_hangar_flag": "提炼机库标志",
+                    "type_id": "空间站类型"
+                },
+                "hidden_attributes": {
+                    "title": "隐藏属性",
+                    "position": "位置",
+                    "orbit_id": "轨道 ID",
+                    "station_name": "空间站名称"
                 }
             }
         }

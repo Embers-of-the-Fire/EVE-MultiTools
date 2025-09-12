@@ -51,6 +51,6 @@ pub async fn get_system_data_by_id(
             .get_system_data_by_id(solar_system_id)
             .await
             .map_err(|e| e.to_string())?
-            .unwrap_or(vec![]),
+            .unwrap_or_else(Vec::new),
     ))
 }

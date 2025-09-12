@@ -40,26 +40,32 @@
             "title": "Explore",
             "type": {
                 "title": "Type",
-                "detail": "Type Detail"
+                "detail": "Type Details"
             },
             "faction": {
                 "title": "Faction",
-                "detail": "Faction Detail"
+                "detail": "Faction Details"
             },
             "localization": "Localization",
             "universe": {
                 "title": "The New Eden",
                 "region": {
-                    "detail": "Region Detail"
+                    "detail": "Region Details"
                 },
                 "constellation": {
                     "detail": "Constellation Detail"
                 },
                 "planet": {
-                    "detail": "Planet Detail"
+                    "detail": "Planet Details"
                 },
                 "system": {
-                    "detail": "System Detail"
+                    "detail": "System Details"
+                },
+                "npc_station": {
+                    "detail": "NPC Station Details"
+                },
+                "moon": {
+                    "detail": "Moon Details"
                 }
             }
         },
@@ -336,6 +342,24 @@
                 "hidden_attributes": {
                     "title": "Hidden Attributes",
                     "position": "Moon Position"
+                },
+                "npc_stations": "NPC Stations"
+            },
+            "npc_station": {
+                "detail": "NPC Station Detail",
+                "npc_station_attributes": {
+                    "title": "Station Attributes",
+                    "operation_id": "Station Operation",
+                    "owner_id": "Owner",
+                    "is_conquerable": "Conquerable",
+                    "graphic_id": "Graphic ID",
+                    "reprocessing_efficiency": "Reprocessing Efficiency",
+                    "reprocessing_stations_take": "NPC Reprocessing Tax",
+                    "reprocessing_hangar_flag": "Reprocessing Hangar Flag"
+                },
+                "hidden_attributes": {
+                    "title": "Hidden Attributes",
+                    "station_name": "Station Name"
                 }
             }
         }

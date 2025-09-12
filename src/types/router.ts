@@ -34,6 +34,7 @@ export interface RouteParamMap {
     "/explore/universe/system": { id: number };
     "/explore/universe/planet": { id: number };
     "/explore/universe/moon": { id: number };
+    "/explore/universe/npc-station": { id: number };
 }
 
 export type RouteParam<T extends keyof RouteParamMap> = RouteParamMap[T];

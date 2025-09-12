@@ -1,6 +1,7 @@
 use std::path::Path;
 
 pub mod moons;
+pub mod npc_stations;
 pub mod planets;
 pub mod systems;
 
@@ -8,6 +9,7 @@ pub struct SystemContentService {
     pub systems: systems::SystemService,
     pub planets: planets::PlanetService,
     pub moons: moons::MoonService,
+    pub npc_stations: npc_stations::NpcStationService,
 }
 
 impl SystemContentService {
@@ -19,6 +21,7 @@ impl SystemContentService {
             systems: systems::SystemService::new_with_db(&db),
             planets: planets::PlanetService::new_with_db(&db),
             moons: moons::MoonService::new_with_db(&db),
+            npc_stations: npc_stations::NpcStationService::new_with_db(&db),
         })
     }
 }

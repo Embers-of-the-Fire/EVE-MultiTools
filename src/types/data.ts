@@ -197,3 +197,14 @@ export interface MoonBrief {
     planet_id: number;
     celestial_index: number;
 }
+
+export interface NpcStationBrief {
+    station_id: number;
+    operation_id: number;
+    owner_id: number;
+    type_id: number;
+    system_id: number;
+    moon_id?: number;
+    planet_id?: number;
+    star_id?: number;
+}

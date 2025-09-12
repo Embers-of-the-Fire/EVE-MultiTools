@@ -82,6 +82,6 @@ pub async fn get_planet_data_by_id(
             .get_planet_data_by_id(planet_id)
             .await
             .map_err(|e| e.to_string())?
-            .unwrap_or(vec![]),
+            .unwrap_or_else(Vec::new),
     ))
 }

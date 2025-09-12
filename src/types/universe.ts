@@ -1,4 +1,10 @@
-export type UniverseObjectType = "region" | "constellation" | "system" | "planet" | "moon";
+export type UniverseObjectType =
+    | "region"
+    | "constellation"
+    | "system"
+    | "planet"
+    | "moon"
+    | "npc-station";
 
 export interface UniverseObject {
     type: UniverseObjectType;

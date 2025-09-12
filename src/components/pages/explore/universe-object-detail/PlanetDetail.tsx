@@ -60,6 +60,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
         navigateToUniverseConstellation,
         navigateToUniverseRegion,
         navigateToUniverseMoon,
+        navigateToUniverseNpcStation,
     } = useSPARouter();
 
     useEffect(() => {
@@ -227,6 +228,37 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                                                 }}
                                                 onClick={() => {
                                                     navigateToUniverseMoon(moonId);
+                                                }}
+                                            />
+                                        ))}
+                                    </CardContent>
+                                </ScrollArea>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </Card>{" "}
+                <Card>
+                    <Accordion type="single" collapsible className="w-full" defaultValue="moons">
+                        <AccordionItem value="moons">
+                            <CardHeader className="w-full">
+                                <AccordionTrigger className="text-base">
+                                    <CardTitle>
+                                        {t("explore.universe.planet.npc_stations")}
+                                    </CardTitle>
+                                </AccordionTrigger>
+                            </CardHeader>
+                            <AccordionContent asChild>
+                                <ScrollArea>
+                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                        {planetData.npcStations.map((npcStationId) => (
+                                            <EmbeddedUniverseObjectCard
+                                                key={npcStationId}
+                                                obj={{
+                                                    type: "npc-station",
+                                                    id: npcStationId,
+                                                }}
+                                                onClick={() => {
+                                                    navigateToUniverseNpcStation(npcStationId);
                                                 }}
                                             />
                                         ))}

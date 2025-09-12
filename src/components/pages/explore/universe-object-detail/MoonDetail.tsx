@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark, a11yLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { EmbeddedTypeCard } from "@/components/card/TypeCard";
+import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import {
     Attribute,
     AttributeContent,
@@ -19,6 +20,7 @@ import { UniversePointDisplay } from "@/components/UniverseLocation";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Moon } from "@/data/schema";
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
@@ -61,6 +63,7 @@ export const MoonDetailPage: React.FC<MoonDetailPageProps> = ({ moonId }) => {
         navigateToUniverseConstellation,
         navigateToUniverseRegion,
         navigateToUniversePlanet,
+        navigateToUniverseNpcStation,
     } = useSPARouter();
 
     useEffect(() => {
@@ -227,26 +230,26 @@ export const MoonDetailPage: React.FC<MoonDetailPageProps> = ({ moonId }) => {
                 {moonData.statistics && (
                     <CelestialStatisticsPanel celestial={moonData.statistics} />
                 )}
-                {/* <Card>
+                <Card>
                     <Accordion type="single" collapsible className="w-full" defaultValue="moons">
                         <AccordionItem value="moons">
                             <CardHeader className="w-full">
                                 <AccordionTrigger className="text-base">
-                                    <CardTitle>{t("explore.universe.planet.moons")}</CardTitle>
+                                    <CardTitle>{t("explore.universe.moon.npc_stations")}</CardTitle>
                                 </AccordionTrigger>
                             </CardHeader>
                             <AccordionContent asChild>
                                 <ScrollArea>
                                     <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
-                                        {planetData.moons.map((moonId) => (
+                                        {moonData.npcStations.map((npcStationId) => (
                                             <EmbeddedUniverseObjectCard
-                                                key={moonId}
+                                                key={npcStationId}
                                                 obj={{
-                                                    type: "moon",
-                                                    id: moonId,
+                                                    type: "npc-station",
+                                                    id: npcStationId,
                                                 }}
                                                 onClick={() => {
-                                                    // navigateToUniverseConstellation(consId);
+                                                    navigateToUniverseNpcStation(npcStationId);
                                                 }}
                                             />
                                         ))}
@@ -255,7 +258,7 @@ export const MoonDetailPage: React.FC<MoonDetailPageProps> = ({ moonId }) => {
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
-                </Card> */}
+                </Card>
                 <AttributePanel>
                     <AttributeTitle>
                         {t("explore.universe.moon.hidden_attributes.title")}

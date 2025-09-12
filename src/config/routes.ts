@@ -9,6 +9,7 @@ import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
 import { ConstellationDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/ConstellationDetail";
 import { MoonDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/MoonDetail";
+import { NpcStationDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/NpcStationDetail";
 import { PlanetDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/PlanetDetail";
 import { RegionDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/RegionDetail";
 import { SystemDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/SystemDetail";
@@ -131,6 +132,13 @@ export const routes: AppRoute[] = [
                 path: "/explore/universe/moon",
                 labelKey: "nav.explore.universe.moon.detail",
                 component: MoonDetailPageWrapper,
+                hideFromNav: true,
+            },
+            {
+                key: "explore-universe-npc-station",
+                path: "/explore/universe/npc-station",
+                labelKey: "nav.explore.universe.npc_station.detail",
+                component: NpcStationDetailPageWrapper,
                 hideFromNav: true,
             },
         ],

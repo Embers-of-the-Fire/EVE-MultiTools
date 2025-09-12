@@ -111,6 +111,8 @@ pub fn run() {
             data::universe::system_content::planets::get_planet_data_by_id,
             data::universe::system_content::moons::get_moon_by_id,
             data::universe::system_content::moons::get_moon_data_by_id,
+            data::universe::system_content::npc_stations::get_npc_station_by_id,
+            data::universe::system_content::npc_stations::get_npc_station_data_by_id,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

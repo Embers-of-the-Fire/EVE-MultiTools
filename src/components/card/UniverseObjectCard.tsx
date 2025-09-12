@@ -7,6 +7,7 @@ import {
     getConstellationById,
     getFaction,
     getMoonById,
+    getNpcStationById,
     getPlanetById,
     getRegionById,
     getSystemById,
@@ -30,6 +31,8 @@ const getIconFromUniverseObjectType = (type: UniverseObjectType): string => {
             return "P";
         case "moon":
             return "M";
+        case "npc-station":
+            return "NS";
     }
 };
 
@@ -175,6 +178,9 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                 const systemName = (await loc(system.name_id)) || "";
 
                 name = getMoonName(systemName, planet.celestial_index, moon.celestial_index, t);
+            } else if (obj.type === "npc-station") {
+                const npcStation = await getNpcStationById(obj.id);
+                name = npcStation.station_id.toString();
             }
 
             if (mounted) {

@@ -8,7 +8,7 @@ export const getPlanetName = (
     if (planetName) {
         return planetName;
     }
-    const num = numberToRoman(celestialIndex + 1);
+    const num = numberToRoman(celestialIndex);
     return `${solarSystemName} ${num}`;
 };
 
@@ -18,8 +18,8 @@ export const getMoonName = (
     moonCelestialIndex: number,
     t: (id: string) => string
 ) => {
-    const planetNum = numberToRoman(planetCelestialIndex + 1);
-    const moonNum = moonCelestialIndex + 1;
+    const planetNum = numberToRoman(planetCelestialIndex);
+    const moonNum = moonCelestialIndex;
 
     return `${solarSystemName} ${planetNum} - ${t("terms.moon")} ${moonNum}`;
 };

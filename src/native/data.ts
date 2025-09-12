@@ -2,6 +2,7 @@ import {
     Constellation,
     MarketGroupCollection,
     Moon,
+    NpcStation,
     Planet,
     Region,
     SolarSystem,
@@ -17,6 +18,7 @@ import {
     type MarketGroup,
     type MetaGroup,
     type MoonBrief,
+    type NpcStationBrief,
     type PlanetBrief,
     type RegionBrief,
     type Skin,
@@ -223,10 +225,14 @@ export async function getLinkUrl(
     });
 }
 
-export async function getRegionById(regionId: number): Promise<RegionBrief | null> {
-    return await tauriInvoke<RegionBrief | null>("get_region_by_id", {
+export async function getRegionById(regionId: number): Promise<RegionBrief> {
+    const result = await tauriInvoke<RegionBrief>("get_region_by_id", {
         regionId,
     });
+    if (!result) {
+        throw new Error("Region not found");
+    }
+    return result;
 }
 
 export async function getRegionsByFactionId(factionId: number | null): Promise<RegionBrief[]> {
@@ -386,4 +392,24 @@ export async function getMoonDataById(moonId: number): Promise<Moon> {
         throw new Error("Failed to fetch moon data");
     }
     return Moon.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getNpcStationById(stationId: number): Promise<NpcStationBrief> {
+    const result = await tauriInvoke<NpcStationBrief | null>("get_npc_station_by_id", {
+        stationId,
+    });
+    if (!result) {
+        throw new Error("NPC Station not found");
+    }
+    return result;
+}
+
+export async function getNpcStationDataById(stationId: number): Promise<NpcStation> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_npc_station_data_by_id", {
+        stationId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch NPC Station data");
+    }
+    return NpcStation.fromBinary(new Uint8Array(bytes));
 }
