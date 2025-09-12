@@ -14,9 +14,8 @@ use crate::{
     utils::database::SqliteConnection,
 };
 
-// 创建一个低优先级任务的信号量来控制并发
 static LOW_PRIORITY_SEMAPHORE: once_cell::sync::Lazy<Arc<Semaphore>> =
-    once_cell::sync::Lazy::new(|| Arc::new(Semaphore::new(2))); // 限制同时最多2个低优先级任务
+    once_cell::sync::Lazy::new(|| Arc::new(Semaphore::new(4)));
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, FromRow)]
 pub struct Price {
