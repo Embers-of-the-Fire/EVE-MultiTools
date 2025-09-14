@@ -23,14 +23,7 @@ import {
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import type { Language } from "@/native";
-import {
-    getConstellationById,
-    getRegionById,
-    getSystemById,
-    searchConstellationByName,
-    searchRegionByName,
-    searchSystemByName,
-} from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { WormholeClass } from "@/types/data";
 import { RegionType } from "@/types/data";
 import type { UniverseObject, UniverseObjectType } from "@/types/universe";
@@ -173,6 +166,8 @@ export function UniverseExplorePage() {
         useState<WormholeClassFilterString>("out-space");
     const [regionTypeFilter, setRegionTypeFilter] = useState<RegionTypeFilterString>("all");
 
+    const { getData } = useData();
+
     const handleSourceTypeChange = (type: UniverseObjectType) => {
         setSourceType(type);
     };
@@ -200,9 +195,9 @@ export function UniverseExplorePage() {
         const rtFilterFunc = rtFilter(regionTypeFilter);
 
         if (sourceType === "region") {
-            const out = await searchRegionByName(query, language);
+            const out = await getData("searchRegionByName", query, language);
             for (const r of out) {
-                const region = await getRegionById(r[0]);
+                const region = await getData("getRegionById", r[0]);
                 if (region) {
                     if (filter(region.wormhole_class_id) === false) continue;
                     if (rtFilterFunc && !rtFilterFunc(region.region_type as RegionType)) continue;
@@ -210,18 +205,18 @@ export function UniverseExplorePage() {
                 }
             }
         } else if (sourceType === "constellation") {
-            const out = await searchConstellationByName(query, language);
+            const out = await getData("searchConstellationByName", query, language);
             for (const r of out) {
-                const constellation = await getConstellationById(r[0]);
+                const constellation = await getData("getConstellationById", r[0]);
                 if (constellation) {
                     if (filter(constellation.wormhole_class_id) === false) continue;
                     results.push({ type: "constellation", id: r[0], score: r[1] });
                 }
             }
         } else if (sourceType === "system") {
-            const out = await searchSystemByName(query, language);
+            const out = await getData("searchSystemByName", query, language);
             for (const r of out) {
-                const system = await getSystemById(r[0]);
+                const system = await getData("getSystemById", r[0]);
                 if (filter(system.wormhole_class_id) === false) continue;
                 results.push({ type: "system", id: r[0], score: r[1] });
             }

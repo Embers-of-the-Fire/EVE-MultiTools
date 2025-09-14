@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent / "schema_loader"))
 
 from data.bundle_generate import BundleGenerator
+from data.bundle_generate import GeneratorType
 from data.bundle_generate.paths import BUNDLE_WS_ROOT
 
 
@@ -90,7 +91,7 @@ def discover_workspaces() -> list[Path]:
     return workspaces
 
 
-async def process_workspace(workspace_path: Path) -> bool:
+async def process_workspace(workspace_path: Path, skip: set[GeneratorType] | None) -> bool:
     """Process a single workspace."""
     workspace_name = workspace_path.name if workspace_path.name != "bundle-ws" else "default"
 
@@ -100,7 +101,7 @@ async def process_workspace(workspace_path: Path) -> bool:
 
     try:
         processor = BundleGenerator(workspace_path)
-        bundle_path = await processor.generate()
+        bundle_path = await processor.generate(skip=skip)
 
         if bundle_path:
             _success(f"Bundle for workspace '{workspace_name}' completed successfully!")
@@ -142,6 +143,14 @@ async def main():
         "--clean", action="store_true", help="Clean up existing bundles and cache before processing"
     )
 
+    parser.add_argument(
+        "--skip",
+        "-s",
+        nargs="+",
+        choices=["image", "localization", "static", "universe"],
+        help="Skip specified generator types during processing",
+    )
+
     args = parser.parse_args()
 
     cprint("EVE MultiTools Data Bundle Generator", "magenta", attrs=["bold"])
@@ -149,6 +158,10 @@ async def main():
 
     # Discover available workspaces
     workspaces = discover_workspaces()
+
+    if args.skip and not (args.workspace or args.all):
+        _error("--skip is only valid with --workspace or --all.")
+        return
 
     if args.list:
         _info("Available workspaces:")
@@ -218,7 +231,7 @@ async def main():
     total_count = len(target_workspaces)
 
     for workspace in target_workspaces:
-        success = await process_workspace(workspace)
+        success = await process_workspace(workspace, skip=set(args.skip) if args.skip else None)
         if success:
             success_count += 1
 

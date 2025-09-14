@@ -3,16 +3,7 @@ import { useTranslation } from "react-i18next";
 import { SECONDARY_COLOR } from "@/constant/color";
 import { getRegionTypeNameKey, getWormholeClassNameKey } from "@/data/universe";
 import { useLocalization } from "@/hooks/useLocalization";
-import {
-    getConstellationById,
-    getFaction,
-    getMoonById,
-    getNpcStationById,
-    getPlanetById,
-    getRegionById,
-    getSystemById,
-    getType,
-} from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { UniverseObject, UniverseObjectType } from "@/types/universe";
 import { getSecurityStatusColor } from "@/utils/color";
 import { getMoonName, getPlanetName } from "@/utils/name";
@@ -49,6 +40,8 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
         orientation: "horizontal",
     });
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setData((d) => ({
@@ -65,23 +58,12 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
             const badges: BadgeConfig[] = [];
 
             if (obj.type === "region") {
-                const region = await getRegionById(obj.id);
+                const region = await getData("getRegionById", obj.id);
                 if (!region) return;
 
                 name = (await loc(region.name_id)) || "";
                 description = "";
 
-                if (region.faction_id) {
-                    const faction = await getFaction(region.faction_id);
-                    if (faction) {
-                        const factionName = (await loc(faction.name_id)) || "";
-                        badges.push({
-                            text: factionName,
-                            variant: "outline",
-                            key: `faction-${region.faction_id}`,
-                        });
-                    }
-                }
                 if (region.region_type) {
                     badges.push({
                         text: t(getRegionTypeNameKey(region.region_type)),
@@ -90,23 +72,12 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                     });
                 }
             } else if (obj.type === "constellation") {
-                const constellation = await getConstellationById(obj.id);
+                const constellation = await getData("getConstellationById", obj.id);
                 if (!constellation) return;
 
                 name = (await loc(constellation.name_id)) || "";
                 description = "";
 
-                if (constellation.faction_id) {
-                    const faction = await getFaction(constellation.faction_id);
-                    if (faction) {
-                        const factionName = (await loc(faction.name_id)) || "";
-                        badges.push({
-                            text: factionName,
-                            variant: "outline",
-                            key: `faction-${constellation.faction_id}`,
-                        });
-                    }
-                }
                 if (constellation.wormhole_class_id) {
                     badges.push({
                         text: t(getWormholeClassNameKey(constellation.wormhole_class_id)),
@@ -115,22 +86,11 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                     });
                 }
             } else if (obj.type === "system") {
-                const system = await getSystemById(obj.id);
+                const system = await getData("getSystemById", obj.id);
 
                 name = (await loc(system.name_id)) || "";
-                description = ""; // Systems may not have descriptions
+                description = "";
 
-                if (system.faction_id) {
-                    const faction = await getFaction(system.faction_id);
-                    if (faction) {
-                        const factionName = (await loc(faction.name_id)) || "";
-                        badges.push({
-                            text: factionName,
-                            variant: "outline",
-                            key: `faction-${system.faction_id}`,
-                        });
-                    }
-                }
                 if (system.wormhole_class_id) {
                     badges.push({
                         text: t(getWormholeClassNameKey(system.wormhole_class_id)),
@@ -150,9 +110,9 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                     key: `security-${security}`,
                 });
             } else if (obj.type === "planet") {
-                const planet = await getPlanetById(obj.id);
+                const planet = await getData("getPlanetById", obj.id);
 
-                const system = await getSystemById(planet.system_id);
+                const system = await getData("getSystemById", planet.system_id);
                 const systemName = (await loc(system.name_id)) || "";
 
                 name = getPlanetName(
@@ -161,7 +121,7 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                     planet.planet_name_id ? await loc(planet.planet_name_id) : undefined
                 );
 
-                const typeNameId = (await getType(planet.type_id))?.type_name_id;
+                const typeNameId = (await getData("getType", planet.type_id))?.type_name_id;
                 if (typeNameId) {
                     badges.push({
                         className: "pr-0 pt-0.5",
@@ -171,15 +131,15 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
                     });
                 }
             } else if (obj.type === "moon") {
-                const moon = await getMoonById(obj.id);
+                const moon = await getData("getMoonById", obj.id);
 
-                const planet = await getPlanetById(moon.planet_id);
-                const system = await getSystemById(planet.system_id);
+                const planet = await getData("getPlanetById", moon.planet_id);
+                const system = await getData("getSystemById", planet.system_id);
                 const systemName = (await loc(system.name_id)) || "";
 
                 name = getMoonName(systemName, planet.celestial_index, moon.celestial_index, t);
             } else if (obj.type === "npc-station") {
-                const npcStation = await getNpcStationById(obj.id);
+                const npcStation = await getData("getNpcStationById", obj.id);
                 name = npcStation.station_id.toString();
             }
 
@@ -201,7 +161,7 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
         return () => {
             mounted = false;
         };
-    }, [obj, loc, t]);
+    }, [obj, loc, t, getData]);
 
     return data;
 }

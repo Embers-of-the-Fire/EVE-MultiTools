@@ -1,10 +1,11 @@
 import { AboutPage } from "@/components/pages/AboutPage";
 import { BundlePage } from "@/components/pages/BundlePage";
 import { ExplorePage } from "@/components/pages/ExplorePage";
-import { FactionDetailPageWrapper } from "@/components/pages/explore/FactionDetailPageWrapper";
+import { FactionDetailPageWrapper } from "@/components/pages/explore/FactionDetailPage";
 import { FactionExplorePage } from "@/components/pages/explore/FactionExplorePage";
 import { LocalizationExplorePage } from "@/components/pages/explore/LocalizationExplorePage";
-import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPageWrapper";
+import { NpcCorporationDetailPageWrapper } from "@/components/pages/explore/NpcCorporationDetailPage";
+import { TypeDetailPageWrapper } from "@/components/pages/explore/TypeDetailPage";
 import { TypeExplorePage } from "@/components/pages/explore/TypeExplorePage";
 import { UniverseExplorePage } from "@/components/pages/explore/UniverseExplorePage";
 import { ConstellationDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/ConstellationDetail";
@@ -139,6 +140,13 @@ export const routes: AppRoute[] = [
                 path: "/explore/universe/npc-station",
                 labelKey: "nav.explore.universe.npc_station.detail",
                 component: NpcStationDetailPageWrapper,
+                hideFromNav: true,
+            },
+            {
+                key: "explore-npc-corporation",
+                path: "/explore/npc-corporation/detail",
+                labelKey: "nav.explore.npc_corporation.detail",
+                component: NpcCorporationDetailPageWrapper,
                 hideFromNav: true,
             },
         ],

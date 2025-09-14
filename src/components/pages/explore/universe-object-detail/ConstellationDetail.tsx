@@ -26,7 +26,7 @@ import { getWormholeClassFromNative, getWormholeClassNameKey } from "@/data/univ
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { getConstellationById, getConstellationDetailById, getRegionById } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { ConstellationBrief } from "@/types/data";
 
 export interface ConstellationDetailPageProps {
@@ -50,18 +50,20 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
     const { navigateToFactionDetail, navigateToUniverseRegion, navigateToUniverseSystem } =
         useSPARouter();
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setIsLoading(true);
 
         (async () => {
-            const cons = await getConstellationDetailById(constellationId);
-            const consBrief = await getConstellationById(constellationId);
+            const cons = await getData("getConstellationDetailById", constellationId);
+            const consBrief = await getData("getConstellationById", constellationId);
 
             const name = await loc(cons.nameId);
             let regionName = "";
             if (consBrief) {
-                const region = await getRegionById(consBrief.region_id);
+                const region = await getData("getRegionById", consBrief.region_id);
                 if (region) {
                     regionName = await loc(region.name_id);
                 }
@@ -80,7 +82,7 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
         return () => {
             mounted = false;
         };
-    }, [constellationId, loc]);
+    }, [constellationId, loc, getData]);
 
     if (isLoading || !constellationBrief || !constellationDetail) {
         return (
@@ -181,37 +183,45 @@ export const ConstellationDetailPage: React.FC<ConstellationDetailPageProps> = (
                         </Attribute>
                     </AttributeContent>
                 </AttributePanel>
-                <Card>
-                    <Accordion type="single" collapsible className="w-full" defaultValue="systems">
-                        <AccordionItem value="systems">
-                            <CardHeader className="w-full">
-                                <AccordionTrigger className="text-base">
-                                    <CardTitle>
-                                        {t("explore.universe.constellation.systems")}
-                                    </CardTitle>
-                                </AccordionTrigger>
-                            </CardHeader>
-                            <AccordionContent asChild>
-                                <ScrollArea>
-                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
-                                        {constellationDetail.solarSystemIds.map((systemId) => (
-                                            <EmbeddedUniverseObjectCard
-                                                key={systemId}
-                                                obj={{
-                                                    type: "system",
-                                                    id: systemId,
-                                                }}
-                                                onClick={() => {
-                                                    navigateToUniverseSystem(systemId);
-                                                }}
-                                            />
-                                        ))}
-                                    </CardContent>
-                                </ScrollArea>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </Card>
+                {constellationDetail.solarSystemIds.length > 0 && (
+                    <Card>
+                        <Accordion
+                            type="single"
+                            collapsible
+                            className="w-full"
+                            defaultValue="systems"
+                        >
+                            <AccordionItem value="systems">
+                                <CardHeader className="w-full">
+                                    <AccordionTrigger className="text-base">
+                                        <CardTitle>
+                                            {t("explore.universe.constellation.systems")}
+                                        </CardTitle>
+                                    </AccordionTrigger>
+                                </CardHeader>
+                                <AccordionContent asChild>
+                                    <ScrollArea>
+                                        <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                            {constellationDetail.solarSystemIds.map((systemId) => (
+                                                <EmbeddedUniverseObjectCard
+                                                    key={systemId}
+                                                    obj={{
+                                                        type: "system",
+                                                        id: systemId,
+                                                    }}
+                                                    compact={true}
+                                                    onClick={() => {
+                                                        navigateToUniverseSystem(systemId);
+                                                    }}
+                                                />
+                                            ))}
+                                        </CardContent>
+                                    </ScrollArea>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </Card>
+                )}
                 <AttributePanel>
                     <AttributeTitle>
                         {t("explore.universe.constellation.hidden_attributes")}

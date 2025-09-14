@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { MarketGroup, MarketGroupCollection } from "@/data/schema";
-import { getMarketGroupRaw, searchTypeByName } from "@/native/data";
+import type { Language } from "@/native";
+import { getMarketGroupRaw } from "@/native/data";
 import { mapSetDefault } from "@/utils/map";
 
 interface MarketGroupTreeState {
@@ -21,7 +22,12 @@ export interface MarketGroupNode {
 
 interface MarketGroupTreeActions {
     loadMarketGroupTree: () => Promise<void>;
-    filterTreeByName: (query: string, language: "en" | "zh") => Promise<void>;
+    filterTreeByName: (
+        query: string,
+        language: "en" | "zh",
+        // use useData().getData("searchTypeByName", query, language) to search
+        search: (query: string, language: Language, limit: number) => Promise<number[]>
+    ) => Promise<void>;
     clearFilter: () => void;
 }
 
@@ -119,7 +125,11 @@ export const useMarketGroupTreeStore = create<MarketGroupTreeStore>()(
                 }
             },
 
-            filterTreeByName: async (query: string, language: "en" | "zh") => {
+            filterTreeByName: async (
+                query: string,
+                language: "en" | "zh",
+                search: (query: string, language: Language, limit: number) => Promise<number[]>
+            ) => {
                 const state = get();
 
                 // If query is empty, show all tree
@@ -136,7 +146,7 @@ export const useMarketGroupTreeStore = create<MarketGroupTreeStore>()(
 
                 try {
                     // Search for types matching the query
-                    const matchingTypeIds = await searchTypeByName(query, language, 1000);
+                    const matchingTypeIds = await search(query, language, 1000);
                     const validTypeIds = new Set(matchingTypeIds);
 
                     // Filter the tree to only include groups that contain matching types

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
-import { getCategory, getGroup, getMetaGroup, getType } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import type { BadgeConfig, GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
@@ -17,6 +17,8 @@ function useTypeData(typeId: number): GenericData {
         metaGroupName: undefined,
     });
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setData((d) => ({
@@ -29,14 +31,14 @@ function useTypeData(typeId: number): GenericData {
             metaGroupIconUrl: undefined,
             metaGroupName: undefined,
         }));
-        getType(typeId).then(async (type) => {
+        getData("getType", typeId).then(async (type) => {
             if (!type) {
                 if (mounted) setData((d) => ({ ...d, loading: false }));
                 return;
             }
 
             let categoryId: number | null = null;
-            const group = await getGroup(type.group_id);
+            const group = await getData("getGroup", type.group_id);
             if (group) {
                 categoryId = group.category_id;
             }
@@ -49,7 +51,7 @@ function useTypeData(typeId: number): GenericData {
 
             const badgeArr: BadgeConfig[] = [];
             if (categoryId) {
-                const category = await getCategory(categoryId);
+                const category = await getData("getCategory", categoryId);
                 if (category) {
                     badgeArr.push({
                         text: (await loc(category.category_name_id)) ?? "",
@@ -59,7 +61,7 @@ function useTypeData(typeId: number): GenericData {
                 }
             }
             if (type.meta_group_id) {
-                const meta = await getMetaGroup(type.meta_group_id);
+                const meta = await getData("getMetaGroup", type.meta_group_id);
                 if (meta?.name_id) {
                     badgeArr.push({
                         text: (await loc(meta.name_id)) ?? "",
@@ -72,7 +74,7 @@ function useTypeData(typeId: number): GenericData {
             let mgIcon: string | null = null;
             let mgName: string | null = null;
             if (type.meta_group_id) {
-                const meta = await getMetaGroup(type.meta_group_id);
+                const meta = await getData("getMetaGroup", type.meta_group_id);
                 if (meta?.icon_id) {
                     mgIcon = await getIconUrl(meta.icon_id);
                 }
@@ -97,7 +99,7 @@ function useTypeData(typeId: number): GenericData {
         return () => {
             mounted = false;
         };
-    }, [typeId, loc]);
+    }, [typeId, loc, getData]);
 
     return data;
 }

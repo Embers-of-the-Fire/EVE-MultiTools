@@ -28,7 +28,6 @@ impl FactionsService {
                     (
                         def.faction_id,
                         Faction {
-                            // faction_id 由 FactionEntry 提供
                             faction_id: def.faction_id,
                             name_id: def.faction_data.name_id,
                             description_id: def.faction_data.description_id,
@@ -62,7 +61,7 @@ impl FactionsService {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Faction {
-    pub faction_id: i32, // FactionEntry key
+    pub faction_id: i32,
     pub name_id: i32,
     pub description_id: i32,
     pub short_description_id: Option<i32>,

@@ -4,7 +4,7 @@ import { SearchBar } from "@/components/common/SearchBar";
 import { useLanguage } from "@/hooks/useAppSettings";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import type { Language } from "@/native";
-import { searchTypeByName } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import { PageLayout } from "../../layout";
 import { ScrollArea } from "../../ui/scroll-area";
 
@@ -14,6 +14,8 @@ export function TypeExplorePage() {
 
     const { navigateToTypeDetail } = useSPARouter();
 
+    const { getData } = useData();
+
     // Handle type card click event
     const handleTypeClick = (typeId: number) => {
         navigateToTypeDetail(typeId, t("explore.type.detail.title"));
@@ -21,7 +23,7 @@ export function TypeExplorePage() {
 
     // Search helper functions
     const searchFunction = async (query: string, language: Language) => {
-        return await searchTypeByName(query, language);
+        return await getData("searchTypeByName", query, language);
     };
 
     return (

@@ -104,7 +104,7 @@ pub fn get_config(state: State<AppConfigState>) -> Result<GlobalSettings, String
     let config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     Ok(config.global_settings.clone())
 }
 
@@ -113,11 +113,11 @@ pub fn set_theme(state: State<AppConfigState>, theme: Theme) -> Result<(), Strin
     let mut config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     config.global_settings.theme = theme;
     config
         .save_to_file()
-        .map_err(|e| format!("Failed to save config: {e}"))?;
+        .map_err(|e| format!("Failed to save config: {e:?}"))?;
     Ok(())
 }
 
@@ -126,11 +126,11 @@ pub fn set_language(state: State<AppConfigState>, language: Language) -> Result<
     let mut config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     config.global_settings.language = language;
     config
         .save_to_file()
-        .map_err(|e| format!("Failed to save config: {e}"))?;
+        .map_err(|e| format!("Failed to save config: {e:?}"))?;
     Ok(())
 }
 
@@ -142,7 +142,7 @@ pub fn update_config(
     let mut config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     let data_directory = config.global_settings.data_directory.clone();
 
     config.global_settings = new_config;
@@ -150,7 +150,7 @@ pub fn update_config(
 
     config
         .save_to_file()
-        .map_err(|e| format!("Failed to save config: {e}"))?;
+        .map_err(|e| format!("Failed to save config: {e:?}"))?;
     Ok(())
 }
 
@@ -159,10 +159,10 @@ pub fn reset_config_to_default(state: State<AppConfigState>) -> Result<GlobalSet
     let mut config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     config
         .reset_to_default()
-        .map_err(|e| format!("Failed to reset config: {e}"))?;
+        .map_err(|e| format!("Failed to reset config: {e:?}"))?;
     Ok(config.global_settings.clone())
 }
 
@@ -171,7 +171,7 @@ pub fn get_config_file_path(state: State<AppConfigState>) -> Result<String, Stri
     let config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     let path = config
         .config_file_path
         .as_ref()
@@ -187,10 +187,10 @@ pub fn set_enabled_bundle_id(
     let mut config = state
         .config
         .lock()
-        .map_err(|e| format!("Failed to lock config: {e}"))?;
+        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
     config.global_settings.enabled_bundle_id = bundle_id;
     config
         .save_to_file()
-        .map_err(|e| format!("Failed to save config: {e}"))?;
+        .map_err(|e| format!("Failed to save config: {e:?}"))?;
     Ok(())
 }

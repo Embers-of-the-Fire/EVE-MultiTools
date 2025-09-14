@@ -21,6 +21,9 @@ if TYPE_CHECKING:
     from data.bundle_generate.resources import FormatterFunc
 
 
+type GeneratorType = Literal["image", "localization", "static", "universe"]
+
+
 @dataclass
 class Metadata:
     server: str
@@ -237,17 +240,35 @@ class BundleGenerator:
         else:
             LOGGER.info(f"No existing bundle cache directory '{self.bundle_root}' to remove.")
 
-    async def generate(self) -> Path:
+    async def generate(self, skip: set[GeneratorType] | None = None) -> Path:
+        if skip is None:
+            skip = set()
+
         self._create_metadata_descriptor()
         self._create_esi_config()
         self._create_links_config()
 
         dataset = (self.bundle_root, self.__fsd, self.__res_file_index, self.__metadata.metadata)
 
-        await ImageGenerator(*dataset).load()
-        await LocalizationGenerator(*dataset).load()
-        await StaticDataGenerator(*dataset).load()
-        await UniverseGenerator(*dataset).load()
+        if "image" not in skip:
+            await ImageGenerator(*dataset).load()
+        else:
+            LOGGER.info("Skipping image generation as per configuration.")
+
+        if "localization" not in skip:
+            await LocalizationGenerator(*dataset).load()
+        else:
+            LOGGER.info("Skipping localization generation as per configuration.")
+
+        if "static" not in skip:
+            await StaticDataGenerator(*dataset).load()
+        else:
+            LOGGER.info("Skipping static data generation as per configuration.")
+
+        if "universe" not in skip:
+            await UniverseGenerator(*dataset).load()
+        else:
+            LOGGER.info("Skipping universe data generation as per configuration.")
 
         return self._package_bundle()
 

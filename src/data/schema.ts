@@ -468,6 +468,31 @@ export interface LocalizationCollection_LocalizationEntry {
     localizationData?: LocalizationString;
 }
 /**
+ * Meta UI localization,
+ * see `res:/localizationfsd/localization_fsd_main.pickle` for more details
+ *
+ * @generated from protobuf message eve_multitools.data.MetaUiLocalizationCollection
+ */
+export interface MetaUiLocalizationCollection {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.MetaUiLocalizationCollection.MetaUiEntry meta_ui_entries = 1
+     */
+    metaUiEntries: MetaUiLocalizationCollection_MetaUiEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.MetaUiLocalizationCollection.MetaUiEntry
+ */
+export interface MetaUiLocalizationCollection_MetaUiEntry {
+    /**
+     * @generated from protobuf field: required string key = 1
+     */
+    key: string;
+    /**
+     * @generated from protobuf field: required uint32 message_id = 2
+     */
+    messageId: number;
+}
+/**
  * Type localization lookup data
  *
  * @generated from protobuf message eve_multitools.data.TypeLocalizationLookup
@@ -564,6 +589,32 @@ export interface SystemLocalizationLookup_SystemLocEntry {
      * @generated from protobuf field: required uint32 name_id = 2
      */
     nameId: number;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.NpcCorporationLocalizationLookup
+ */
+export interface NpcCorporationLocalizationLookup {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.NpcCorporationLocalizationLookup.NpcCorporationLocEntry npc_corporation_entries = 1
+     */
+    npcCorporationEntries: NpcCorporationLocalizationLookup_NpcCorporationLocEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.NpcCorporationLocalizationLookup.NpcCorporationLocEntry
+ */
+export interface NpcCorporationLocalizationLookup_NpcCorporationLocEntry {
+    /**
+     * @generated from protobuf field: required int32 npc_corporation_id = 1
+     */
+    npcCorporationId: number;
+    /**
+     * @generated from protobuf field: required uint32 name_id = 2
+     */
+    nameId: number;
+    /**
+     * @generated from protobuf field: optional uint32 description_id = 3
+     */
+    descriptionId?: number;
 }
 /**
  * Faction definition
@@ -696,6 +747,224 @@ export interface MarketGroupCollection_MarketGroupEntry {
      * @generated from protobuf field: required eve_multitools.data.MarketGroup market_group_data = 2
      */
     marketGroupData?: MarketGroup;
+}
+/**
+ * NPC Corporation definition
+ *
+ * @generated from protobuf message eve_multitools.data.NpcCorporation
+ */
+export interface NpcCorporation {
+    /**
+     * @generated from protobuf field: required int32 corporation_id = 1
+     */
+    corporationId: number;
+    /**
+     * @generated from protobuf field: repeated int32 allowed_member_races = 2
+     */
+    allowedMemberRaces: number[];
+    /**
+     * @generated from protobuf field: optional int32 ceo_id = 3
+     */
+    ceoId?: number;
+    /**
+     * @generated from protobuf field: map<int32, double> corporation_trades = 4
+     */
+    corporationTrades: {
+        [key: number]: number;
+    };
+    /**
+     * @generated from protobuf field: required bool deleted = 5
+     */
+    deleted: boolean;
+    /**
+     * @generated from protobuf field: optional int32 description_id = 6
+     */
+    descriptionId?: number;
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.NpcCorporation.Division divisions = 7
+     */
+    divisions: NpcCorporation_Division[];
+    /**
+     * @generated from protobuf field: optional int32 enemy_id = 8
+     */
+    enemyId?: number;
+    /**
+     * @generated from protobuf field: required eve_multitools.data.NpcCorporation.Extent extent = 9
+     */
+    extent: NpcCorporation_Extent;
+    /**
+     * @generated from protobuf field: optional int32 faction_id = 10
+     */
+    factionId?: number;
+    /**
+     * @generated from protobuf field: optional int32 friend_id = 11
+     */
+    friendId?: number;
+    /**
+     * @generated from protobuf field: required bool has_player_personnel_manager = 12
+     */
+    hasPlayerPersonnelManager: boolean;
+    /**
+     * @generated from protobuf field: optional int32 icon_id = 13
+     */
+    iconId?: number;
+    /**
+     * @generated from protobuf field: required double initial_price = 14
+     */
+    initialPrice: number;
+    /**
+     * @generated from protobuf field: map<int32, int32> investors = 15
+     */
+    investors: {
+        [key: number]: number;
+    };
+    /**
+     * @generated from protobuf field: repeated int32 lp_offer_tables = 16
+     */
+    lpOfferTables: number[];
+    /**
+     * @generated from protobuf field: optional int32 main_activity_id = 17
+     */
+    mainActivityId?: number;
+    /**
+     * @generated from protobuf field: required double min_security = 18
+     */
+    minSecurity: number;
+    /**
+     * @generated from protobuf field: required bool minimum_join_standing = 19
+     */
+    minimumJoinStanding: boolean;
+    /**
+     * @generated from protobuf field: required int32 name_id = 20
+     */
+    nameId: number;
+    /**
+     * @generated from protobuf field: required int64 public_shares = 21
+     */
+    publicShares: bigint;
+    /**
+     * @generated from protobuf field: optional int32 race_id = 22
+     */
+    raceId?: number;
+    /**
+     * @generated from protobuf field: optional int32 secondary_activity_id = 23
+     */
+    secondaryActivityId?: number;
+    /**
+     * @generated from protobuf field: required bool send_char_termination_message = 24
+     */
+    sendCharTerminationMessage: boolean;
+    /**
+     * @generated from protobuf field: required int64 shares = 25
+     */
+    shares: bigint;
+    /**
+     * @generated from protobuf field: optional eve_multitools.data.NpcCorporation.Size size = 26
+     */
+    size?: NpcCorporation_Size;
+    /**
+     * @generated from protobuf field: optional double size_factor = 27
+     */
+    sizeFactor?: number;
+    /**
+     * @generated from protobuf field: optional int32 solar_system_id = 28
+     */
+    solarSystemId?: number;
+    /**
+     * @generated from protobuf field: optional int32 station_id = 29
+     */
+    stationId?: number;
+    /**
+     * @generated from protobuf field: required double tax_rate = 30
+     */
+    taxRate: number;
+    /**
+     * @generated from protobuf field: required string ticker_name = 31
+     */
+    tickerName: string;
+    /**
+     * @generated from protobuf field: required bool unique_name = 32
+     */
+    uniqueName: boolean;
+}
+/**
+ * @generated from protobuf message eve_multitools.data.NpcCorporation.Division
+ */
+export interface NpcCorporation_Division {
+    /**
+     * @generated from protobuf field: required int32 division_id = 1
+     */
+    divisionId: number;
+    /**
+     * @generated from protobuf field: required int32 leader_id = 2
+     */
+    leaderId: number;
+    /**
+     * @generated from protobuf field: required int32 size = 3
+     */
+    size: number;
+    /**
+     * @generated from protobuf field: required int32 division_number = 4
+     */
+    divisionNumber: number;
+}
+/**
+ * @generated from protobuf enum eve_multitools.data.NpcCorporation.Extent
+ */
+export enum NpcCorporation_Extent {
+    /**
+     * @generated synthetic value - protobuf-ts requires all enums to have a 0 value
+     */
+    UNSPECIFIED$ = 0,
+    /**
+     * @generated from protobuf enum value: EXT_C = 1;
+     */
+    EXT_C = 1,
+    /**
+     * @generated from protobuf enum value: EXT_G = 2;
+     */
+    EXT_G = 2,
+    /**
+     * @generated from protobuf enum value: EXT_L = 3;
+     */
+    EXT_L = 3,
+    /**
+     * @generated from protobuf enum value: EXT_N = 4;
+     */
+    EXT_N = 4,
+    /**
+     * @generated from protobuf enum value: EXT_R = 5;
+     */
+    EXT_R = 5,
+}
+/**
+ * @generated from protobuf enum eve_multitools.data.NpcCorporation.Size
+ */
+export enum NpcCorporation_Size {
+    /**
+     * @generated synthetic value - protobuf-ts requires all enums to have a 0 value
+     */
+    UNSPECIFIED$ = 0,
+    /**
+     * @generated from protobuf enum value: SIZE_H = 1;
+     */
+    SIZE_H = 1,
+    /**
+     * @generated from protobuf enum value: SIZE_L = 2;
+     */
+    SIZE_L = 2,
+    /**
+     * @generated from protobuf enum value: SIZE_M = 3;
+     */
+    SIZE_M = 3,
+    /**
+     * @generated from protobuf enum value: SIZE_S = 4;
+     */
+    SIZE_S = 4,
+    /**
+     * @generated from protobuf enum value: SIZE_T = 5;
+     */
+    SIZE_T = 5,
 }
 /**
  * @generated from protobuf message eve_multitools.data.UniversePoint
@@ -3753,6 +4022,163 @@ class LocalizationCollection_LocalizationEntry$Type extends MessageType<Localiza
 export const LocalizationCollection_LocalizationEntry =
     new LocalizationCollection_LocalizationEntry$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class MetaUiLocalizationCollection$Type extends MessageType<MetaUiLocalizationCollection> {
+    constructor() {
+        super("eve_multitools.data.MetaUiLocalizationCollection", [
+            {
+                no: 1,
+                name: "meta_ui_entries",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => MetaUiLocalizationCollection_MetaUiEntry,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<MetaUiLocalizationCollection>): MetaUiLocalizationCollection {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.metaUiEntries = [];
+        if (value !== undefined)
+            reflectionMergePartial<MetaUiLocalizationCollection>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MetaUiLocalizationCollection
+    ): MetaUiLocalizationCollection {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.MetaUiLocalizationCollection.MetaUiEntry meta_ui_entries */ 1:
+                    message.metaUiEntries.push(
+                        MetaUiLocalizationCollection_MetaUiEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: MetaUiLocalizationCollection,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.MetaUiLocalizationCollection.MetaUiEntry meta_ui_entries = 1; */
+        for (let i = 0; i < message.metaUiEntries.length; i++)
+            MetaUiLocalizationCollection_MetaUiEntry.internalBinaryWrite(
+                message.metaUiEntries[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.MetaUiLocalizationCollection
+ */
+export const MetaUiLocalizationCollection = new MetaUiLocalizationCollection$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MetaUiLocalizationCollection_MetaUiEntry$Type extends MessageType<MetaUiLocalizationCollection_MetaUiEntry> {
+    constructor() {
+        super("eve_multitools.data.MetaUiLocalizationCollection.MetaUiEntry", [
+            { no: 1, name: "key", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "message_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+        ]);
+    }
+    create(
+        value?: PartialMessage<MetaUiLocalizationCollection_MetaUiEntry>
+    ): MetaUiLocalizationCollection_MetaUiEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.key = "";
+        message.messageId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<MetaUiLocalizationCollection_MetaUiEntry>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: MetaUiLocalizationCollection_MetaUiEntry
+    ): MetaUiLocalizationCollection_MetaUiEntry {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required string key */ 1:
+                    message.key = reader.string();
+                    break;
+                case /* required uint32 message_id */ 2:
+                    message.messageId = reader.uint32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: MetaUiLocalizationCollection_MetaUiEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required string key = 1; */
+        if (message.key !== "") writer.tag(1, WireType.LengthDelimited).string(message.key);
+        /* required uint32 message_id = 2; */
+        if (message.messageId !== 0) writer.tag(2, WireType.Varint).uint32(message.messageId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.MetaUiLocalizationCollection.MetaUiEntry
+ */
+export const MetaUiLocalizationCollection_MetaUiEntry =
+    new MetaUiLocalizationCollection_MetaUiEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class TypeLocalizationLookup$Type extends MessageType<TypeLocalizationLookup> {
     constructor() {
         super("eve_multitools.data.TypeLocalizationLookup", [
@@ -4413,6 +4839,183 @@ class SystemLocalizationLookup_SystemLocEntry$Type extends MessageType<SystemLoc
 export const SystemLocalizationLookup_SystemLocEntry =
     new SystemLocalizationLookup_SystemLocEntry$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class NpcCorporationLocalizationLookup$Type extends MessageType<NpcCorporationLocalizationLookup> {
+    constructor() {
+        super("eve_multitools.data.NpcCorporationLocalizationLookup", [
+            {
+                no: 1,
+                name: "npc_corporation_entries",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => NpcCorporationLocalizationLookup_NpcCorporationLocEntry,
+            },
+        ]);
+    }
+    create(
+        value?: PartialMessage<NpcCorporationLocalizationLookup>
+    ): NpcCorporationLocalizationLookup {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.npcCorporationEntries = [];
+        if (value !== undefined)
+            reflectionMergePartial<NpcCorporationLocalizationLookup>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: NpcCorporationLocalizationLookup
+    ): NpcCorporationLocalizationLookup {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.NpcCorporationLocalizationLookup.NpcCorporationLocEntry npc_corporation_entries */ 1:
+                    message.npcCorporationEntries.push(
+                        NpcCorporationLocalizationLookup_NpcCorporationLocEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: NpcCorporationLocalizationLookup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.NpcCorporationLocalizationLookup.NpcCorporationLocEntry npc_corporation_entries = 1; */
+        for (let i = 0; i < message.npcCorporationEntries.length; i++)
+            NpcCorporationLocalizationLookup_NpcCorporationLocEntry.internalBinaryWrite(
+                message.npcCorporationEntries[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.NpcCorporationLocalizationLookup
+ */
+export const NpcCorporationLocalizationLookup = new NpcCorporationLocalizationLookup$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class NpcCorporationLocalizationLookup_NpcCorporationLocEntry$Type extends MessageType<NpcCorporationLocalizationLookup_NpcCorporationLocEntry> {
+    constructor() {
+        super("eve_multitools.data.NpcCorporationLocalizationLookup.NpcCorporationLocEntry", [
+            { no: 1, name: "npc_corporation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "name_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+            {
+                no: 3,
+                name: "description_id",
+                kind: "scalar",
+                opt: true,
+                T: 13 /*ScalarType.UINT32*/,
+            },
+        ]);
+    }
+    create(
+        value?: PartialMessage<NpcCorporationLocalizationLookup_NpcCorporationLocEntry>
+    ): NpcCorporationLocalizationLookup_NpcCorporationLocEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.npcCorporationId = 0;
+        message.nameId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<NpcCorporationLocalizationLookup_NpcCorporationLocEntry>(
+                this,
+                message,
+                value
+            );
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: NpcCorporationLocalizationLookup_NpcCorporationLocEntry
+    ): NpcCorporationLocalizationLookup_NpcCorporationLocEntry {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 npc_corporation_id */ 1:
+                    message.npcCorporationId = reader.int32();
+                    break;
+                case /* required uint32 name_id */ 2:
+                    message.nameId = reader.uint32();
+                    break;
+                case /* optional uint32 description_id */ 3:
+                    message.descriptionId = reader.uint32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: NpcCorporationLocalizationLookup_NpcCorporationLocEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 npc_corporation_id = 1; */
+        if (message.npcCorporationId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.npcCorporationId);
+        /* required uint32 name_id = 2; */
+        if (message.nameId !== 0) writer.tag(2, WireType.Varint).uint32(message.nameId);
+        /* optional uint32 description_id = 3; */
+        if (message.descriptionId !== undefined)
+            writer.tag(3, WireType.Varint).uint32(message.descriptionId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.NpcCorporationLocalizationLookup.NpcCorporationLocEntry
+ */
+export const NpcCorporationLocalizationLookup_NpcCorporationLocEntry =
+    new NpcCorporationLocalizationLookup_NpcCorporationLocEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Faction$Type extends MessageType<Faction> {
     constructor() {
         super("eve_multitools.data.Faction", [
@@ -5036,6 +5639,538 @@ class MarketGroupCollection_MarketGroupEntry$Type extends MessageType<MarketGrou
  */
 export const MarketGroupCollection_MarketGroupEntry =
     new MarketGroupCollection_MarketGroupEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class NpcCorporation$Type extends MessageType<NpcCorporation> {
+    constructor() {
+        super("eve_multitools.data.NpcCorporation", [
+            { no: 1, name: "corporation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 2,
+                name: "allowed_member_races",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 3, name: "ceo_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 4,
+                name: "corporation_trades",
+                kind: "map",
+                K: 5 /*ScalarType.INT32*/,
+                V: { kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            },
+            { no: 5, name: "deleted", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 6, name: "description_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 7,
+                name: "divisions",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => NpcCorporation_Division,
+            },
+            { no: 8, name: "enemy_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 9,
+                name: "extent",
+                kind: "enum",
+                T: () => ["eve_multitools.data.NpcCorporation.Extent", NpcCorporation_Extent],
+            },
+            { no: 10, name: "faction_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 11, name: "friend_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 12,
+                name: "has_player_personnel_manager",
+                kind: "scalar",
+                T: 8 /*ScalarType.BOOL*/,
+            },
+            { no: 13, name: "icon_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 14, name: "initial_price", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            {
+                no: 15,
+                name: "investors",
+                kind: "map",
+                K: 5 /*ScalarType.INT32*/,
+                V: { kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            },
+            {
+                no: 16,
+                name: "lp_offer_tables",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 17,
+                name: "main_activity_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 18, name: "min_security", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 19, name: "minimum_join_standing", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 20, name: "name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 21,
+                name: "public_shares",
+                kind: "scalar",
+                T: 3 /*ScalarType.INT64*/,
+                L: 0 /*LongType.BIGINT*/,
+            },
+            { no: 22, name: "race_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            {
+                no: 23,
+                name: "secondary_activity_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 24,
+                name: "send_char_termination_message",
+                kind: "scalar",
+                T: 8 /*ScalarType.BOOL*/,
+            },
+            {
+                no: 25,
+                name: "shares",
+                kind: "scalar",
+                T: 3 /*ScalarType.INT64*/,
+                L: 0 /*LongType.BIGINT*/,
+            },
+            {
+                no: 26,
+                name: "size",
+                kind: "enum",
+                opt: true,
+                T: () => ["eve_multitools.data.NpcCorporation.Size", NpcCorporation_Size],
+            },
+            { no: 27, name: "size_factor", kind: "scalar", opt: true, T: 1 /*ScalarType.DOUBLE*/ },
+            {
+                no: 28,
+                name: "solar_system_id",
+                kind: "scalar",
+                opt: true,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            { no: 29, name: "station_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 30, name: "tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 31, name: "ticker_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 32, name: "unique_name", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+        ]);
+    }
+    create(value?: PartialMessage<NpcCorporation>): NpcCorporation {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.corporationId = 0;
+        message.allowedMemberRaces = [];
+        message.corporationTrades = {};
+        message.deleted = false;
+        message.divisions = [];
+        message.extent = 0;
+        message.hasPlayerPersonnelManager = false;
+        message.initialPrice = 0;
+        message.investors = {};
+        message.lpOfferTables = [];
+        message.minSecurity = 0;
+        message.minimumJoinStanding = false;
+        message.nameId = 0;
+        message.publicShares = 0n;
+        message.sendCharTerminationMessage = false;
+        message.shares = 0n;
+        message.taxRate = 0;
+        message.tickerName = "";
+        message.uniqueName = false;
+        if (value !== undefined) reflectionMergePartial<NpcCorporation>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: NpcCorporation
+    ): NpcCorporation {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 corporation_id */ 1:
+                    message.corporationId = reader.int32();
+                    break;
+                case /* repeated int32 allowed_member_races */ 2:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.allowedMemberRaces.push(reader.int32());
+                    else message.allowedMemberRaces.push(reader.int32());
+                    break;
+                case /* optional int32 ceo_id */ 3:
+                    message.ceoId = reader.int32();
+                    break;
+                case /* map<int32, double> corporation_trades */ 4:
+                    this.binaryReadMap4(message.corporationTrades, reader, options);
+                    break;
+                case /* required bool deleted */ 5:
+                    message.deleted = reader.bool();
+                    break;
+                case /* optional int32 description_id */ 6:
+                    message.descriptionId = reader.int32();
+                    break;
+                case /* repeated eve_multitools.data.NpcCorporation.Division divisions */ 7:
+                    message.divisions.push(
+                        NpcCorporation_Division.internalBinaryRead(reader, reader.uint32(), options)
+                    );
+                    break;
+                case /* optional int32 enemy_id */ 8:
+                    message.enemyId = reader.int32();
+                    break;
+                case /* required eve_multitools.data.NpcCorporation.Extent extent */ 9:
+                    message.extent = reader.int32();
+                    break;
+                case /* optional int32 faction_id */ 10:
+                    message.factionId = reader.int32();
+                    break;
+                case /* optional int32 friend_id */ 11:
+                    message.friendId = reader.int32();
+                    break;
+                case /* required bool has_player_personnel_manager */ 12:
+                    message.hasPlayerPersonnelManager = reader.bool();
+                    break;
+                case /* optional int32 icon_id */ 13:
+                    message.iconId = reader.int32();
+                    break;
+                case /* required double initial_price */ 14:
+                    message.initialPrice = reader.double();
+                    break;
+                case /* map<int32, int32> investors */ 15:
+                    this.binaryReadMap15(message.investors, reader, options);
+                    break;
+                case /* repeated int32 lp_offer_tables */ 16:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.lpOfferTables.push(reader.int32());
+                    else message.lpOfferTables.push(reader.int32());
+                    break;
+                case /* optional int32 main_activity_id */ 17:
+                    message.mainActivityId = reader.int32();
+                    break;
+                case /* required double min_security */ 18:
+                    message.minSecurity = reader.double();
+                    break;
+                case /* required bool minimum_join_standing */ 19:
+                    message.minimumJoinStanding = reader.bool();
+                    break;
+                case /* required int32 name_id */ 20:
+                    message.nameId = reader.int32();
+                    break;
+                case /* required int64 public_shares */ 21:
+                    message.publicShares = reader.int64().toBigInt();
+                    break;
+                case /* optional int32 race_id */ 22:
+                    message.raceId = reader.int32();
+                    break;
+                case /* optional int32 secondary_activity_id */ 23:
+                    message.secondaryActivityId = reader.int32();
+                    break;
+                case /* required bool send_char_termination_message */ 24:
+                    message.sendCharTerminationMessage = reader.bool();
+                    break;
+                case /* required int64 shares */ 25:
+                    message.shares = reader.int64().toBigInt();
+                    break;
+                case /* optional eve_multitools.data.NpcCorporation.Size size */ 26:
+                    message.size = reader.int32();
+                    break;
+                case /* optional double size_factor */ 27:
+                    message.sizeFactor = reader.double();
+                    break;
+                case /* optional int32 solar_system_id */ 28:
+                    message.solarSystemId = reader.int32();
+                    break;
+                case /* optional int32 station_id */ 29:
+                    message.stationId = reader.int32();
+                    break;
+                case /* required double tax_rate */ 30:
+                    message.taxRate = reader.double();
+                    break;
+                case /* required string ticker_name */ 31:
+                    message.tickerName = reader.string();
+                    break;
+                case /* required bool unique_name */ 32:
+                    message.uniqueName = reader.bool();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    private binaryReadMap4(
+        map: NpcCorporation["corporationTrades"],
+        reader: IBinaryReader,
+        _options: BinaryReadOptions
+    ): void {
+        let len = reader.uint32(),
+            end = reader.pos + len,
+            key: keyof NpcCorporation["corporationTrades"] | undefined,
+            val: NpcCorporation["corporationTrades"][any] | undefined;
+        while (reader.pos < end) {
+            const [fieldNo, _wireType] = reader.tag();
+            switch (fieldNo) {
+                case 1:
+                    key = reader.int32();
+                    break;
+                case 2:
+                    val = reader.double();
+                    break;
+                default:
+                    throw new globalThis.Error(
+                        "unknown map entry field for eve_multitools.data.NpcCorporation.corporation_trades"
+                    );
+            }
+        }
+        map[key ?? 0] = val ?? 0;
+    }
+    private binaryReadMap15(
+        map: NpcCorporation["investors"],
+        reader: IBinaryReader,
+        _options: BinaryReadOptions
+    ): void {
+        let len = reader.uint32(),
+            end = reader.pos + len,
+            key: keyof NpcCorporation["investors"] | undefined,
+            val: NpcCorporation["investors"][any] | undefined;
+        while (reader.pos < end) {
+            const [fieldNo, _wireType] = reader.tag();
+            switch (fieldNo) {
+                case 1:
+                    key = reader.int32();
+                    break;
+                case 2:
+                    val = reader.int32();
+                    break;
+                default:
+                    throw new globalThis.Error(
+                        "unknown map entry field for eve_multitools.data.NpcCorporation.investors"
+                    );
+            }
+        }
+        map[key ?? 0] = val ?? 0;
+    }
+    internalBinaryWrite(
+        message: NpcCorporation,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 corporation_id = 1; */
+        if (message.corporationId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.corporationId);
+        /* repeated int32 allowed_member_races = 2; */
+        for (let i = 0; i < message.allowedMemberRaces.length; i++)
+            writer.tag(2, WireType.Varint).int32(message.allowedMemberRaces[i]);
+        /* optional int32 ceo_id = 3; */
+        if (message.ceoId !== undefined) writer.tag(3, WireType.Varint).int32(message.ceoId);
+        /* map<int32, double> corporation_trades = 4; */
+        for (const k of globalThis.Object.keys(message.corporationTrades))
+            writer
+                .tag(4, WireType.LengthDelimited)
+                .fork()
+                .tag(1, WireType.Varint)
+                .int32(parseInt(k))
+                .tag(2, WireType.Bit64)
+                .double(message.corporationTrades[k as any])
+                .join();
+        /* required bool deleted = 5; */
+        if (message.deleted !== false) writer.tag(5, WireType.Varint).bool(message.deleted);
+        /* optional int32 description_id = 6; */
+        if (message.descriptionId !== undefined)
+            writer.tag(6, WireType.Varint).int32(message.descriptionId);
+        /* repeated eve_multitools.data.NpcCorporation.Division divisions = 7; */
+        for (let i = 0; i < message.divisions.length; i++)
+            NpcCorporation_Division.internalBinaryWrite(
+                message.divisions[i],
+                writer.tag(7, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        /* optional int32 enemy_id = 8; */
+        if (message.enemyId !== undefined) writer.tag(8, WireType.Varint).int32(message.enemyId);
+        /* required eve_multitools.data.NpcCorporation.Extent extent = 9; */
+        if (message.extent !== 0) writer.tag(9, WireType.Varint).int32(message.extent);
+        /* optional int32 faction_id = 10; */
+        if (message.factionId !== undefined)
+            writer.tag(10, WireType.Varint).int32(message.factionId);
+        /* optional int32 friend_id = 11; */
+        if (message.friendId !== undefined) writer.tag(11, WireType.Varint).int32(message.friendId);
+        /* required bool has_player_personnel_manager = 12; */
+        if (message.hasPlayerPersonnelManager !== false)
+            writer.tag(12, WireType.Varint).bool(message.hasPlayerPersonnelManager);
+        /* optional int32 icon_id = 13; */
+        if (message.iconId !== undefined) writer.tag(13, WireType.Varint).int32(message.iconId);
+        /* required double initial_price = 14; */
+        if (message.initialPrice !== 0) writer.tag(14, WireType.Bit64).double(message.initialPrice);
+        /* map<int32, int32> investors = 15; */
+        for (const k of globalThis.Object.keys(message.investors))
+            writer
+                .tag(15, WireType.LengthDelimited)
+                .fork()
+                .tag(1, WireType.Varint)
+                .int32(parseInt(k))
+                .tag(2, WireType.Varint)
+                .int32(message.investors[k as any])
+                .join();
+        /* repeated int32 lp_offer_tables = 16; */
+        for (let i = 0; i < message.lpOfferTables.length; i++)
+            writer.tag(16, WireType.Varint).int32(message.lpOfferTables[i]);
+        /* optional int32 main_activity_id = 17; */
+        if (message.mainActivityId !== undefined)
+            writer.tag(17, WireType.Varint).int32(message.mainActivityId);
+        /* required double min_security = 18; */
+        if (message.minSecurity !== 0) writer.tag(18, WireType.Bit64).double(message.minSecurity);
+        /* required bool minimum_join_standing = 19; */
+        if (message.minimumJoinStanding !== false)
+            writer.tag(19, WireType.Varint).bool(message.minimumJoinStanding);
+        /* required int32 name_id = 20; */
+        if (message.nameId !== 0) writer.tag(20, WireType.Varint).int32(message.nameId);
+        /* required int64 public_shares = 21; */
+        if (message.publicShares !== 0n)
+            writer.tag(21, WireType.Varint).int64(message.publicShares);
+        /* optional int32 race_id = 22; */
+        if (message.raceId !== undefined) writer.tag(22, WireType.Varint).int32(message.raceId);
+        /* optional int32 secondary_activity_id = 23; */
+        if (message.secondaryActivityId !== undefined)
+            writer.tag(23, WireType.Varint).int32(message.secondaryActivityId);
+        /* required bool send_char_termination_message = 24; */
+        if (message.sendCharTerminationMessage !== false)
+            writer.tag(24, WireType.Varint).bool(message.sendCharTerminationMessage);
+        /* required int64 shares = 25; */
+        if (message.shares !== 0n) writer.tag(25, WireType.Varint).int64(message.shares);
+        /* optional eve_multitools.data.NpcCorporation.Size size = 26; */
+        if (message.size !== undefined) writer.tag(26, WireType.Varint).int32(message.size);
+        /* optional double size_factor = 27; */
+        if (message.sizeFactor !== undefined)
+            writer.tag(27, WireType.Bit64).double(message.sizeFactor);
+        /* optional int32 solar_system_id = 28; */
+        if (message.solarSystemId !== undefined)
+            writer.tag(28, WireType.Varint).int32(message.solarSystemId);
+        /* optional int32 station_id = 29; */
+        if (message.stationId !== undefined)
+            writer.tag(29, WireType.Varint).int32(message.stationId);
+        /* required double tax_rate = 30; */
+        if (message.taxRate !== 0) writer.tag(30, WireType.Bit64).double(message.taxRate);
+        /* required string ticker_name = 31; */
+        if (message.tickerName !== "")
+            writer.tag(31, WireType.LengthDelimited).string(message.tickerName);
+        /* required bool unique_name = 32; */
+        if (message.uniqueName !== false) writer.tag(32, WireType.Varint).bool(message.uniqueName);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.NpcCorporation
+ */
+export const NpcCorporation = new NpcCorporation$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class NpcCorporation_Division$Type extends MessageType<NpcCorporation_Division> {
+    constructor() {
+        super("eve_multitools.data.NpcCorporation.Division", [
+            { no: 1, name: "division_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "leader_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "size", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "division_number", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+        ]);
+    }
+    create(value?: PartialMessage<NpcCorporation_Division>): NpcCorporation_Division {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.divisionId = 0;
+        message.leaderId = 0;
+        message.size = 0;
+        message.divisionNumber = 0;
+        if (value !== undefined)
+            reflectionMergePartial<NpcCorporation_Division>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: NpcCorporation_Division
+    ): NpcCorporation_Division {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 division_id */ 1:
+                    message.divisionId = reader.int32();
+                    break;
+                case /* required int32 leader_id */ 2:
+                    message.leaderId = reader.int32();
+                    break;
+                case /* required int32 size */ 3:
+                    message.size = reader.int32();
+                    break;
+                case /* required int32 division_number */ 4:
+                    message.divisionNumber = reader.int32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: NpcCorporation_Division,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 division_id = 1; */
+        if (message.divisionId !== 0) writer.tag(1, WireType.Varint).int32(message.divisionId);
+        /* required int32 leader_id = 2; */
+        if (message.leaderId !== 0) writer.tag(2, WireType.Varint).int32(message.leaderId);
+        /* required int32 size = 3; */
+        if (message.size !== 0) writer.tag(3, WireType.Varint).int32(message.size);
+        /* required int32 division_number = 4; */
+        if (message.divisionNumber !== 0)
+            writer.tag(4, WireType.Varint).int32(message.divisionNumber);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.NpcCorporation.Division
+ */
+export const NpcCorporation_Division = new NpcCorporation_Division$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class UniversePoint$Type extends MessageType<UniversePoint> {
     constructor() {

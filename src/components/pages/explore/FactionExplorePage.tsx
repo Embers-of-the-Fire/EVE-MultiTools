@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { EmbeddedFactionCard } from "@/components/card/FactionCard";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { getFaction, getFactionIds } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import { PageLayout } from "../../layout";
 import { ScrollArea } from "../../ui/scroll-area";
 
@@ -18,6 +18,8 @@ export function FactionExplorePage() {
     const [factions, setFactions] = useState<FactionData[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const { getData } = useData();
+
     // Handle faction card click event
     const handleFactionClick = (factionId: number) => {
         navigateToFactionDetail(factionId, t("explore.faction.detail.title"));
@@ -29,12 +31,12 @@ export function FactionExplorePage() {
 
         (async () => {
             try {
-                const factionIds = await getFactionIds();
+                const factionIds = await getData("getFactionIds");
                 const items: FactionData[] = [];
 
                 const factionPromises = factionIds.map(async (id) => {
                     try {
-                        const faction = await getFaction(id);
+                        const faction = await getData("getFaction", id);
                         if (!faction) return null;
 
                         const name = await loc(faction.name_id);
@@ -76,7 +78,7 @@ export function FactionExplorePage() {
         return () => {
             ignore = true;
         };
-    }, [loc]);
+    }, [loc, getData]);
 
     return (
         <PageLayout title={t("explore.faction.title")} description={t("explore.faction.desc")}>

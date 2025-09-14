@@ -15,6 +15,7 @@ FACTION_FLAT_LOGO_RES_PAT: ResourcePathPattern = (
 
 LOC_EN_RES: ResourcePath = "res:/localizationfsd/localization_fsd_en-us.pickle"
 LOC_ZH_RES: ResourcePath = "res:/localizationfsd/localization_fsd_zh.pickle"
+LOC_MAIN_RES: ResourcePath = "res:/localizationfsd/localization_fsd_main.pickle"
 
 SKINS_STATIC_RES: ResourcePath = "res:/staticdata/skins.static"
 SKIN_MATERIALS_STATIC_RES: ResourcePath = "res:/staticdata/skinmaterials.static"

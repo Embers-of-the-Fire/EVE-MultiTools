@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { createLocalizationQuery } from "@/stores/localizationStore";
+import { createLocalizationQuery, createUiLocalizationQuery } from "@/stores/localizationStore";
 import { useLanguage } from "./useAppSettings";
 
 export const useLocalization = () => {
@@ -15,7 +15,16 @@ export const useLocalization = () => {
         [language, queryClient]
     );
 
+    const uiLoc = useCallback(
+        async (key: string) => {
+            const queryOptions = createUiLocalizationQuery(key, language);
+            return await queryClient.ensureQueryData(queryOptions);
+        },
+        [language, queryClient]
+    );
+
     return {
         loc,
+        uiLoc,
     };
 };

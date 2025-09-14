@@ -30,12 +30,7 @@ import { getWormholeClassFromNative, getWormholeClassNameKey } from "@/data/univ
 import { useLanguage, useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import {
-    getConstellationById,
-    getRegionById,
-    getSystemById,
-    getSystemDataById,
-} from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { SystemBrief } from "@/types/data";
 import { getSecurityStatusColor } from "@/utils/color";
 
@@ -66,26 +61,31 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
         navigateToUniverseRegion,
     } = useSPARouter();
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setIsLoading(true);
 
         (async () => {
-            const system = await getSystemDataById(systemId);
+            const system = await getData("getSystemDataById", systemId);
 
             const name = await loc(system.solarSystemNameId);
             let desc = "";
             if (system.descriptionId) {
                 desc = await loc(system.descriptionId);
             }
-            const systemBrief = await getSystemById(systemId);
+            const systemBrief = await getData("getSystemById", systemId);
             let regionName = "";
             let constellationName = "";
-            const region = await getRegionById(systemBrief.region_id);
+            const region = await getData("getRegionById", systemBrief.region_id);
             if (region) {
                 regionName = await loc(region.name_id);
             }
-            const constellation = await getConstellationById(systemBrief.constellation_id);
+            const constellation = await getData(
+                "getConstellationById",
+                systemBrief.constellation_id
+            );
             if (constellation) {
                 constellationName = await loc(constellation.name_id);
             }
@@ -105,7 +105,7 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
         return () => {
             mounted = false;
         };
-    }, [systemId, loc]);
+    }, [systemId, loc, getData]);
 
     if (isLoading || !systemData) {
         return (
@@ -262,30 +262,42 @@ export const SystemDetailPage: React.FC<SystemDetailPageProps> = ({ systemId }) 
                         )}
                     </AttributeContent>
                 </AttributePanel>
-                <Card>
-                    <Accordion type="single" collapsible className="w-full" defaultValue="planets">
-                        <AccordionItem value="planets">
-                            <CardHeader className="w-full">
-                                <AccordionTrigger className="text-base">
-                                    <CardTitle>{t("explore.universe.system.planets")}</CardTitle>
-                                </AccordionTrigger>
-                            </CardHeader>
-                            <AccordionContent asChild>
-                                <ScrollArea>
-                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
-                                        {systemData.planets.map((planetId) => (
-                                            <EmbeddedUniverseObjectCard
-                                                key={planetId}
-                                                obj={{ type: "planet", id: planetId }}
-                                                onClick={() => navigateToUniversePlanet(planetId)}
-                                            />
-                                        ))}
-                                    </CardContent>
-                                </ScrollArea>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </Card>
+                {systemData.planets.length > 0 && (
+                    <Card>
+                        <Accordion
+                            type="single"
+                            collapsible
+                            className="w-full"
+                            defaultValue="planets"
+                        >
+                            <AccordionItem value="planets">
+                                <CardHeader className="w-full">
+                                    <AccordionTrigger className="text-base">
+                                        <CardTitle>
+                                            {t("explore.universe.system.planets")}
+                                        </CardTitle>
+                                    </AccordionTrigger>
+                                </CardHeader>
+                                <AccordionContent asChild>
+                                    <ScrollArea>
+                                        <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                            {systemData.planets.map((planetId) => (
+                                                <EmbeddedUniverseObjectCard
+                                                    key={planetId}
+                                                    obj={{ type: "planet", id: planetId }}
+                                                    compact={true}
+                                                    onClick={() =>
+                                                        navigateToUniversePlanet(planetId)
+                                                    }
+                                                />
+                                            ))}
+                                        </CardContent>
+                                    </ScrollArea>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </Card>
+                )}
                 <AttributePanel>
                     <AttributeTitle>
                         {t("explore.universe.system.hidden_attributes")}

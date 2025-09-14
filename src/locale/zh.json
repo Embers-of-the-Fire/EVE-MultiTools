@@ -37,6 +37,9 @@
                 "npc_station": {
                     "detail": "NPC 空间站详情"
                 }
+            },
+            "npc_corporation": {
+                "detail": "NPC 军团详情"
             }
         },
         "home": "首页",
@@ -224,7 +227,12 @@
                 "race_id": "种族 {{raceId}}",
                 "logos": "标志",
                 "flat_logo": "平面标志",
-                "flat_logo_with_name": "带名称的平面标志"
+                "flat_logo_with_name": "带名称的平面标志",
+                "no_faction_selected": "没有选中势力",
+                "basic_info": "基础信息",
+                "unknown_attributes": {
+                    "title": "未知属性"
+                }
             }
         },
         "localization": {
@@ -362,6 +370,50 @@
                     "orbit_id": "轨道 ID",
                     "station_name": "空间站名称"
                 }
+            }
+        },
+        "npc_corporation": {
+            "detail": {
+                "load_error": "加载错误",
+                "title": "NPC 军团详情",
+                "npc_corporation_not_found": "未找到 NPC 军团",
+                "npc_corporation": "NPC 军团 {{npcCorporationId}}",
+                "npc_corporation_id": "NPC 军团 ID",
+                "description": "描述",
+                "basic_info": "基础信息",
+                "attributes": {
+                    "title": "属性",
+                    "member_races": "成员种族",
+                    "icon_id": "图标 ID",
+                    "faction_id": "势力",
+                    "friend_id": "盟友军团",
+                    "enemy_id": "敌对军团",
+                    "ceo_id": "CEO ID",
+                    "unique_name": "独特名称",
+                    "tax_rate": "税率",
+                    "shares": "股票",
+                    "public_shares": "公开股票",
+                    "min_security": "最低安等要求",
+                    "size": "大小",
+                    "extent": "范围",
+                    "station_id": "总部空间站",
+                    "solar_system_id": "总部星系",
+                    "size_factor": "大小系数"
+                },
+                "hidden_attributes": {
+                    "title": "隐藏属性",
+                    "deleted": "已删除",
+                    "race_tag": "种族 ID {{raceId}}",
+                    "race_id": "种族",
+                    "has_player_personnel_manager": "玩家人事管理",
+                    "lp_offer_tables": "忠诚点订单表"
+                },
+                "unknown_attributes": {
+                    "minimum_join_standing": "最小加入立场",
+                    "send_char_termination_message": "发送角色删除信息"
+                },
+                "investors": "股东",
+                "no_investors": "无股东"
             }
         }
     },

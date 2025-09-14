@@ -29,6 +29,7 @@ export interface DetailHistoryItem {
 export interface RouteParamMap {
     "/explore/type/detail": { typeId: number };
     "/explore/faction/detail": { factionId: number };
+    "/explore/npc-corporation/detail": { corporationId: number };
     "/explore/universe/region": { id: number };
     "/explore/universe/constellation": { id: number };
     "/explore/universe/system": { id: number };

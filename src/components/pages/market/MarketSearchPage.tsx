@@ -5,14 +5,16 @@ import { PageLayout } from "@/components/layout";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLanguage } from "@/hooks/useAppSettings";
 import type { Language } from "@/native";
-import { searchTypeByName } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 
 export function MarketSearchPage() {
     const { t } = useTranslation();
     const { language } = useLanguage();
 
+    const { getData } = useData();
+
     const searchFunction = async (query: string, language: Language) => {
-        return await searchTypeByName(query, language, 100);
+        return await getData("searchTypeByName", query, language, 100);
     };
 
     return (

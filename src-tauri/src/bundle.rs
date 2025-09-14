@@ -293,7 +293,7 @@ pub async fn import_bundle_file(
         let config = config_state
             .config
             .lock()
-            .map_err(|e| format!("Failed to lock config state: {e}"))?;
+            .map_err(|e| format!("Failed to lock config state: {e:?}"))?;
         config
             .global_settings
             .data_directory
@@ -400,11 +400,11 @@ pub async fn enable_bundle(
                 let mut config = config_state
                     .config
                     .lock()
-                    .map_err(|e| format!("Failed to lock config: {e}"))?;
+                    .map_err(|e| format!("Failed to lock config: {e:?}"))?;
                 config.global_settings.enabled_bundle_id = Some(server_id);
                 config
                     .save_to_file()
-                    .map_err(|e| format!("Failed to save config: {e}"))?;
+                    .map_err(|e| format!("Failed to save config: {e:?}"))?;
                 Ok(())
             }
             Err(e) => {
@@ -413,12 +413,12 @@ pub async fn enable_bundle(
                 let mut config = config_state
                     .config
                     .lock()
-                    .map_err(|e| format!("Failed to lock config: {e}"))?;
+                    .map_err(|e| format!("Failed to lock config: {e:?}"))?;
                 config.global_settings.enabled_bundle_id = None;
                 config
                     .save_to_file()
-                    .map_err(|e| format!("Failed to save config: {e}"))?;
-                Err(format!("Failed to activate bundle: {e}"))
+                    .map_err(|e| format!("Failed to save config: {e:?}"))?;
+                Err(format!("Failed to activate bundle: {e:?}"))
             }
         }
     };
@@ -473,7 +473,7 @@ pub async fn remove_bundle(
 
     bundle_state
         .remove_bundle(&server_id)
-        .map_err(|e| format!("Failed to remove bundle: {e}"))?;
+        .map_err(|e| format!("Failed to remove bundle: {e:?}"))?;
 
     // 如果删除的是已启用的数据包，清空启用状态
     if is_enabled {
@@ -481,11 +481,11 @@ pub async fn remove_bundle(
         let mut config = config_state
             .config
             .lock()
-            .map_err(|e| format!("Failed to lock config: {e}"))?;
+            .map_err(|e| format!("Failed to lock config: {e:?}"))?;
         config.global_settings.enabled_bundle_id = None;
         config
             .save_to_file()
-            .map_err(|e| format!("Failed to save config: {e}"))?;
+            .map_err(|e| format!("Failed to save config: {e:?}"))?;
     }
 
     // Emit bundles-changed event

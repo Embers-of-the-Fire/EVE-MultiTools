@@ -67,6 +67,9 @@
                 "moon": {
                     "detail": "Moon Details"
                 }
+            },
+            "npc_corporation": {
+                "detail": "NPC Corporation Detail"
             }
         },
         "home": "Home",
@@ -230,7 +233,11 @@
                 "race_id": "Race {{raceId}}",
                 "logos": "Logos",
                 "flat_logo": "Flat Logo",
-                "flat_logo_with_name": "Flat Logo with Name"
+                "flat_logo_with_name": "Flat Logo with Name",
+                "no_faction_selected": "No Faction Selected",
+                "unknown_attributes": {
+                    "title": "Unknown Attributes"
+                }
             }
         },
         "localization": {
@@ -360,6 +367,46 @@
                 "hidden_attributes": {
                     "title": "Hidden Attributes",
                     "station_name": "Station Name"
+                }
+            }
+        },
+        "npc_corporation": {
+            "detail": {
+                "title": "NPC Corporation Detail",
+                "load_error": "Load Error",
+                "npc_corporation_not_found": "NPC Corporation Not Found",
+                "npc_corporation": "NPC Corp {{npcCorporationId}}",
+                "npc_corporation_id": "NPC Corp ID",
+                "description": "Description",
+                "attributes": {
+                    "title": "Attributes",
+                    "member_races": "Member Races",
+                    "icon_id": "Icon ID",
+                    "faction_id": "Faction",
+                    "enemy_id": "Enemy Corp",
+                    "friend_id": "Firend Corp",
+                    "ceo_id": "CEO ID",
+                    "unique_name": "Unique Name",
+                    "tax_rate": "Tax Rate",
+                    "shares": "Shares",
+                    "public_shares": "Public Shares",
+                    "size": "Size",
+                    "extent": "Extent",
+                    "station_id": "Capital Station",
+                    "solar_system_id": "Capital System",
+                    "size_factor": "Size Factor"
+                },
+                "hidden_attributes": {
+                    "deleted": "Deleted",
+                    "race_tag": "Race ID {{raceId}}",
+                    "race_id": "Race",
+                    "has_player_personnel_manager": "Player Personnel Manager",
+                    "lp_offer_tables": "LP Offer Tables"
+                },
+                "investors": "Investors",
+                "no_investors": "No Investors",
+                "unknown_attributes": {
+                    "send_char_termination_message": "Send Char Termination Msg"
                 }
             }
         }

@@ -8,7 +8,7 @@ import { useLanguage } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import type { Language } from "@/native";
-import { getCategory, getGroup, getMetaGroup, getType, searchTypeByName } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { Category, Group, MetaGroup, Type } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import {
@@ -52,9 +52,10 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Search helper functions
+    const { getData } = useData();
+
     const searchFunction = async (query: string, language: Language) => {
-        return await searchTypeByName(query, language);
+        return await getData("searchTypeByName", query, language);
     };
 
     const handleTypeSelect = (selectedTypeId: number) => {
@@ -74,7 +75,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
 
         const loadTypeDetails = async () => {
             try {
-                const typeData = await getType(typeId);
+                const typeData = await getData("getType", typeId);
                 if (!typeData) {
                     if (mounted) {
                         setError(t("explore.type.detail.type_not_found"));
@@ -87,13 +88,14 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                     setType(typeData);
                 }
 
-                // 并行获取相关数据
                 const [typeNameText, typeDescText, groupData, metaGroupData] = await Promise.all([
                     loc(typeData.type_name_id),
                     typeData.description_id ? loc(typeData.description_id) : Promise.resolve(""),
-                    typeData.group_id ? getGroup(typeData.group_id) : Promise.resolve(null),
+                    typeData.group_id
+                        ? getData("getGroup", typeData.group_id)
+                        : Promise.resolve(null),
                     typeData.meta_group_id
-                        ? getMetaGroup(typeData.meta_group_id)
+                        ? getData("getMarketGroup", typeData.meta_group_id)
                         : Promise.resolve(null),
                 ]);
 
@@ -110,7 +112,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                 if (groupData) {
                     const [groupNameText, categoryData] = await Promise.all([
                         loc(groupData.group_name_id),
-                        getCategory(groupData.category_id),
+                        getData("getCategory", groupData.category_id),
                     ]);
 
                     if (mounted) {
@@ -158,7 +160,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
         return () => {
             mounted = false;
         };
-    }, [typeId, loc, t]);
+    }, [typeId, loc, t, getData]);
 
     if (loading) {
         return (
@@ -481,4 +483,36 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
             </div>
         </PageLayout>
     );
+};
+
+export const TypeDetailPageWrapper: React.FC = () => {
+    const { t } = useTranslation();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    // Get parameters from the new router system
+    const routeParams = useRouteParams("/explore/type/detail");
+    const typeId = routeParams?.typeId;
+
+    useEffect(() => {
+        // If no type is selected, redirect to explore page
+        if (!typeId) {
+            navigate("/explore/type");
+        }
+    }, [typeId, navigate]);
+
+    if (!typeId) {
+        return (
+            <PageLayout title={t("explore.type.detail.title")} description={t("common.error")}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-muted-foreground">
+                            {t("explore.type.detail.no_type_selected")}
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageLayout>
+        );
+    }
+
+    return <TypeDetailPage typeId={typeId} />;
 };

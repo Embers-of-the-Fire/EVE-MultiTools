@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EmbeddedNpcCorporationCard } from "@/components/card/NpcCorporationCard";
 import { EmbeddedUniverseObjectCard } from "@/components/card/UniverseObjectCard";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { getFaction } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { Faction } from "@/types/data";
 import { getFactionIconUrl, getFactionLogoUrl } from "@/utils/image";
 import {
@@ -27,7 +28,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
     const { t } = useTranslation();
     const { loc } = useLocalization();
 
-    const { navigateToUniverseSystem } = useSPARouter();
+    const { navigateToUniverseSystem, navigateToNpcCorporationDetail } = useSPARouter();
 
     const [faction, setFaction] = useState<Faction | null>(null);
     const [name, setName] = useState<string>("");
@@ -39,6 +40,8 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setLoading(true);
@@ -46,7 +49,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
 
         const loadFactionDetails = async () => {
             try {
-                const factionData = await getFaction(factionId);
+                const factionData = await getData("getFaction", factionId);
                 if (!factionData) {
                     if (mounted) {
                         setError(t("explore.faction.detail.faction_not_found"));
@@ -109,7 +112,7 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
         return () => {
             mounted = false;
         };
-    }, [factionId, t, loc]);
+    }, [factionId, t, loc, getData]);
 
     if (loading) {
         return (
@@ -141,43 +144,51 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
             description={shortDescription}
         >
             <div className="space-y-6">
-                {/* 基本信息 */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-3">
-                            {iconUrl && (
-                                <div
-                                    className="w-12 h-12 bg-center bg-contain bg-no-repeat rounded"
-                                    style={{ backgroundImage: `url(${iconUrl})` }}
-                                    title={name}
-                                />
-                            )}
-                            <div>
-                                <div className="text-2xl font-bold">{name}</div>
-                                <div className="text-sm text-muted-foreground">
-                                    {t("explore.faction.detail.faction_id")}: {factionId}
-                                </div>
-                            </div>
-                        </CardTitle>
+                        <CardTitle>{t("explore.faction.detail.basic_info")}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="space-y-4">
-                            {shortDescription && (
+                        <div className="flex items-start gap-6">
+                            <div className="flex-shrink-0">
+                                {iconUrl ? (
+                                    <Image
+                                        src={iconUrl}
+                                        alt={name}
+                                        width={64}
+                                        height={64}
+                                        className="bg-muted p-2 rounded"
+                                    />
+                                ) : (
+                                    <div className="w-16 h-16 bg-muted flex items-center justify-center rounded">
+                                        <span className="text-sm text-muted-foreground">N/A</span>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="flex-1 space-y-4">
                                 <div>
-                                    <h4 className="font-semibold mb-2">
-                                        {t("explore.faction.detail.short_description")}
-                                    </h4>
-                                    <p className="text-muted-foreground">{shortDescription}</p>
+                                    <div className="text-2xl font-bold">{name}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        {t("explore.faction.detail.faction_id")}: {factionId}
+                                    </div>
                                 </div>
-                            )}
-                            {description && (
-                                <div>
-                                    <h4 className="font-semibold mb-2">
-                                        {t("explore.faction.detail.description")}
-                                    </h4>
-                                    <p className="text-muted-foreground">{description}</p>
-                                </div>
-                            )}
+                                {shortDescription && (
+                                    <div>
+                                        <h4 className="font-semibold mb-2">
+                                            {t("explore.faction.detail.short_description")}
+                                        </h4>
+                                        <p className="text-muted-foreground">{shortDescription}</p>
+                                    </div>
+                                )}
+                                {description && (
+                                    <div>
+                                        <h4 className="font-semibold mb-2">
+                                            {t("explore.faction.detail.description")}
+                                        </h4>
+                                        <p className="text-muted-foreground">{description}</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
@@ -205,7 +216,18 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
                                 <AttributeName>
                                     {t("explore.faction.detail.corporation_id")}
                                 </AttributeName>
-                                <AttributeText>{faction.corporation_id}</AttributeText>
+                                <AttributeText>
+                                    <EmbeddedNpcCorporationCard
+                                        className="mt-2"
+                                        npcCorporationId={faction.corporation_id}
+                                        onClick={() => {
+                                            if (faction.corporation_id)
+                                                navigateToNpcCorporationDetail(
+                                                    faction.corporation_id
+                                                );
+                                        }}
+                                    />
+                                </AttributeText>
                             </Attribute>
                         )}
 
@@ -304,4 +326,36 @@ export const FactionDetailPage: React.FC<FactionDetailPageProps> = ({ factionId 
             </div>
         </PageLayout>
     );
+};
+
+export const FactionDetailPageWrapper: React.FC = () => {
+    const { t } = useTranslation();
+    const { navigate, useRouteParams } = useSPARouter();
+
+    // Get parameters from the new router system
+    const routeParams = useRouteParams("/explore/faction/detail");
+    const factionId = routeParams?.factionId;
+
+    useEffect(() => {
+        // If no faction is selected, redirect to explore page
+        if (!factionId) {
+            navigate("/explore/faction");
+        }
+    }, [factionId, navigate]);
+
+    if (!factionId) {
+        return (
+            <PageLayout title={t("explore.faction.detail.title")} description={t("common.error")}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="text-muted-foreground">
+                            {t("explore.faction.detail.no_faction_selected")}
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageLayout>
+        );
+    }
+
+    return <FactionDetailPage factionId={factionId} />;
 };

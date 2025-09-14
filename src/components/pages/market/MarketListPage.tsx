@@ -16,7 +16,7 @@ import { useLocalization } from "@/hooks/useLocalization";
 import { useMarketGroupTree } from "@/hooks/useMarketGroupTree";
 import { useMarketList } from "@/hooks/useMarketList";
 import type { Language } from "@/native";
-import { getMarketGroup, searchTypeByName } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { MarketGroupNode } from "@/stores/marketGroupTreeStore";
 import { getIconUrl } from "@/utils/image";
 
@@ -102,15 +102,24 @@ export const MarketListPage: React.FunctionComponent = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [matchingTypeIds, setMatchingTypeIds] = useState<Set<number>>(new Set());
 
+    const { getData } = useData();
+
     // Handle search query changes
     useEffect(() => {
         const delayTimeout = setTimeout(() => {
             if (searchQuery.trim()) {
-                filterTreeByName(searchQuery, language);
+                filterTreeByName(searchQuery, language, (query, language, limit) =>
+                    getData("searchTypeByName", query, language, limit)
+                );
                 // Also get the matching type IDs for filtering the price list
                 (async () => {
                     try {
-                        const typeIds = await searchTypeByName(searchQuery, language, 1000);
+                        const typeIds = await getData(
+                            "searchTypeByName",
+                            searchQuery,
+                            language,
+                            1000
+                        );
                         setMatchingTypeIds(new Set(typeIds));
                     } catch (error) {
                         console.error("Failed to search types:", error);
@@ -124,7 +133,7 @@ export const MarketListPage: React.FunctionComponent = () => {
         }, 500); // Debounce search
 
         return () => clearTimeout(delayTimeout);
-    }, [searchQuery, language, filterTreeByName, clearFilter]);
+    }, [searchQuery, language, filterTreeByName, clearFilter, getData]);
 
     // Load market group tree on component mount
     useEffect(() => {
@@ -147,7 +156,7 @@ export const MarketListPage: React.FunctionComponent = () => {
     useEffect(() => {
         if (selectedGroupId === null) return;
         (async () => {
-            const mg = await getMarketGroup(selectedGroupId);
+            const mg = await getData("getMarketGroup", selectedGroupId);
             const allTypes = mg?.types;
             if (allTypes && allTypes.length > 0) {
                 // If there's a search query, filter types to only show matching ones

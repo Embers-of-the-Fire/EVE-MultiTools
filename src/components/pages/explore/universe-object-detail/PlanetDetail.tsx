@@ -25,12 +25,7 @@ import type { Planet } from "@/data/schema";
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import {
-    getConstellationById,
-    getPlanetDataById,
-    getRegionById,
-    getSystemById,
-} from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { SystemBrief } from "@/types/data";
 import { getPlanetName } from "@/utils/name";
 import { CelestialAttributesPanel, CelestialStatisticsPanel } from "./_CelestialAttributes";
@@ -63,14 +58,16 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
         navigateToUniverseNpcStation,
     } = useSPARouter();
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setIsLoading(true);
 
         (async () => {
-            const planet = await getPlanetDataById(planetId);
+            const planet = await getData("getPlanetDataById", planetId);
             const systemId = planet.solarSystemId;
-            const systemBrief = await getSystemById(systemId);
+            const systemBrief = await getData("getSystemById", systemId);
 
             const systemName = await loc(systemBrief.name_id);
             const planetName = getPlanetName(
@@ -81,11 +78,14 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
 
             let regionName = "";
             let constellationName = "";
-            const region = await getRegionById(systemBrief.region_id);
+            const region = await getData("getRegionById", systemBrief.region_id);
             if (region) {
                 regionName = await loc(region.name_id);
             }
-            const constellation = await getConstellationById(systemBrief.constellation_id);
+            const constellation = await getData(
+                "getConstellationById",
+                systemBrief.constellation_id
+            );
             if (constellation) {
                 constellationName = await loc(constellation.name_id);
             }
@@ -105,7 +105,7 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
         return () => {
             mounted = false;
         };
-    }, [planetId, loc]);
+    }, [planetId, loc, getData]);
 
     if (isLoading || !planetData || !systemBrief) {
         return (
@@ -208,66 +208,82 @@ export const PlanetDetailPage: React.FC<PlanetDetailPageProps> = ({ planetId }) 
                 {planetData.statistics && (
                     <CelestialStatisticsPanel celestial={planetData.statistics} />
                 )}
-                <Card>
-                    <Accordion type="single" collapsible className="w-full" defaultValue="moons">
-                        <AccordionItem value="moons">
-                            <CardHeader className="w-full">
-                                <AccordionTrigger className="text-base">
-                                    <CardTitle>{t("explore.universe.planet.moons")}</CardTitle>
-                                </AccordionTrigger>
-                            </CardHeader>
-                            <AccordionContent asChild>
-                                <ScrollArea>
-                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
-                                        {planetData.moons.map((moonId) => (
-                                            <EmbeddedUniverseObjectCard
-                                                key={moonId}
-                                                obj={{
-                                                    type: "moon",
-                                                    id: moonId,
-                                                }}
-                                                onClick={() => {
-                                                    navigateToUniverseMoon(moonId);
-                                                }}
-                                            />
-                                        ))}
-                                    </CardContent>
-                                </ScrollArea>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </Card>{" "}
-                <Card>
-                    <Accordion type="single" collapsible className="w-full" defaultValue="moons">
-                        <AccordionItem value="moons">
-                            <CardHeader className="w-full">
-                                <AccordionTrigger className="text-base">
-                                    <CardTitle>
-                                        {t("explore.universe.planet.npc_stations")}
-                                    </CardTitle>
-                                </AccordionTrigger>
-                            </CardHeader>
-                            <AccordionContent asChild>
-                                <ScrollArea>
-                                    <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
-                                        {planetData.npcStations.map((npcStationId) => (
-                                            <EmbeddedUniverseObjectCard
-                                                key={npcStationId}
-                                                obj={{
-                                                    type: "npc-station",
-                                                    id: npcStationId,
-                                                }}
-                                                onClick={() => {
-                                                    navigateToUniverseNpcStation(npcStationId);
-                                                }}
-                                            />
-                                        ))}
-                                    </CardContent>
-                                </ScrollArea>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </Card>
+                {planetData.moons.length > 0 && (
+                    <Card>
+                        <Accordion
+                            type="single"
+                            collapsible
+                            className="w-full"
+                            defaultValue="moons"
+                        >
+                            <AccordionItem value="moons">
+                                <CardHeader className="w-full">
+                                    <AccordionTrigger className="text-base">
+                                        <CardTitle>{t("explore.universe.planet.moons")}</CardTitle>
+                                    </AccordionTrigger>
+                                </CardHeader>
+                                <AccordionContent asChild>
+                                    <ScrollArea>
+                                        <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                            {planetData.moons.map((moonId) => (
+                                                <EmbeddedUniverseObjectCard
+                                                    key={moonId}
+                                                    obj={{
+                                                        type: "moon",
+                                                        id: moonId,
+                                                    }}
+                                                    compact={true}
+                                                    onClick={() => {
+                                                        navigateToUniverseMoon(moonId);
+                                                    }}
+                                                />
+                                            ))}
+                                        </CardContent>
+                                    </ScrollArea>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </Card>
+                )}
+                {planetData.npcStations.length > 0 && (
+                    <Card>
+                        <Accordion
+                            type="single"
+                            collapsible
+                            className="w-full"
+                            defaultValue="moons"
+                        >
+                            <AccordionItem value="moons">
+                                <CardHeader className="w-full">
+                                    <AccordionTrigger className="text-base">
+                                        <CardTitle>
+                                            {t("explore.universe.planet.npc_stations")}
+                                        </CardTitle>
+                                    </AccordionTrigger>
+                                </CardHeader>
+                                <AccordionContent asChild>
+                                    <ScrollArea>
+                                        <CardContent className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-3 gap-2 max-h-96">
+                                            {planetData.npcStations.map((npcStationId) => (
+                                                <EmbeddedUniverseObjectCard
+                                                    key={npcStationId}
+                                                    obj={{
+                                                        type: "npc-station",
+                                                        id: npcStationId,
+                                                    }}
+                                                    compact={true}
+                                                    onClick={() => {
+                                                        navigateToUniverseNpcStation(npcStationId);
+                                                    }}
+                                                />
+                                            ))}
+                                        </CardContent>
+                                    </ScrollArea>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </Card>
+                )}
                 <AttributePanel>
                     <AttributeTitle>
                         {t("explore.universe.system.hidden_attributes")}

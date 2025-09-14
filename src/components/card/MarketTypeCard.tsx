@@ -5,7 +5,7 @@ import { useLanguage } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useMarketRecord } from "@/hooks/useMarketCache";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import { getGroup, getLinkUrl, getMetaGroup, getType } from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import { LinkKey } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import { ExternalLink } from "../Links";
@@ -32,19 +32,21 @@ const useMarketTypeData = (typeId: number) => {
 
     const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
 
         setStaticDataLoaded(false);
         (async () => {
-            const type = await getType(typeId);
+            const type = await getData("getType", typeId);
 
             if (!type) {
                 return;
             }
 
             let categoryId: number | null = null;
-            const group = await getGroup(type.group_id);
+            const group = await getData("getGroup", type.group_id);
             if (group) {
                 categoryId = group.category_id;
             }
@@ -58,7 +60,7 @@ const useMarketTypeData = (typeId: number) => {
             let mgIcon: string | null = null;
             let mgName: string | null = null;
             if (type.meta_group_id) {
-                const meta = await getMetaGroup(type.meta_group_id);
+                const meta = await getData("getMetaGroup", type.meta_group_id);
                 if (meta?.icon_id) {
                     mgIcon = await getIconUrl(meta.icon_id);
                 }
@@ -82,7 +84,7 @@ const useMarketTypeData = (typeId: number) => {
         return () => {
             mounted = false;
         };
-    }, [typeId, loc]);
+    }, [typeId, loc, getData]);
 
     useEffect(() => {
         (async () => {
@@ -90,19 +92,25 @@ const useMarketTypeData = (typeId: number) => {
             newLinks.push({
                 url:
                     language === "zh"
-                        ? await getLinkUrl(LinkKey.MarketEveC3qCc, { typeId: typeId.toString() })
-                        : await getLinkUrl(LinkKey.MarketEveC3qCcEn, { typeId: typeId.toString() }),
+                        ? await getData("getLinkUrl", LinkKey.MarketEveC3qCc, {
+                              typeId: typeId.toString(),
+                          })
+                        : await getData("getLinkUrl", LinkKey.MarketEveC3qCcEn, {
+                              typeId: typeId.toString(),
+                          }),
                 name: t("market.link.eve_c3q_cc"),
             });
             newLinks.push({
-                url: await getLinkUrl(LinkKey.MarketEveTycoon, { typeId: typeId.toString() }),
+                url: await getData("getLinkUrl", LinkKey.MarketEveTycoon, {
+                    typeId: typeId.toString(),
+                }),
                 name: t("market.link.eve_tycoon"),
             });
             setLinks(
                 newLinks.filter((link): link is { url: string; name: string } => link.url !== null)
             );
         })();
-    }, [typeId, language, t]);
+    }, [typeId, language, t, getData]);
 
     const isMarketDataLoading = marketRecord.isLoading;
 

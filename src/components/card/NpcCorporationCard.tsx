@@ -1,23 +1,18 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useData } from "@/stores/dataStore";
-import { getFactionIconUrl } from "@/utils/image";
+import { getIconUrl } from "@/utils/image";
 import GenericCard, { type BadgeConfig, type GenericData } from "./GenericCard";
 
-interface FactionData extends GenericData {
-    uniqueName?: boolean;
-}
+interface NpcCorporationData extends GenericData {}
 
-function useFactionData(factionId: number): FactionData {
-    const { t } = useTranslation();
-    const [data, setData] = useState<FactionData>({
+function useNpcCorporationData(npcCorporationId: number): NpcCorporationData {
+    const [data, setData] = useState<NpcCorporationData>({
         name: "",
         description: "",
         badges: [],
         loading: true,
-        id: factionId,
-        uniqueName: false,
+        id: npcCorporationId,
     });
 
     const { loc } = useLocalization();
@@ -32,9 +27,9 @@ function useFactionData(factionId: number): FactionData {
             name: "",
             description: "",
             iconUrl: null,
-            uniqueName: false,
         }));
-        getData("getFaction", factionId).then(async (f) => {
+
+        getData("getNpcCorporationById", npcCorporationId).then(async (f) => {
             if (!f) {
                 if (mounted) setData((d) => ({ ...d, loading: false }));
                 return;
@@ -44,46 +39,42 @@ function useFactionData(factionId: number): FactionData {
                 f.description_id ? loc(f.description_id) : Promise.resolve(""),
             ]);
             const badgeArr: BadgeConfig[] = [];
-            if (f.unique_name) {
-                badgeArr.push({
-                    text: t("faction.unique_name"),
-                    key: "unique",
-                    variant: "secondary",
-                });
-            }
+
             if (mounted) {
                 setData({
                     name: nameText || "",
                     description: descText || "",
-                    iconUrl: (await getFactionIconUrl(factionId)) || undefined,
+                    iconUrl: f.icon_id ? (await getIconUrl(f.icon_id)) || undefined : undefined,
                     badges: badgeArr,
                     loading: false,
-                    id: factionId,
-                    uniqueName: f.unique_name,
+                    id: npcCorporationId,
                 });
             }
         });
         return () => {
             mounted = false;
         };
-    }, [factionId, t, loc, getData]);
+    }, [npcCorporationId, loc, getData]);
 
     return data;
 }
 
-interface HoverFactionCardProps {
-    factionId: number;
+interface HoverNpcCorporationCardProps {
+    npcCorporationId: number;
     className?: string;
 }
 
-export const HoverFactionCard: React.FC<HoverFactionCardProps> = ({ factionId, className }) => {
-    const factionData = useFactionData(factionId);
+export const HoverFactionCard: React.FC<HoverNpcCorporationCardProps> = ({
+    npcCorporationId,
+    className,
+}) => {
+    const corpData = useNpcCorporationData(npcCorporationId);
 
-    return <GenericCard.Hover data={factionData} className={className} />;
+    return <GenericCard.Hover data={corpData} className={className} />;
 };
 
-interface EmbeddedFactionCardProps {
-    factionId: number;
+interface EmbeddedNpcCorporationCardProps {
+    npcCorporationId: number;
     title?: string;
     className?: string;
     compact?: boolean;
@@ -92,8 +83,8 @@ interface EmbeddedFactionCardProps {
     noBorder?: boolean;
 }
 
-export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
-    factionId,
+export const EmbeddedNpcCorporationCard: React.FC<EmbeddedNpcCorporationCardProps> = ({
+    npcCorporationId,
     title,
     className,
     compact = false,
@@ -101,34 +92,38 @@ export const EmbeddedFactionCard: React.FC<EmbeddedFactionCardProps> = ({
     onClick,
     noBorder = false,
 }) => {
-    const factionData = useFactionData(factionId);
+    const corpData = useNpcCorporationData(npcCorporationId);
 
     return (
         <GenericCard.Embed
-            data={factionData}
+            data={corpData}
             title={title}
             className={className}
             compact={compact}
             showBadges={showBadges}
-            onClick={onClick ? () => onClick(factionId) : undefined}
+            onClick={onClick ? () => onClick(npcCorporationId) : undefined}
             noBorder={noBorder}
         />
     );
 };
 
-interface FactionCardProps {
-    factionId: number;
+interface NpcCorporationCardProps {
+    npcCorporationId: number;
     className?: string;
     onClick?: (factionId: number) => void;
 }
 
-export const FactionCard: React.FC<FactionCardProps> = ({ factionId, className, onClick }) => {
-    const factionData = useFactionData(factionId);
+export const NpcCorporationCard: React.FC<NpcCorporationCardProps> = ({
+    npcCorporationId,
+    className,
+    onClick,
+}) => {
+    const corporationData = useNpcCorporationData(npcCorporationId);
     return (
         <GenericCard.Card
-            data={factionData}
+            data={corporationData}
             className={className}
-            onClick={onClick ? () => onClick(factionId) : undefined}
+            onClick={onClick ? () => onClick(npcCorporationId) : undefined}
         />
     );
 };

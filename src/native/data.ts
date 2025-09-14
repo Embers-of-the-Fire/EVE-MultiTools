@@ -2,6 +2,7 @@ import {
     Constellation,
     MarketGroupCollection,
     Moon,
+    NpcCorporation,
     NpcStation,
     Planet,
     Region,
@@ -18,6 +19,7 @@ import {
     type MarketGroup,
     type MetaGroup,
     type MoonBrief,
+    type NpcCorporationBrief,
     type NpcStationBrief,
     type PlanetBrief,
     type RegionBrief,
@@ -73,17 +75,22 @@ export async function getLocalization(key: number): Promise<LocString | null> {
 
 export async function getLocalizationByLang(
     key: number,
-    lang: "en" | "zh"
+    language: "en" | "zh"
 ): Promise<string | null> {
-    const loc = await getLocalization(key);
-    if (!loc) return null;
-    return lang === "en" ? loc.en : loc.zh;
+    const loc = await tauriInvoke<string | null>("get_localization_by_language", { key, language });
+    return loc;
 }
 
-export const localizationCommands = {
-    getLocalization,
-    getLocalizationByLang,
-} as const;
+export async function getUiLocalizationByLang(
+    key: string,
+    language: "en" | "zh"
+): Promise<string | null> {
+    const loc = await tauriInvoke<string | null>("get_ui_localization_by_language", {
+        key,
+        language,
+    });
+    return loc;
+}
 
 export async function getGroup(groupId: number): Promise<Group | null> {
     return await tauriInvoke<Group | null>("get_group", { groupId });
@@ -412,4 +419,26 @@ export async function getNpcStationDataById(stationId: number): Promise<NpcStati
         throw new Error("Failed to fetch NPC Station data");
     }
     return NpcStation.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getNpcCorporationById(
+    npcCorporationId: number
+): Promise<NpcCorporationBrief> {
+    const result = await tauriInvoke<NpcCorporationBrief | null>("get_npc_corporation_by_id", {
+        npcCorporationId,
+    });
+    if (!result) {
+        throw new Error("NPC Corporation not found");
+    }
+    return result;
+}
+
+export async function getNpcCorporationDataById(npcCorporationId: number): Promise<NpcCorporation> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_npc_corporation_data_by_id", {
+        npcCorporationId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch NPC Corporation data");
+    }
+    return NpcCorporation.fromBinary(new Uint8Array(bytes));
 }

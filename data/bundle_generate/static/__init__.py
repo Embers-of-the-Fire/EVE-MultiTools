@@ -8,6 +8,7 @@ from data.bundle_generate.static import factions
 from data.bundle_generate.static import groups
 from data.bundle_generate.static import market_groups
 from data.bundle_generate.static import meta_groups
+from data.bundle_generate.static import npc_corporations
 from data.bundle_generate.static import skin_infos
 from data.bundle_generate.static import type_definitions
 from data.bundle_generate.static import type_dogma
@@ -49,6 +50,7 @@ class StaticDataGenerator:
         meta_groups.collect_meta_groups(self.__fsd, self.__root)
         factions.collect_factions(self.__fsd, self.__root)
         market_groups.collect_market_groups(self.__fsd, self.__root)
+        npc_corporations.collect_npc_corporations(self.__fsd, self.__root, self.__loc_root)
 
         await skin_infos.collect_skin_infos(self.__fsd, self.__index, self.__root)
 

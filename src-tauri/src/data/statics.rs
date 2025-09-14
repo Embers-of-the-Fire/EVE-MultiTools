@@ -5,6 +5,7 @@ pub mod factions;
 pub mod groups;
 pub mod market_group;
 pub mod meta_groups;
+pub mod npc_corporations;
 pub mod skins;
 pub mod types;
 
@@ -16,6 +17,7 @@ pub struct StaticsService {
     pub meta_groups: meta_groups::MetaGroupsService,
     pub skins: skins::SkinService,
     pub factions: factions::FactionsService,
+    pub npc_corporations: npc_corporations::NpcCorporationsService,
 }
 
 impl StaticsService {
@@ -28,6 +30,7 @@ impl StaticsService {
         let meta_groups = meta_groups::MetaGroupsService::init(&static_path).await?;
         let skins = skins::SkinService::init(&static_path).await?;
         let factions = factions::FactionsService::init(&static_path).await?;
+        let npc_corporations = npc_corporations::NpcCorporationsService::init(&static_path).await?;
 
         Ok(Self {
             types,
@@ -37,6 +40,7 @@ impl StaticsService {
             meta_groups,
             skins,
             factions,
+            npc_corporations,
         })
     }
 }

@@ -161,6 +161,16 @@ message LocalizationCollection {
     repeated LocalizationEntry localizations = 1;
 }
 
+// Meta UI localization,
+// see `res:/localizationfsd/localization_fsd_main.pickle` for more details
+message MetaUiLocalizationCollection {
+    message MetaUiEntry {
+        required string key = 1;
+        required uint32 message_id = 2;
+    }
+    repeated MetaUiEntry meta_ui_entries = 1;
+}
+
 // Type localization lookup data
 message TypeLocalizationLookup {
     message TypeLocEntry {
@@ -194,6 +204,15 @@ message SystemLocalizationLookup {
         required uint32 name_id = 2;
     }
     repeated SystemLocEntry system_entries = 1;
+}
+
+message NpcCorporationLocalizationLookup {
+    message NpcCorporationLocEntry {
+        required int32 npc_corporation_id = 1;
+        required uint32 name_id = 2;
+        optional uint32 description_id = 3;
+    }
+    repeated NpcCorporationLocEntry npc_corporation_entries = 1;
 }
 
 // Faction definition
@@ -238,6 +257,68 @@ message MarketGroupCollection {
     }
 
     repeated MarketGroupEntry market_groups = 1;
+}
+
+// NPC Corporation definition
+message NpcCorporation {
+    required int32 corporation_id = 1;
+    repeated int32 allowed_member_races = 2;
+    optional int32 ceo_id = 3;
+    map<int32, double> corporation_trades = 4;
+    required bool deleted = 5;
+    optional int32 description_id = 6;
+
+    message Division {
+        required int32 division_id = 1;
+        required int32 leader_id = 2;
+        required int32 size = 3;
+        required int32 division_number = 4;
+    }
+    repeated Division divisions = 7;
+
+    optional int32 enemy_id = 8;
+
+    enum Extent {
+        EXT_C = 1;
+        EXT_G = 2;
+        EXT_L = 3;
+        EXT_N = 4;
+        EXT_R = 5;
+    }
+    required Extent extent = 9;
+
+    optional int32 faction_id = 10;
+    optional int32 friend_id = 11;
+    required bool has_player_personnel_manager = 12;
+    optional int32 icon_id = 13;
+    required double initial_price = 14;
+    map<int32, int32> investors = 15;
+    repeated int32 lp_offer_tables = 16;
+    optional int32 main_activity_id = 17;
+    required double min_security = 18;
+    required bool minimum_join_standing = 19;
+    required int32 name_id = 20;
+    required int64 public_shares = 21;
+    optional int32 race_id = 22;
+    optional int32 secondary_activity_id = 23;
+    required bool send_char_termination_message = 24;
+    required int64 shares = 25;
+
+    enum Size {
+        SIZE_H = 1;
+        SIZE_L = 2;
+        SIZE_M = 3;
+        SIZE_S = 4;
+        SIZE_T = 5;
+    }
+    optional Size size = 26;
+
+    optional double size_factor = 27;
+    optional int32 solar_system_id = 28;
+    optional int32 station_id = 29;
+    required double tax_rate = 30;
+    required string ticker_name = 31;
+    required bool unique_name = 32;
 }
 
 message UniversePoint {

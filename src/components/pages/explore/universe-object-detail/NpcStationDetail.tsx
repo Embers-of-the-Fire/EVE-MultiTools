@@ -23,14 +23,7 @@ import type { NpcStation } from "@/data/schema";
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import {
-    getConstellationById,
-    getMoonById,
-    getNpcStationDataById,
-    getPlanetById,
-    getRegionById,
-    getSystemById,
-} from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import { getMoonName, getPlanetName } from "@/utils/name";
 import { displayPercent } from "@/utils/unit";
 
@@ -67,6 +60,8 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
         navigateToUniverseMoon,
     } = useSPARouter();
 
+    const { getData } = useData();
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: navigate funcs are constant
     useEffect(() => {
         let mounted = true;
@@ -74,18 +69,18 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
 
         (async () => {
             const position = [];
-            const station = await getNpcStationDataById(npcStationId);
+            const station = await getData("getNpcStationDataById", npcStationId);
 
             const systemId = station.solarSystemId;
             console.log(npcStationId, station);
-            const systemBrief = await getSystemById(systemId);
+            const systemBrief = await getData("getSystemById", systemId);
 
             const systemName = await loc(systemBrief.name_id);
 
             let planet = null;
             if (station.moonId) {
-                const moon = await getMoonById(station.moonId);
-                planet = await getPlanetById(moon.planet_id);
+                const moon = await getData("getMoonById", station.moonId);
+                planet = await getData("getPlanetById", moon.planet_id);
                 const moonName = moon.moon_name_id
                     ? await loc(moon.moon_name_id)
                     : getMoonName(systemName, planet.celestial_index, moon.celestial_index, t);
@@ -94,7 +89,7 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
                     onNavigate: () => navigateToUniverseMoon(moon.moon_id),
                 });
             } else if (station.planetId) {
-                planet = await getPlanetById(station.planetId);
+                planet = await getData("getPlanetById", station.planetId);
             }
 
             if (planet) {
@@ -111,12 +106,15 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
                 name: systemName,
                 onNavigate: () => navigateToUniverseSystem(systemBrief.solar_system_id),
             });
-            const constellation = await getConstellationById(systemBrief.constellation_id);
+            const constellation = await getData(
+                "getConstellationById",
+                systemBrief.constellation_id
+            );
             position.push({
                 name: await loc(constellation.name_id),
                 onNavigate: () => navigateToUniverseConstellation(constellation.constellation_id),
             });
-            const region = await getRegionById(systemBrief.region_id);
+            const region = await getData("getRegionById", systemBrief.region_id);
             position.push({
                 name: await loc(region.name_id),
                 onNavigate: () => navigateToUniverseRegion(region.region_id),
@@ -136,7 +134,7 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
         return () => {
             mounted = false;
         };
-    }, [npcStationId, loc, t]);
+    }, [npcStationId, loc, t, getData]);
 
     if (isLoading || !npcStationData) {
         return (

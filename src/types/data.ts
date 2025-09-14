@@ -208,3 +208,11 @@ export interface NpcStationBrief {
     planet_id?: number;
     star_id?: number;
 }
+
+export interface NpcCorporationBrief {
+    npc_corporation_id: number;
+    name_id: number;
+    ticker_name: string;
+    description_id?: number;
+    icon_id?: number;
+}

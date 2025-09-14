@@ -33,13 +33,7 @@ import {
 import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
-import {
-    getConstellationById,
-    getConstellationDetailById,
-    getRegionById,
-    getRegionDetailById,
-    getSystemById,
-} from "@/native/data";
+import { useData } from "@/stores/dataStore";
 import type { RegionBrief } from "@/types/data";
 import { getSecurityStatusColor } from "@/utils/color";
 
@@ -51,17 +45,19 @@ const RegionTree: React.FC<{ regionId: number }> = ({ regionId }) => {
     const [tree, setTree] = useState<TreeDataItem[]>([]);
     const { navigateToUniverseConstellation, navigateToUniverseSystem } = useSPARouter();
 
+    const { getData } = useData();
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: const router func
     useEffect(() => {
         let mounted = true;
         (async () => {
-            const reg = await getRegionDetailById(regionId);
+            const reg = await getData("getRegionDetailById", regionId);
             if (!mounted) return;
             console.log("region detail", reg);
 
             const newTree: TreeDataItem[] = await Promise.all(
                 reg.constellationIds.map(async (consId) => {
-                    const cons = await getConstellationDetailById(consId);
+                    const cons = await getData("getConstellationDetailById", consId);
 
                     const children = cons.solarSystemIds.map((sysId) => ({
                         id: sysId.toString(),
@@ -94,7 +90,7 @@ const RegionTree: React.FC<{ regionId: number }> = ({ regionId }) => {
         return () => {
             mounted = false;
         };
-    }, [regionId]);
+    }, [regionId, getData]);
 
     return <TreeView data={tree} className="p-0 m-0" />;
 };
@@ -103,10 +99,12 @@ const ConstellationNode: React.FC<{ constellationId: number }> = ({ constellatio
     const { loc } = useLocalization();
     const [name, setName] = useState<string | null>(null);
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         (async () => {
-            const cons = await getConstellationById(constellationId);
+            const cons = await getData("getConstellationById", constellationId);
             const name = await loc(cons.name_id);
             if (mounted) {
                 setName(name);
@@ -115,7 +113,7 @@ const ConstellationNode: React.FC<{ constellationId: number }> = ({ constellatio
         return () => {
             mounted = false;
         };
-    }, [constellationId, loc]);
+    }, [constellationId, loc, getData]);
 
     if (!name) {
         return <div>Loading...</div>;
@@ -133,10 +131,12 @@ const SystemNode: React.FC<{ systemId: number }> = ({ systemId }) => {
     const [name, setName] = useState<string | null>(null);
     const [security, setSecurity] = useState<number>(-1.0);
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         (async () => {
-            const sys = await getSystemById(systemId);
+            const sys = await getData("getSystemById", systemId);
             const name = await loc(sys.name_id);
             const sec = sys.security_status;
             if (mounted) {
@@ -147,7 +147,7 @@ const SystemNode: React.FC<{ systemId: number }> = ({ systemId }) => {
         return () => {
             mounted = false;
         };
-    }, [systemId, loc]);
+    }, [systemId, loc, getData]);
 
     if (!name) {
         return <div>Loading...</div>;
@@ -181,13 +181,15 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
     const leftDescRef = useRef<HTMLDivElement>(null);
     const rightTreeRef = useRef<HTMLDivElement>(null);
 
+    const { getData } = useData();
+
     useEffect(() => {
         let mounted = true;
         setIsLoading(true);
 
         (async () => {
-            const reg = await getRegionDetailById(regionId);
-            const regBrief = await getRegionById(regionId);
+            const reg = await getData("getRegionDetailById", regionId);
+            const regBrief = await getData("getRegionById", regionId);
 
             const name = await loc(reg.nameId);
             let desc = "";
@@ -208,7 +210,7 @@ export const RegionDetailPage: React.FC<RegionDetailPageProps> = ({ regionId }) 
         return () => {
             mounted = false;
         };
-    }, [regionId, loc]);
+    }, [regionId, loc, getData]);
 
     useLayoutEffect(() => {
         const leftEl = leftDescRef.current;

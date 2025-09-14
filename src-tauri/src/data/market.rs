@@ -205,7 +205,7 @@ pub async fn get_market_price(
                 let _ = window.emit("market_price_success", &price_data);
             }
             Err(e) => {
-                let _ = window.emit("market_price_error", &format!("Type {type_id}: {e}"));
+                let _ = window.emit("market_price_error", &format!("Type {type_id}: {e:?}"));
             }
         }
 

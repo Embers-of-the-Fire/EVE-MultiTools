@@ -36,6 +36,21 @@ export function useSPARouter() {
         router.navigateWithParams("/explore/faction/detail", { factionId });
     };
 
+    const navigateToNpcCorporationDetail = (corporationId: number, title?: string) => {
+        const finalTitle = title || t("explore.npc_corporation.detail.title");
+
+        // Add to detail history
+        router.addDetailHistory({
+            id: `npc-corporation-${corporationId}`,
+            title: finalTitle,
+            path: "/explore/npc-corporation/detail",
+            params: { corporationId },
+            timestamp: Date.now(),
+        });
+
+        router.navigateWithParams("/explore/npc-corporation/detail", { corporationId });
+    };
+
     const navigateToUniverseRegion = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.region.detail");
 
@@ -129,6 +144,7 @@ export function useSPARouter() {
         ...router,
         navigateToTypeDetail,
         navigateToFactionDetail,
+        navigateToNpcCorporationDetail,
         navigateToUniverseRegion,
         navigateToUniverseConstellation,
         navigateToUniverseSystem,
