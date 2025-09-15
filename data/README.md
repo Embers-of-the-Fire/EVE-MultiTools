@@ -90,6 +90,7 @@ The bundle creator's work space is `[project]/data/bundle-ws`.
 The bundler will create the bundle based on what provided in the workspace.
 ```text
 - [project]/data/bundle-ws
+  - [workspace-name]
     - metadata.json          *1
     - start.ini              *2
     - resfileindex.txt       *2
