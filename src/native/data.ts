@@ -7,6 +7,7 @@ import {
     Planet,
     Region,
     SolarSystem,
+    StationOperation,
 } from "@/data/schema";
 import {
     type Category,
@@ -26,6 +27,7 @@ import {
     type Skin,
     type SkinLicense,
     type SkinMaterial,
+    type StationOperationBrief,
     type SystemBrief,
     type Type,
     type WormholeClass,
@@ -441,4 +443,24 @@ export async function getNpcCorporationDataById(npcCorporationId: number): Promi
         throw new Error("Failed to fetch NPC Corporation data");
     }
     return NpcCorporation.fromBinary(new Uint8Array(bytes));
+}
+
+export async function getStationOperationById(operationId: number): Promise<StationOperationBrief> {
+    const result = await tauriInvoke<StationOperationBrief | null>("get_station_operation_by_id", {
+        operationId,
+    });
+    if (!result) {
+        throw new Error("Station Operation not found");
+    }
+    return result;
+}
+
+export async function getStationOperationDataById(operationId: number): Promise<StationOperation> {
+    const bytes = await tauriInvoke<ArrayBuffer>("get_station_operation_data_by_id", {
+        operationId,
+    });
+    if (!bytes) {
+        throw new Error("Failed to fetch Station Operation data");
+    }
+    return StationOperation.fromBinary(new Uint8Array(bytes));
 }

@@ -6,7 +6,7 @@ import { useLocalization } from "@/hooks/useLocalization";
 import { useData } from "@/stores/dataStore";
 import type { UniverseObject, UniverseObjectType } from "@/types/universe";
 import { getSecurityStatusColor } from "@/utils/color";
-import { getMoonName, getPlanetName } from "@/utils/name";
+import { getMoonName, getPlanetName, getStationName } from "@/utils/name";
 import type { BadgeConfig, GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
@@ -139,8 +139,7 @@ function useUniverseObjectData(obj: UniverseObject): GenericData {
 
                 name = getMoonName(systemName, planet.celestial_index, moon.celestial_index, t);
             } else if (obj.type === "npc-station") {
-                const npcStation = await getData("getNpcStationById", obj.id);
-                name = npcStation.station_id.toString();
+                name = await getStationName(obj.id, getData, loc, t);
             }
 
             if (mounted) {

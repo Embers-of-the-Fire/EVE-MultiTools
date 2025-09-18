@@ -86,6 +86,8 @@ export const createDataQuery = <K extends AsyncDataFunctionKeys>(
             getNpcStationDataById: dataApi.getNpcStationDataById,
             getNpcCorporationById: dataApi.getNpcCorporationById,
             getNpcCorporationDataById: dataApi.getNpcCorporationDataById,
+            getStationOperationById: dataApi.getStationOperationById,
+            getStationOperationDataById: dataApi.getStationOperationDataById,
         } as const;
 
         const fn = functionMap[functionName];
@@ -125,6 +127,8 @@ export const useData = () => {
         getData,
     };
 };
+
+export type DataGetter = ReturnType<typeof useData>["getData"];
 
 // Type-safe helper functions for commonly used patterns
 export const createTypedDataQuery = {

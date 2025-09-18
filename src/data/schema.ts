@@ -617,6 +617,32 @@ export interface NpcCorporationLocalizationLookup_NpcCorporationLocEntry {
     descriptionId?: number;
 }
 /**
+ * @generated from protobuf message eve_multitools.data.StationOperationLocalizationLookup
+ */
+export interface StationOperationLocalizationLookup {
+    /**
+     * @generated from protobuf field: repeated eve_multitools.data.StationOperationLocalizationLookup.StationOperationLocEntry station_operation_entries = 1
+     */
+    stationOperationEntries: StationOperationLocalizationLookup_StationOperationLocEntry[];
+}
+/**
+ * @generated from protobuf message eve_multitools.data.StationOperationLocalizationLookup.StationOperationLocEntry
+ */
+export interface StationOperationLocalizationLookup_StationOperationLocEntry {
+    /**
+     * @generated from protobuf field: required int32 operation_id = 1
+     */
+    operationId: number;
+    /**
+     * @generated from protobuf field: required uint32 name_id = 2
+     */
+    nameId: number;
+    /**
+     * @generated from protobuf field: optional uint32 description_id = 3
+     */
+    descriptionId?: number;
+}
+/**
  * Faction definition
  *
  * @generated from protobuf message eve_multitools.data.Faction
@@ -965,6 +991,65 @@ export enum NpcCorporation_Size {
      * @generated from protobuf enum value: SIZE_T = 5;
      */
     SIZE_T = 5,
+}
+/**
+ * Station operation definition
+ *
+ * @generated from protobuf message eve_multitools.data.StationOperation
+ */
+export interface StationOperation {
+    /**
+     * @generated from protobuf field: required int32 operation_id = 1
+     */
+    operationId: number;
+    /**
+     * @generated from protobuf field: required int32 activity_id = 2
+     */
+    activityId: number;
+    /**
+     * @generated from protobuf field: required double border = 3
+     */
+    border: number;
+    /**
+     * @generated from protobuf field: required double corridor = 4
+     */
+    corridor: number;
+    /**
+     * @generated from protobuf field: optional int32 description_id = 5
+     */
+    descriptionId?: number;
+    /**
+     * @generated from protobuf field: required double fringe = 6
+     */
+    fringe: number;
+    /**
+     * @generated from protobuf field: required double hub = 7
+     */
+    hub: number;
+    /**
+     * @generated from protobuf field: required double manufacturing_factor = 8
+     */
+    manufacturingFactor: number;
+    /**
+     * @generated from protobuf field: required int32 operation_name_id = 9
+     */
+    operationNameId: number;
+    /**
+     * @generated from protobuf field: required double ratio = 10
+     */
+    ratio: number;
+    /**
+     * @generated from protobuf field: required double research_factor = 11
+     */
+    researchFactor: number;
+    /**
+     * @generated from protobuf field: repeated int32 services = 12
+     */
+    services: number[];
+    /**
+     * @generated from protobuf field: repeated int32 station_types = 13
+     */
+    stationTypes: number[];
 }
 /**
  * @generated from protobuf message eve_multitools.data.UniversePoint
@@ -5016,6 +5101,182 @@ class NpcCorporationLocalizationLookup_NpcCorporationLocEntry$Type extends Messa
 export const NpcCorporationLocalizationLookup_NpcCorporationLocEntry =
     new NpcCorporationLocalizationLookup_NpcCorporationLocEntry$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class StationOperationLocalizationLookup$Type extends MessageType<StationOperationLocalizationLookup> {
+    constructor() {
+        super("eve_multitools.data.StationOperationLocalizationLookup", [
+            {
+                no: 1,
+                name: "station_operation_entries",
+                kind: "message",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: () => StationOperationLocalizationLookup_StationOperationLocEntry,
+            },
+        ]);
+    }
+    create(
+        value?: PartialMessage<StationOperationLocalizationLookup>
+    ): StationOperationLocalizationLookup {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.stationOperationEntries = [];
+        if (value !== undefined)
+            reflectionMergePartial<StationOperationLocalizationLookup>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: StationOperationLocalizationLookup
+    ): StationOperationLocalizationLookup {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated eve_multitools.data.StationOperationLocalizationLookup.StationOperationLocEntry station_operation_entries */ 1:
+                    message.stationOperationEntries.push(
+                        StationOperationLocalizationLookup_StationOperationLocEntry.internalBinaryRead(
+                            reader,
+                            reader.uint32(),
+                            options
+                        )
+                    );
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: StationOperationLocalizationLookup,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* repeated eve_multitools.data.StationOperationLocalizationLookup.StationOperationLocEntry station_operation_entries = 1; */
+        for (let i = 0; i < message.stationOperationEntries.length; i++)
+            StationOperationLocalizationLookup_StationOperationLocEntry.internalBinaryWrite(
+                message.stationOperationEntries[i],
+                writer.tag(1, WireType.LengthDelimited).fork(),
+                options
+            ).join();
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.StationOperationLocalizationLookup
+ */
+export const StationOperationLocalizationLookup = new StationOperationLocalizationLookup$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class StationOperationLocalizationLookup_StationOperationLocEntry$Type extends MessageType<StationOperationLocalizationLookup_StationOperationLocEntry> {
+    constructor() {
+        super("eve_multitools.data.StationOperationLocalizationLookup.StationOperationLocEntry", [
+            { no: 1, name: "operation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "name_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+            {
+                no: 3,
+                name: "description_id",
+                kind: "scalar",
+                opt: true,
+                T: 13 /*ScalarType.UINT32*/,
+            },
+        ]);
+    }
+    create(
+        value?: PartialMessage<StationOperationLocalizationLookup_StationOperationLocEntry>
+    ): StationOperationLocalizationLookup_StationOperationLocEntry {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.operationId = 0;
+        message.nameId = 0;
+        if (value !== undefined)
+            reflectionMergePartial<StationOperationLocalizationLookup_StationOperationLocEntry>(
+                this,
+                message,
+                value
+            );
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: StationOperationLocalizationLookup_StationOperationLocEntry
+    ): StationOperationLocalizationLookup_StationOperationLocEntry {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 operation_id */ 1:
+                    message.operationId = reader.int32();
+                    break;
+                case /* required uint32 name_id */ 2:
+                    message.nameId = reader.uint32();
+                    break;
+                case /* optional uint32 description_id */ 3:
+                    message.descriptionId = reader.uint32();
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: StationOperationLocalizationLookup_StationOperationLocEntry,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 operation_id = 1; */
+        if (message.operationId !== 0) writer.tag(1, WireType.Varint).int32(message.operationId);
+        /* required uint32 name_id = 2; */
+        if (message.nameId !== 0) writer.tag(2, WireType.Varint).uint32(message.nameId);
+        /* optional uint32 description_id = 3; */
+        if (message.descriptionId !== undefined)
+            writer.tag(3, WireType.Varint).uint32(message.descriptionId);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.StationOperationLocalizationLookup.StationOperationLocEntry
+ */
+export const StationOperationLocalizationLookup_StationOperationLocEntry =
+    new StationOperationLocalizationLookup_StationOperationLocEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Faction$Type extends MessageType<Faction> {
     constructor() {
         super("eve_multitools.data.Faction", [
@@ -6171,6 +6432,177 @@ class NpcCorporation_Division$Type extends MessageType<NpcCorporation_Division> 
  * @generated MessageType for protobuf message eve_multitools.data.NpcCorporation.Division
  */
 export const NpcCorporation_Division = new NpcCorporation_Division$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class StationOperation$Type extends MessageType<StationOperation> {
+    constructor() {
+        super("eve_multitools.data.StationOperation", [
+            { no: 1, name: "operation_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "activity_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "border", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 4, name: "corridor", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 5, name: "description_id", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 6, name: "fringe", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "hub", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 8, name: "manufacturing_factor", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 9, name: "operation_name_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 10, name: "ratio", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 11, name: "research_factor", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            {
+                no: 12,
+                name: "services",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+            {
+                no: 13,
+                name: "station_types",
+                kind: "scalar",
+                repeat: 2 /*RepeatType.UNPACKED*/,
+                T: 5 /*ScalarType.INT32*/,
+            },
+        ]);
+    }
+    create(value?: PartialMessage<StationOperation>): StationOperation {
+        const message = globalThis.Object.create(this.messagePrototype!);
+        message.operationId = 0;
+        message.activityId = 0;
+        message.border = 0;
+        message.corridor = 0;
+        message.fringe = 0;
+        message.hub = 0;
+        message.manufacturingFactor = 0;
+        message.operationNameId = 0;
+        message.ratio = 0;
+        message.researchFactor = 0;
+        message.services = [];
+        message.stationTypes = [];
+        if (value !== undefined) reflectionMergePartial<StationOperation>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(
+        reader: IBinaryReader,
+        length: number,
+        options: BinaryReadOptions,
+        target?: StationOperation
+    ): StationOperation {
+        const message = target ?? this.create(),
+            end = reader.pos + length;
+        while (reader.pos < end) {
+            const [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required int32 operation_id */ 1:
+                    message.operationId = reader.int32();
+                    break;
+                case /* required int32 activity_id */ 2:
+                    message.activityId = reader.int32();
+                    break;
+                case /* required double border */ 3:
+                    message.border = reader.double();
+                    break;
+                case /* required double corridor */ 4:
+                    message.corridor = reader.double();
+                    break;
+                case /* optional int32 description_id */ 5:
+                    message.descriptionId = reader.int32();
+                    break;
+                case /* required double fringe */ 6:
+                    message.fringe = reader.double();
+                    break;
+                case /* required double hub */ 7:
+                    message.hub = reader.double();
+                    break;
+                case /* required double manufacturing_factor */ 8:
+                    message.manufacturingFactor = reader.double();
+                    break;
+                case /* required int32 operation_name_id */ 9:
+                    message.operationNameId = reader.int32();
+                    break;
+                case /* required double ratio */ 10:
+                    message.ratio = reader.double();
+                    break;
+                case /* required double research_factor */ 11:
+                    message.researchFactor = reader.double();
+                    break;
+                case /* repeated int32 services */ 12:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.services.push(reader.int32());
+                    else message.services.push(reader.int32());
+                    break;
+                case /* repeated int32 station_types */ 13:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e; )
+                            message.stationTypes.push(reader.int32());
+                    else message.stationTypes.push(reader.int32());
+                    break;
+                default: {
+                    const u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(
+                            `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+                        );
+                    const d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(
+                            this.typeName,
+                            message,
+                            fieldNo,
+                            wireType,
+                            d
+                        );
+                }
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(
+        message: StationOperation,
+        writer: IBinaryWriter,
+        options: BinaryWriteOptions
+    ): IBinaryWriter {
+        /* required int32 operation_id = 1; */
+        if (message.operationId !== 0) writer.tag(1, WireType.Varint).int32(message.operationId);
+        /* required int32 activity_id = 2; */
+        if (message.activityId !== 0) writer.tag(2, WireType.Varint).int32(message.activityId);
+        /* required double border = 3; */
+        if (message.border !== 0) writer.tag(3, WireType.Bit64).double(message.border);
+        /* required double corridor = 4; */
+        if (message.corridor !== 0) writer.tag(4, WireType.Bit64).double(message.corridor);
+        /* optional int32 description_id = 5; */
+        if (message.descriptionId !== undefined)
+            writer.tag(5, WireType.Varint).int32(message.descriptionId);
+        /* required double fringe = 6; */
+        if (message.fringe !== 0) writer.tag(6, WireType.Bit64).double(message.fringe);
+        /* required double hub = 7; */
+        if (message.hub !== 0) writer.tag(7, WireType.Bit64).double(message.hub);
+        /* required double manufacturing_factor = 8; */
+        if (message.manufacturingFactor !== 0)
+            writer.tag(8, WireType.Bit64).double(message.manufacturingFactor);
+        /* required int32 operation_name_id = 9; */
+        if (message.operationNameId !== 0)
+            writer.tag(9, WireType.Varint).int32(message.operationNameId);
+        /* required double ratio = 10; */
+        if (message.ratio !== 0) writer.tag(10, WireType.Bit64).double(message.ratio);
+        /* required double research_factor = 11; */
+        if (message.researchFactor !== 0)
+            writer.tag(11, WireType.Bit64).double(message.researchFactor);
+        /* repeated int32 services = 12; */
+        for (let i = 0; i < message.services.length; i++)
+            writer.tag(12, WireType.Varint).int32(message.services[i]);
+        /* repeated int32 station_types = 13; */
+        for (let i = 0; i < message.stationTypes.length; i++)
+            writer.tag(13, WireType.Varint).int32(message.stationTypes[i]);
+        const u = options.writeUnknownFields;
+        if (u !== false)
+            (u === true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message eve_multitools.data.StationOperation
+ */
+export const StationOperation = new StationOperation$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class UniversePoint$Type extends MessageType<UniversePoint> {
     constructor() {

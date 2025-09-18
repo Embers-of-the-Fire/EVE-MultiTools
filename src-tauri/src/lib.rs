@@ -85,6 +85,8 @@ pub fn run() {
             data::statics::market_group::get_market_group_raw,
             data::statics::npc_corporations::get_npc_corporation_by_id,
             data::statics::npc_corporations::get_npc_corporation_data_by_id,
+            data::statics::station_operations::get_station_operation_by_id,
+            data::statics::station_operations::get_station_operation_data_by_id,
             data::links::get_link_url,
             data::localization::get_localization,
             data::localization::get_localization_by_language,

@@ -28,3 +28,6 @@ export const useLocalization = () => {
         uiLoc,
     };
 };
+
+export type LocGetter = ReturnType<typeof useLocalization>["loc"];
+export type UiLocGetter = ReturnType<typeof useLocalization>["uiLoc"];

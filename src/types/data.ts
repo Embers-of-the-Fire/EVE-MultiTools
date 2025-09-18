@@ -216,3 +216,9 @@ export interface NpcCorporationBrief {
     description_id?: number;
     icon_id?: number;
 }
+
+export interface StationOperationBrief {
+    operation_id: number;
+    name_id: number;
+    description_id?: number;
+}

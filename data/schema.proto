@@ -215,6 +215,15 @@ message NpcCorporationLocalizationLookup {
     repeated NpcCorporationLocEntry npc_corporation_entries = 1;
 }
 
+message StationOperationLocalizationLookup {
+    message StationOperationLocEntry {
+        required int32 operation_id = 1;
+        required uint32 name_id = 2;
+        optional uint32 description_id = 3;
+    }
+    repeated StationOperationLocEntry station_operation_entries = 1;
+}
+
 // Faction definition
 message Faction {
     required int32 name_id = 1;
@@ -319,6 +328,23 @@ message NpcCorporation {
     required double tax_rate = 30;
     required string ticker_name = 31;
     required bool unique_name = 32;
+}
+
+// Station operation definition
+message StationOperation {
+    required int32 operation_id = 1;
+    required int32 activity_id = 2;
+    required double border = 3;
+    required double corridor = 4;
+    optional int32 description_id = 5;
+    required double fringe = 6;
+    required double hub = 7;
+    required double manufacturing_factor = 8;
+    required int32 operation_name_id = 9;
+    required double ratio = 10;
+    required double research_factor = 11;
+    repeated int32 services = 12;
+    repeated int32 station_types = 13;
 }
 
 message UniversePoint {

@@ -24,7 +24,7 @@ import { useTheme } from "@/hooks/useAppSettings";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useData } from "@/stores/dataStore";
-import { getMoonName, getPlanetName } from "@/utils/name";
+import { getMoonName, getPlanetName, getStationName } from "@/utils/name";
 import { displayPercent } from "@/utils/unit";
 
 export interface NpcStationDetailPageProps {
@@ -80,6 +80,7 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
             let planet = null;
             if (station.moonId) {
                 const moon = await getData("getMoonById", station.moonId);
+                console.log("moon2", moon);
                 planet = await getData("getPlanetById", moon.planet_id);
                 const moonName = moon.moon_name_id
                     ? await loc(moon.moon_name_id)
@@ -122,8 +123,10 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
 
             setGalaxyPosition(position.reverse());
 
+            const name = await getStationName(npcStationId, getData, loc, t);
+
             if (mounted) {
-                setName(station.stationId.toString());
+                setName(name);
                 setNpcStationData(station);
                 setGalaxyPosition(position.reverse());
             }
