@@ -10,6 +10,7 @@ is not meant to be server-specific.
 
 A bundle for a specific server contains the following major parts:
 -   A metadata descriptor.
+-   Several configuration files.
 -   Resource folder
 
 The data resources are stored in a single SQLite database,
@@ -18,6 +19,10 @@ while images are stored separately.
 Unlike some other tools such as PyFA, EVE MultiTools choses to follow
 most data behavior in the game.
 Which means the source data might be unable to read for human.
+
+To support various platform and server instances,
+You have to create your own config files (as listed below)
+because the app won't hard-code any external resource.
 
 ### Metadata Descriptor
 
@@ -40,12 +45,38 @@ The file itself is actually a JSON file:
 }
 ```
 
+> Note: Though the example above uses json-c, the config parser
+> does not accept such syntax.
+
 ### Resource Folder
 
-There're two major part of resources, the static data and the images.
-
-The static data are stored in `res/static.sqlite`,
-and the images are stored in `res/images` (folder).
+Currently the bundle resource folder layout is:
+```text
+- images/
+  - factions/
+    - icons/
+      - xxx.png   # faction icon
+    - logos/
+      - xxx.png   # faction logo
+  - graphics/
+    - id.png      # graphic
+    - id_bp.png   # blueprint
+    - id_bpc.png  # blueprint copy
+  - icons/
+    - id.png      # icon
+  - skins/
+    - materials/
+      - id.png    # skin material
+- localizations/
+  - localizations.pb # all localizations def
+  - *_lookup.pb   # fast lookup table
+- static/
+  - *.pb          # static data, load when starting
+  - *.db          # static data, load when request
+- universe/
+  - universe.db      # system and larger universe obj
+  - solar_system.db  # system and smaller universe obj
+```
 
 ## How to Create a Bundle
 
