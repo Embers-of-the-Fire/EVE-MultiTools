@@ -95,7 +95,7 @@ export const TypeDetailPage: React.FC<TypeDetailPageProps> = ({ typeId }) => {
                         ? getData("getGroup", typeData.group_id)
                         : Promise.resolve(null),
                     typeData.meta_group_id
-                        ? getData("getMarketGroup", typeData.meta_group_id)
+                        ? getData("getMetaGroup", typeData.meta_group_id)
                         : Promise.resolve(null),
                 ]);
 
