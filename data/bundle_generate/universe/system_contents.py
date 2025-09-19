@@ -238,10 +238,10 @@ async def collect_system_contents(index: ResourceTree, root: Path, loc_root: Pat
         celestial_counter = 0
         previous_orbit_id = -1
         for moon_id, moon in sorted(planet.moons.items(), key=lambda item: item[0]):
-            celestial_counter += 1
             if moon.orbitID != previous_orbit_id:
                 celestial_counter = 0
                 previous_orbit_id = moon.orbitID
+            celestial_counter += 1
             moons[moon_id] = (
                 moon,
                 MoonExtraInfo(
