@@ -148,60 +148,64 @@ export const MoonDetailPage: React.FC<MoonDetailPageProps> = ({ moonId }) => {
 
                             <div className="flex-1 space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
+                                    <h2 className="text-2xl font-bold flex flex-col">
                                         {name}
-                                        <ChevronLeft className="text-sm h-[1em] w-[1em]" />
-                                        <Button
-                                            variant="link"
-                                            className="text-sm p-0"
-                                            onClick={() => {
-                                                if (!planetBrief) return;
-                                                navigateToUniversePlanet(planetBrief.planet_id);
-                                            }}
-                                        >
-                                            {planetName ||
-                                                t("explore.universe.detail.unknown_planet")}
-                                        </Button>
-                                        <ChevronLeft className="text-sm h-[1em] w-[1em]" />
-                                        <Button
-                                            variant="link"
-                                            className="text-sm p-0"
-                                            onClick={() => {
-                                                if (!systemBrief) return;
-                                                navigateToUniverseSystem(
-                                                    systemBrief.solar_system_id
-                                                );
-                                            }}
-                                        >
-                                            {systemName ||
-                                                t("explore.universe.detail.unknown_system")}
-                                        </Button>
-                                        <ChevronLeft className="text-sm h-[1em] w-[1em]" />
-                                        <Button
-                                            variant="link"
-                                            className="text-sm p-0"
-                                            onClick={() => {
-                                                if (!systemBrief) return;
-                                                navigateToUniverseConstellation(
-                                                    systemBrief.constellation_id
-                                                );
-                                            }}
-                                        >
-                                            {constellationName ||
-                                                t("explore.universe.detail.unknown_constellation")}
-                                        </Button>
-                                        <ChevronLeft className="text-sm h-[1em] w-[1em]" />
-                                        <Button
-                                            variant="link"
-                                            className="text-sm p-0"
-                                            onClick={() => {
-                                                if (!systemBrief) return;
-                                                navigateToUniverseRegion(systemBrief.region_id);
-                                            }}
-                                        >
-                                            {regionName ||
-                                                t("explore.universe.detail.unknown_region")}
-                                        </Button>
+                                        <div className="flex flex-row items-center gap-2 ml-8">
+                                            <ChevronLeft className="text-sm h-[1em] w-[1em]" />
+                                            <Button
+                                                variant="link"
+                                                className="text-sm p-0"
+                                                onClick={() => {
+                                                    if (!planetBrief) return;
+                                                    navigateToUniversePlanet(planetBrief.planet_id);
+                                                }}
+                                            >
+                                                {planetName ||
+                                                    t("explore.universe.detail.unknown_planet")}
+                                            </Button>
+                                            <ChevronLeft className="text-sm h-[1em] w-[1em]" />
+                                            <Button
+                                                variant="link"
+                                                className="text-sm p-0"
+                                                onClick={() => {
+                                                    if (!systemBrief) return;
+                                                    navigateToUniverseSystem(
+                                                        systemBrief.solar_system_id
+                                                    );
+                                                }}
+                                            >
+                                                {systemName ||
+                                                    t("explore.universe.detail.unknown_system")}
+                                            </Button>
+                                            <ChevronLeft className="text-sm h-[1em] w-[1em]" />
+                                            <Button
+                                                variant="link"
+                                                className="text-sm p-0"
+                                                onClick={() => {
+                                                    if (!systemBrief) return;
+                                                    navigateToUniverseConstellation(
+                                                        systemBrief.constellation_id
+                                                    );
+                                                }}
+                                            >
+                                                {constellationName ||
+                                                    t(
+                                                        "explore.universe.detail.unknown_constellation"
+                                                    )}
+                                            </Button>
+                                            <ChevronLeft className="text-sm h-[1em] w-[1em]" />
+                                            <Button
+                                                variant="link"
+                                                className="text-sm p-0"
+                                                onClick={() => {
+                                                    if (!systemBrief) return;
+                                                    navigateToUniverseRegion(systemBrief.region_id);
+                                                }}
+                                            >
+                                                {regionName ||
+                                                    t("explore.universe.detail.unknown_region")}
+                                            </Button>
+                                        </div>
                                     </h2>
                                     <p className="text-sm text-muted-foreground">ID: {moonId}</p>
                                 </div>

@@ -171,21 +171,23 @@ export const NpcStationDetailPage: React.FC<NpcStationDetailPageProps> = ({ npcS
 
                             <div className="flex-1 space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold flex flex-row items-center gap-2">
+                                    <h2 className="text-2xl font-bold flex flex-col">
                                         {name}
-                                        {galaxyPosition.length > 0 &&
-                                            galaxyPosition.map((pos) => (
-                                                <Fragment key={pos.name}>
-                                                    <ChevronLeft className="text-sm h-[1em] w-[1em]" />
-                                                    <Button
-                                                        variant="link"
-                                                        className="text-sm p-0"
-                                                        onClick={pos.onNavigate}
-                                                    >
-                                                        {pos.name}
-                                                    </Button>
-                                                </Fragment>
-                                            ))}
+                                        <div className="flex flex-row items-center gap-2 ml-8">
+                                            {galaxyPosition.length > 0 &&
+                                                galaxyPosition.map((pos) => (
+                                                    <Fragment key={pos.name}>
+                                                        <ChevronLeft className="text-sm h-[1em] w-[1em]" />
+                                                        <Button
+                                                            variant="link"
+                                                            className="text-sm p-0"
+                                                            onClick={pos.onNavigate}
+                                                        >
+                                                            {pos.name}
+                                                        </Button>
+                                                    </Fragment>
+                                                ))}
+                                        </div>
                                     </h2>
                                     <p className="text-sm text-muted-foreground">
                                         ID: {npcStationId}
