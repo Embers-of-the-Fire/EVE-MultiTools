@@ -302,7 +302,8 @@
                 "disallow_scanning": "禁用扫描",
                 "disallow_cyno": "禁用诱导",
                 "planets": "行星",
-                "detail": "星系详情"
+                "detail": "星系详情",
+                "system_tree": "星系树"
             },
             "constellation": {
                 "constellation_attributes": {

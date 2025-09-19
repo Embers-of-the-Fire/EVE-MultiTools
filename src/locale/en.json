@@ -307,7 +307,8 @@
                 "disallow_scanning": "Disallow Scanning",
                 "disallow_cyno": "Disallow Cyno",
                 "planets": "Planets",
-                "detail": "System Detail"
+                "detail": "System Detail",
+                "system_tree": "System Tree"
             },
             "constellation": {
                 "constellation_attributes": {
