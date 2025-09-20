@@ -23,6 +23,7 @@ import {
     type NpcCorporationBrief,
     type NpcStationBrief,
     type PlanetBrief,
+    type Price,
     type RegionBrief,
     type Skin,
     type SkinLicense,
@@ -214,14 +215,14 @@ export async function getMarketGroupRaw(): Promise<MarketGroupCollection> {
     return MarketGroupCollection.fromBinary(new Uint8Array(bytes));
 }
 
-export async function getMarketPrice(typeId: number): Promise<void> {
-    await tauriInvoke<void>("get_market_price", {
+export async function getMarketPrice(typeId: number): Promise<Price> {
+    return await tauriInvoke<Price>("get_market_price", {
         typeId,
     });
 }
 
-export async function getMarketPrices(typeIds: number[]): Promise<void> {
-    await Promise.all(typeIds.map((typeId) => getMarketPrice(typeId)));
+export async function getMarketPrices(typeIds: number[]): Promise<Price[]> {
+    return await Promise.all(typeIds.map((typeId) => getMarketPrice(typeId)));
 }
 
 export async function getLinkUrl(

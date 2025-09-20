@@ -1,10 +1,9 @@
 use std::f64;
 use std::sync::Arc;
 
-use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
-use tauri::{Emitter, Manager};
+use tauri::Manager;
 use tokio::sync::Semaphore;
 
 use crate::{
@@ -181,37 +180,25 @@ impl MarketService {
 
 #[tauri::command]
 pub async fn get_market_price(
-    window: tauri::Window,
     app_handle: tauri::AppHandle,
     type_id: i64,
-) -> Result<(), String> {
-    // BACKGROUND_RUNTIME.spawn(async move {
-    tokio::spawn(async move {
-        let _permit = LOW_PRIORITY_SEMAPHORE.acquire().await?;
+) -> Result<PriceRecord, String> {
+    let _permit = LOW_PRIORITY_SEMAPHORE
+        .acquire()
+        .await
+        .map_err(|e| e.to_string())?;
 
-        let bundle = app_handle.state::<crate::bundle::AppBundleState>();
+    let bundle = app_handle.state::<crate::bundle::AppBundleState>();
 
-        let cache = bundle.read().await;
-        let activated_bundle = cache
-            .activated_bundle
-            .as_ref()
-            .ok_or(anyhow!("No activated bundle found"))?;
+    let cache = bundle.read().await;
+    let activated_bundle = cache
+        .activated_bundle
+        .as_ref()
+        .ok_or("No activated bundle found".to_string())?;
 
-        match activated_bundle
-            .market
-            .fetch_market_price(&activated_bundle.esi, type_id)
-            .await
-        {
-            Ok(price_data) => {
-                let _ = window.emit("market_price_success", &price_data);
-            }
-            Err(e) => {
-                let _ = window.emit("market_price_error", &format!("Type {type_id}: {e:?}"));
-            }
-        }
-        Ok::<_, anyhow::Error>(())
-    });
-    // });
-
-    Ok(())
+    activated_bundle
+        .market
+        .fetch_market_price(&activated_bundle.esi, type_id)
+        .await
+        .map_err(|e| format!("Type {type_id}: {e:?}"))
 }
