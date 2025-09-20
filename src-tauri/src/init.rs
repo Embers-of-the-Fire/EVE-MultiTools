@@ -76,7 +76,7 @@ pub(crate) async fn init(app: &mut App) -> anyhow::Result<()> {
     // Auto-activate previously enabled bundle if it exists
     if let Some(enabled_bundle_id) = &config_state.global_settings.enabled_bundle_id {
         let bundle_state = app.state::<bundle::AppBundleState>();
-        let mut bundle_state = bundle_state.lock().await;
+        let mut bundle_state = bundle_state.write().await;
 
         match bundle_state.activate_bundle(enabled_bundle_id).await {
             Ok(_) => {

@@ -68,7 +68,7 @@ pub async fn get_group(
     app_bundle: tauri::State<'_, AppBundleState>,
 ) -> Result<Option<Group>, String> {
     Ok(app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

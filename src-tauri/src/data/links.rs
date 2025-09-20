@@ -48,7 +48,7 @@ pub async fn get_link_url(
     key: u8,
     params: HashMap<String, String>,
 ) -> Result<Option<String>, String> {
-    let bundle = app_bundle.lock().await;
+    let bundle = app_bundle.read().await;
     let activated_bundle = bundle
         .activated_bundle
         .as_ref()

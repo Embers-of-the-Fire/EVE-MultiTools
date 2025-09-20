@@ -51,7 +51,7 @@ pub async fn get_planet_by_id(
     planet_id: i32,
 ) -> Result<Option<PlanetBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -71,7 +71,7 @@ pub async fn get_planet_data_by_id(
 ) -> Result<tauri::ipc::Response, String> {
     Ok(tauri::ipc::Response::new(
         app_bundle
-            .lock()
+            .read()
             .await
             .activated_bundle
             .as_ref()

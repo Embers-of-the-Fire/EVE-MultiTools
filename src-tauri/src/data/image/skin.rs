@@ -31,7 +31,7 @@ pub async fn get_skin_material_path(
     skin_material_id: i64,
 ) -> Result<PathBuf, String> {
     bundle_state
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

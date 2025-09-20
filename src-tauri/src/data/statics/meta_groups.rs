@@ -54,7 +54,7 @@ pub async fn get_meta_group(
     app_bundle: tauri::State<'_, AppBundleState>,
 ) -> Result<Option<MetaGroup>, String> {
     Ok(app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

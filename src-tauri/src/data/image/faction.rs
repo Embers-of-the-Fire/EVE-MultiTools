@@ -36,7 +36,7 @@ pub async fn get_faction_icon_path(
     icon_id: i32,
 ) -> Result<PathBuf, String> {
     bundle_state
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -50,7 +50,7 @@ pub async fn get_faction_logo_path(
     logo_id: &str,
 ) -> Result<PathBuf, String> {
     bundle_state
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

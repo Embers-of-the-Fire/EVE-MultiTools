@@ -40,7 +40,7 @@ pub async fn get_system_data_by_id(
 ) -> Result<tauri::ipc::Response, String> {
     Ok(tauri::ipc::Response::new(
         app_bundle
-            .lock()
+            .read()
             .await
             .activated_bundle
             .as_ref()

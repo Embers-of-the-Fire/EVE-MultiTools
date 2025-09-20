@@ -118,7 +118,7 @@ pub async fn get_system_by_id(
     solar_system_id: i32,
 ) -> Result<Option<SystemBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -136,7 +136,7 @@ pub async fn get_systems_by_region_id(
     region_id: i32,
 ) -> Result<Vec<SystemBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -154,7 +154,7 @@ pub async fn get_systems_by_constellation_id(
     constellation_id: i32,
 ) -> Result<Vec<SystemBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -172,7 +172,7 @@ pub async fn get_systems_by_faction_id(
     faction_id: Option<i32>,
 ) -> Result<Vec<SystemBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -190,7 +190,7 @@ pub async fn get_systems_by_wormhole_class_id(
     class_id: Option<u8>,
 ) -> Result<Vec<SystemBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -209,7 +209,7 @@ pub async fn get_systems_by_security_range(
     max: f32,
 ) -> Result<Vec<SystemBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

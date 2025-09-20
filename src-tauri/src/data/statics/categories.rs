@@ -58,7 +58,7 @@ pub async fn get_category(
     app_bundle: tauri::State<'_, AppBundleState>,
 ) -> Result<Option<Category>, String> {
     Ok(app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

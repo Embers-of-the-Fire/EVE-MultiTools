@@ -198,7 +198,7 @@ pub async fn search_region_by_name(
     language: LocLanguage,
 ) -> Result<Vec<LocSearchResult>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -215,7 +215,7 @@ pub async fn search_constellation_by_name(
     language: LocLanguage,
 ) -> Result<Vec<LocSearchResult>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -232,7 +232,7 @@ pub async fn search_system_by_name(
     language: LocLanguage,
 ) -> Result<Vec<LocSearchResult>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

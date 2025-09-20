@@ -52,7 +52,7 @@ pub async fn get_graphic_path(
     graphic_type: GraphicType,
 ) -> Result<Option<PathBuf>, String> {
     bundle_state
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

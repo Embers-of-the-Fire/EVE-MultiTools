@@ -103,8 +103,11 @@ pub async fn get_type(
     type_id: i32,
     app_bundle: tauri::State<'_, AppBundleState>,
 ) -> Result<Option<Type>, String> {
-    Ok(app_bundle
-        .lock()
+    let begin_time = std::time::Instant::now();
+    println!("Getting type for type_id: {}", type_id);
+
+    let ty = app_bundle
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -112,5 +115,12 @@ pub async fn get_type(
         .statics
         .types
         .get_type(type_id)
-        .cloned())
+        .cloned();
+
+    println!(
+        "Found type: {:?} in {:?} ms",
+        type_id,
+        begin_time.elapsed().as_millis()
+    );
+    Ok(ty)
 }

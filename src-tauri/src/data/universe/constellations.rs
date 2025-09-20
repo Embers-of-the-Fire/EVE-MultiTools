@@ -100,7 +100,7 @@ pub async fn get_constellation_by_id(
     constellation_id: i32,
 ) -> Result<Option<ConstellationBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -118,7 +118,7 @@ pub async fn get_constellations_by_region_id(
     region_id: i32,
 ) -> Result<Vec<ConstellationBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -136,7 +136,7 @@ pub async fn get_constellations_by_faction_id(
     faction_id: Option<i32>,
 ) -> Result<Vec<ConstellationBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -154,7 +154,7 @@ pub async fn get_constellations_by_wormhole_class_id(
     class_id: Option<u8>,
 ) -> Result<Vec<ConstellationBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -172,7 +172,7 @@ pub async fn get_constellation_detail_by_id(
     constellation_id: i32,
 ) -> Result<Vec<u8>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

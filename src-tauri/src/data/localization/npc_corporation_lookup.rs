@@ -94,7 +94,7 @@ pub async fn search_npc_corporation_by_name(
     limit: u32,
 ) -> Result<Vec<i32>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

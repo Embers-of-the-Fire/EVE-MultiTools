@@ -51,7 +51,7 @@ pub async fn get_moon_by_id(
     moon_id: i32,
 ) -> Result<Option<MoonBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -71,7 +71,7 @@ pub async fn get_moon_data_by_id(
 ) -> Result<tauri::ipc::Response, String> {
     Ok(tauri::ipc::Response::new(
         app_bundle
-            .lock()
+            .read()
             .await
             .activated_bundle
             .as_ref()

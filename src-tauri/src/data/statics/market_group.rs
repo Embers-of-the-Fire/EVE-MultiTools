@@ -67,7 +67,7 @@ pub async fn get_market_group(
     app_bundle: tauri::State<'_, crate::bundle::AppBundleState>,
 ) -> Result<Option<MarketGroup>, String> {
     Ok(app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -86,7 +86,7 @@ pub async fn get_market_group_raw(
 ) -> Result<Response, String> {
     Ok(Response::new(
         app_bundle
-            .lock()
+            .read()
             .await
             .activated_bundle
             .as_ref()

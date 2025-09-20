@@ -114,7 +114,7 @@ pub async fn get_localization(
     key: u32,
 ) -> Result<Option<LocString>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -132,7 +132,7 @@ pub async fn get_localization_by_language(
     language: LocLanguage,
 ) -> Result<Option<String>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -150,7 +150,7 @@ pub async fn get_ui_localization_by_language(
     language: LocLanguage,
 ) -> Result<Option<String>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

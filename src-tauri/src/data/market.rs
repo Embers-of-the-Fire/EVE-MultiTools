@@ -185,12 +185,13 @@ pub async fn get_market_price(
     app_handle: tauri::AppHandle,
     type_id: i64,
 ) -> Result<(), String> {
+    // BACKGROUND_RUNTIME.spawn(async move {
     tokio::spawn(async move {
         let _permit = LOW_PRIORITY_SEMAPHORE.acquire().await?;
 
         let bundle = app_handle.state::<crate::bundle::AppBundleState>();
 
-        let cache = bundle.lock().await;
+        let cache = bundle.read().await;
         let activated_bundle = cache
             .activated_bundle
             .as_ref()
@@ -208,9 +209,9 @@ pub async fn get_market_price(
                 let _ = window.emit("market_price_error", &format!("Type {type_id}: {e:?}"));
             }
         }
-
         Ok::<_, anyhow::Error>(())
     });
+    // });
 
     Ok(())
 }

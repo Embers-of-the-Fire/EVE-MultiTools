@@ -2,8 +2,10 @@ use serde::{Deserialize, Serialize};
 use std::io::BufReader;
 use std::{collections::HashMap, path::PathBuf};
 use tauri::{Emitter, Manager, ipc::Channel};
-use tokio::sync::{Mutex, mpsc};
+use tokio::sync::{RwLock, mpsc};
 use zip::ZipArchive;
+
+use crate::config::AppConfigState;
 
 #[derive(Clone, Serialize)]
 struct BundleChangeStartPayload {
@@ -68,7 +70,7 @@ pub struct BundleState {
     pub activated_bundle: Option<crate::data::bundle::Bundle>,
 }
 
-pub type AppBundleState = Mutex<BundleState>;
+pub type AppBundleState = RwLock<BundleState>;
 
 impl BundleState {
     pub fn new() -> Self {
@@ -283,17 +285,14 @@ pub struct BundleGameInfo {
 #[tauri::command]
 pub async fn import_bundle_file(
     bundle_path: String,
-    config_state: tauri::State<'_, crate::config::AppConfigState>,
+    config_state: tauri::State<'_, AppConfigState>,
     app: tauri::AppHandle,
     on_event: Channel<BundleImportEvent>,
 ) -> Result<(), String> {
     let bundle_path = PathBuf::from(bundle_path);
 
     let data_dir = {
-        let config = config_state
-            .config
-            .lock()
-            .map_err(|e| format!("Failed to lock config state: {e:?}"))?;
+        let config = config_state.config.write().await;
         config
             .global_settings
             .data_directory
@@ -329,7 +328,7 @@ pub async fn import_bundle_file(
             Ok(bundle_name) => {
                 let target_dir = data_dir_clone.join("bundle").join(&bundle_name);
 
-                let mut state = bundle_state.lock().await;
+                let mut state = bundle_state.write().await;
 
                 if let Err(e) = state.add_bundle(target_dir) {
                     result = ImportResult {
@@ -378,7 +377,7 @@ pub async fn import_bundle_file(
 pub async fn enable_bundle(
     server_id: String,
     bundle_state: tauri::State<'_, AppBundleState>,
-    config_state: tauri::State<'_, crate::config::AppConfigState>,
+    config_state: tauri::State<'_, AppConfigState>,
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
     // Emit start event
@@ -392,15 +391,11 @@ pub async fn enable_bundle(
     }
 
     let result = {
-        let mut bundle_state = bundle_state.lock().await;
-
+        let mut bundle_state = bundle_state.write().await;
         match bundle_state.activate_bundle(&server_id).await {
             Ok(_) => {
                 // Save to config only on successful activation
-                let mut config = config_state
-                    .config
-                    .lock()
-                    .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+                let mut config = config_state.config.write().await;
                 config.global_settings.enabled_bundle_id = Some(server_id);
                 config
                     .save_to_file()
@@ -410,10 +405,7 @@ pub async fn enable_bundle(
             Err(e) => {
                 // Clear any enabled bundle state on failure
                 bundle_state.activated_bundle = None;
-                let mut config = config_state
-                    .config
-                    .lock()
-                    .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+                let mut config = config_state.config.write().await;
                 config.global_settings.enabled_bundle_id = None;
                 config
                     .save_to_file()
@@ -435,7 +427,7 @@ pub async fn enable_bundle(
 pub async fn get_bundles(
     bundle_state: tauri::State<'_, AppBundleState>,
 ) -> Result<Vec<BundleMetadata>, String> {
-    let bundle_state = bundle_state.lock().await;
+    let bundle_state = bundle_state.read().await;
     let bundles: Vec<BundleMetadata> = bundle_state
         .bundles
         .values()
@@ -448,7 +440,7 @@ pub async fn get_bundles(
 pub async fn get_enabled_bundle_id(
     bundle_state: tauri::State<'_, AppBundleState>,
 ) -> Result<Option<String>, String> {
-    let bundle_state = bundle_state.lock().await;
+    let bundle_state = bundle_state.read().await;
 
     Ok(bundle_state
         .activated_bundle
@@ -463,7 +455,7 @@ pub async fn remove_bundle(
     config_state: tauri::State<'_, crate::config::AppConfigState>,
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
-    let mut bundle_state = bundle_state.lock().await;
+    let mut bundle_state = bundle_state.write().await;
 
     // Check if we're removing the currently enabled bundle
     let is_enabled = bundle_state
@@ -478,10 +470,7 @@ pub async fn remove_bundle(
     // 如果删除的是已启用的数据包，清空启用状态
     if is_enabled {
         bundle_state.activated_bundle = None;
-        let mut config = config_state
-            .config
-            .lock()
-            .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+        let mut config = config_state.config.write().await;
         config.global_settings.enabled_bundle_id = None;
         config
             .save_to_file()

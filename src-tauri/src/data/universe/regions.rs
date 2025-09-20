@@ -82,7 +82,7 @@ pub async fn get_region_by_id(
     region_id: i32,
 ) -> Result<Option<RegionBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -100,7 +100,7 @@ pub async fn get_regions_by_faction_id(
     faction_id: Option<i32>,
 ) -> Result<Vec<RegionBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -118,7 +118,7 @@ pub async fn get_regions_by_wormhole_class_id(
     class_id: Option<u8>,
 ) -> Result<Vec<RegionBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -136,7 +136,7 @@ pub async fn get_region_detail_by_id(
     region_id: i32,
 ) -> Result<tauri::ipc::Response, String> {
     let buf = app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

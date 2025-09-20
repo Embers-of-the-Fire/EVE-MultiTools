@@ -2,8 +2,8 @@ use anyhow::{Result, anyhow};
 use log::info;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use std::sync::Mutex;
 use tauri::State;
+use tokio::sync::RwLock;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub enum Theme {
@@ -88,32 +88,26 @@ impl ConfigState {
 }
 
 pub struct AppConfigState {
-    pub config: Mutex<ConfigState>,
+    pub config: RwLock<ConfigState>,
 }
 
 impl AppConfigState {
     pub fn new(config: ConfigState) -> Self {
         AppConfigState {
-            config: Mutex::new(config),
+            config: RwLock::new(config),
         }
     }
 }
 
 #[tauri::command]
-pub fn get_config(state: State<AppConfigState>) -> Result<GlobalSettings, String> {
-    let config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+pub async fn get_config(state: State<'_, AppConfigState>) -> Result<GlobalSettings, String> {
+    let config = state.config.read().await;
     Ok(config.global_settings.clone())
 }
 
 #[tauri::command]
-pub fn set_theme(state: State<AppConfigState>, theme: Theme) -> Result<(), String> {
-    let mut config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+pub async fn set_theme(state: State<'_, AppConfigState>, theme: Theme) -> Result<(), String> {
+    let mut config = state.config.write().await;
     config.global_settings.theme = theme;
     config
         .save_to_file()
@@ -122,11 +116,11 @@ pub fn set_theme(state: State<AppConfigState>, theme: Theme) -> Result<(), Strin
 }
 
 #[tauri::command]
-pub fn set_language(state: State<AppConfigState>, language: Language) -> Result<(), String> {
-    let mut config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+pub async fn set_language(
+    state: State<'_, AppConfigState>,
+    language: Language,
+) -> Result<(), String> {
+    let mut config = state.config.write().await;
     config.global_settings.language = language;
     config
         .save_to_file()
@@ -135,14 +129,11 @@ pub fn set_language(state: State<AppConfigState>, language: Language) -> Result<
 }
 
 #[tauri::command]
-pub fn update_config(
-    state: State<AppConfigState>,
+pub async fn update_config(
+    state: State<'_, AppConfigState>,
     new_config: GlobalSettings,
 ) -> Result<(), String> {
-    let mut config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+    let mut config = state.config.write().await;
     let data_directory = config.global_settings.data_directory.clone();
 
     config.global_settings = new_config;
@@ -155,11 +146,10 @@ pub fn update_config(
 }
 
 #[tauri::command]
-pub fn reset_config_to_default(state: State<AppConfigState>) -> Result<GlobalSettings, String> {
-    let mut config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+pub async fn reset_config_to_default(
+    state: State<'_, AppConfigState>,
+) -> Result<GlobalSettings, String> {
+    let mut config = state.config.write().await;
     config
         .reset_to_default()
         .map_err(|e| format!("Failed to reset config: {e:?}"))?;
@@ -167,11 +157,8 @@ pub fn reset_config_to_default(state: State<AppConfigState>) -> Result<GlobalSet
 }
 
 #[tauri::command]
-pub fn get_config_file_path(state: State<AppConfigState>) -> Result<String, String> {
-    let config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+pub async fn get_config_file_path(state: State<'_, AppConfigState>) -> Result<String, String> {
+    let config = state.config.write().await;
     let path = config
         .config_file_path
         .as_ref()
@@ -180,14 +167,11 @@ pub fn get_config_file_path(state: State<AppConfigState>) -> Result<String, Stri
 }
 
 #[tauri::command]
-pub fn set_enabled_bundle_id(
-    state: State<AppConfigState>,
+pub async fn set_enabled_bundle_id(
+    state: State<'_, AppConfigState>,
     bundle_id: Option<String>,
 ) -> Result<(), String> {
-    let mut config = state
-        .config
-        .lock()
-        .map_err(|e| format!("Failed to lock config: {e:?}"))?;
+    let mut config = state.config.write().await;
     config.global_settings.enabled_bundle_id = bundle_id;
     config
         .save_to_file()

@@ -59,7 +59,7 @@ pub async fn get_station_operation_by_id(
     operation_id: i32,
 ) -> Result<Option<StationOperationBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -78,7 +78,7 @@ pub async fn get_station_operation_data_by_id(
 ) -> Result<tauri::ipc::Response, String> {
     Ok(tauri::ipc::Response::new(
         app_bundle
-            .lock()
+            .read()
             .await
             .activated_bundle
             .as_ref()

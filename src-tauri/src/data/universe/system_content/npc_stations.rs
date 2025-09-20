@@ -59,7 +59,7 @@ pub async fn get_npc_station_by_id(
     station_id: i32,
 ) -> Result<Option<NpcStationBrief>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -78,7 +78,7 @@ pub async fn get_npc_station_data_by_id(
     station_id: i32,
 ) -> Result<tauri::ipc::Response, String> {
     let data = app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

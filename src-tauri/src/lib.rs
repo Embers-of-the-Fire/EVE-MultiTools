@@ -8,6 +8,14 @@ mod data;
 mod init;
 mod utils;
 
+// pub static BACKGROUND_RUNTIME: std::sync::LazyLock<tokio::runtime::Runtime> =
+//     std::sync::LazyLock::new(|| {
+//         tokio::runtime::Builder::new_multi_thread()
+//             .enable_all()
+//             .build()
+//             .expect("Failed to create background runtime")
+//     });
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()

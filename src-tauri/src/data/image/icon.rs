@@ -32,7 +32,7 @@ pub async fn get_icon_path(
     icon_id: u32,
 ) -> Result<Option<PathBuf>, String> {
     bundle_state
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

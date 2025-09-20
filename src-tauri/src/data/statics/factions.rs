@@ -82,7 +82,7 @@ pub async fn get_faction(
     app_bundle: tauri::State<'_, AppBundleState>,
 ) -> Result<Option<Faction>, String> {
     Ok(app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -98,7 +98,7 @@ pub async fn get_faction_ids(
     app_bundle: tauri::State<'_, AppBundleState>,
 ) -> Result<Vec<i32>, String> {
     Ok(app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()

@@ -39,7 +39,7 @@ pub async fn get_skin(
     skin_id: i32,
 ) -> Result<Option<Skin>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -57,7 +57,7 @@ pub async fn get_skin_material(
     skin_material_id: i32,
 ) -> Result<Option<SkinMaterial>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -75,7 +75,7 @@ pub async fn get_skin_license(
     license_id: i32,
 ) -> Result<Option<SkinLicense>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -93,7 +93,7 @@ pub async fn get_skin_material_id_by_license(
     license_id: i32,
 ) -> Result<Option<i64>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
@@ -111,7 +111,7 @@ pub async fn get_licenses_by_skin(
     skin_id: i32,
 ) -> Result<Vec<SkinLicense>, String> {
     app_bundle
-        .lock()
+        .read()
         .await
         .activated_bundle
         .as_ref()
