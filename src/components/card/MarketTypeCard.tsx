@@ -10,7 +10,7 @@ import { LinkKey } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
 import { ExternalLink } from "../Links";
 import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import type { GenericData } from "./GenericCard";
 import GenericCard from "./GenericCard";
 
@@ -133,13 +133,13 @@ const useMarketTypeData = (typeId: number) => {
             >
                 <Info size="32" />
             </Button>,
-            <Popover key="external-link-popover">
-                <PopoverTrigger asChild>
+            <DropdownMenu key="market-dropdown">
+                <DropdownMenuTrigger asChild>
                     <Button size="icon" variant="default" className="size-8" key="market-button">
                         <SquareArrowUpRight size="32" />
                     </Button>
-                </PopoverTrigger>
-                <PopoverContent align="end">
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-min">
                     {links.map((link) => (
                         <ExternalLink
                             key={link.url}
@@ -149,8 +149,8 @@ const useMarketTypeData = (typeId: number) => {
                             {link.name}
                         </ExternalLink>
                     ))}
-                </PopoverContent>
-            </Popover>,
+                </DropdownMenuContent>
+            </DropdownMenu>,
         ],
         description: (
             <div className="flex flex-col items-end">
