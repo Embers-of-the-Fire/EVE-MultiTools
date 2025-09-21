@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { getRouteTitleKey } from "@/lib/router";
 import { useSPARouterStore } from "@/stores/spaRouterStore";
 import type { RouteParam, RouteParamMap } from "@/types/router";
 
@@ -140,6 +141,18 @@ export function useSPARouter() {
         return router.getRouteParams(path);
     };
 
+    const navigateToPage = (path: string, title?: string, params?: any) => {
+        const finalTitle = title || t(getRouteTitleKey(path));
+
+        router.addGeneralHistory(path, finalTitle, params);
+
+        if (params) {
+            router.navigateWithParams(path as any, params);
+        } else {
+            router.navigate(path);
+        }
+    };
+
     return {
         ...router,
         navigateToTypeDetail,
@@ -152,5 +165,6 @@ export function useSPARouter() {
         navigateToUniverseMoon,
         navigateToUniverseNpcStation,
         useRouteParams,
+        navigateToPage,
     };
 }

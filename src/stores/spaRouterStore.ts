@@ -11,13 +11,14 @@ import type {
 
 type RouterAction =
     | { type: "NAVIGATE"; path: string }
-    | { type: "NAVIGATE_WITH_PARAMS"; path: keyof RouteParamMap; params: any }
+    | { type: "NAVIGATE_WITH_PARAMS"; path: string; params: any }
     | { type: "GO_BACK" }
     | { type: "GO_FORWARD" }
     | { type: "REPLACE"; path: string }
-    | { type: "REPLACE_WITH_PARAMS"; path: keyof RouteParamMap; params: any }
-    | { type: "SET_ROUTE_PARAMS"; path: keyof RouteParamMap; params: any }
-    | { type: "ADD_DETAIL_HISTORY"; item: DetailHistoryItem };
+    | { type: "REPLACE_WITH_PARAMS"; path: string; params: any }
+    | { type: "SET_ROUTE_PARAMS"; path: string; params: any }
+    | { type: "ADD_DETAIL_HISTORY"; item: DetailHistoryItem }
+    | { type: "ADD_GENERAL_HISTORY"; path: string; title: string; params?: any };
 
 interface SPARouterState extends RouterState {}
 
@@ -31,6 +32,7 @@ interface SPARouterActions {
     setRouteParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => void;
     getRouteParams: <T extends keyof RouteParamMap>(path: T) => RouteParam<T> | undefined;
     addDetailHistory: (item: DetailHistoryItem) => void;
+    addGeneralHistory: (path: string, title: string, params?: any) => void; // 添加通用历史记录方法
     navigateToDetailHistoryItem: (item: DetailHistoryItem) => void;
     dispatch: (action: RouterAction) => void;
 }
@@ -44,6 +46,7 @@ const initialState: RouterState = {
     canGoForward: false,
     routeParams: {},
     detailHistory: [],
+    generalHistory: [], // 初始化通用历史记录
 };
 
 function routerReducer(state: RouterState, action: RouterAction): RouterState {
@@ -66,6 +69,37 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 }
 
                 newHistory.push(newRecord);
+
+                // 同时添加到通用历史记录，但排除首页
+                if (action.path !== "/") {
+                    // 不记录首页
+                    const newGeneralHistory = [
+                        {
+                            path: action.path,
+                            title: getRouteTitleKey(action.path),
+                            timestamp: Date.now(),
+                        },
+                        ...state.generalHistory.filter((item) => item.path !== action.path),
+                    ].slice(0, 30); // 保留最近的30条记录
+
+                    return {
+                        ...state,
+                        currentPath: action.path,
+                        history: newHistory,
+                        canGoBack: newHistory.length > 1,
+                        canGoForward: false,
+                        generalHistory: newGeneralHistory,
+                    };
+                }
+
+                // 如果是首页或其他情况，只更新基本状态
+                return {
+                    ...state,
+                    currentPath: action.path,
+                    history: newHistory,
+                    canGoBack: newHistory.length > 1,
+                    canGoForward: false,
+                };
             }
 
             return {
@@ -95,6 +129,39 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 }
 
                 newHistory.push(newRecord);
+
+                // 同时更新通用历史记录，除非是通过addGeneralHistory方法调用的或者是首页
+                const shouldUpdateGeneralHistory = action.path !== "/"; // 不记录首页
+                if (shouldUpdateGeneralHistory) {
+                    const newGeneralHistory = [
+                        {
+                            path: action.path,
+                            title: getRouteTitleKey(action.path),
+                            params: action.params,
+                            timestamp: Date.now(),
+                        },
+                        ...state.generalHistory.filter(
+                            (item) =>
+                                !(
+                                    item.path === action.path &&
+                                    JSON.stringify(item.params) === JSON.stringify(action.params)
+                                )
+                        ),
+                    ].slice(0, 30); // 保留最近的30条记录
+
+                    return {
+                        ...state,
+                        currentPath: action.path,
+                        history: newHistory,
+                        canGoBack: newHistory.length > 1,
+                        canGoForward: false,
+                        routeParams: {
+                            ...state.routeParams,
+                            [action.path]: action.params,
+                        },
+                        generalHistory: newGeneralHistory,
+                    };
+                }
             }
 
             return {
@@ -150,10 +217,30 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 };
             }
 
+            // 如果是首页，不更新通用历史记录
+            if (action.path === "/") {
+                return {
+                    ...state,
+                    currentPath: action.path,
+                    history: newHistory,
+                };
+            }
+
+            // 更新通用历史记录
+            const newGeneralHistory = [
+                {
+                    path: action.path,
+                    title: getRouteTitleKey(action.path),
+                    timestamp: Date.now(),
+                },
+                ...state.generalHistory.filter((item) => item.path !== action.path),
+            ].slice(0, 30);
+
             return {
                 ...state,
                 currentPath: action.path,
                 history: newHistory,
+                generalHistory: newGeneralHistory,
             };
         }
 
@@ -169,6 +256,36 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 };
             }
 
+            // 如果是首页，不更新通用历史记录
+            if (action.path === "/") {
+                return {
+                    ...state,
+                    currentPath: action.path,
+                    history: newHistory,
+                    routeParams: {
+                        ...state.routeParams,
+                        [action.path]: action.params,
+                    },
+                };
+            }
+
+            // 更新通用历史记录
+            const newGeneralHistory = [
+                {
+                    path: action.path,
+                    title: getRouteTitleKey(action.path),
+                    params: action.params,
+                    timestamp: Date.now(),
+                },
+                ...state.generalHistory.filter(
+                    (item) =>
+                        !(
+                            item.path === action.path &&
+                            JSON.stringify(item.params) === JSON.stringify(action.params)
+                        )
+                ),
+            ].slice(0, 30);
+
             return {
                 ...state,
                 currentPath: action.path,
@@ -177,6 +294,7 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                     ...state.routeParams,
                     [action.path]: action.params,
                 },
+                generalHistory: newGeneralHistory,
             };
         }
 
@@ -208,6 +326,34 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
             };
         }
 
+        case "ADD_GENERAL_HISTORY": {
+            // 不记录首页
+            if (action.path === "/") {
+                return state;
+            }
+
+            const newGeneralHistory = [
+                {
+                    path: action.path,
+                    title: action.title,
+                    params: action.params,
+                    timestamp: Date.now(),
+                },
+                ...state.generalHistory.filter(
+                    (item) =>
+                        !(
+                            item.path === action.path &&
+                            JSON.stringify(item.params) === JSON.stringify(action.params)
+                        )
+                ),
+            ].slice(0, 30); // 保留最近的30条记录
+
+            return {
+                ...state,
+                generalHistory: newGeneralHistory,
+            };
+        }
+
         default:
             return state;
     }
@@ -233,7 +379,7 @@ export const useSPARouterStore = create<SPARouterStore>()(
 
             navigateWithParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => {
                 const { dispatch } = get();
-                dispatch({ type: "NAVIGATE_WITH_PARAMS", path, params });
+                dispatch({ type: "NAVIGATE_WITH_PARAMS", path: path as string, params });
             },
 
             goBack: () => {
@@ -253,17 +399,17 @@ export const useSPARouterStore = create<SPARouterStore>()(
 
             replaceWithParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => {
                 const { dispatch } = get();
-                dispatch({ type: "REPLACE_WITH_PARAMS", path, params });
+                dispatch({ type: "REPLACE_WITH_PARAMS", path: path as string, params });
             },
 
             setRouteParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => {
                 const { dispatch } = get();
-                dispatch({ type: "SET_ROUTE_PARAMS", path, params });
+                dispatch({ type: "SET_ROUTE_PARAMS", path: path as string, params });
             },
 
             getRouteParams: <T extends keyof RouteParamMap>(path: T): RouteParam<T> | undefined => {
                 const { routeParams } = get();
-                return routeParams[path] as RouteParam<T> | undefined;
+                return routeParams[path as string] as RouteParam<T> | undefined;
             },
 
             addDetailHistory: (item: DetailHistoryItem) => {
@@ -271,9 +417,14 @@ export const useSPARouterStore = create<SPARouterStore>()(
                 dispatch({ type: "ADD_DETAIL_HISTORY", item });
             },
 
+            addGeneralHistory: (path: string, title: string, params?: any) => {
+                const { dispatch } = get();
+                dispatch({ type: "ADD_GENERAL_HISTORY", path, title, params });
+            },
+
             navigateToDetailHistoryItem: (item: DetailHistoryItem) => {
                 const { navigateWithParams } = get();
-                navigateWithParams(item.path, item.params);
+                navigateWithParams(item.path as any, item.params);
             },
         }),
         {

@@ -26,7 +26,8 @@ export interface DetailHistoryItem {
 }
 
 // Route parameter type mapping
-export interface RouteParamMap {
+// 定义特定路由的参数类型
+export interface KnownRouteParamMap {
     "/explore/type/detail": { typeId: number };
     "/explore/faction/detail": { factionId: number };
     "/explore/npc-corporation/detail": { corporationId: number };
@@ -38,13 +39,27 @@ export interface RouteParamMap {
     "/explore/universe/npc-station": { id: number };
 }
 
+// 扩展路由参数映射，包括通用路径
+export interface RouteParamMap extends KnownRouteParamMap {
+    [path: string]: Record<string, any>;
+}
+
 export type RouteParam<T extends keyof RouteParamMap> = RouteParamMap[T];
+
+// 添加通用历史记录项接口
+export interface GeneralHistoryItem {
+    path: string;
+    title: string;
+    params?: any;
+    timestamp: number;
+}
 
 export type RouterState = {
     currentPath: string;
     history: RouteHistory[];
     canGoBack: boolean;
     canGoForward: boolean;
-    routeParams: Partial<Record<keyof RouteParamMap, any>>;
+    routeParams: Partial<Record<string, any>>;
     detailHistory: DetailHistoryItem[];
+    generalHistory: GeneralHistoryItem[]; // 添加通用历史记录
 };
