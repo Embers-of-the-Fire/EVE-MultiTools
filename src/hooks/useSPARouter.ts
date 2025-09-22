@@ -10,14 +10,8 @@ export function useSPARouter() {
     // Add convenience methods for typed route navigation
     const navigateToTypeDetail = (typeId: number, title?: string) => {
         const finalTitle = title || t("explore.type.detail.title");
-        // Add to detail history
-        router.addDetailHistory({
-            id: `type-${typeId}`,
-            title: finalTitle,
-            path: "/explore/type/detail",
-            params: { typeId },
-            timestamp: Date.now(),
-        });
+        // Add to history
+        router.addHistoryItem("/explore/type/detail", finalTitle, `type-${typeId}`, { typeId });
 
         router.navigateWithParams("/explore/type/detail", { typeId });
     };
@@ -25,13 +19,9 @@ export function useSPARouter() {
     const navigateToFactionDetail = (factionId: number, title?: string) => {
         const finalTitle = title || t("explore.faction.detail.title");
 
-        // Add to detail history
-        router.addDetailHistory({
-            id: `faction-${factionId}`,
-            title: finalTitle,
-            path: "/explore/faction/detail",
-            params: { factionId },
-            timestamp: Date.now(),
+        // Add to history
+        router.addHistoryItem("/explore/faction/detail", finalTitle, `faction-${factionId}`, {
+            factionId,
         });
 
         router.navigateWithParams("/explore/faction/detail", { factionId });
@@ -40,14 +30,13 @@ export function useSPARouter() {
     const navigateToNpcCorporationDetail = (corporationId: number, title?: string) => {
         const finalTitle = title || t("explore.npc_corporation.detail.title");
 
-        // Add to detail history
-        router.addDetailHistory({
-            id: `npc-corporation-${corporationId}`,
-            title: finalTitle,
-            path: "/explore/npc-corporation/detail",
-            params: { corporationId },
-            timestamp: Date.now(),
-        });
+        // Add to history
+        router.addHistoryItem(
+            "/explore/npc-corporation/detail",
+            finalTitle,
+            `npc-corporation-${corporationId}`,
+            { corporationId }
+        );
 
         router.navigateWithParams("/explore/npc-corporation/detail", { corporationId });
     };
@@ -55,13 +44,7 @@ export function useSPARouter() {
     const navigateToUniverseRegion = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.region.detail");
 
-        router.addDetailHistory({
-            id: `region-${id}`,
-            title: finalTitle,
-            path: "/explore/universe/region",
-            params: { id },
-            timestamp: Date.now(),
-        });
+        router.addHistoryItem("/explore/universe/region", finalTitle, `region-${id}`, { id });
 
         router.navigateWithParams("/explore/universe/region", { id });
     };
@@ -69,13 +52,12 @@ export function useSPARouter() {
     const navigateToUniverseConstellation = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.constellation.detail");
 
-        router.addDetailHistory({
-            id: `constellation-${id}`,
-            title: finalTitle,
-            path: "/explore/universe/constellation",
-            params: { id },
-            timestamp: Date.now(),
-        });
+        router.addHistoryItem(
+            "/explore/universe/constellation",
+            finalTitle,
+            `constellation-${id}`,
+            { id }
+        );
 
         router.navigateWithParams("/explore/universe/constellation", { id });
     };
@@ -83,13 +65,7 @@ export function useSPARouter() {
     const navigateToUniverseSystem = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.system.detail");
 
-        router.addDetailHistory({
-            id: `system-${id}`,
-            title: finalTitle,
-            path: "/explore/universe/system",
-            params: { id },
-            timestamp: Date.now(),
-        });
+        router.addHistoryItem("/explore/universe/system", finalTitle, `system-${id}`, { id });
 
         router.navigateWithParams("/explore/universe/system", { id });
     };
@@ -97,13 +73,7 @@ export function useSPARouter() {
     const navigateToUniversePlanet = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.planet.detail");
 
-        router.addDetailHistory({
-            id: `planet-${id}`,
-            title: finalTitle,
-            path: "/explore/universe/planet",
-            params: { id },
-            timestamp: Date.now(),
-        });
+        router.addHistoryItem("/explore/universe/planet", finalTitle, `planet-${id}`, { id });
 
         router.navigateWithParams("/explore/universe/planet", { id });
     };
@@ -111,13 +81,7 @@ export function useSPARouter() {
     const navigateToUniverseMoon = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.moon.detail");
 
-        router.addDetailHistory({
-            id: `moon-${id}`,
-            title: finalTitle,
-            path: "/explore/universe/moon",
-            params: { id },
-            timestamp: Date.now(),
-        });
+        router.addHistoryItem("/explore/universe/moon", finalTitle, `moon-${id}`, { id });
 
         router.navigateWithParams("/explore/universe/moon", { id });
     };
@@ -125,12 +89,8 @@ export function useSPARouter() {
     const navigateToUniverseNpcStation = (id: number, title?: string) => {
         const finalTitle = title || t("explore.universe.npc_station.detail");
 
-        router.addDetailHistory({
-            id: `npc-station-${id}`,
-            title: finalTitle,
-            path: "/explore/universe/npc-station",
-            params: { id },
-            timestamp: Date.now(),
+        router.addHistoryItem("/explore/universe/npc-station", finalTitle, `npc-station-${id}`, {
+            id,
         });
 
         router.navigateWithParams("/explore/universe/npc-station", { id });
@@ -144,7 +104,7 @@ export function useSPARouter() {
     const navigateToPage = (path: string, title?: string, params?: any) => {
         const finalTitle = title || t(getRouteTitleKey(path));
 
-        router.addGeneralHistory(path, finalTitle, params);
+        router.addHistoryItem(path, finalTitle, undefined, params);
 
         if (params) {
             router.navigateWithParams(path as any, params);
@@ -152,7 +112,6 @@ export function useSPARouter() {
             router.navigate(path);
         }
     };
-
     return {
         ...router,
         navigateToTypeDetail,

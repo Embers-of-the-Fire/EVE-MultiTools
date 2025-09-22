@@ -34,16 +34,16 @@ function NotFoundPage() {
 
 export function SPARouter() {
     const { t } = useTranslation();
-    const { currentPath, addGeneralHistory } = useSPARouter();
+    const { currentPath, addHistoryItem } = useSPARouter();
     const route = findRouteByPath(currentPath);
 
-    // 记录路由变化到通用历史记录，但排除首页
+    // 记录路由变化到历史记录，但排除首页
     useEffect(() => {
         if (route && currentPath !== "/") {
             // 不记录首页
-            addGeneralHistory(currentPath, t(route.labelKey) || route.labelKey || currentPath);
+            addHistoryItem(currentPath, t(route.labelKey) || route.labelKey || currentPath);
         }
-    }, [currentPath, route, addGeneralHistory, t]);
+    }, [currentPath, route, addHistoryItem, t]);
 
     if (!route) {
         return <NotFoundPage />;

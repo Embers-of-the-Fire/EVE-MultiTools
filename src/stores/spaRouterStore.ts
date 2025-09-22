@@ -1,13 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { getRouteTitleKey } from "@/lib/router";
-import type {
-    DetailHistoryItem,
-    RouteHistory,
-    RouteParam,
-    RouteParamMap,
-    RouterState,
-} from "@/types/router";
+import type { RouteHistory, RouteParam, RouteParamMap, RouterState } from "@/types/router";
 
 type RouterAction =
     | { type: "NAVIGATE"; path: string }
@@ -17,8 +11,7 @@ type RouterAction =
     | { type: "REPLACE"; path: string }
     | { type: "REPLACE_WITH_PARAMS"; path: string; params: any }
     | { type: "SET_ROUTE_PARAMS"; path: string; params: any }
-    | { type: "ADD_DETAIL_HISTORY"; item: DetailHistoryItem }
-    | { type: "ADD_GENERAL_HISTORY"; path: string; title: string; params?: any };
+    | { type: "ADD_HISTORY_ITEM"; path: string; title: string; id?: string; params?: any };
 
 interface SPARouterState extends RouterState {}
 
@@ -31,9 +24,8 @@ interface SPARouterActions {
     replaceWithParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => void;
     setRouteParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => void;
     getRouteParams: <T extends keyof RouteParamMap>(path: T) => RouteParam<T> | undefined;
-    addDetailHistory: (item: DetailHistoryItem) => void;
-    addGeneralHistory: (path: string, title: string, params?: any) => void; // 添加通用历史记录方法
-    navigateToDetailHistoryItem: (item: DetailHistoryItem) => void;
+    addHistoryItem: (path: string, title: string, id?: string, params?: any) => void; // 统一的历史记录方法
+    navigateToHistoryItem: (path: string, params?: any) => void;
     dispatch: (action: RouterAction) => void;
 }
 
@@ -45,8 +37,7 @@ const initialState: RouterState = {
     canGoBack: false,
     canGoForward: false,
     routeParams: {},
-    detailHistory: [],
-    generalHistory: [], // 初始化通用历史记录
+    generalHistory: [],
 };
 
 function routerReducer(state: RouterState, action: RouterAction): RouterState {
@@ -55,7 +46,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
             const newHistory = [...state.history];
             const currentIndex = newHistory.findIndex((h) => h.path === state.currentPath);
 
-            // 如果不是当前路径，添加到历史记录
             if (action.path !== state.currentPath) {
                 const newRecord: RouteHistory = {
                     path: action.path,
@@ -63,16 +53,13 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                     title: getRouteTitleKey(action.path),
                 };
 
-                // 如果当前不在历史记录末尾，删除后面的记录
                 if (currentIndex < newHistory.length - 1) {
                     newHistory.splice(currentIndex + 1);
                 }
 
                 newHistory.push(newRecord);
 
-                // 同时添加到通用历史记录，但排除首页
                 if (action.path !== "/") {
-                    // 不记录首页
                     const newGeneralHistory = [
                         {
                             path: action.path,
@@ -80,7 +67,7 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                             timestamp: Date.now(),
                         },
                         ...state.generalHistory.filter((item) => item.path !== action.path),
-                    ].slice(0, 30); // 保留最近的30条记录
+                    ].slice(0, 30);
 
                     return {
                         ...state,
@@ -92,7 +79,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                     };
                 }
 
-                // 如果是首页或其他情况，只更新基本状态
                 return {
                     ...state,
                     currentPath: action.path,
@@ -115,7 +101,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
             const newHistory = [...state.history];
             const currentIndex = newHistory.findIndex((h) => h.path === state.currentPath);
 
-            // 如果不是当前路径，添加到历史记录
             if (action.path !== state.currentPath) {
                 const newRecord: RouteHistory = {
                     path: action.path,
@@ -123,15 +108,13 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                     title: getRouteTitleKey(action.path),
                 };
 
-                // 如果当前不在历史记录末尾，删除后面的记录
                 if (currentIndex < newHistory.length - 1) {
                     newHistory.splice(currentIndex + 1);
                 }
 
                 newHistory.push(newRecord);
 
-                // 同时更新通用历史记录，除非是通过addGeneralHistory方法调用的或者是首页
-                const shouldUpdateGeneralHistory = action.path !== "/"; // 不记录首页
+                const shouldUpdateGeneralHistory = action.path !== "/";
                 if (shouldUpdateGeneralHistory) {
                     const newGeneralHistory = [
                         {
@@ -147,7 +130,7 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                                     JSON.stringify(item.params) === JSON.stringify(action.params)
                                 )
                         ),
-                    ].slice(0, 30); // 保留最近的30条记录
+                    ].slice(0, 30);
 
                     return {
                         ...state,
@@ -217,7 +200,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 };
             }
 
-            // 如果是首页，不更新通用历史记录
             if (action.path === "/") {
                 return {
                     ...state,
@@ -226,7 +208,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 };
             }
 
-            // 更新通用历史记录
             const newGeneralHistory = [
                 {
                     path: action.path,
@@ -256,7 +237,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 };
             }
 
-            // 如果是首页，不更新通用历史记录
             if (action.path === "/") {
                 return {
                     ...state,
@@ -269,7 +249,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 };
             }
 
-            // 更新通用历史记录
             const newGeneralHistory = [
                 {
                     path: action.path,
@@ -308,26 +287,7 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
             };
         }
 
-        case "ADD_DETAIL_HISTORY": {
-            const newDetailHistory = [
-                action.item,
-                ...state.detailHistory.filter(
-                    (item) =>
-                        !(
-                            item.path === action.item.path &&
-                            JSON.stringify(item.params) === JSON.stringify(action.item.params)
-                        )
-                ),
-            ].slice(0, 20); // Keep only last 20 items
-
-            return {
-                ...state,
-                detailHistory: newDetailHistory,
-            };
-        }
-
-        case "ADD_GENERAL_HISTORY": {
-            // 不记录首页
+        case "ADD_HISTORY_ITEM": {
             if (action.path === "/") {
                 return state;
             }
@@ -336,6 +296,7 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                 {
                     path: action.path,
                     title: action.title,
+                    id: action.id || `${action.path}-${Date.now()}`,
                     params: action.params,
                     timestamp: Date.now(),
                 },
@@ -346,14 +307,13 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
                             JSON.stringify(item.params) === JSON.stringify(action.params)
                         )
                 ),
-            ].slice(0, 30); // 保留最近的30条记录
+            ].slice(0, 30);
 
             return {
                 ...state,
                 generalHistory: newGeneralHistory,
             };
         }
-
         default:
             return state;
     }
@@ -362,7 +322,6 @@ function routerReducer(state: RouterState, action: RouterAction): RouterState {
 export const useSPARouterStore = create<SPARouterStore>()(
     devtools(
         (set, get) => ({
-            // 初始状态
             ...initialState,
 
             // Actions
@@ -412,19 +371,19 @@ export const useSPARouterStore = create<SPARouterStore>()(
                 return routeParams[path as string] as RouteParam<T> | undefined;
             },
 
-            addDetailHistory: (item: DetailHistoryItem) => {
+            addHistoryItem: (path: string, title: string, id?: string, params?: any) => {
                 const { dispatch } = get();
-                dispatch({ type: "ADD_DETAIL_HISTORY", item });
+                dispatch({ type: "ADD_HISTORY_ITEM", path, title, id, params });
             },
 
-            addGeneralHistory: (path: string, title: string, params?: any) => {
-                const { dispatch } = get();
-                dispatch({ type: "ADD_GENERAL_HISTORY", path, title, params });
-            },
-
-            navigateToDetailHistoryItem: (item: DetailHistoryItem) => {
-                const { navigateWithParams } = get();
-                navigateWithParams(item.path as any, item.params);
+            navigateToHistoryItem: (path: string, params?: any) => {
+                if (params) {
+                    const { navigateWithParams } = get();
+                    navigateWithParams(path as any, params);
+                } else {
+                    const { navigate } = get();
+                    navigate(path);
+                }
             },
         }),
         {
