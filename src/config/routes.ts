@@ -1,3 +1,4 @@
+import z from "zod";
 import { AboutPage } from "@/components/pages/AboutPage";
 import { BundlePage } from "@/components/pages/BundlePage";
 import { ExplorePage } from "@/components/pages/ExplorePage";
@@ -20,7 +21,7 @@ import { MarketListPage } from "@/components/pages/market/MarketListPage";
 import { MarketSearchPage } from "@/components/pages/market/MarketSearchPage";
 import type { AppRoute } from "@/types/router";
 
-export const routes: AppRoute[] = [
+export const routes = [
     {
         key: "home",
         path: "/",
@@ -74,6 +75,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.type.detail",
                 component: TypeDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ typeId: z.number() }),
             },
             {
                 key: "explore-faction",
@@ -87,6 +89,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.faction.detail",
                 component: FactionDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ factionId: z.number() }),
             },
             {
                 key: "explore-localization",
@@ -106,6 +109,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.universe.region.detail",
                 component: RegionDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ id: z.number() }),
             },
             {
                 key: "explore-universe-constellation",
@@ -113,6 +117,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.universe.constellation.detail",
                 component: ConstellationDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ id: z.number() }),
             },
             {
                 key: "explore-universe-system",
@@ -120,6 +125,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.universe.system.detail",
                 component: SystemDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ id: z.number() }),
             },
             {
                 key: "explore-universe-planet",
@@ -127,6 +133,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.universe.planet.detail",
                 component: PlanetDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ id: z.number() }),
             },
             {
                 key: "explore-universe-moon",
@@ -134,6 +141,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.universe.moon.detail",
                 component: MoonDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ id: z.number() }),
             },
             {
                 key: "explore-universe-npc-station",
@@ -141,6 +149,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.universe.npc_station.detail",
                 component: NpcStationDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ id: z.number() }),
             },
             {
                 key: "explore-npc-corporation",
@@ -148,6 +157,7 @@ export const routes: AppRoute[] = [
                 labelKey: "nav.explore.npc_corporation.detail",
                 component: NpcCorporationDetailPageWrapper,
                 hideFromNav: true,
+                paramType: z.object({ corporationId: z.number() }),
             },
         ],
     },
@@ -165,4 +175,4 @@ export const routes: AppRoute[] = [
         component: AboutPage,
         icon: "info",
     },
-] as const;
+] as const satisfies AppRoute[];

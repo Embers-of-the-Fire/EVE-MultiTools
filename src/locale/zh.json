@@ -53,7 +53,9 @@
         "get_started": "快速上手",
         "back": "回退",
         "detail_history": "历史记录",
-        "recent_details": "最近记录"
+        "recent_details": "最近记录",
+        "history": "历史记录",
+        "recent_pages": "最近访问"
     },
     "common": {
         "loading": "加载中...",

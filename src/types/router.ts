@@ -1,3 +1,6 @@
+import type z from "zod";
+import type { routes } from "@/config/routes";
+
 export type AppRoute = {
     key: string;
     path: string;
@@ -8,6 +11,7 @@ export type AppRoute = {
     badge?: string;
     disabled?: boolean;
     hideFromNav?: boolean;
+    paramType?: any;
 };
 
 export type RouteHistory = {
@@ -31,11 +35,24 @@ export interface KnownRouteParamMap {
     "/explore/universe/npc-station": { id: number };
 }
 
-export interface RouteParamMap extends KnownRouteParamMap {
-    [path: string]: Record<string, any>;
-}
-
 export type RouteParam<T extends keyof RouteParamMap> = RouteParamMap[T];
+
+type ExtractRouteParams<T> = T extends readonly any[]
+    ? { [K in keyof T]: ExtractRouteParams<T[K]> }[number]
+    : T extends { path: infer N; paramType?: infer P; children?: infer C }
+      ?
+            | {
+                  key: N extends string ? N : never;
+                  param: P extends z.ZodTypeAny ? z.infer<P> : undefined;
+              }
+            | (C extends readonly any[] ? ExtractRouteParams<C> : never)
+      : never;
+
+type RouteParamPairs = ExtractRouteParams<typeof routes>;
+
+export type RouteParamMap = {
+    [K in RouteParamPairs as K["key"]]: K["param"];
+};
 
 export interface GeneralHistoryItem {
     path: string;

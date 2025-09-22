@@ -32,8 +32,7 @@ export const createDataQuery = <K extends AsyncDataFunctionKeys>(
 ) => ({
     queryKey: dataKeys.byFunction(functionName, ...params),
     queryFn: async (): Promise<FunctionReturnType<DataApiFunctions[K]>> => {
-        // Create a mapping for tree-shaking friendly function access
-        const functionMap = {
+        const functionMap: Record<AsyncDataFunctionKeys, any> = {
             getGraphicPath: dataApi.getGraphicPath,
             getIconPath: dataApi.getIconPath,
             getSkinMaterialPath: dataApi.getSkinMaterialPath,
@@ -41,6 +40,7 @@ export const createDataQuery = <K extends AsyncDataFunctionKeys>(
             getFactionLogoPath: dataApi.getFactionLogoPath,
             getLocalization: dataApi.getLocalization,
             getLocalizationByLang: dataApi.getLocalizationByLang,
+            getUiLocalizationByLang: dataApi.getUiLocalizationByLang,
             getGroup: dataApi.getGroup,
             getCategory: dataApi.getCategory,
             getMetaGroup: dataApi.getMetaGroup,
@@ -88,13 +88,13 @@ export const createDataQuery = <K extends AsyncDataFunctionKeys>(
             getNpcCorporationDataById: dataApi.getNpcCorporationDataById,
             getStationOperationById: dataApi.getStationOperationById,
             getStationOperationDataById: dataApi.getStationOperationDataById,
-        } as const;
+        };
 
         const fn = functionMap[functionName];
         if (!fn) {
             throw new Error(`Function ${functionName} not found in data API`);
         }
-        return await (fn as any)(...params);
+        return await fn(...params);
     },
     staleTime: Number.POSITIVE_INFINITY,
     gcTime: 1000 * 60 * 10,

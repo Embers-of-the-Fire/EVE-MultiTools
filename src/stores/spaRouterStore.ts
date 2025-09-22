@@ -24,7 +24,6 @@ interface SPARouterActions {
     replaceWithParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => void;
     setRouteParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => void;
     getRouteParams: <T extends keyof RouteParamMap>(path: T) => RouteParam<T> | undefined;
-    addHistoryItem: (path: string, title: string, id?: string, params?: any) => void; // 统一的历史记录方法
     navigateToHistoryItem: (path: string, params?: any) => void;
     dispatch: (action: RouterAction) => void;
 }
@@ -369,11 +368,6 @@ export const useSPARouterStore = create<SPARouterStore>()(
             getRouteParams: <T extends keyof RouteParamMap>(path: T): RouteParam<T> | undefined => {
                 const { routeParams } = get();
                 return routeParams[path as string] as RouteParam<T> | undefined;
-            },
-
-            addHistoryItem: (path: string, title: string, id?: string, params?: any) => {
-                const { dispatch } = get();
-                dispatch({ type: "ADD_HISTORY_ITEM", path, title, id, params });
             },
 
             navigateToHistoryItem: (path: string, params?: any) => {

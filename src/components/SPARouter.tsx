@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { findRouteByPath } from "@/lib/router";
@@ -33,17 +33,8 @@ function NotFoundPage() {
 }
 
 export function SPARouter() {
-    const { t } = useTranslation();
-    const { currentPath, addHistoryItem } = useSPARouter();
+    const { currentPath } = useSPARouter();
     const route = findRouteByPath(currentPath);
-
-    // 记录路由变化到历史记录，但排除首页
-    useEffect(() => {
-        if (route && currentPath !== "/") {
-            // 不记录首页
-            addHistoryItem(currentPath, t(route.labelKey) || route.labelKey || currentPath);
-        }
-    }, [currentPath, route, addHistoryItem, t]);
 
     if (!route) {
         return <NotFoundPage />;

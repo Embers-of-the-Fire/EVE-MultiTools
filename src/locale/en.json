@@ -83,7 +83,9 @@
         "get_started": "Get Started",
         "back": "Back",
         "detail_history": "Detail History",
-        "recent_details": "Recent Details"
+        "recent_details": "Recent Details",
+        "history": "History",
+        "recent_pages": "Recent Pages"
     },
     "settings": {
         "theme": {
