@@ -17,6 +17,10 @@ import { RegionDetailPageWrapper } from "@/components/pages/explore/universe-obj
 import { SystemDetailPageWrapper } from "@/components/pages/explore/universe-object-detail/SystemDetail";
 import { GetStartedPage } from "@/components/pages/GetStartedPage";
 import { HomePage } from "@/components/pages/HomePage";
+import {
+    MarketBatchListPage,
+    MarketBatchListTablePage,
+} from "@/components/pages/market/MarketBatchListPage";
 import { MarketListPage } from "@/components/pages/market/MarketListPage";
 import { MarketSearchPage } from "@/components/pages/market/MarketSearchPage";
 import type { AppRoute } from "@/types/router";
@@ -53,6 +57,29 @@ export const routes = [
                 path: "/market/search",
                 labelKey: "nav.market.search",
                 component: MarketSearchPage,
+            },
+            {
+                key: "market-batch-list",
+                path: "/market/batch-list",
+                labelKey: "nav.market.batch_list.input",
+                component: MarketBatchListPage,
+                children: [
+                    {
+                        key: "market-batch-list-table",
+                        path: "/market/batch-list/table",
+                        labelKey: "nav.market.batch_list.table",
+                        component: MarketBatchListTablePage,
+                        hideFromNav: true,
+                        paramType: z.object({
+                            typeList: z.array(
+                                z.object({
+                                    typeId: z.number(),
+                                    amount: z.number(),
+                                })
+                            ),
+                        }),
+                    },
+                ],
             },
         ],
     },

@@ -31,7 +31,8 @@
         "data_outdated": "Outdated Data",
         "about": "About",
         "none": "None",
-        "all": "All"
+        "all": "All",
+        "clear_all": "Clear All"
     },
     "nav": {
         "platform": "Platform",
@@ -76,7 +77,11 @@
         "market": {
             "title": "Market",
             "list": "Market List",
-            "search": "Market Search"
+            "search": "Market Search",
+            "batch_list": {
+                "input": "Batch Market Assess",
+                "table": "Batch Market Assess (Table)"
+            }
         },
         "bundle": "Data Bundle",
         "about": "About",
@@ -164,6 +169,49 @@
         "search": {
             "title": "Market Search",
             "placeholder": "Search for types"
+        },
+        "batch_list": {
+            "table": {
+                "type_name": {
+                    "header": "Type"
+                },
+                "group_name": {
+                    "header": "Group"
+                },
+                "amount": {
+                    "header": "Amount"
+                },
+                "sell_single": {
+                    "header": "Sell per Item"
+                },
+                "buy_single": {
+                    "header": "Buy per Item"
+                },
+                "sell_total": {
+                    "header": "Sell Total"
+                },
+                "buy_total": {
+                    "header": "Buy Total"
+                },
+                "actions": {
+                    "header": "Actions"
+                },
+                "title": "Batch Market Assess: Table",
+                "sell_summary": "Sell: {{sell}}",
+                "buy_summary": "Buy: {{buy}}",
+                "count_summary": "Total {{counts}} items",
+                "selected_sell_summary": "Selected Sell: ",
+                "selected_buy_summary": "Selected Buy: ",
+                "selected_count_summary": "Select {{count}} items"
+            },
+            "title": "Batch Market Assess",
+            "description": "Analyze prices from the item list in the game (container, contract, etc.)",
+            "input": {
+                "label": "Item List",
+                "placeholder": "Item List",
+                "hint": "Copy the entries directly from the cargo/contract page and paste it here",
+                "submit": "Analyze"
+            }
         }
     },
     "error": {

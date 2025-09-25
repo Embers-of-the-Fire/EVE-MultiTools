@@ -46,7 +46,11 @@
         "market": {
             "title": "市场",
             "list": "市场总览",
-            "search": "市场搜索"
+            "search": "市场搜索",
+            "batch_list": {
+                "input": "批量价格统计",
+                "table": "批量价格估计（统计表）"
+            }
         },
         "bundle": "数据包",
         "about": "关于",
@@ -88,7 +92,8 @@
         "all": "全部",
         "data": {
             "raw_json_data": "JSON 原始数据"
-        }
+        },
+        "clear_all": "清理全部"
     },
     "bundle": {
         "title": "数据包管理",
@@ -448,6 +453,49 @@
         "search": {
             "title": "市场搜索",
             "placeholder": "搜索物品"
+        },
+        "batch_list": {
+            "table": {
+                "actions": {
+                    "header": "工具"
+                },
+                "buy_total": {
+                    "header": "买单总价"
+                },
+                "sell_total": {
+                    "header": "卖单总价"
+                },
+                "buy_single": {
+                    "header": "买单单价"
+                },
+                "sell_single": {
+                    "header": "卖单单价"
+                },
+                "group_name": {
+                    "header": "分类"
+                },
+                "type_name": {
+                    "header": "物品"
+                },
+                "amount": {
+                    "header": "数量"
+                },
+                "title": "批量价格估计（统计表）",
+                "sell_summary": "卖单总价：",
+                "buy_summary": "买单总价：",
+                "count_summary": "共计 {{counts}} 件物品",
+                "selected_sell_summary": "已选卖单总价：",
+                "selected_buy_summary": "已选买单总价：",
+                "selected_count_summary": "已选 {{counts}} 件物品"
+            },
+            "title": "批量价格估计",
+            "description": "从游戏中的物品列表（货柜、合同等）分析价格",
+            "input": {
+                "label": "物品列表",
+                "placeholder": "物品列表",
+                "hint": "从仓库/合同页面直接复制条目并粘贴到此处",
+                "submit": "分析"
+            }
         }
     },
     "terms": {

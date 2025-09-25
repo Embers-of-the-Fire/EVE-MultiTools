@@ -1,7 +1,7 @@
 "use client";
 
 import { Command as CommandPrimitive } from "cmdk";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 import * as React from "react";
 import {
     Dialog,
@@ -58,8 +58,9 @@ function CommandDialog({
 
 function CommandInput({
     className,
+    onClear,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & { onClear?: () => void }) {
     return (
         <div
             data-slot="command-input-wrapper"
@@ -74,6 +75,12 @@ function CommandInput({
                 )}
                 {...props}
             />
+            {onClear && (
+                <XIcon
+                    className="size-4 shrink-0 opacity-50 cursor-pointer"
+                    onClick={() => onClear?.()}
+                />
+            )}
         </div>
     );
 }

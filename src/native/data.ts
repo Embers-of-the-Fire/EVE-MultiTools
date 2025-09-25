@@ -95,22 +95,38 @@ export async function getUiLocalizationByLang(
     return loc;
 }
 
-export async function getGroup(groupId: number): Promise<Group | null> {
-    return await tauriInvoke<Group | null>("get_group", { groupId });
+export async function getGroup(groupId: number): Promise<Group> {
+    const result = await tauriInvoke<Group | null>("get_group", { groupId });
+    if (!result) {
+        throw new Error("Group not found");
+    }
+    return result;
 }
 
-export async function getCategory(categoryId: number): Promise<Category | null> {
-    return await tauriInvoke<Category | null>("get_category", { categoryId });
+export async function getCategory(categoryId: number): Promise<Category> {
+    const result = await tauriInvoke<Category | null>("get_category", { categoryId });
+    if (!result) {
+        throw new Error("Category not found");
+    }
+    return result;
 }
 
-export async function getMetaGroup(metaGroupId: number): Promise<MetaGroup | null> {
-    return await tauriInvoke<MetaGroup | null>("get_meta_group", {
+export async function getMetaGroup(metaGroupId: number): Promise<MetaGroup> {
+    const result = await tauriInvoke<MetaGroup | null>("get_meta_group", {
         metaGroupId,
     });
+    if (!result) {
+        throw new Error("MetaGroup not found");
+    }
+    return result;
 }
 
-export async function getType(typeId: number): Promise<Type | null> {
-    return await tauriInvoke<Type | null>("get_type", { typeId });
+export async function getType(typeId: number): Promise<Type> {
+    const result = await tauriInvoke<Type | null>("get_type", { typeId });
+    if (!result) {
+        throw new Error("Type not found");
+    }
+    return result;
 }
 
 export async function searchTypeByName(

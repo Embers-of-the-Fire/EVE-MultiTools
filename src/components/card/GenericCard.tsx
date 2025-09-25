@@ -41,7 +41,7 @@ interface GenericImageProps {
     imageComponent?: React.ReactNode;
 }
 
-const GenericImage: React.FC<GenericImageProps> = ({
+export const GenericImage: React.FC<GenericImageProps> = ({
     iconUrl,
     alt,
     loading,

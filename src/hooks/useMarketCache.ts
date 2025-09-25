@@ -50,9 +50,21 @@ export const useMarketCache = () => {
         [queryClient]
     );
 
+    const getMarketRecord = useCallback(
+        async (typeID: number): Promise<MarketRecord> => {
+            // ensureQueryData will fetch and cache if not present, and return cached if available
+            const record = await queryClient.ensureQueryData<MarketRecord>(
+                createMarketPriceQuery(typeID)
+            );
+            return record;
+        },
+        [queryClient]
+    );
+
     return {
         clearCache,
         clearTypeCache,
+        getMarketRecord,
     };
 };
 

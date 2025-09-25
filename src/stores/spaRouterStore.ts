@@ -1,7 +1,13 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { getRouteTitleKey } from "@/lib/router";
-import type { RouteHistory, RouteParam, RouteParamMap, RouterState } from "@/types/router";
+import type {
+    NoParamRoute,
+    RouteHistory,
+    RouteParam,
+    RouteParamMap,
+    RouterState,
+} from "@/types/router";
 
 type RouterAction =
     | { type: "NAVIGATE"; path: string }
@@ -16,7 +22,7 @@ type RouterAction =
 interface SPARouterState extends RouterState {}
 
 interface SPARouterActions {
-    navigate: (path: string) => void;
+    navigate: <T extends NoParamRoute>(path: T) => void;
     navigateWithParams: <T extends keyof RouteParamMap>(path: T, params: RouteParam<T>) => void;
     goBack: () => void;
     goForward: () => void;
@@ -370,14 +376,12 @@ export const useSPARouterStore = create<SPARouterStore>()(
                 return routeParams[path as string] as RouteParam<T> | undefined;
             },
 
-            navigateToHistoryItem: (path: string, params?: any) => {
-                if (params) {
-                    const { navigateWithParams } = get();
-                    navigateWithParams(path as any, params);
-                } else {
-                    const { navigate } = get();
-                    navigate(path);
-                }
+            navigateToHistoryItem: <K extends keyof RouteParamMap>(
+                path: K,
+                params: RouteParamMap[K]
+            ) => {
+                const { navigateWithParams } = get();
+                navigateWithParams(path, params);
             },
         }),
         {

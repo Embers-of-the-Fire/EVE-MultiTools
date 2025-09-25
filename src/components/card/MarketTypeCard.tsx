@@ -6,8 +6,8 @@ import { useLocalization } from "@/hooks/useLocalization";
 import { useMarketRecord } from "@/hooks/useMarketCache";
 import { useSPARouter } from "@/hooks/useSPARouter";
 import { useData } from "@/stores/dataStore";
-import { LinkKey } from "@/types/data";
 import { getIconUrl, getTypeImageUrl } from "@/utils/image";
+import { getMarketTypeLinks } from "@/utils/link";
 import { ExternalLink } from "../Links";
 import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
@@ -87,29 +87,15 @@ const useMarketTypeData = (typeId: number) => {
     }, [typeId, loc, getData]);
 
     useEffect(() => {
-        (async () => {
-            const newLinks = [];
-            newLinks.push({
-                url:
-                    language === "zh"
-                        ? await getData("getLinkUrl", LinkKey.MarketEveC3qCc, {
-                              typeId: typeId.toString(),
-                          })
-                        : await getData("getLinkUrl", LinkKey.MarketEveC3qCcEn, {
-                              typeId: typeId.toString(),
-                          }),
-                name: t("market.link.eve_c3q_cc"),
-            });
-            newLinks.push({
-                url: await getData("getLinkUrl", LinkKey.MarketEveTycoon, {
-                    typeId: typeId.toString(),
-                }),
-                name: t("market.link.eve_tycoon"),
-            });
+        getMarketTypeLinks(typeId, {
+            language,
+            t,
+            getData,
+        }).then((newLinks) => {
             setLinks(
                 newLinks.filter((link): link is { url: string; name: string } => link.url !== null)
             );
-        })();
+        });
     }, [typeId, language, t, getData]);
 
     const isMarketDataLoading = marketRecord.isLoading;

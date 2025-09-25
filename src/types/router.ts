@@ -21,20 +21,6 @@ export type RouteHistory = {
     params?: any;
 };
 
-// Route parameter type mapping
-// 定义特定路由的参数类型
-export interface KnownRouteParamMap {
-    "/explore/type/detail": { typeId: number };
-    "/explore/faction/detail": { factionId: number };
-    "/explore/npc-corporation/detail": { corporationId: number };
-    "/explore/universe/region": { id: number };
-    "/explore/universe/constellation": { id: number };
-    "/explore/universe/system": { id: number };
-    "/explore/universe/planet": { id: number };
-    "/explore/universe/moon": { id: number };
-    "/explore/universe/npc-station": { id: number };
-}
-
 export type RouteParam<T extends keyof RouteParamMap> = RouteParamMap[T];
 
 type ExtractRouteParams<T> = T extends readonly any[]
@@ -52,6 +38,10 @@ type RouteParamPairs = ExtractRouteParams<typeof routes>;
 
 export type RouteParamMap = {
     [K in RouteParamPairs as K["key"]]: K["param"];
+};
+
+export type NoParamRoute = keyof {
+    [K in keyof RouteParamMap as RouteParamMap[K] extends undefined ? K : never]: K;
 };
 
 export interface GeneralHistoryItem {
